@@ -17,6 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { usePathname } from "next/navigation";
 
 export function NavMain({
   items,
@@ -32,15 +33,17 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const path = usePathname();
+
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>TOP VALUE BRANDS</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible
             key={item.title}
             asChild
-            defaultOpen={item.isActive}
+            defaultOpen={path.split("/")[1] === item.url.split("/")[1]}
             className="group/collapsible"
           >
             <SidebarMenuItem>

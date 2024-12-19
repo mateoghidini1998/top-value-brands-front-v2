@@ -1,18 +1,11 @@
 import { AppSidebar } from "@/components/custom/sidebar/app-sidebar";
 import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbSeparator,
-  BreadcrumbPage,
-} from "@/components/ui/breadcrumb";
-import {
   SidebarProvider,
   SidebarInset,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Separator } from "@radix-ui/react-separator";
+import { Separator } from "@/components/ui/separator";
+import { DynamicBreadcrumb } from "@/components/custom/dynamic.breadcrumb";
 
 interface AuthenticatedLayoutProps {
   children: React.ReactNode;
@@ -29,19 +22,7 @@ export default function AuthenticatedLayout({
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+            <DynamicBreadcrumb />
           </div>
         </header>
         {children}

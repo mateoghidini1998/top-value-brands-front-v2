@@ -1,0 +1,165 @@
+import {
+  GalleryVerticalEnd,
+  AudioWaveform,
+  SquareTerminal,
+  Bot,
+  BookOpen,
+  Settings2,
+  Frame,
+  PieChart,
+} from "lucide-react";
+
+export const routes = {
+  user: {
+    name: "shadcn",
+    email: "m@example.com",
+    avatar: "/avatars/shadcn.jpg",
+  },
+  teams: [
+    {
+      name: "Amazon",
+      logo: GalleryVerticalEnd,
+      plan: "Enterprise",
+    },
+    {
+      name: "Walmart",
+      logo: AudioWaveform,
+      plan: "Startup",
+    },
+    // {
+    //   name: "Evil Corp.",
+    //   logo: Command,
+    //   plan: "Free",
+    // },
+  ],
+  navMain: [
+    {
+      title: "Inventory Management",
+      url: "/inventory",
+      icon: SquareTerminal,
+      items: [
+        {
+          title: "All Products",
+          url: "/inventory",
+        },
+        {
+          title: "Tracked Products",
+          url: "/inventory/tracked-products",
+        },
+        {
+          title: "Deleted Products",
+          url: "/inventory/manage-products",
+        },
+      ],
+    },
+    {
+      title: "Purchase Orders",
+      url: "/purchase-orders",
+      icon: Bot,
+      items: [
+        {
+          title: "All POs",
+          url: "/purchase-orders",
+        },
+        {
+          title: "Create PO",
+          url: "/purchase-orders/create",
+        },
+        // {
+        //   title: "Quantum",
+        //   url: "#",
+        // },
+      ],
+    },
+    {
+      title: "Warehouse Management",
+      url: "/warehouse",
+      icon: BookOpen,
+      items: [
+        {
+          title: "Warehouse",
+          url: "/warehouse",
+        },
+        {
+          title: "Incoming Shipments",
+          url: "/warehouse/incoming-shipments",
+        },
+        {
+          title: "Outgoing Shipments",
+          url: "/warehouse/outgoing-shipments",
+        },
+        {
+          title: "Storage",
+          url: "/warehouse/storage",
+        },
+        {
+          title: "Changelog",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Users",
+      url: "/users",
+      icon: BookOpen,
+      items: [
+        {
+          title: "Introduction",
+          url: "#",
+        },
+        {
+          title: "Get Started",
+          url: "#",
+        },
+        {
+          title: "Tutorials",
+          url: "#",
+        },
+        {
+          title: "Changelog",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Settings",
+      url: "#",
+      icon: Settings2,
+      items: [
+        {
+          title: "General",
+          url: "#",
+        },
+        {
+          title: "Team",
+          url: "#",
+        },
+        {
+          title: "Billing",
+          url: "#",
+        },
+        {
+          title: "Limits",
+          url: "#",
+        },
+      ],
+    },
+  ],
+  projects: [
+    {
+      name: "Design Engineering",
+      url: "#",
+      icon: Frame,
+    },
+    {
+      name: "Sales & Marketing",
+      url: "#",
+      icon: PieChart,
+    },
+    {
+      name: "Travel",
+      url: "#",
+      icon: Map,
+    },
+  ],
+};
