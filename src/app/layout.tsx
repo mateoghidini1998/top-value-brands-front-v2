@@ -1,14 +1,10 @@
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import AuthenticatedLayout from "@/shared/layouts/authenticated.layout";
+import PublicLayout from "@/shared/layouts/public.layout";
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
-import { ThemeProvider } from "@/shared/components/theme-provider";
-import {
-  ClerkProvider,
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-} from "@clerk/nextjs";
+import localFont from "next/font/local";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,6 +27,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isSignedIn = true;
+
   return (
     <ClerkProvider>
       <html lang="es" suppressHydrationWarning>
@@ -39,17 +37,15 @@ export default function RootLayout({
         >
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-            {children}
+            {isSignedIn ? (
+              <AuthenticatedLayout>{children}</AuthenticatedLayout>
+            ) : (
+              <PublicLayout>{children}</PublicLayout>
+            )}
           </ThemeProvider>
         </body>
       </html>
