@@ -1,11 +1,9 @@
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import AuthenticatedLayout from "@/shared/layouts/authenticated.layout";
-import PublicLayout from "@/shared/layouts/public.layout";
+import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import "./globals.css";
 import localFont from "next/font/local";
-import { Toaster } from "@/components/ui/sonner";
+import "./globals.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,8 +26,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isSignedIn = true;
-
   return (
     <ClerkProvider>
       <html lang="es" suppressHydrationWarning>
@@ -42,11 +38,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {isSignedIn ? (
-              <AuthenticatedLayout>{children}</AuthenticatedLayout>
-            ) : (
-              <PublicLayout>{children}</PublicLayout>
-            )}
+            {children}
             <Toaster position="top-right" />
           </ThemeProvider>
         </body>
