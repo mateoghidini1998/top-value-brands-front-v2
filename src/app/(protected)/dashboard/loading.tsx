@@ -1,0 +1,23 @@
+import { Skeleton } from "@/components/ui/skeleton";
+
+export default function Loading() {
+  return (
+    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+        {[...Array(3)].map((_, index) => (
+          <Skeleton key={index} className="aspect-video" />
+        ))}
+      </div>
+      <Skeleton className="min-h-[100vh] flex-1 md:min-h-min" />
+      <div
+        className="fixed inset-0 -z-10 animate-[shimmer_2s_infinite]"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
+          backgroundSize: "200% 100%",
+        }}
+        aria-hidden="true"
+      />
+    </div>
+  );
+}
