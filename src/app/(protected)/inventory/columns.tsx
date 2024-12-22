@@ -3,6 +3,7 @@
 import { Product } from "@/app/(protected)/inventory/interfaces/product.interface";
 import { ColumnDef } from "@tanstack/react-table";
 import ActionsCell from "./components/actions-cell";
+import { formatDate } from "@/helpers/format-date";
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -30,6 +31,14 @@ export const columns: ColumnDef<Product>[] = [
     header: "Seller SKU",
   },
   {
+    accessorKey: "supplier_item_number",
+    header: "Supplier Item No",
+  },
+  {
+    accessorKey: "pack_type",
+    header: "Pack Type",
+  },
+  {
     accessorKey: "FBA_available_inventory",
     header: "FBA Available Inventory",
   },
@@ -54,6 +63,14 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: "is_active",
     header: "Active",
     cell: ({ row }) => <span>{row.original.is_active ? "Yes " : "No"}</span>,
+  },
+  {
+    accessorKey: "updatedAt",
+    header: "Last Update",
+    cell: ({ row }) => {
+      const updatedAt = row.original.updatedAt;
+      return <span>{formatDate(updatedAt.toString())}</span>;
+    },
   },
   {
     id: "actions",

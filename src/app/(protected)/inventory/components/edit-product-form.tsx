@@ -37,17 +37,20 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
   const { editProductMutation } = useInventory();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  console.log(product);
+
   const form = useForm<z.infer<typeof editProductSchema>>({
     resolver: zodResolver(editProductSchema),
     defaultValues: {
       ASIN: product.ASIN,
       seller_sku: product.seller_sku || "",
-      product_cost:
-        typeof product.product_cost === "number" ? product.product_cost : null,
-      supplier_id: product.supplier?.id || null,
-      supplier_item_number: product.supplier_item_number || null,
+      product_cost: parseFloat(product.product_cost),
+      supplier_id: product.supplier_id || null,
+      supplier_item_number: product.supplier_item_number
+        ? parseInt(product.supplier_item_number)
+        : null,
       upc: product.upc || "",
-      pack_type: product.pack_type || null,
+      pack_type: product.pack_type || 1,
     },
   });
 
@@ -107,7 +110,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
                   type="number"
                   {...field}
                   value={field.value ?? ""}
-                  onChange={(e) => field.onChange(parseInt(e.target.value))}
+                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
                 />
               </FormControl>
               <FormMessage />
