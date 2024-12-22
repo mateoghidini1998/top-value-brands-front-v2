@@ -144,7 +144,7 @@ DataTableProps<TData, TValue>) {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead className="text-xs" key={header.id}>
+                    <TableHead className="" key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -165,7 +165,7 @@ DataTableProps<TData, TValue>) {
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className="text-xs" key={cell.id}>
+                    <TableCell className="" key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -176,7 +176,7 @@ DataTableProps<TData, TValue>) {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-xs">
+                <TableCell colSpan={columns.length} className="h-24 ">
                   No results.
                 </TableCell>
               </TableRow>

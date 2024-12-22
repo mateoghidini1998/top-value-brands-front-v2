@@ -29,7 +29,7 @@ export default function Page() {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="w-fit h-7 text-xs">
+          <Button className="w-fit h-7 ">
             <Plus className="mr-2 h-4 w-4" />
             Add Product
           </Button>
