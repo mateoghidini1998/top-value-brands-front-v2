@@ -2,19 +2,15 @@ import { TanstackProvider } from "@/components/providers/tanstack-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Poppins } from "next/font/google"; // Importa la fuente desde Google Fonts
+
 import "./globals.css";
 import { Toaster } from "sonner";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const poppins = Poppins({
+  subsets: ["latin"], // Subconjuntos que deseas incluir
+  variable: "--font-poppins", // Define una variable CSS para la fuente
+  weight: ["400", "700"], // Pesos necesarios
 });
 
 export const metadata: Metadata = {
@@ -30,9 +26,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="es" suppressHydrationWarning>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+        <body className={` ${poppins.variable}`}>
           <TanstackProvider>
             <ThemeProvider
               attribute="class"
