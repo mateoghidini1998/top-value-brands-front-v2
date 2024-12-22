@@ -39,6 +39,10 @@ export const columns: ColumnDef<Product>[] = [
     header: "Pack Type",
   },
   {
+    accessorKey: "upc",
+    header: "UPC",
+  },
+  {
     accessorKey: "FBA_available_inventory",
     header: "FBA Available Inventory",
   },

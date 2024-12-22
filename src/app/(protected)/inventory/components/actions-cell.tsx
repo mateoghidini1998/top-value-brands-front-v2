@@ -19,6 +19,7 @@ import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { Product } from "../interfaces/product.interface";
 import { EditProductForm } from "./edit-product-form";
+import { useInventory } from "../hooks/useInventory";
 
 interface ActionsCellProps {
   row: Product;
@@ -26,9 +27,14 @@ interface ActionsCellProps {
 
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const { deleteProductMutation } = useInventory();
 
   const handleEditSuccess = () => {
     setIsEditDialogOpen(false);
+  };
+
+  const handleDeleteProduct = async (product: Product) => {
+    await deleteProductMutation.mutateAsync(product);
   };
 
   return (
@@ -42,16 +48,18 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
+          {/* <DropdownMenuItem
             onClick={() => navigator.clipboard.writeText(row.id.toString())}
           >
             Copy product ID
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
             Edit Product
           </DropdownMenuItem>
-          <DropdownMenuItem>View product details</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleDeleteProduct(row)}>
+            Delete Product
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 

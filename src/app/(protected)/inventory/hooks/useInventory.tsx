@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { createProduct } from "../actions/create-product.action";
 import { editProduct } from "../actions/edit-product.action";
+import { deleteProduct } from "../actions/delete-product.action";
 
 export const useInventory = () => {
   const queryClient = useQueryClient();
@@ -59,9 +60,21 @@ export const useInventory = () => {
     },
   });
 
+  const deleteProductMutation = useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["inventory"] });
+    },
+    onError(error: Error) {
+      console.error(error);
+      toast.error(error.message);
+    },
+  });
+
   return {
     inventoryQuery,
     createProductMutation,
     editProductMutation,
+    deleteProductMutation,
   };
 };

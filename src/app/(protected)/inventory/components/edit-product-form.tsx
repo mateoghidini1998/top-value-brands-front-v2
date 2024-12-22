@@ -37,8 +37,6 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
   const { editProductMutation } = useInventory();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  console.log(product);
-
   const form = useForm<z.infer<typeof editProductSchema>>({
     resolver: zodResolver(editProductSchema),
     defaultValues: {
@@ -50,7 +48,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
         ? parseInt(product.supplier_item_number)
         : null,
       upc: product.upc || "",
-      pack_type: product.pack_type || 1,
+      pack_type: product.pack_type ? parseInt(product.pack_type) : 1,
     },
   });
 
