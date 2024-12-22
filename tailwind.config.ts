@@ -10,6 +10,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        dark: "#1F2128",
+        "dark-2": "#262935",
+        "dark-3": "#393E4F",
+        light: "#61656E",
+        "light-2": "#F8FAFC",
+        "light-3": "#EFF1F3",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -75,6 +81,7 @@ const config: Config = {
       },
     },
   },
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require("tailwindcss-animate")],
 };
 export default config;

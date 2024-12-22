@@ -31,12 +31,12 @@ export function ProductTitle({
         <TooltipTrigger asChild>
           <div
             style={{ width: width }}
-            className={` text-xs font-medium text-left h-[35px] overflow-y-hidden`}
+            className={` text-xs font-medium text-left h-fit overflow-y-hidden`}
           >
             <div className="relative flex w-full h-full items-center justify-between text-left">
               <div className="h-8 gap-2 flex items-center justify-between mr-2">
                 {product_image ? (
-                  <div className="">
+                  <div className="w-7 h-7">
                     <Link
                       target="a_blank"
                       href={`https://www.amazon.com/dp/${ASIN}`}
@@ -51,7 +51,7 @@ export function ProductTitle({
                     </Link>
                   </div>
                 ) : (
-                  <div className="h-8 bg-light-2 shadow-sm dark:bg-dark-2 rounded-lg flex items-center justify-center">
+                  <div className="h-7 w-70 bg-light-2 shadow-sm dark:bg-dark-2 rounded-lg flex items-center justify-center">
                     <EmptyImage />
                   </div>
                 )}
