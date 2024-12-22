@@ -1,4 +1,4 @@
-import { sleep } from "@/helpers";
+import { apiRequest } from "@/helpers/http.adapter";
 
 interface CreateProductProps {
   ASIN: string;
@@ -6,26 +6,27 @@ interface CreateProductProps {
   supplier_id: number;
   supplier_item_number: string;
 }
+export interface CreateProductResponse {
+  id: number;
+  ASIN: string;
+  product_cost: string;
+  supplier_id: string;
+  supplier_item_number: string;
+  product_name: string;
+  updatedAt: Date;
+  createdAt: Date;
+}
 
-export const createProduct = async (data: CreateProductProps) => {
-  await sleep(2000);
-
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products/add`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }
-  );
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(
-      errorData.errors ? errorData.errors[0].msg : "Network response was not ok"
-    );
-  }
-  return response.json();
+export const createProduct = async (
+  data: CreateProductProps
+): Promise<CreateProductResponse> => {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products/add`;
+  const options: RequestInit = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  };
+  return apiRequest<CreateProductResponse>(url, options);
 };

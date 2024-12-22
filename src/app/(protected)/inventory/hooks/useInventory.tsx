@@ -35,10 +35,12 @@ export const useInventory = () => {
   const createProductMutation = useMutation({
     mutationFn: createProduct,
     onSuccess: () => {
+      console.log("Product created successfully");
       // Invalidate the inventory query to refetch the updated list
       queryClient.invalidateQueries({ queryKey: ["inventory"] });
     },
     onError: (error: Error) => {
+      console.error(error);
       toast.error(error.message);
     },
   });

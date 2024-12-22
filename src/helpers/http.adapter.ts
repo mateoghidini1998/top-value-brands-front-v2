@@ -1,73 +1,38 @@
-export class HttpAPI {
-  public static async fetch(
-    url: string,
-    options: RequestInit
-  ): Promise<unknown> {
-    const response = await fetch(url, options);
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.errors
-          ? errorData.errors[0].msg
-          : "Network response was not ok"
-      );
-    }
-    return response.json();
-  }
+import { sleep } from "./sleep";
 
-  public static async get(
-    url: string,
-    options?: RequestInit
-  ): Promise<unknown> {
-    return this.fetch(url, { method: "GET", ...options });
-  }
+class HttpError extends Error {
+  status: number;
 
-  public static async post(
-    url: string,
-    body: object,
-    accessToken?: string
-  ): Promise<unknown> {
-    return this.fetch(url, {
-      method: "POST",
-      headers: !accessToken
-        ? { "Content-Type": "application/json" }
-        : {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-      body: JSON.stringify(body),
-    });
-  }
-
-  public static async patch(
-    url: string,
-    body?: object,
-    accessToken?: string
-  ): Promise<unknown> {
-    return this.fetch(url, {
-      method: "PATCH",
-      headers: !accessToken
-        ? { "Content-Type": "application/json" }
-        : {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-      body: JSON.stringify(body),
-    });
-  }
-
-  public static async delete(
-    url: string,
-    accessToken?: string
-  ): Promise<unknown> {
-    return this.fetch(url, {
-      method: "DELETE",
-      headers: !accessToken
-        ? { "Content-Type": "application/json" }
-        : {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-    });
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "HttpError";
+    this.status = status;
   }
 }
+
+export const handleResponse = async <T>(response: Response): Promise<T> => {
+  if (!response.ok) {
+    const errorData = await response.json();
+    const errorMessage = errorData.msg || "An unexpected error occurred";
+    throw new HttpError(errorMessage, response.status);
+  }
+  return response.json();
+};
+
+export const apiRequest = async <T>(
+  url: string,
+  options: RequestInit = {}
+): Promise<T> => {
+  try {
+    await sleep(2000);
+    const response = await fetch(url, options);
+    return handleResponse<T>(response);
+  } catch (error) {
+    if (error instanceof HttpError) {
+      console.error(`HTTP Error (${error.status}): ${error.message}`);
+    } else {
+      console.error("Unexpected error:", error);
+    }
+    throw error; // Relanzar el error si es necesario para manejarlo en el llamado
+  }
+};
