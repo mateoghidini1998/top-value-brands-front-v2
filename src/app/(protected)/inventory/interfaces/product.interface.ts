@@ -30,5 +30,6 @@ export interface Product {
 }
 
 export interface Supplier {
+  id: number;
   supplier_name: string;
 }
