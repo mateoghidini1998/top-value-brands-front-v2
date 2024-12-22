@@ -13,7 +13,7 @@ import { routes } from "@/routes/routes";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { TeamSwitcher } from "./team-switcher";
-import { ModeToggle } from "../theme-toogle";
+import { ModeToggle } from "../theme-toggle";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
