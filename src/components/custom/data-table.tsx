@@ -39,7 +39,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   dataLength?: number;
   pagination?: React.ReactElement;
-  onSort?: (sorting: SortingState) => any;
+  onSort?: (sorting: SortingState) => unknown;
   showHideColumns?: boolean;
   searchInput?: string;
 }
@@ -144,7 +144,7 @@ DataTableProps<TData, TValue>) {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead className="" key={header.id}>
+                    <TableHead className="text-xs" key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -165,7 +165,7 @@ DataTableProps<TData, TValue>) {
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className="" key={cell.id}>
+                    <TableCell className="text-xs" key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -176,7 +176,7 @@ DataTableProps<TData, TValue>) {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24">
+                <TableCell colSpan={columns.length} className="h-24 text-xs">
                   No results.
                 </TableCell>
               </TableRow>

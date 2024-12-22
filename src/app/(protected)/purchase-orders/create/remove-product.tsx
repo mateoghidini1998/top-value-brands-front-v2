@@ -8,7 +8,7 @@ interface ActionsCellRow {
 }
 
 const RemoveProduct = ({ productInOrder, setData }: ActionsCellRow) => {
-  console.log(productInOrder);
+  // console.log(productInOrder);
 
   const handleRemoveProduct = () => {
     setData((prev: ProductInOrder[]) => {
