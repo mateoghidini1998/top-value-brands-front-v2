@@ -13,6 +13,7 @@ import { routes } from "@/routes/routes";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { TeamSwitcher } from "./team-switcher";
+import { ModeToggle } from "../theme-toogle";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -25,6 +26,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* <NavProjects projects={routes.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
+        <ModeToggle />
         <NavUser user={routes.user} />
       </SidebarFooter>
       <SidebarRail />
