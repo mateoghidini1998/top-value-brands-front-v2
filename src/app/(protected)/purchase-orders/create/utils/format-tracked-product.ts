@@ -5,8 +5,8 @@ export const formatTrackedProduct = (
   product: TrackedProduct
 ): ProductInOrder => {
   return {
-    id: product.id.toString(),
-    product_id: product.product_id.toString(),
+    id: product.id,
+    product_id: product.product_id,
     supplier_id: product.supplier_id ? product.supplier_id : "N/A",
     product_name: product.product_name,
     product_image: product.product_image,

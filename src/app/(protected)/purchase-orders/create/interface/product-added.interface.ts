@@ -1,6 +1,6 @@
 export interface ProductInOrder {
-  id: string;
-  product_id: string;
+  id: number;
+  product_id: number;
   supplier_id: string;
   product_name: string;
   product_image: string;

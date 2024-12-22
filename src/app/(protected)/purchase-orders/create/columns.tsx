@@ -19,6 +19,10 @@ export const getTrackedProductsColumns = (
     header: "ASIN",
   },
   {
+    accessorKey: "supplier_id",
+    header: "Supplier ID",
+  },
+  {
     accessorKey: "product_image",
     header: "Image",
     cell: ({ row }) => (

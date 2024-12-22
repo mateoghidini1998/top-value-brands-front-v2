@@ -1,6 +1,6 @@
 import { apiRequest } from "@/helpers/http.adapter";
 
-interface CreateProductProps {
+interface CreateProductRequest {
   ASIN: string;
   product_cost: number;
   supplier_id: number;
@@ -18,7 +18,7 @@ export interface CreateProductResponse {
 }
 
 export const createProduct = async (
-  data: CreateProductProps
+  data: CreateProductRequest
 ): Promise<CreateProductResponse> => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products/add`;
   const options: RequestInit = {
