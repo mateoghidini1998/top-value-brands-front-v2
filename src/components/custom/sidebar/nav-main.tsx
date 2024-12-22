@@ -17,6 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export function NavMain({
@@ -34,6 +35,10 @@ export function NavMain({
   }[];
 }) {
   const path = usePathname();
+
+  const presetData = () => {
+    console.log("prefetching data...");
+  };
 
   return (
     <SidebarGroup>
@@ -57,11 +62,14 @@ export function NavMain({
               <CollapsibleContent>
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
+                    <SidebarMenuSubItem
+                      key={subItem.title}
+                      onMouseEnter={presetData}
+                    >
                       <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
+                        <Link href={subItem.url}>
                           <span>{subItem.title}</span>
-                        </a>
+                        </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

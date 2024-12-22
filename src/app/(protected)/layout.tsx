@@ -1,11 +1,11 @@
+import { DynamicBreadcrumb } from "@/components/custom/dynamic.breadcrumb";
 import { AppSidebar } from "@/components/custom/sidebar/app-sidebar";
+import { Separator } from "@/components/ui/separator";
 import {
-  SidebarProvider,
   SidebarInset,
+  SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
-import { DynamicBreadcrumb } from "@/components/custom/dynamic.breadcrumb";
 
 interface AuthenticatedLayoutProps {
   children: React.ReactNode;
@@ -25,7 +25,7 @@ export default function AuthenticatedLayout({
             <DynamicBreadcrumb />
           </div>
         </header>
-        {children}
+        <main className="px-[20px] py-4">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );

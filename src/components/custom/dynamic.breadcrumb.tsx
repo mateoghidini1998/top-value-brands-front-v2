@@ -1,14 +1,14 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import {
   Breadcrumb,
-  BreadcrumbList,
   BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbSeparator,
+  BreadcrumbList,
   BreadcrumbPage,
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 export function DynamicBreadcrumb() {
@@ -28,7 +28,7 @@ export function DynamicBreadcrumb() {
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="/">TVB</BreadcrumbLink>
+          <Link href="/">TVB</Link>
         </BreadcrumbItem>
         {pathSegments.map((segment, index) => {
           const href = `/${pathSegments.slice(0, index + 1).join("/")}`;
@@ -41,9 +41,7 @@ export function DynamicBreadcrumb() {
                 {isLast ? (
                   <BreadcrumbPage>{styleSegment(segment)}</BreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink href={href}>
-                    {styleSegment(segment)}
-                  </BreadcrumbLink>
+                  <Link href={href}>{styleSegment(segment)}</Link>
                 )}
               </BreadcrumbItem>
             </React.Fragment>
