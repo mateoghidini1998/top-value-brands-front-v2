@@ -72,7 +72,7 @@ export const routes = {
       ],
     },
     {
-      title: "Warehouse Management",
+      title: "Warehouse",
       url: "/warehouse",
       icon: BookOpen,
       items: [
