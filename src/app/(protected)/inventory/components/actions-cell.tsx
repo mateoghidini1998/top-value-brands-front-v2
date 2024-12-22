@@ -17,9 +17,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
+import { useInventory } from "../hooks/useInventory";
 import { Product } from "../interfaces/product.interface";
 import { EditProductForm } from "./edit-product-form";
-import { useInventory } from "../hooks/useInventory";
 
 interface ActionsCellProps {
   row: Product;

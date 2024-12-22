@@ -21,10 +21,11 @@ export const handleResponse = async <T>(response: Response): Promise<T> => {
 
 export const apiRequest = async <T>(
   url: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  delay: number = 100
 ): Promise<T> => {
   try {
-    await sleep(2000);
+    await sleep(delay);
     const response = await fetch(url, options);
     return handleResponse<T>(response);
   } catch (error) {

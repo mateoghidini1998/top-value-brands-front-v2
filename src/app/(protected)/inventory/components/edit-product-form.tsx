@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { EditProductProps } from "../actions/edit-product.action";
@@ -35,7 +34,7 @@ interface EditProductFormProps {
 
 export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
   const { editProductMutation } = useInventory();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof editProductSchema>>({
     resolver: zodResolver(editProductSchema),
@@ -53,7 +52,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
   });
 
   async function onSubmit(values: z.infer<typeof editProductSchema>) {
-    setIsSubmitting(true);
+    // setIsSubmitting(true);
     try {
       const editData: EditProductProps = {
         id: product.id,
@@ -64,7 +63,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
     } catch (error) {
       console.error("Failed to edit product:", error);
     } finally {
-      setIsSubmitting(false);
+      // setIsSubmitting(false);
     }
   }
 
@@ -182,9 +181,10 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isSubmitting}>
+        {/* <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Saving..." : "Save Changes"}
-        </Button>
+        </Button> */}
+        <Button type="submit">Save Changes</Button>
       </form>
     </Form>
   );

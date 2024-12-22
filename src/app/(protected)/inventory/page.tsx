@@ -17,7 +17,7 @@ import { useInventory } from "./hooks/useInventory";
 export default function Page() {
   const { inventoryQuery } = useInventory();
 
-  if (inventoryQuery.isLoading) {
+  if (inventoryQuery.isLoading || inventoryQuery.isFetching) {
     return <LoadingSpinner />;
   }
 
