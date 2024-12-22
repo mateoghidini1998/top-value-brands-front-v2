@@ -3,7 +3,7 @@ import { GetTrackedProductsResponse } from "../interfaces/tracked-product.interf
 
 export const getTrackedProducts =
   async (): Promise<GetTrackedProductsResponse> => {
-    await sleep(2000);
+    await sleep(100);
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/v1/trackedproducts`
