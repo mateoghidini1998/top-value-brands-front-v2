@@ -6,33 +6,61 @@ import { toast } from "sonner";
 import { createProduct } from "../actions/create-product.action";
 import { editProduct } from "../actions/edit-product.action";
 import { deleteProduct } from "../actions/delete-product.action";
+import { useState } from "react";
 
 export const useInventory = () => {
   const queryClient = useQueryClient();
 
-  const inventoryQuery = useQuery({
-    queryKey: [
-      "inventory",
-      {
-        page: 1,
-        limit: 50,
-        keyword: "",
-        supplier: "",
-        orderBy: "",
-        orderWay: "",
-      },
-    ],
-    queryFn: () =>
-      getInventory({
-        page: 1,
-        limit: 50,
-        keyword: "",
-        supplier: "",
-        orderBy: "",
-        orderWay: "",
-      }),
-    staleTime: 1000 * 60 * 5, // -> 5m
+  const [filters, setFilters] = useState({
+    page: 1,
+    limit: 50,
+    keyword: "",
+    supplier: "",
+    orderBy: "",
+    orderWay: "",
   });
+
+  const fetchInventory = ({
+    page = 1,
+    limit = 50,
+    keyword = "",
+    supplier = "",
+    orderBy = "",
+    orderWay = "",
+  }: {
+    page?: number;
+    limit?: number;
+    keyword?: string;
+    supplier?: string;
+    orderBy?: string;
+    orderWay?: string;
+  }) => getInventory({ page, limit, keyword, supplier, orderBy, orderWay });
+
+  const inventoryQuery = useQuery({
+    queryKey: ["inventory", filters],
+    queryFn: ({ queryKey }) => {
+      const [, params] = queryKey as [
+        string,
+        {
+          page: number;
+          limit: number;
+          keyword: string;
+          supplier: string;
+          orderBy: string;
+          orderWay: string;
+        }
+      ];
+      return fetchInventory(params);
+    },
+    staleTime: 1000 * 60 * 10, // -> 10m
+  });
+
+  const filterBySupplier = (supplier_id: number | null) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      supplier: supplier_id ? supplier_id.toString() : "",
+    }));
+  };
 
   const createProductMutation = useMutation({
     mutationFn: createProduct,
@@ -73,6 +101,7 @@ export const useInventory = () => {
 
   return {
     inventoryQuery,
+    filterBySupplier,
     createProductMutation,
     editProductMutation,
     deleteProductMutation,
