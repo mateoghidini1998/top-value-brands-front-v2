@@ -6,13 +6,30 @@ import AddProduct from "./add-product";
 import { ProductInOrder } from "./interface/product-added.interface";
 import { TrackedProduct } from "../../inventory/tracked-products/interfaces/tracked-product.interface";
 import RemoveProduct from "./remove-product";
+import { ProductTitle } from "@/components/custom/product-title";
 
 export const getTrackedProductsColumns = (
   setProductsAdded: Dispatch<SetStateAction<ProductInOrder[]>>
 ): ColumnDef<TrackedProduct>[] => [
   {
-    accessorKey: "product_name",
+    id: "product_title",
     header: "Product Name",
+    cell: ({ row }) => {
+      const product_image = row.original.product_image;
+      const product_name = row.original.product_name;
+      const ASIN = row.original.ASIN;
+      const in_seller_account = row.original.in_seller_account;
+      const width = 300;
+      return (
+        <ProductTitle
+          product_image={product_image}
+          product_name={product_name}
+          ASIN={ASIN}
+          in_seller_account={in_seller_account}
+          width={width}
+        />
+      );
+    },
   },
   {
     accessorKey: "ASIN",
@@ -21,18 +38,6 @@ export const getTrackedProductsColumns = (
   {
     accessorKey: "supplier_id",
     header: "Supplier ID",
-  },
-  {
-    accessorKey: "product_image",
-    header: "Image",
-    cell: ({ row }) => (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={row.original.product_image}
-        alt={row.original.product_name}
-        style={{ width: "50px", height: "50px" }}
-      />
-    ),
   },
   {
     accessorKey: "seller_sku",
