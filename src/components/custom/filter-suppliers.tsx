@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { SupplierItem } from "@/app/(protected)/inventory/page";
 import { cn } from "@/lib/utils";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import {
   Command,
@@ -10,25 +11,22 @@ import {
   CommandItem,
   CommandList,
 } from "../ui/command";
-import { SupplierItem } from "@/app/(protected)/inventory/page";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 interface FilterSuppliersProps {
   items: SupplierItem[];
   value: number | null;
   onValueChange: (value: number | null) => void;
+  className?: string;
 }
 
 export function FilterSuppliers({
   items,
   value,
   onValueChange,
+  className,
 }: FilterSuppliersProps) {
   const [open, setOpen] = useState<boolean>(false);
-
-  const queryClient = useQueryClient();
-
   if (items.length === 0) {
     console.log("No suppliers found");
     return null;
@@ -41,7 +39,7 @@ export function FilterSuppliers({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[250px] justify-between"
+          className={cn("w-full justify-between", className)}
         >
           {value !== null
             ? items.find((supplier) => supplier.value === value)?.name
@@ -49,7 +47,7 @@ export function FilterSuppliers({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[250px] p-0">
+      <PopoverContent className={cn("w-full p-0", className)}>
         <Command>
           <CommandInput placeholder="Search supplier..." className="h-9" />
           <CommandList>
@@ -74,7 +72,6 @@ export function FilterSuppliers({
                   key={supplier.value}
                   onSelect={() => {
                     onValueChange(supplier.value);
-                    queryClient.invalidateQueries({ queryKey: ["inventory"] });
                     setOpen(false);
                   }}
                 >

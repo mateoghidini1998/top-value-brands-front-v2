@@ -1,5 +1,6 @@
 "use client";
 
+import { FilterSuppliers } from "@/components/custom/filter-suppliers";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,13 +12,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
+import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
+import { Supplier } from "../../suppliers/interfaces/supplier.interface";
 import { EditProductProps } from "../actions/edit-product.action";
 import { useInventory } from "../hooks/useInventory";
 import { Product } from "../interfaces/product.interface";
-import { toast } from "sonner";
-import { useState } from "react";
+import { SupplierItem } from "../page";
 
 const editProductSchema = z.object({
   ASIN: z.string().min(1, "ASIN is required"),
@@ -36,7 +40,9 @@ interface EditProductFormProps {
 
 export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
   const { editProductMutation } = useInventory();
+  const { suppliersQuery } = useSuppliers();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
 
   const form = useForm<z.infer<typeof editProductSchema>>({
     resolver: zodResolver(editProductSchema),
@@ -70,6 +76,15 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
       setIsSubmitting(false);
     }
   }
+
+  if (!suppliersQuery.data) {
+    return <div>Loading...</div>;
+  }
+  const formatSuppliers = (suppliers: Supplier[]): SupplierItem[] =>
+    suppliers.map((supplier) => ({
+      name: supplier.supplier_name,
+      value: supplier.id,
+    }));
 
   return (
     <Form {...form}>
@@ -125,11 +140,19 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
             <FormItem>
               <FormLabel>Supplier ID</FormLabel>
               <FormControl>
-                <Input
+                {/* <Input
                   type="number"
                   {...field}
                   value={field.value ?? ""}
                   onChange={(e) => field.onChange(parseInt(e.target.value))}
+                /> */}
+                <FilterSuppliers
+                  items={formatSuppliers(suppliersQuery.data.data)}
+                  value={selectedSupplier}
+                  onValueChange={(supplier_id) => {
+                    setSelectedSupplier(supplier_id);
+                    field.onChange(supplier_id);
+                  }}
                 />
               </FormControl>
               <FormMessage />

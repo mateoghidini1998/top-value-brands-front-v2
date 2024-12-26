@@ -14,6 +14,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useInventory } from "../hooks/useInventory";
+import { FilterSuppliers } from "@/components/custom/filter-suppliers";
+import { useState } from "react";
+import { Supplier } from "../../suppliers/interfaces/supplier.interface";
+import { SupplierItem } from "../page";
+import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
 
 const formSchema = z.object({
   ASIN: z.string().min(1, "ASIN is required"),
@@ -25,7 +30,9 @@ const formSchema = z.object({
 type ProductFormValues = z.infer<typeof formSchema>;
 
 export function CreateProductForm() {
+  const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
   const { createProductMutation } = useInventory();
+  const { suppliersQuery } = useSuppliers();
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
@@ -36,6 +43,16 @@ export function CreateProductForm() {
       supplier_item_number: "",
     },
   });
+
+  if (!suppliersQuery.data) {
+    return <div>Loading...</div>;
+  }
+
+  const formatSuppliers = (suppliers: Supplier[]): SupplierItem[] =>
+    suppliers.map((supplier) => ({
+      name: supplier.supplier_name,
+      value: supplier.id,
+    }));
 
   async function onSubmit(data: ProductFormValues) {
     await createProductMutation.mutateAsync(data);
@@ -82,14 +99,17 @@ export function CreateProductForm() {
           control={form.control}
           name="supplier_id"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Supplier ID</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  placeholder="Enter supplier ID"
-                  {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
+            <FormItem className="flex flex-col items-start justify-center w-full">
+              <FormLabel>Supplier</FormLabel>
+              <FormControl className="w-full">
+                <FilterSuppliers
+                  className="w-full"
+                  items={formatSuppliers(suppliersQuery.data.data)}
+                  value={selectedSupplier}
+                  onValueChange={(supplier_id) => {
+                    setSelectedSupplier(supplier_id);
+                    field.onChange(supplier_id);
+                  }}
                 />
               </FormControl>
               <FormMessage />

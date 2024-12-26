@@ -62,6 +62,8 @@ export const useInventory = () => {
       page: 1,
       limit: 50,
     }));
+
+    queryClient.invalidateQueries({ queryKey: ["inventory"] });
   };
 
   const filterByKeyword = (keyword: string) => {
