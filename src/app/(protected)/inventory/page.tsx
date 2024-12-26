@@ -10,7 +10,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import debounce from "lodash.debounce";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 import { DataTable } from "../../../components/custom/data-table";
 import { useSuppliers } from "../suppliers/hooks/useSuppliers";
 import { Supplier } from "../suppliers/interfaces/supplier.interface";
@@ -19,8 +21,10 @@ import { CreateProductForm } from "./components/create-product-form";
 import { useInventory } from "./hooks/useInventory";
 
 export default function Page() {
-  const { inventoryQuery, filterBySupplier } = useInventory();
+  const { inventoryQuery, filterBySupplier, filterByKeyword } = useInventory();
   const { suppliersQuery } = useSuppliers();
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   if (inventoryQuery.isLoading || inventoryQuery.isFetching) {
     return <LoadingSpinner />;
@@ -43,10 +47,15 @@ export default function Page() {
     filterBySupplier(supplier_id);
   };
 
-  const handleFilterByKeyword = (keyword: string) => {
-    console.log(keyword);
-  };
+  // Debounce the filterByKeyword function to avoid too many API calls
+  const debouncedFilterByKeyword = debounce((value: string) => {
+    filterByKeyword(value);
+  }, 700);
 
+  const handleFilterByKeyword = (value: string) => {
+    setSearchTerm(value);
+    debouncedFilterByKeyword(value);
+  };
   return (
     <div>
       <div className="w-full flex items-center justify-between">
@@ -54,6 +63,7 @@ export default function Page() {
           <Input
             placeholder="Search product"
             className="w-[200px]"
+            value={searchTerm}
             onChange={(e) => handleFilterByKeyword(e.target.value)}
           />
           {/* Dropdown to filter all product by supplier */}

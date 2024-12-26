@@ -62,6 +62,10 @@ export const useInventory = () => {
     }));
   };
 
+  const filterByKeyword = (keyword: string) => {
+    setFilters((prev) => ({ ...prev, keyword }));
+  };
+
   const createProductMutation = useMutation({
     mutationFn: createProduct,
     onSuccess: () => {
@@ -102,6 +106,7 @@ export const useInventory = () => {
   return {
     inventoryQuery,
     filterBySupplier,
+    filterByKeyword,
     createProductMutation,
     editProductMutation,
     deleteProductMutation,
