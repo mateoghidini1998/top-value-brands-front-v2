@@ -69,5 +69,7 @@ export const useTrackedProducts = () => {
     filterByKeyword,
     changePage,
     changeLimit,
+    currentPage: filters.page,
+    itemsPerPage: filters.limit,
   };
 };

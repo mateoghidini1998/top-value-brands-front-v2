@@ -134,7 +134,7 @@ export default function Page() {
   };
 
   return (
-    <div>
+    <>
       <div className="w-full flex items-center justify-between">
         <div className="w-fit flex items-center justify-between gap-4">
           <Input
@@ -185,6 +185,7 @@ export default function Page() {
         dataLength={inventoryQuery.data.total}
       />
 
+      {/* Pagination */}
       <div className="flex items-center justify-between mt-6">
         <Pagination>
           <PaginationContent>
@@ -234,6 +235,6 @@ export default function Page() {
           </SelectContent>
         </Select>
       </div>
-    </div>
+    </>
   );
 }
