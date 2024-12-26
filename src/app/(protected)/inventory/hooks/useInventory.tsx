@@ -59,11 +59,21 @@ export const useInventory = () => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       supplier: supplier_id ? supplier_id.toString() : "",
+      page: 1,
+      limit: 50,
     }));
   };
 
   const filterByKeyword = (keyword: string) => {
-    setFilters((prev) => ({ ...prev, keyword }));
+    setFilters((prev) => ({ ...prev, keyword, page: 1, limit: 50 }));
+  };
+
+  const changePage = (page: number) => {
+    setFilters((prev) => ({ ...prev, page }));
+  };
+
+  const changeLimit = (limit: number) => {
+    setFilters((prev) => ({ ...prev, limit, page: 1 }));
   };
 
   const createProductMutation = useMutation({
@@ -107,6 +117,10 @@ export const useInventory = () => {
     inventoryQuery,
     filterBySupplier,
     filterByKeyword,
+    changePage,
+    changeLimit,
+    currentPage: filters.page,
+    itemsPerPage: filters.limit,
     createProductMutation,
     editProductMutation,
     deleteProductMutation,
