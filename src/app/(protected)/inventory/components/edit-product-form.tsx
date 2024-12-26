@@ -137,16 +137,11 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
           control={form.control}
           name="supplier_id"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col items-start justify-center gap-1">
               <FormLabel>Supplier ID</FormLabel>
-              <FormControl>
-                {/* <Input
-                  type="number"
-                  {...field}
-                  value={field.value ?? ""}
-                  onChange={(e) => field.onChange(parseInt(e.target.value))}
-                /> */}
+              <FormControl className="">
                 <FilterSuppliers
+                  className="w-full"
                   items={formatSuppliers(suppliersQuery.data.data)}
                   value={selectedSupplier}
                   onValueChange={(supplier_id) => {

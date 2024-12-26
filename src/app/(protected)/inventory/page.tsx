@@ -185,7 +185,7 @@ export default function Page() {
         dataLength={inventoryQuery.data.total}
       />
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mt-6">
         <Pagination>
           <PaginationContent>
             <PaginationItem className="cursor-pointer">

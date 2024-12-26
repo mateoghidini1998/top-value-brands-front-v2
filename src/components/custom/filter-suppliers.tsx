@@ -24,7 +24,7 @@ export function FilterSuppliers({
   items,
   value,
   onValueChange,
-  className,
+  className = "w-[250px]",
 }: FilterSuppliersProps) {
   const [open, setOpen] = useState<boolean>(false);
   if (items.length === 0) {

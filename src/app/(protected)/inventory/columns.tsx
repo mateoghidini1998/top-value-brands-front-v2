@@ -43,10 +43,10 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: "pack_type",
     header: "Pack Type",
   },
-  {
-    accessorKey: "upc",
-    header: "UPC",
-  },
+  // {
+  //   accessorKey: "upc",
+  //   header: "UPC",
+  // },
   {
     accessorKey: "FBA_available_inventory",
     header: "FBA Available Inventory",
@@ -68,11 +68,11 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: "product_cost",
     header: "Product Cost",
   },
-  {
-    accessorKey: "is_active",
-    header: "Active",
-    cell: ({ row }) => <span>{row.original.is_active ? "Yes " : "No"}</span>,
-  },
+  // {
+  //   accessorKey: "is_active",
+  //   header: "Active",
+  //   cell: ({ row }) => <span>{row.original.is_active ? "Yes " : "No"}</span>,
+  // },
   {
     accessorKey: "updatedAt",
     header: "Last Update",

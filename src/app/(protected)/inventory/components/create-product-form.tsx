@@ -99,7 +99,7 @@ export function CreateProductForm() {
           control={form.control}
           name="supplier_id"
           render={({ field }) => (
-            <FormItem className="flex flex-col items-start justify-center w-full">
+            <FormItem className="flex flex-col items-start justify-center w-full gap-1">
               <FormLabel>Supplier</FormLabel>
               <FormControl className="w-full">
                 <FilterSuppliers
