@@ -36,6 +36,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+type PaginationRange = number | "...";
+export interface SupplierItem {
+  value: number;
+  name: string;
+}
+
 export default function Page() {
   const {
     inventoryQuery,
@@ -49,72 +55,80 @@ export default function Page() {
   const { suppliersQuery } = useSuppliers();
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
 
-  /**
-   * Format suppliers for dropdown
-   */
-  const formatSuppliers = (suppliers: Supplier[]) => {
-    return suppliers.map((supplier) => ({
-      name: supplier.supplier_name,
-      value: supplier.id,
-    }));
-  };
+  // Total pages calculation
+  const totalPages = useMemo(() => {
+    if (!inventoryQuery.data) return 1; // Valor por defecto si no hay datos
+    return Math.ceil(inventoryQuery.data.total / itemsPerPage);
+  }, [inventoryQuery.data, itemsPerPage]);
 
-  const handleFilterBySupplier = (supplier_id: number | null) => {
-    filterBySupplier(supplier_id);
-  };
-
-  // Debounce the filterByKeyword function to avoid too many API calls
-  const debouncedFilterByKeyword = useCallback(
-    debounce((value: string) => {
-      filterByKeyword(value);
-    }, 600),
-    []
-  );
-  const handleFilterByKeyword = (value: string) => {
-    setSearchTerm(value);
-    debouncedFilterByKeyword(value);
-  };
-
-  const totalPages = Math.ceil(inventoryQuery.data?.total / itemsPerPage);
-
-  const paginationRange = useMemo(() => {
-    const delta = 2; // Number of pages to show on each side of the current page
-    const range = [];
-    const rangeWithDots = [];
-    let l;
+  // Pagination range
+  const paginationRange: PaginationRange[] = useMemo(() => {
+    const delta = 2; // Número de páginas a mostrar a cada lado de la página actual
+    const range: number[] = [];
+    const rangeWithDots: PaginationRange[] = [];
+    let lastNumber: number | null = null;
 
     for (let i = 1; i <= totalPages; i++) {
       if (
-        i === 1 ||
-        i === totalPages ||
-        (i >= currentPage - delta && i <= currentPage + delta)
+        i === 1 || // Primera página siempre
+        i === totalPages || // Última página siempre
+        (i >= currentPage - delta && i <= currentPage + delta) // Páginas cercanas a la actual
       ) {
         range.push(i);
       }
     }
 
-    for (const i of range) {
-      if (l) {
-        if (i - l === 2) {
-          rangeWithDots.push(l + 1);
-        } else if (i - l !== 1) {
+    for (const page of range) {
+      if (lastNumber !== null) {
+        if (page - lastNumber === 2) {
+          rangeWithDots.push(lastNumber + 1); // Página intermedia
+        } else if (page - lastNumber > 1) {
           rangeWithDots.push("...");
         }
       }
-      rangeWithDots.push(i);
-      l = i;
+      rangeWithDots.push(page);
+      lastNumber = page;
     }
 
     return rangeWithDots;
   }, [currentPage, totalPages]);
 
+  const debouncedFilterByKeyword = useMemo(
+    () =>
+      debounce((value: string) => {
+        filterByKeyword(value);
+      }, 600),
+    [filterByKeyword]
+  );
+
+  const handleFilterByKeyword = useCallback(
+    (value: string) => {
+      setSearchTerm(value);
+      debouncedFilterByKeyword(value);
+    },
+    [debouncedFilterByKeyword]
+  );
+
+  // Render condicional después de los hooks
   if (inventoryQuery.isLoading || inventoryQuery.isFetching) {
     return <LoadingSpinner />;
   }
+
   if (!inventoryQuery.data || !suppliersQuery.data) {
     return <div>Error</div>;
   }
+
+  const formatSuppliers = (suppliers: Supplier[]): SupplierItem[] =>
+    suppliers.map((supplier) => ({
+      name: supplier.supplier_name,
+      value: supplier.id,
+    }));
+
+  const handleFilterBySupplier = (supplier_id: number | null) => {
+    filterBySupplier(supplier_id);
+  };
 
   return (
     <div>
@@ -126,12 +140,13 @@ export default function Page() {
             value={searchTerm}
             onChange={(e) => handleFilterByKeyword(e.target.value)}
           />
-          {/* Dropdown to filter all product by supplier */}
           <FilterSuppliers
             items={formatSuppliers(suppliersQuery.data.data)}
-            onValueChange={(supplier_id: number | null) =>
-              handleFilterBySupplier(supplier_id)
-            }
+            value={selectedSupplier}
+            onValueChange={(supplier_id) => {
+              setSelectedSupplier(supplier_id);
+              handleFilterBySupplier(supplier_id);
+            }}
           />
         </div>
 
@@ -157,7 +172,6 @@ export default function Page() {
         dataLength={inventoryQuery.data.total}
       />
 
-      {/* Pagination */}
       <div className="flex items-center justify-between">
         <Pagination>
           <PaginationContent>
