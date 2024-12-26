@@ -10,15 +10,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import debounce from "lodash.debounce";
-import { Plus } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
-import { DataTable } from "../../../components/custom/data-table";
-import { useSuppliers } from "../suppliers/hooks/useSuppliers";
-import { Supplier } from "../suppliers/interfaces/supplier.interface";
-import { columns } from "./columns";
-import { CreateProductForm } from "./components/create-product-form";
-import { useInventory } from "./hooks/useInventory";
 import {
   Pagination,
   PaginationContent,
@@ -35,6 +26,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Plus } from "lucide-react";
+import { useMemo, useState } from "react";
+import { DataTable } from "../../../components/custom/data-table";
+import { useSuppliers } from "../suppliers/hooks/useSuppliers";
+import { Supplier } from "../suppliers/interfaces/supplier.interface";
+import { columns } from "./columns";
+import { CreateProductForm } from "./components/create-product-form";
+import { useInventory } from "./hooks/useInventory";
 
 type PaginationRange = number | "...";
 export interface SupplierItem {
@@ -95,21 +94,25 @@ export default function Page() {
     return rangeWithDots;
   }, [currentPage, totalPages]);
 
-  const debouncedFilterByKeyword = useMemo(
-    () =>
-      debounce((value: string) => {
-        filterByKeyword(value);
-      }, 600),
-    [filterByKeyword]
-  );
+  // const debouncedFilterByKeyword = useMemo(
+  //   () =>
+  //     debounce((value: string) => {
+  //       filterByKeyword(value);
+  //     }, 1500),
+  //   [filterByKeyword]
+  // );
 
-  const handleFilterByKeyword = useCallback(
-    (value: string) => {
-      setSearchTerm(value);
-      debouncedFilterByKeyword(value);
-    },
-    [debouncedFilterByKeyword]
-  );
+  // const handleFilterByKeyword = useCallback(
+  //   (value: string) => {
+  //     setSearchTerm(value);
+  //     debouncedFilterByKeyword(value);
+  //   },
+  //   [debouncedFilterByKeyword]
+  // );
+
+  const handleSearch = () => {
+    filterByKeyword(searchTerm);
+  };
 
   // Render condicional después de los hooks
   if (inventoryQuery.isLoading || inventoryQuery.isFetching) {
@@ -135,11 +138,21 @@ export default function Page() {
       <div className="w-full flex items-center justify-between">
         <div className="w-fit flex items-center justify-between gap-4">
           <Input
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
             placeholder="Search product"
             className="w-[200px]"
             value={searchTerm}
-            onChange={(e) => handleFilterByKeyword(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+            }}
           />
+          <Button type="submit" onClick={handleSearch}>
+            {searchTerm !== "" ? "Search" : "Reset"}
+          </Button>
           <FilterSuppliers
             items={formatSuppliers(suppliersQuery.data.data)}
             value={selectedSupplier}
@@ -175,7 +188,7 @@ export default function Page() {
       <div className="flex items-center justify-between">
         <Pagination>
           <PaginationContent>
-            <PaginationItem>
+            <PaginationItem className="cursor-pointer">
               {currentPage > 1 ? (
                 <PaginationPrevious
                   onClick={() => changePage(Math.max(1, currentPage - 1))}
@@ -185,7 +198,7 @@ export default function Page() {
               )}
             </PaginationItem>
             {paginationRange.map((pageNumber, index) => (
-              <PaginationItem key={index}>
+              <PaginationItem key={index} className="cursor-pointer">
                 {pageNumber === "..." ? (
                   <PaginationEllipsis />
                 ) : (
@@ -198,7 +211,7 @@ export default function Page() {
                 )}
               </PaginationItem>
             ))}
-            <PaginationItem>
+            <PaginationItem className="cursor-pointer">
               <PaginationNext
                 onClick={() =>
                   changePage(Math.min(totalPages, currentPage + 1))

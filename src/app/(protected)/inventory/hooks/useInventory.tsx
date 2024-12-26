@@ -66,6 +66,7 @@ export const useInventory = () => {
 
   const filterByKeyword = (keyword: string) => {
     setFilters((prev) => ({ ...prev, keyword, page: 1, limit: 50 }));
+    queryClient.invalidateQueries({ queryKey: ["inventory"] });
   };
 
   const changePage = (page: number) => {

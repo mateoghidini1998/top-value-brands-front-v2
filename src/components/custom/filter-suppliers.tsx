@@ -12,6 +12,7 @@ import {
 } from "../ui/command";
 import { SupplierItem } from "@/app/(protected)/inventory/page";
 import { Check, ChevronsUpDown } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface FilterSuppliersProps {
   items: SupplierItem[];
@@ -26,6 +27,8 @@ export function FilterSuppliers({
 }: FilterSuppliersProps) {
   const [open, setOpen] = useState<boolean>(false);
 
+  const queryClient = useQueryClient();
+
   if (items.length === 0) {
     console.log("No suppliers found");
     return null;
@@ -38,7 +41,7 @@ export function FilterSuppliers({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-[250px] justify-between"
         >
           {value !== null
             ? items.find((supplier) => supplier.value === value)?.name
@@ -46,7 +49,7 @@ export function FilterSuppliers({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[250px] p-0">
         <Command>
           <CommandInput placeholder="Search supplier..." className="h-9" />
           <CommandList>
@@ -71,6 +74,7 @@ export function FilterSuppliers({
                   key={supplier.value}
                   onSelect={() => {
                     onValueChange(supplier.value);
+                    queryClient.invalidateQueries({ queryKey: ["inventory"] });
                     setOpen(false);
                   }}
                 >
