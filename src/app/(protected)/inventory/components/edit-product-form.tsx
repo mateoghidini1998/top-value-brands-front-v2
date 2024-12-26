@@ -16,6 +16,8 @@ import * as z from "zod";
 import { EditProductProps } from "../actions/edit-product.action";
 import { useInventory } from "../hooks/useInventory";
 import { Product } from "../interfaces/product.interface";
+import { toast } from "sonner";
+import { useState } from "react";
 
 const editProductSchema = z.object({
   ASIN: z.string().min(1, "ASIN is required"),
@@ -34,7 +36,7 @@ interface EditProductFormProps {
 
 export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
   const { editProductMutation } = useInventory();
-  // const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof editProductSchema>>({
     resolver: zodResolver(editProductSchema),
@@ -52,7 +54,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
   });
 
   async function onSubmit(values: z.infer<typeof editProductSchema>) {
-    // setIsSubmitting(true);
+    setIsSubmitting(true);
     try {
       const editData: EditProductProps = {
         id: product.id,
@@ -60,10 +62,12 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
       };
       await editProductMutation.mutateAsync(editData);
       onSuccess();
+      toast.success("Product edited successfully");
     } catch (error) {
       console.error("Failed to edit product:", error);
+      toast.error("Failed to edit product");
     } finally {
-      // setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   }
 
@@ -181,10 +185,10 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
             </FormItem>
           )}
         />
-        {/* <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Saving..." : "Save Changes"}
-        </Button> */}
-        <Button type="submit">Save Changes</Button>
+        </Button>
+        {/* <Button type="submit">Save Changes</Button> */}
       </form>
     </Form>
   );

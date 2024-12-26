@@ -25,7 +25,6 @@ export default function Page() {
   if (inventoryQuery.isLoading || inventoryQuery.isFetching) {
     return <LoadingSpinner />;
   }
-
   if (!inventoryQuery.data || !suppliersQuery.data) {
     return <div>Error</div>;
   }
