@@ -1,5 +1,15 @@
 "use client";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,6 +30,7 @@ import { useState } from "react";
 import { useInventory } from "../hooks/useInventory";
 import { Product } from "../interfaces/product.interface";
 import { EditProductForm } from "./edit-product-form";
+import { toast } from "sonner";
 
 interface ActionsCellProps {
   row: Product;
@@ -28,13 +39,24 @@ interface ActionsCellProps {
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const { deleteProductMutation } = useInventory();
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
   const handleEditSuccess = () => {
     setIsEditDialogOpen(false);
   };
 
-  const handleDeleteProduct = async (product: Product) => {
-    await deleteProductMutation.mutateAsync(product);
+  const handleDeleteProduct = async () => {
+    if (productToDelete) {
+      try {
+        await deleteProductMutation.mutateAsync(productToDelete).then(() => {
+          toast.success("Product deleted successfully");
+        });
+        setProductToDelete(null);
+      } catch (error) {
+        console.error("Failed to delete product:", error);
+        toast.error("Failed to delete product");
+      }
+    }
   };
 
   return (
@@ -57,7 +79,7 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
           <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
             Edit Product
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleDeleteProduct(row)}>
+          <DropdownMenuItem onClick={() => setProductToDelete(row)}>
             Delete Product
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -71,6 +93,28 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
           <EditProductForm product={row} onSuccess={handleEditSuccess} />
         </DialogContent>
       </Dialog>
+      <AlertDialog
+        open={!!productToDelete}
+        onOpenChange={(open) => !open && setProductToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Are you sure you want to delete this product?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              product from your inventory.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteProduct}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };
