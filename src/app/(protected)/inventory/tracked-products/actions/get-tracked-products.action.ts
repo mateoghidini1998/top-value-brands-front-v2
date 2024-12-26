@@ -1,20 +1,18 @@
 import { sleep } from "@/helpers";
 import { GetTrackedProductsResponse } from "../interfaces/tracked-product.interface";
+import { apiRequest } from "@/helpers/http.adapter";
 
-export const getTrackedProducts =
-  async (): Promise<GetTrackedProductsResponse> => {
-    await sleep(100);
+export interface GetTrackedProductsProps {
+  page?: number;
+  limit?: number;
+  keyword?: string;
+  orderBy?: string;
+  orderWay?: string;
+}
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/trackedproducts`
-    );
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.errors
-          ? errorData.errors[0].msg
-          : "Network response was not ok"
-      );
-    }
-    return response.json();
-  };
+export const getTrackedProducts = async (props: GetTrackedProductsProps) => {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/trackedproducts?orderBy=${props.orderBy}&orderWay=${props.orderWay}&page=${props.page}&limit=${props.limit}&keyword=${props.keyword}`;
+  return await sleep(1000).then(() =>
+    apiRequest<GetTrackedProductsResponse>(url)
+  );
+};
