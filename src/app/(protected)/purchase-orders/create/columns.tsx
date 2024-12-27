@@ -241,12 +241,12 @@ export const getAddedProductsColumns = (
     header: "ASIN",
   },
   {
-    accessorKey: "supplier_name",
+    accessorKey: "Supplier",
     header: "supplier_name",
   },
   {
     accessorKey: "quantity",
-    header: "quantity",
+    header: "Quantity",
     cell: ({ row }) => {
       return (
         <AddQuantity
@@ -259,10 +259,8 @@ export const getAddedProductsColumns = (
   },
   {
     accessorKey: "product_cost",
-    header: "product_cost",
+    header: "Product Cost",
     cell: ({ row }) => {
-      console.log(row.original);
-
       return (
         <AddProductCost
           productCost={row.original.product_cost}
@@ -274,14 +272,19 @@ export const getAddedProductsColumns = (
   },
   {
     accessorKey: "total_amount",
-    header: "total_amount",
+    header: "Total Amount",
+    cell: ({ row }) => {
+      const product_cost = row.original.product_cost;
+      const quantity = row.original.quantity;
+
+      return <span>${(product_cost * quantity).toFixed(2)}</span>;
+    },
   },
   {
     accessorKey: "units_sold",
-    header: "units_sold",
+    header: "Units Sold",
   },
   {
-    accessorKey: "actions",
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
