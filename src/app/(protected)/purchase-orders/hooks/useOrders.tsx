@@ -1,16 +1,79 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createOrder } from "../actions/create-order.action";
 import { getOrders } from "../actions/get-orders.action";
+import { useState } from "react";
 
 export const useOrders = () => {
   // Obtén la instancia de QueryClient proporcionada por el contexto de React Query
   const queryClient = useQueryClient();
 
-  const ordersQuery = useQuery({
-    queryKey: ["orders"],
-    queryFn: () => getOrders(),
-    staleTime: 1000 * 60 * 15, // -> 15m
+  const [filters, setFilters] = useState({
+    page: 1,
+    limit: 50,
+    keyword: "",
+    supplier: "",
+    orderBy: "",
+    orderWay: "",
   });
+
+  const fetchOrders = ({
+    page = 1,
+    limit = 50,
+    keyword = "",
+    supplier = "",
+    orderBy = "",
+    orderWay = "",
+  }: {
+    page?: number;
+    limit?: number;
+    keyword?: string;
+    supplier?: string;
+    orderBy?: string;
+    orderWay?: string;
+  }) => getOrders({ page, limit, keyword, supplier, orderBy, orderWay });
+
+  const ordersQuery = useQuery({
+    queryKey: ["orders", filters],
+    queryFn: ({ queryKey }) => {
+      const [, params] = queryKey as [
+        string,
+        {
+          page: number;
+          limit: number;
+          keyword: string;
+          supplier: string;
+          orderBy: string;
+          orderWay: string;
+        }
+      ];
+      return fetchOrders(params);
+    },
+    staleTime: 1000 * 60 * 10, // -> 10m
+  });
+
+  const filterBySupplier = (supplier_id: number | null) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      supplier: supplier_id ? supplier_id.toString() : "",
+      page: 1,
+      limit: 50,
+    }));
+
+    queryClient.invalidateQueries({ queryKey: ["orders"] });
+  };
+
+  const filterByKeyword = (keyword: string) => {
+    setFilters((prev) => ({ ...prev, keyword, page: 1, limit: 50 }));
+    queryClient.invalidateQueries({ queryKey: ["orders"] });
+  };
+
+  const changePage = (page: number) => {
+    setFilters((prev) => ({ ...prev, page }));
+  };
+
+  const changeLimit = (limit: number) => {
+    setFilters((prev) => ({ ...prev, limit, page: 1 }));
+  };
 
   const createOrderMutation = useMutation({
     mutationFn: createOrder,
@@ -23,5 +86,11 @@ export const useOrders = () => {
   return {
     ordersQuery,
     createOrderMutation,
+    filterBySupplier,
+    filterByKeyword,
+    changePage,
+    changeLimit,
+    currentPage: filters.page,
+    itemsPerPage: filters.limit,
   };
 };
