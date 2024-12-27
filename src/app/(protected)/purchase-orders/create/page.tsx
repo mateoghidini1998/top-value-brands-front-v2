@@ -222,7 +222,10 @@ export default function Page() {
       </div>
 
       {/* 4. Create order summary */}
-      <CreateOrderSummary productsAdded={productsAdded} />
+      <CreateOrderSummary
+        productsAdded={productsAdded}
+        setProductsAdded={setProductsAdded}
+      />
     </section>
   );
 }

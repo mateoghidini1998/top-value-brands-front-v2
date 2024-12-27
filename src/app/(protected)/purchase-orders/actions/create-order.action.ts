@@ -5,6 +5,7 @@ interface CreateOrderRequest {
   supplier_id: number;
   purchase_order_status_id: number;
   products: CreateOrderProduct[];
+  notes: string;
 }
 
 interface CreateOrderProduct {

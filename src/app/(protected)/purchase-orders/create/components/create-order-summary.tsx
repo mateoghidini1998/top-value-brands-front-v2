@@ -3,15 +3,20 @@ import { useOrders } from "../../hooks/useOrders";
 import { ProductInOrder } from "../interface/product-added.interface";
 import generateId from "../utils/generate-po-id";
 import { LoaderCircle } from "lucide-react";
+import { useState } from "react";
 
 interface CreateOrderSummaryProps {
   productsAdded: ProductInOrder[];
+  setProductsAdded: React.Dispatch<React.SetStateAction<ProductInOrder[]>>;
 }
 
 export default function CreateOrderSummary({
   productsAdded,
+  setProductsAdded,
 }: CreateOrderSummaryProps) {
   const { createOrderMutation } = useOrders();
+
+  const [orderNotes, setOrderNotes] = useState<string>("");
 
   const handleCreateOrder = async (productsAdded: ProductInOrder[]) => {
     if (productsAdded.length === 0) {
@@ -19,23 +24,37 @@ export default function CreateOrderSummary({
       return;
     }
 
-    await createOrderMutation.mutateAsync({
-      products: productsAdded.map((product) => {
-        return {
-          product_id: product.product_id,
-          quantity: product.quantity,
-          product_cost: product.product_cost,
-        };
-      }),
-      order_number: generateId(productsAdded[0].supplier_name),
-      supplier_id: parseInt(productsAdded[0].supplier_id),
-      purchase_order_status_id: 1,
-    });
+    await createOrderMutation
+      .mutateAsync({
+        products: productsAdded.map((product) => {
+          return {
+            product_id: product.product_id,
+            quantity: product.quantity,
+            product_cost: product.product_cost,
+          };
+        }),
+        order_number: generateId(productsAdded[0].supplier_name),
+        supplier_id: parseInt(productsAdded[0].supplier_id),
+        purchase_order_status_id: 1,
+        notes: orderNotes,
+      })
+      .then(() => {
+        localStorage.removeItem("productsAdded");
+        setOrderNotes("");
+        setProductsAdded([]);
+        return toast.success("Order created successfully");
+      })
+      .catch((error) => {
+        console.error("Error creating order:", error);
+        return toast.error("Error creating order");
+      });
   };
 
   const handleCleanOrder = () => {
     localStorage.removeItem("productsAdded");
-    window.location.reload();
+    setOrderNotes("");
+    setProductsAdded([]);
+    toast.success("Order cleaned");
   };
 
   return (
@@ -68,7 +87,8 @@ export default function CreateOrderSummary({
           <div className="flex flex-col gap-2 min-w-[300px] w-auto">
             <p>Notes</p>
             <textarea
-              // onChange={(e) => handleNotesChange(e)}
+              value={orderNotes}
+              onChange={(e) => setOrderNotes(e.target.value)}
               className="dark:bg-dark w-full h-[100px] border-solid border-[1px] rounded-lg border-gray-300 p-4 dark:text-white"
               placeholder="Order Notes"
             />
