@@ -1,12 +1,12 @@
-import { DogIcon } from "lucide-react";
+import { SquarePlus } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
+import { toast } from "sonner";
+import { TrackedProduct } from "../../../inventory/tracked-products/interfaces/tracked-product.interface";
 import {
   LocalStorageProduct,
   ProductInOrder,
 } from "../interface/product-added.interface";
-import { TrackedProduct } from "../../../inventory/tracked-products/interfaces/tracked-product.interface";
 import { formatTrackedProduct } from "../utils/format-tracked-product";
-import { toast } from "sonner";
 
 interface ActionsCellRow {
   trackedProduct: TrackedProduct;
@@ -84,7 +84,9 @@ const AddProduct = ({ trackedProduct, setData }: ActionsCellRow) => {
     });
   };
 
-  return <DogIcon className="cursor-pointer" onClick={handleAddProduct} />;
+  return (
+    <SquarePlus className="w-5 h-5 cursor-pointer" onClick={handleAddProduct} />
+  );
 };
 
 export default AddProduct;

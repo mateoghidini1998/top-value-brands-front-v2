@@ -1,4 +1,4 @@
-import { DogIcon } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 import { ProductInOrder } from "../interface/product-added.interface";
 
@@ -32,7 +32,9 @@ const RemoveProduct = ({ productInOrder, setData }: ActionsCellRow) => {
     });
   };
 
-  return <DogIcon className="cursor-pointer" onClick={handleRemoveProduct} />;
+  return (
+    <Trash2 className="w-5 h-5 cursor-pointer" onClick={handleRemoveProduct} />
+  );
 };
 
 export default RemoveProduct;
