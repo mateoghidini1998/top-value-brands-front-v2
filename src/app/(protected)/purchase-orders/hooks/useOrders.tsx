@@ -4,6 +4,7 @@ import { getOrders } from "../actions/get-orders.action";
 import { useState } from "react";
 import { toast } from "sonner";
 import { deleteOrder } from "../actions/delete-order.action";
+import { downloadPDF } from "../actions/download-pdf.action";
 
 export const useOrders = () => {
   // Obtén la instancia de QueryClient proporcionada por el contexto de React Query
@@ -106,5 +107,6 @@ export const useOrders = () => {
     currentPage: filters.page,
     itemsPerPage: filters.limit,
     deleteOrderMutation,
+    downloadPDF,
   };
 };

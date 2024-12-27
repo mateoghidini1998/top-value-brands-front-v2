@@ -12,11 +12,22 @@ class HttpError extends Error {
 
 export const handleResponse = async <T>(response: Response): Promise<T> => {
   if (!response.ok) {
-    const errorData = await response.json();
-    const errorMessage = errorData.msg || "An unexpected error occurred";
-    throw new HttpError(errorMessage, response.status);
+    try {
+      const errorData = await response.json();
+      const errorMessage = errorData.msg || "An unexpected error occurred";
+      throw new HttpError(errorMessage, response.status);
+    } catch {
+      throw new HttpError(response.statusText, response.status);
+    }
   }
-  return response.json();
+
+  // Determinar si la respuesta es JSON o un Blob (ej., PDF)
+  const contentType = response.headers.get("Content-Type") || "";
+  if (contentType.includes("application/json")) {
+    return response.json() as Promise<T>;
+  } else {
+    return response.blob() as unknown as T;
+  }
 };
 
 export const apiRequest = async <T>(

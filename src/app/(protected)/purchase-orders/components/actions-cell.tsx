@@ -36,7 +36,7 @@ interface ActionsCellProps {
 
 const ActionsCell = ({ orderId }: ActionsCellProps) => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const { deleteOrderMutation } = useOrders();
+  const { deleteOrderMutation, downloadPDF } = useOrders();
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
 
   // const handleEditSuccess = () => {
@@ -54,6 +54,17 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
         console.error("Failed to delete order:", error);
         toast.error("Failed to delete order");
       }
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    try {
+      await downloadPDF({ orderId }).then(() => {
+        toast.success("PDF downloaded successfully");
+      });
+    } catch (error) {
+      console.error("Failed to download PDF:", error);
+      toast.error("Failed to download PDF");
     }
   };
 
@@ -79,6 +90,9 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOrderToDelete(orderId)}>
             Delete Order
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleDownloadPDF}>
+            Download PDF
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
