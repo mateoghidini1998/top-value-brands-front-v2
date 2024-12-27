@@ -1,6 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Order } from "./actions/get-orders.action";
 import { Badge } from "@/components/ui/badge";
+import ActionsCell from "./components/actions-cell";
+import { Order } from "./interfaces/orders.interface";
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -74,5 +75,13 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "actions",
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
+    cell: ({ row }) => {
+      const orderId: number = row.original.id;
+      return (
+        <div className="text-right">
+          <ActionsCell orderId={orderId} />
+        </div>
+      );
+    },
   },
 ];

@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createOrder } from "../actions/create-order.action";
 import { getOrders } from "../actions/get-orders.action";
 import { useState } from "react";
+import { toast } from "sonner";
+import { deleteOrder } from "../actions/delete-order.action";
 
 export const useOrders = () => {
   // Obtén la instancia de QueryClient proporcionada por el contexto de React Query
@@ -83,6 +85,17 @@ export const useOrders = () => {
     },
   });
 
+  const deleteOrderMutation = useMutation({
+    mutationFn: (orderId: number) => deleteOrder({ orderId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+    onError(error: Error) {
+      console.error(error);
+      toast.error(error.message);
+    },
+  });
+
   return {
     ordersQuery,
     createOrderMutation,
@@ -92,5 +105,6 @@ export const useOrders = () => {
     changeLimit,
     currentPage: filters.page,
     itemsPerPage: filters.limit,
+    deleteOrderMutation,
   };
 };
