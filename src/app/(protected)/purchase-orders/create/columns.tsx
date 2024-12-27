@@ -10,6 +10,7 @@ import { ProductTitle } from "@/components/custom/product-title";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/helpers/format-date";
 import AddQuantity from "./components/add-quantity";
+import AddProductCost from "./components/add-product-cost";
 
 export const getTrackedProductsColumns = (
   setProductsAdded: Dispatch<SetStateAction<ProductInOrder[]>>
@@ -259,6 +260,17 @@ export const getAddedProductsColumns = (
   {
     accessorKey: "product_cost",
     header: "product_cost",
+    cell: ({ row }) => {
+      console.log(row.original);
+
+      return (
+        <AddProductCost
+          productCost={row.original.product_cost}
+          setProductsAdded={setProductsAdded}
+          productId={row.original.product_id}
+        />
+      );
+    },
   },
   {
     accessorKey: "total_amount",

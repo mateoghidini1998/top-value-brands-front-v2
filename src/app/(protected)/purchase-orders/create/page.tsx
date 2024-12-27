@@ -134,7 +134,7 @@ export default function Page() {
         return {
           product_id: product.product_id,
           quantity: product.quantity,
-          unit_price: 10,
+          unit_price: product.product_cost,
         };
       }),
       order_number: "123456",
@@ -142,8 +142,6 @@ export default function Page() {
       purchase_order_status_id: 1,
     });
   };
-
-  console.log(productsAdded);
 
   return (
     <>

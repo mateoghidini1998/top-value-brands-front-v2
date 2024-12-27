@@ -7,20 +7,20 @@ import {
   ProductInOrder,
 } from "../interface/product-added.interface";
 
-interface AddQuantityProps {
+interface AddProductCostProps {
   productId: number;
   setProductsAdded: React.Dispatch<React.SetStateAction<ProductInOrder[]>>;
-  productQuantity: number;
+  productCost: number;
 }
 
-const AddQuantity = ({
+const AddProductCost = ({
   productId,
   setProductsAdded,
-  productQuantity,
-}: AddQuantityProps) => {
-  const [quantityAdded, setQuantityAdded] = useState<number>(productQuantity);
+  productCost,
+}: AddProductCostProps) => {
+  const [costAdded, setCostAdded] = useState<number>(productCost);
 
-  const handleAddQuantityToLocalStorage = () => {
+  const handleAddCostToLocalStorage = () => {
     const productsAdded: LocalStorageProduct[] = JSON.parse(
       localStorage.getItem("productsAdded") ?? "[]"
     );
@@ -30,49 +30,49 @@ const AddQuantity = ({
     );
 
     if (existingProductIndex !== -1) {
-      // Actualizar cantidad si ya existe
-      productsAdded[existingProductIndex].quantity = quantityAdded;
+      // Actualizar costo si ya existe
+      productsAdded[existingProductIndex].cost = costAdded;
     } else {
       // Agregar nuevo producto si no existe
       productsAdded.push({
         product_id: productId,
-        quantity: quantityAdded,
-        cost: 1,
+        quantity: 1,
+        cost: costAdded,
       });
     }
 
     localStorage.setItem("productsAdded", JSON.stringify(productsAdded));
 
     // Actualizar el estado de los productos agregados
-    setProductsAdded((prev) => {
+    setProductsAdded((prev): ProductInOrder[] => {
       return prev.map((p) => {
         const localProduct = productsAdded.find(
-          (p: LocalStorageProduct) => p.product_id === productId
+          (lp: LocalStorageProduct) => lp.product_id === productId
         );
 
         return p.product_id === productId
-          ? { ...p, quantity: localProduct?.quantity ?? 0 }
+          ? { ...p, product_cost: localProduct?.cost ?? 0 }
           : p;
       });
     });
   };
 
   const handleBlur = () => {
-    // Guardar la cantidad en localStorage al salir del campo de entrada
-    handleAddQuantityToLocalStorage();
+    // Guardar el costo en localStorage al salir del campo de entrada
+    handleAddCostToLocalStorage();
   };
 
   return (
     <Input
       type="number"
-      placeholder="Quantity"
+      placeholder="Cost"
       className="w-full"
-      value={quantityAdded}
-      onChange={(e) => setQuantityAdded(Number(e.target.value))}
+      value={costAdded}
+      onChange={(e) => setCostAdded(Number(e.target.value))}
       onBlur={handleBlur} // Guardar valores cuando el usuario pierde el foco
       min={0}
     />
   );
 };
 
-export default AddQuantity;
+export default AddProductCost;
