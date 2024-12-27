@@ -8,11 +8,27 @@ interface ActionsCellRow {
 }
 
 const RemoveProduct = ({ productInOrder, setData }: ActionsCellRow) => {
-  // console.log(productInOrder);
-
   const handleRemoveProduct = () => {
     setData((prev: ProductInOrder[]) => {
-      return prev.filter((product) => product.id !== productInOrder.id);
+      // Filter out the product to remove from the local state
+      const updatedState = prev.filter(
+        (product) => product.product_id !== productInOrder.product_id
+      );
+
+      // Update the localStorage to remove the product
+      const storedProducts = JSON.parse(
+        localStorage.getItem("productsAdded") ?? "[]"
+      );
+      const updatedLocalStorage = storedProducts.filter(
+        (product: { product_id: number }) =>
+          product.product_id !== productInOrder.product_id
+      );
+      localStorage.setItem(
+        "productsAdded",
+        JSON.stringify(updatedLocalStorage)
+      );
+
+      return updatedState;
     });
   };
 
