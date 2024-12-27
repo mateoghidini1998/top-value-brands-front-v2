@@ -156,3 +156,9 @@ export interface TrackedProductsOfTheOrder {
   product_image: string;
   product_cost: string;
 }
+
+export interface CustomTrackedProduct extends TrackedProductsOfTheOrder {
+  sellable_quantity: number;
+  total_amount: number;
+  quantity_purchased: number;
+}

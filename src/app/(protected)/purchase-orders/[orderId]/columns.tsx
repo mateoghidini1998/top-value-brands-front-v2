@@ -4,8 +4,17 @@ import { ProductTitle } from "@/components/custom/product-title";
 import { ColumnDef } from "@tanstack/react-table";
 import { TrackedProductsOfTheOrder } from "../interfaces/orders.interface";
 import { formatDate } from "@/helpers/format-date";
+import ProductCostCell from "./components/product-cost-cell";
+import QuantityCell from "./components/quantity-cell";
+import TotalAmountCell from "./components/total-amount-cell";
 
-export const columns: ColumnDef<TrackedProductsOfTheOrder>[] = [
+export interface CustomTrackedProduct extends TrackedProductsOfTheOrder {
+  sellable_quantity: number;
+  total_amount: number;
+  quantity_purchased: number;
+}
+
+export const columns: ColumnDef<CustomTrackedProduct>[] = [
   {
     id: "product_title",
     header: "Product Name",
@@ -53,6 +62,17 @@ export const columns: ColumnDef<TrackedProductsOfTheOrder>[] = [
   {
     accessorKey: "product_cost",
     header: "Product Cost",
+    cell: ({ row }) => {
+      const product_cost = parseFloat(row.getValue("product_cost"));
+      const productQuantity = row.original.sellable_quantity;
+      return (
+        <ProductCostCell
+          value={product_cost}
+          productId={row.original.id}
+          productQuantity={productQuantity}
+        />
+      );
+    },
   },
   {
     accessorKey: "lowest_fba_price",
@@ -84,10 +104,23 @@ export const columns: ColumnDef<TrackedProductsOfTheOrder>[] = [
   {
     id: "sellable_quanity",
     header: "Sellable Quantity",
+    cell: ({ row }) => {
+      const sellable_quanity = row.original.sellable_quantity;
+      return (
+        <QuantityCell
+          value={sellable_quanity}
+          productId={row.original.id}
+          productCost={row.original.product_cost}
+        />
+      );
+    },
   },
   {
     accessorKey: "total_amount",
     header: "Total Amount",
+    cell: ({ row }) => {
+      return <TotalAmountCell productId={row.original.id} />;
+    },
   },
   {
     id: "actions",
