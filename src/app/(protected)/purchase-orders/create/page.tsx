@@ -22,14 +22,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useMemo, useState } from "react";
-import { toast } from "sonner";
 import { useTrackedProducts } from "../../inventory/tracked-products/hooks/useTrackedProducts";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
 import { Supplier } from "../../suppliers/interfaces/supplier.interface";
-import { useOrders } from "../hooks/useOrders";
 import { getAddedProductsColumns, getTrackedProductsColumns } from "./columns";
+import CreateOrderSummary from "./components/create-order-summary";
 import { ProductInOrder } from "./interface/product-added.interface";
-import generateId from "./utils/generate-po-id";
 
 type PaginationRange = number | "...";
 export interface SupplierItem {
@@ -47,7 +45,6 @@ export default function Page() {
     currentPage,
     itemsPerPage,
   } = useTrackedProducts();
-  const { createOrderMutation } = useOrders();
 
   const { suppliersQuery } = useSuppliers();
 
@@ -125,28 +122,9 @@ export default function Page() {
     return <div>Error</div>;
   }
 
-  const handleCreateOrder = async (productsAdded: ProductInOrder[]) => {
-    if (productsAdded.length === 0) {
-      toast.error("No products added");
-      return;
-    }
-
-    await createOrderMutation.mutateAsync({
-      products: productsAdded.map((product) => {
-        return {
-          product_id: product.product_id,
-          quantity: product.quantity,
-          product_cost: product.product_cost,
-        };
-      }),
-      order_number: generateId(productsAdded[0].supplier_name),
-      supplier_id: parseInt(productsAdded[0].supplier_id),
-      purchase_order_status_id: 1,
-    });
-  };
-
   return (
-    <>
+    <section className="flex flex-col gap-6 w-full">
+      {/* 1. Search and filter */}
       <div className="w-fit flex items-center justify-between gap-4">
         <Input
           onKeyDown={(e) => {
@@ -173,6 +151,8 @@ export default function Page() {
           }}
         />
       </div>
+
+      {/* 2. Table and pagination */}
       <div className="max-h-[400px] overflow-y-auto">
         <DataTable
           data={trackedProductsQuery.data.data}
@@ -231,6 +211,8 @@ export default function Page() {
           </Select>
         </div>
       </div>
+
+      {/* 3. Added products table */}
       <div className="max-h-[400px] overflow-y-auto">
         <DataTable
           data={productsAdded}
@@ -238,13 +220,9 @@ export default function Page() {
           dataLength={10}
         />
       </div>
-      <Button
-        onClick={() => {
-          handleCreateOrder(productsAdded);
-        }}
-      >
-        Create Order
-      </Button>
-    </>
+
+      {/* 4. Create order summary */}
+      <CreateOrderSummary productsAdded={productsAdded} />
+    </section>
   );
 }
