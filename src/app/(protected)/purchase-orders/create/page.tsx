@@ -29,6 +29,7 @@ import { Supplier } from "../../suppliers/interfaces/supplier.interface";
 import { useOrders } from "../hooks/useOrders";
 import { getAddedProductsColumns, getTrackedProductsColumns } from "./columns";
 import { ProductInOrder } from "./interface/product-added.interface";
+import generateId from "./utils/generate-po-id";
 
 type PaginationRange = number | "...";
 export interface SupplierItem {
@@ -92,6 +93,7 @@ export default function Page() {
 
     return rangeWithDots;
   }, [currentPage, totalPages]);
+
   const handleSearch = () => {
     filterByKeyword(searchTerm);
   };
@@ -137,8 +139,8 @@ export default function Page() {
           unit_price: product.product_cost,
         };
       }),
-      order_number: "123456",
-      supplier_id: 1,
+      order_number: generateId(productsAdded[0].supplier_name),
+      supplier_id: parseInt(productsAdded[0].supplier_id),
       purchase_order_status_id: 1,
     });
   };
