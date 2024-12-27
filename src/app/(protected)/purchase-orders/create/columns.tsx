@@ -216,24 +216,32 @@ export const getAddedProductsColumns = (
   setProductsAdded: Dispatch<SetStateAction<ProductInOrder[]>>
 ): ColumnDef<ProductInOrder>[] => [
   {
-    accessorKey: "id",
-    header: "id",
-  },
-  {
-    accessorKey: "supplier_name",
-    header: "supplier_name",
-  },
-  {
-    accessorKey: "product_image",
-    header: "product_image",
+    id: "product_title",
+    header: "Product Name",
+    cell: ({ row }) => {
+      const product_image = row.original.product_image;
+      const product_name = row.original.product_name;
+      const ASIN = row.original.ASIN;
+      const in_seller_account = row.original.in_seller_account;
+      const width = 300;
+      return (
+        <ProductTitle
+          product_image={product_image}
+          product_name={product_name}
+          ASIN={ASIN}
+          in_seller_account={in_seller_account}
+          width={width}
+        />
+      );
+    },
   },
   {
     accessorKey: "ASIN",
     header: "ASIN",
   },
   {
-    accessorKey: "product_name",
-    header: "product_name",
+    accessorKey: "supplier_name",
+    header: "supplier_name",
   },
   {
     accessorKey: "quantity",
@@ -259,14 +267,6 @@ export const getAddedProductsColumns = (
   {
     accessorKey: "units_sold",
     header: "units_sold",
-  },
-  {
-    accessorKey: "fees",
-    header: "fees",
-  },
-  {
-    accessorKey: "lowest_fba_prive",
-    header: "lowest_fba_prive",
   },
   {
     accessorKey: "actions",

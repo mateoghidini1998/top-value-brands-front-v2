@@ -12,6 +12,7 @@ export interface ProductInOrder {
   units_sold: number;
   fees: number;
   lowest_fba_price: number;
+  in_seller_account: boolean;
 }
 
 export interface LocalStorageProduct {
