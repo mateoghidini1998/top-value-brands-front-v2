@@ -12,12 +12,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -26,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useOrders } from "../hooks/useOrders";
@@ -35,13 +30,8 @@ interface ActionsCellProps {
 }
 
 const ActionsCell = ({ orderId }: ActionsCellProps) => {
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const { deleteOrderMutation, downloadPDF } = useOrders();
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
-
-  // const handleEditSuccess = () => {
-  //   setIsEditDialogOpen(false);
-  // };
 
   const handleDeleteOrder = async () => {
     if (orderToDelete) {
@@ -79,14 +69,9 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          {/* <DropdownMenuItem
-            onClick={() => navigator.clipboard.writeText(row.id.toString())}
-          >
-            Copy product ID
-          </DropdownMenuItem> */}
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
-            View Details
+          <DropdownMenuItem>
+            <Link href={`/purchase-orders/${orderId}`}>View Details</Link>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOrderToDelete(orderId)}>
             Delete Order
@@ -96,15 +81,6 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Edit Order</DialogTitle>
-          </DialogHeader>
-          {/* <EditProductForm product={row} onSuccess={handleEditSuccess} /> */}
-        </DialogContent>
-      </Dialog>
       <AlertDialog
         open={!!orderToDelete}
         onOpenChange={(open) => !open && setOrderToDelete(0)}
