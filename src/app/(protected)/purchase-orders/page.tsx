@@ -88,22 +88,6 @@ export default function Page() {
     return rangeWithDots;
   }, [currentPage, totalPages]);
 
-  // const debouncedFilterByKeyword = useMemo(
-  //   () =>
-  //     debounce((value: string) => {
-  //       filterByKeyword(value);
-  //     }, 1500),
-  //   [filterByKeyword]
-  // );
-
-  // const handleFilterByKeyword = useCallback(
-  //   (value: string) => {
-  //     setSearchTerm(value);
-  //     debouncedFilterByKeyword(value);
-  //   },
-  //   [debouncedFilterByKeyword]
-  // );
-
   const handleSearch = () => {
     filterByKeyword(searchTerm);
   };

@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { columns, CustomTrackedProduct } from "./columns";
 import { PurchaseOrderProvider } from "./context/purchase-order.context";
 import { usePurchaseOrder } from "./hooks/usePurchaseOrder";
+import { Button } from "@/components/ui/button";
 
 export default function PurchaseOrderPage({
   params,
@@ -121,6 +122,8 @@ export default function PurchaseOrderPage({
             <DataTable columns={columns} data={productsForTable} />
           </CardContent>
         </Card>
+
+        <Button onClick={() => console.log("save")}>Save</Button>
       </div>
     </PurchaseOrderProvider>
   );

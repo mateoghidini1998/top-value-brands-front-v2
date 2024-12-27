@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
-import { usePurchaseOrder } from "../context/purchase-order.context";
+import { usePurchaseOrderContext } from "../context/purchase-order.context";
 
 interface QuantityCellProps {
   value: number;
@@ -16,7 +16,7 @@ export default function QuantityCell({
   productCost,
 }: QuantityCellProps) {
   const [quantity, setQuantity] = useState(value);
-  const { updateProduct } = usePurchaseOrder();
+  const { updateProduct } = usePurchaseOrderContext();
 
   useEffect(() => {
     setQuantity(value);

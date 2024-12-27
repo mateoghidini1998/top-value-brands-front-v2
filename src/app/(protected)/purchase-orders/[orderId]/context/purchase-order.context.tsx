@@ -40,7 +40,7 @@ export function PurchaseOrderProvider({
   );
 }
 
-export function usePurchaseOrder() {
+export function usePurchaseOrderContext() {
   const context = useContext(PurchaseOrderContext);
   if (context === undefined) {
     throw new Error(
