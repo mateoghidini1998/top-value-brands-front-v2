@@ -13,3 +13,9 @@ export interface ProductInOrder {
   fees: number;
   lowest_fba_price: number;
 }
+
+export interface LocalStorageProduct {
+  product_id: number;
+  quantity: number;
+  cost: number;
+}

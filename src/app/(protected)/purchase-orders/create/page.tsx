@@ -1,16 +1,10 @@
 "use client";
 
 import { DataTable } from "@/components/custom/data-table";
+import { FilterSuppliers } from "@/components/custom/filter-suppliers";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Button } from "@/components/ui/button";
-import { useMemo, useState } from "react";
-import { toast } from "sonner";
-import { useTrackedProducts } from "../../inventory/tracked-products/hooks/useTrackedProducts";
-import { useOrders } from "../hooks/useOrders";
-import { getAddedProductsColumns, getTrackedProductsColumns } from "./columns";
-import { ProductInOrder } from "./interface/product-added.interface";
-import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
-import { Supplier } from "../../suppliers/interfaces/supplier.interface";
+import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -27,8 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { FilterSuppliers } from "@/components/custom/filter-suppliers";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
+import { useTrackedProducts } from "../../inventory/tracked-products/hooks/useTrackedProducts";
+import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
+import { Supplier } from "../../suppliers/interfaces/supplier.interface";
+import { useOrders } from "../hooks/useOrders";
+import { getAddedProductsColumns, getTrackedProductsColumns } from "./columns";
+import { ProductInOrder } from "./interface/product-added.interface";
 
 type PaginationRange = number | "...";
 export interface SupplierItem {
@@ -92,23 +92,6 @@ export default function Page() {
 
     return rangeWithDots;
   }, [currentPage, totalPages]);
-
-  // const debouncedFilterByKeyword = useMemo(
-  //   () =>
-  //     debounce((value: string) => {
-  //       filterByKeyword(value);
-  //     }, 1500),
-  //   [filterByKeyword]
-  // );
-
-  // const handleFilterByKeyword = useCallback(
-  //   (value: string) => {
-  //     setSearchTerm(value);
-  //     debouncedFilterByKeyword(value);
-  //   },
-  //   [debouncedFilterByKeyword]
-  // );
-
   const handleSearch = () => {
     filterByKeyword(searchTerm);
   };
@@ -159,6 +142,8 @@ export default function Page() {
       purchase_order_status_id: 1,
     });
   };
+
+  console.log(productsAdded);
 
   return (
     <>

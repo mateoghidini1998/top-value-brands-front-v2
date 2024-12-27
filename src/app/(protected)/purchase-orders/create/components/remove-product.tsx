@@ -1,6 +1,6 @@
 import { DogIcon } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
-import { ProductInOrder } from "./interface/product-added.interface";
+import { ProductInOrder } from "../interface/product-added.interface";
 
 interface ActionsCellRow {
   productInOrder: ProductInOrder;
