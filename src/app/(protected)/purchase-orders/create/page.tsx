@@ -212,20 +212,24 @@ export default function Page() {
         </div>
       </div>
 
-      {/* 3. Added products table */}
-      <div className="max-h-[400px] overflow-y-auto">
-        <DataTable
-          data={productsAdded}
-          columns={getAddedProductsColumns(setProductsAdded)}
-          dataLength={10}
-        />
-      </div>
+      {productsAdded.length > 0 && (
+        <>
+          {/* 3. Added products table */}
+          <div className="max-h-[400px] overflow-y-auto">
+            <DataTable
+              data={productsAdded}
+              columns={getAddedProductsColumns(setProductsAdded)}
+              dataLength={10}
+            />
+          </div>
 
-      {/* 4. Create order summary */}
-      <CreateOrderSummary
-        productsAdded={productsAdded}
-        setProductsAdded={setProductsAdded}
-      />
+          {/* 4. Create order summary */}
+          <CreateOrderSummary
+            productsAdded={productsAdded}
+            setProductsAdded={setProductsAdded}
+          />
+        </>
+      )}
     </section>
   );
 }
