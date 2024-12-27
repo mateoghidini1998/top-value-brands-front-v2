@@ -1,34 +1,18 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { columns } from "./columns";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
-import { GetPurchaseOrderSummaryResponse } from "../interfaces/orders.interface";
 import { DataTable } from "@/components/custom/data-table";
-
-async function getPurchaseOrder(
-  orderId: string
-): Promise<GetPurchaseOrderSummaryResponse> {
-  const response = await fetch(
-    `http://localhost:5000/api/v1/purchaseorders/summary/${orderId}`
-  );
-  if (!response.ok) {
-    throw new Error("Failed to fetch purchase order");
-  }
-  return response.json();
-}
+import { usePurchaseOrder } from "./hooks/usePurchaseOrder";
 
 export default function PurchaseOrderPage({
   params,
 }: {
   params: { orderId: string };
 }) {
-  const { data, isLoading, error } = useQuery<GetPurchaseOrderSummaryResponse>({
-    queryKey: ["purchase-order", params.orderId],
-    queryFn: () => getPurchaseOrder(params.orderId),
-  });
+  const { data, isLoading, error } = usePurchaseOrder(params.orderId);
 
   if (isLoading) {
     return (
@@ -51,9 +35,8 @@ export default function PurchaseOrderPage({
   if (!data) return null;
 
   const { order_number, total_price, updatedStatusAt, notes } =
-    data.data.purchaseOrder;
-
-  const { trackedProductsOfTheOrder } = data.data;
+    data.purchaseOrder;
+  const { trackedProductsOfTheOrder } = data;
 
   return (
     <div className="py-6 space-y-8">

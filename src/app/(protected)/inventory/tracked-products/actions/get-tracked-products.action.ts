@@ -1,6 +1,5 @@
-import { sleep } from "@/helpers";
-import { GetTrackedProductsResponse } from "../interfaces/tracked-product.interface";
 import { apiRequest } from "@/helpers/http.adapter";
+import { GetTrackedProductsResponse } from "../interfaces/tracked-product.interface";
 
 export interface GetTrackedProductsProps {
   page?: number;
@@ -13,7 +12,5 @@ export interface GetTrackedProductsProps {
 
 export const getTrackedProducts = async (props: GetTrackedProductsProps) => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/trackedproducts?orderBy=${props.orderBy}&orderWay=${props.orderWay}&page=${props.page}&limit=${props.limit}&keyword=${props.keyword}&supplier=${props.supplier}`;
-  return await sleep(1000).then(() =>
-    apiRequest<GetTrackedProductsResponse>(url)
-  );
+  return await apiRequest<GetTrackedProductsResponse>(url);
 };
