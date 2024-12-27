@@ -9,7 +9,7 @@ interface CreateOrderRequest {
 
 interface CreateOrderProduct {
   product_id: number;
-  unit_price: number;
+  product_cost: number;
   quantity: number;
 }
 

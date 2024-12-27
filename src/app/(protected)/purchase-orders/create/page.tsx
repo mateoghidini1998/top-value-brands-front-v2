@@ -136,7 +136,7 @@ export default function Page() {
         return {
           product_id: product.product_id,
           quantity: product.quantity,
-          unit_price: product.product_cost,
+          product_cost: product.product_cost,
         };
       }),
       order_number: generateId(productsAdded[0].supplier_name),
