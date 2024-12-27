@@ -1,5 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Order } from "./actions/get-orders.action";
+import { Badge } from "@/components/ui/badge";
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -18,6 +19,15 @@ export const columns: ColumnDef<Order>[] = [
   {
     accessorKey: "total_price",
     header: "Total Price",
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("total_price"));
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(amount);
+
+      return <div className="">{formatted}</div>;
+    },
   },
   {
     accessorKey: "notes",
@@ -35,5 +45,34 @@ export const columns: ColumnDef<Order>[] = [
   {
     accessorKey: "avg_roi",
     header: "avg roi",
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("avg_roi")).toFixed(2);
+
+      const getBadgeVariant = (amount: number) => {
+        if (amount >= 2) {
+          return "default";
+        }
+
+        if (amount <= 0) {
+          return "destructive";
+        }
+
+        return "secondary";
+      };
+
+      return (
+        <Badge
+          variant={getBadgeVariant(parseFloat(amount))}
+          className={`cursor-pointer`}
+        >
+          {amount}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "actions",
+    id: "actions",
+    header: () => <div className="text-right">Actions</div>,
   },
 ];
