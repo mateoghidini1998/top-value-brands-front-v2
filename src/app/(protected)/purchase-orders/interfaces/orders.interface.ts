@@ -162,3 +162,10 @@ export interface CustomTrackedProduct extends TrackedProductsOfTheOrder {
   total_amount: number;
   quantity_purchased: number;
 }
+
+export interface PurchaseOrderProductsUpdates {
+  purchaseOrderProductId: number;
+  quantityPurchased: number;
+  product_cost: string;
+  profit: string;
+}
