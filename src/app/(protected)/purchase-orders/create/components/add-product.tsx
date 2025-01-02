@@ -21,6 +21,13 @@ const AddProduct = ({ trackedProduct, setData }: ActionsCellRow) => {
   );
 
   const handleAddProduct = () => {
+    // Verifica si el producto tiene un suppplier_id y si no lo tiene, muestra un mensaje de error
+    if (!trackedProduct.supplier_id) {
+      toast.error("Product without supplier");
+      return;
+    }
+    // TODO: Si existe un producto ya agregado, verifica que tengan el mismo supplier_id
+
     setData((prev: ProductInOrder[]) => {
       // Si no hay productos en localStorage, simplemente crea un array vacío y agrega el nuevo producto
       if (storedProducts.length === 0) {
