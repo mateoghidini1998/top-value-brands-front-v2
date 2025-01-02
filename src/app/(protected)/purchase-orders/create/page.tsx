@@ -153,7 +153,13 @@ export default function Page() {
       </div>
 
       {/* 2. Table and pagination */}
-      <div className="max-h-[400px] overflow-y-auto">
+      <div
+        className={`${
+          productsAdded.length <= 0
+            ? ""
+            : "max-h-[400px] overflow-y-auto transition-all duration-300"
+        }`}
+      >
         <DataTable
           data={trackedProductsQuery.data.data}
           columns={getTrackedProductsColumns(setProductsAdded)}
