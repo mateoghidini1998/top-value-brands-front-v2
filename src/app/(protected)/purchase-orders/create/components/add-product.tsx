@@ -26,9 +26,20 @@ const AddProduct = ({ trackedProduct, setData }: ActionsCellRow) => {
       toast.error("Product without supplier");
       return;
     }
-    // TODO: Si existe un producto ya agregado, verifica que tengan el mismo supplier_id
 
     setData((prev: ProductInOrder[]) => {
+      // Si existe un producto ya agregado, verifica que tengan el mismo supplier_id
+      if (prev.length > 0) {
+        const productWithSameSupplier = prev.find(
+          (product) => product.supplier_id !== formattedProduct.supplier_id
+        );
+
+        if (productWithSameSupplier) {
+          toast.error("Products must have the same supplier");
+          return prev;
+        }
+      }
+
       // Si no hay productos en localStorage, simplemente crea un array vacío y agrega el nuevo producto
       if (storedProducts.length === 0) {
         localStorage.setItem(
