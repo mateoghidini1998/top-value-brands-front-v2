@@ -207,7 +207,12 @@ export const getTrackedProductsColumns = (
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <AddProduct trackedProduct={row.original} setData={setProductsAdded} />
+        <span className="flex items-center justify-center">
+          <AddProduct
+            trackedProduct={row.original}
+            setData={setProductsAdded}
+          />
+        </span>
       );
     },
   },
@@ -289,10 +294,12 @@ export const getAddedProductsColumns = (
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <RemoveProduct
-          productInOrder={row.original}
-          setData={setProductsAdded}
-        />
+        <span className="flex items-center justify-center">
+          <RemoveProduct
+            productInOrder={row.original}
+            setData={setProductsAdded}
+          />
+        </span>
       );
     },
   },

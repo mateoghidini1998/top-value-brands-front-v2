@@ -5,9 +5,9 @@ import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { columns, CustomTrackedProduct } from "./columns";
-import { PurchaseOrderProvider } from "./context/purchase-order.context";
 import { usePurchaseOrder } from "./hooks/usePurchaseOrder";
 import { Button } from "@/components/ui/button";
+import { PurchaseOrderProvider } from "@/contexts/orders.context";
 
 export default function PurchaseOrderPage({
   params,
@@ -118,7 +118,7 @@ export default function PurchaseOrderPage({
           <CardHeader>
             <CardTitle>Products</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0">
             <DataTable columns={columns} data={productsForTable} />
           </CardContent>
         </Card>

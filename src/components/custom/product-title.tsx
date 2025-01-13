@@ -31,7 +31,7 @@ export function ProductTitle({
         <TooltipTrigger asChild>
           <div
             style={{ width: width }}
-            className={`  font-medium text-left h-fit overflow-y-hidden`}
+            className={`  font-medium text-left h-fit overflow-y-hidden whitespace-normal`}
           >
             <div className="relative flex w-full h-full items-center justify-between text-left">
               <div className="h-8 gap-2 flex items-center justify-between mr-2">

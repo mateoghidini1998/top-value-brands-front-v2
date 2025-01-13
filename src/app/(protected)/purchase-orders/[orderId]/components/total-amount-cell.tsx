@@ -1,6 +1,6 @@
 "use client";
 
-import { usePurchaseOrderContext } from "../context/purchase-order.context";
+import { usePurchaseOrderContext } from "@/contexts/orders.context";
 
 interface TotalAmountCellProps {
   productId: number;

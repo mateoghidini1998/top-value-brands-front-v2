@@ -1,7 +1,7 @@
 "use client";
 
+import { CustomTrackedProduct } from "@/app/(protected)/purchase-orders/interfaces/orders.interface";
 import { createContext, useContext, useState } from "react";
-import { CustomTrackedProduct } from "../columns";
 
 interface PurchaseOrderContextType {
   products: CustomTrackedProduct[];

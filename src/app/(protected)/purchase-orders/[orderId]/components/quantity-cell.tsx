@@ -1,8 +1,8 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+import { usePurchaseOrderContext } from "@/contexts/orders.context";
 import { useEffect, useState } from "react";
-import { usePurchaseOrderContext } from "../context/purchase-order.context";
 
 interface QuantityCellProps {
   value: number;

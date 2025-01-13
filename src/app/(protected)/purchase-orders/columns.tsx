@@ -2,6 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import ActionsCell from "./components/actions-cell";
 import { Order } from "./interfaces/orders.interface";
+import { formatDate } from "@/helpers/format-date";
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -15,6 +16,11 @@ export const columns: ColumnDef<Order>[] = [
   {
     accessorKey: "updatedStatusAt",
     header: "Last Update",
+    cell: ({ row }) => (
+      <div className="max-w-xs overflow-hidden text-ellipsis">
+        {formatDate(row.getValue("updatedStatusAt"))}
+      </div>
+    ),
   },
 
   {
@@ -34,7 +40,7 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "notes",
     header: "Notes",
     cell: ({ row }) => (
-      <div className="max-w-xs overflow-hidden text-ellipsis">
+      <div className="w-full overflow-hidden text-ellipsis">
         {row.getValue("notes")}
       </div>
     ),
