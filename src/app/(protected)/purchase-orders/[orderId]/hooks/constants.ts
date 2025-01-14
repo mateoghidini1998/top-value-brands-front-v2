@@ -1,5 +1,6 @@
 export const QUERY_KEYS = {
   PURCHASE_ORDER: "purchase-order",
+  ORDERS: "orders",
 } as const;
 
 export const CACHE_TIMES = {

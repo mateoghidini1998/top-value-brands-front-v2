@@ -10,12 +10,13 @@ export function createMutation<T>(config: MutationConfig<T>) {
   return useMutation({
     mutationFn: config.mutationFn,
     onSuccess: () => {
-      // Invalidate using the config.orderId instead of variables
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.PURCHASE_ORDER, config.orderId.toString()],
       });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
       toast.success(config.successMessage);
     },
+
     onError: (error) => {
       console.error(`${config.errorMessage}:`, error);
       toast.error(config.errorMessage);
