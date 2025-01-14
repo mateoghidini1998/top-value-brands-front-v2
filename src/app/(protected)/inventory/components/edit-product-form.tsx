@@ -18,10 +18,10 @@ import { toast } from "sonner";
 import * as z from "zod";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
 import { Supplier } from "../../suppliers/interfaces/supplier.interface";
-import { EditProductProps } from "../actions/edit-product.action";
-import { useInventory } from "../hooks/useInventory";
-import { Product } from "../interfaces/product.interface";
 import { SupplierItem } from "../page";
+import { Product } from "@/types";
+import { EditProductProps } from "../actions/edit-product.action";
+import { useInventory } from "../hooks";
 
 const editProductSchema = z.object({
   ASIN: z.string().min(1, "ASIN is required"),

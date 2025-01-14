@@ -1,5 +1,5 @@
-import { GetInventoryResponse } from "@/app/(protected)/inventory/interfaces/product.interface";
 import { apiRequest } from "@/helpers/http.adapter";
+import { GetProductsResponse } from "@/types";
 
 interface GetIventoryProps {
   page?: number;
@@ -17,7 +17,7 @@ export const getInventory = async ({
   supplier = "",
   orderBy = "",
   orderWay = "",
-}: GetIventoryProps): Promise<GetInventoryResponse> => {
+}: GetIventoryProps): Promise<GetProductsResponse> => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products?page=${page}&limit=${limit}&keyword=${keyword}&supplier=${supplier}&orderBy=${orderBy}&orderWay=${orderWay}`;
-  return apiRequest<GetInventoryResponse>(url);
+  return apiRequest<GetProductsResponse>(url);
 };

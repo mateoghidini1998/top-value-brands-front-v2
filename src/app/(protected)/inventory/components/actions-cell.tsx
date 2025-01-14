@@ -25,12 +25,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Product } from "@/types";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
-import { useInventory } from "../hooks/useInventory";
-import { Product } from "../interfaces/product.interface";
-import { EditProductForm } from "./edit-product-form";
 import { toast } from "sonner";
+import { useInventory } from "../hooks/useInventory";
+import { EditProductForm } from "./edit-product-form";
 
 interface ActionsCellProps {
   row: Product;

@@ -6,7 +6,7 @@ interface CreateProductRequest {
   supplier_id: number;
   supplier_item_number: string;
 }
-export interface CreateProductResponse {
+interface CreateProductResponse {
   id: number;
   ASIN: string;
   product_cost: string;

@@ -1,5 +1,5 @@
 import { apiRequest } from "@/helpers/http.adapter";
-import { Product } from "../interfaces/product.interface";
+import { Product } from "@/types";
 
 export interface EditProductProps {
   id: number;

@@ -1,12 +1,13 @@
 "use client";
-
-import { getInventory } from "@/app/(protected)/inventory/actions/get-products.action";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { createProduct } from "../actions/create-product.action";
-import { editProduct } from "../actions/edit-product.action";
-import { deleteProduct } from "../actions/delete-product.action";
 import { useState } from "react";
+import {
+  createProduct,
+  deleteProduct,
+  editProduct,
+  getInventory,
+} from "../actions";
 
 export const useInventory = () => {
   const queryClient = useQueryClient();

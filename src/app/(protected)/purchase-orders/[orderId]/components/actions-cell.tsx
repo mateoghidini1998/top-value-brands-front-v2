@@ -1,8 +1,7 @@
 "use client";
 
 import { EditProductForm } from "@/app/(protected)/inventory/components/edit-product-form";
-import { useInventory } from "@/app/(protected)/inventory/hooks/useInventory";
-import { Product } from "@/app/(protected)/inventory/interfaces/product.interface";
+import { useInventory } from "@/app/(protected)/inventory/hooks";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,12 +27,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Product } from "@/types";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 interface ActionsCellProps {
-  row: unknown;
+  row: Product;
 }
 
 const ActionsCell = ({ row }: ActionsCellProps) => {

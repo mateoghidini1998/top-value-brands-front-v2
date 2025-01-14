@@ -33,7 +33,7 @@ import { useSuppliers } from "../suppliers/hooks/useSuppliers";
 import { Supplier } from "../suppliers/interfaces/supplier.interface";
 import { columns } from "./columns";
 import { CreateProductForm } from "./components/create-product-form";
-import { useInventory } from "./hooks/useInventory";
+import { useInventory } from "./hooks";
 
 type PaginationRange = number | "...";
 export interface SupplierItem {

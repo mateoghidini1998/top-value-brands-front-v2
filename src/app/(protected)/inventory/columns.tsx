@@ -1,10 +1,9 @@
 "use client";
-
-import { Product } from "@/app/(protected)/inventory/interfaces/product.interface";
 import { ColumnDef } from "@tanstack/react-table";
-import ActionsCell from "./components/actions-cell";
 import { formatDate } from "@/helpers/format-date";
 import { ProductTitle } from "@/components/custom/product-title";
+import { Product } from "@/types";
+import { ActionsCell } from "./components";
 
 export const columns: ColumnDef<Product>[] = [
   {

@@ -1,5 +1,6 @@
 "use client";
 
+import { FilterSuppliers } from "@/components/custom/filter-suppliers";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,14 +12,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useInventory } from "../hooks/useInventory";
-import { FilterSuppliers } from "@/components/custom/filter-suppliers";
-import { useState } from "react";
-import { Supplier } from "../../suppliers/interfaces/supplier.interface";
-import { SupplierItem } from "../page";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
+import { Supplier } from "../../suppliers/interfaces/supplier.interface";
+import { useInventory } from "../hooks";
+import { SupplierItem } from "../page";
 
 const formSchema = z.object({
   ASIN: z.string().min(1, "ASIN is required"),
