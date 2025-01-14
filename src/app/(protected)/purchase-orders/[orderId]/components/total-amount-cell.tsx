@@ -14,5 +14,5 @@ export default function TotalAmountCell({ productId }: TotalAmountCellProps) {
 
   const total = product.total_amount;
 
-  return <span>${total.toFixed(2)}</span>;
+  return <span>${total}</span>;
 }

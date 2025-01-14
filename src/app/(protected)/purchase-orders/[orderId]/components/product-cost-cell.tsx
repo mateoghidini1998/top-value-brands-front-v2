@@ -7,12 +7,10 @@ import { useEffect, useState } from "react";
 interface ProductCostCellProps {
   value: number;
   productId: number;
-  productQuantity: number;
 }
 
 export default function ProductCostCell({
   value,
-  productQuantity,
   productId,
 }: ProductCostCellProps) {
   const [productCost, setProductCost] = useState(value);
@@ -27,7 +25,6 @@ export default function ProductCostCell({
     setProductCost(newValue);
     updateProduct(productId, {
       product_cost: newValue.toString(),
-      total_amount: newValue * productQuantity,
     });
   };
 

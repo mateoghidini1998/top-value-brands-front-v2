@@ -4,10 +4,11 @@ import { DataTable } from "@/components/custom/data-table";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { columns, CustomTrackedProduct } from "./columns";
-import { usePurchaseOrder } from "./hooks/usePurchaseOrder";
-import { Button } from "@/components/ui/button";
 import { PurchaseOrderProvider } from "@/contexts/orders.context";
+import { columns } from "./columns";
+import SaveOrder from "./components/save-order-button";
+import { usePurchaseOrder } from "./hooks/usePurchaseOrder";
+import { formatDate } from "@/helpers/format-date";
 
 export default function PurchaseOrderPage({
   params,
@@ -15,6 +16,8 @@ export default function PurchaseOrderPage({
   params: { orderId: string };
 }) {
   const { data, isLoading, error } = usePurchaseOrder(params.orderId);
+
+  console.log(data);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -32,98 +35,62 @@ export default function PurchaseOrderPage({
 
   if (!data) return null;
 
-  const { order_number, total_price, updatedStatusAt, notes } =
-    data.purchaseOrder;
-  const { trackedProductsOfTheOrder } = data;
-  const { purchaseOrderProducts } = data.purchaseOrder;
-
-  const productsForTable: CustomTrackedProduct[] =
-    trackedProductsOfTheOrder.map((product) => ({
-      ...product,
-      total_amount: parseFloat(
-        purchaseOrderProducts.find(
-          (item) => item.product_id === product.product_id
-        )?.total_amount ?? "0"
-      ),
-      quantity_purchased: parseInt(
-        (
-          purchaseOrderProducts.find(
-            (item) => item.product_id === product.product_id
-          )?.quantity_purchased ?? "0"
-        ).toString()
-      ),
-      sellable_quantity:
-        purchaseOrderProducts.find(
-          (item) => item.product_id === product.product_id
-        )?.quantity_purchased ?? 0,
-    }));
+  // Desestructuración de los datos de la orden y productos
+  const {
+    order_number,
+    total_price,
+    updatedAt,
+    supplier_name,
+    updatedStatusAt,
+  } = data.data.order;
+  const { purchaseOrderProducts } = data.data; // Los productos ahora están en purchaseOrderProducts
 
   return (
-    <PurchaseOrderProvider initialProducts={productsForTable}>
+    <PurchaseOrderProvider initialProducts={purchaseOrderProducts}>
       <div className="py-6 space-y-8">
         <div className="space-y-4">
           <h1 className="text-2xl font-bold">Purchase Order {order_number}</h1>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Price
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  ${parseFloat(total_price).toFixed(2)}
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Last Updated
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {new Date(updatedStatusAt).toLocaleDateString()}
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Items
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {trackedProductsOfTheOrder.length}
-                </div>
-              </CardContent>
-            </Card>
+            {/* Render cards for order info */}
+            <div className="col-span-1">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Order Details</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>
+                    <strong>Order Number:</strong> {order_number}
+                  </p>
+                  <p>
+                    <strong>Total Price:</strong> ${total_price}
+                  </p>
+                  <p>
+                    <strong>Supplier:</strong> {supplier_name}
+                  </p>
+                  <p>
+                    <strong>Updated At: </strong>
+                    {formatDate(updatedAt) || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Updated Status At: </strong>
+                    {formatDate(updatedStatusAt) || "N/A"}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
-
-        {notes && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Notes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>{notes}</p>
-            </CardContent>
-          </Card>
-        )}
 
         <Card>
           <CardHeader>
             <CardTitle>Products</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <DataTable columns={columns} data={productsForTable} />
+            <DataTable columns={columns} data={purchaseOrderProducts} />
           </CardContent>
         </Card>
 
-        <Button onClick={() => console.log("save")}>Save</Button>
+        <SaveOrder orderId={params.orderId} />
       </div>
     </PurchaseOrderProvider>
   );

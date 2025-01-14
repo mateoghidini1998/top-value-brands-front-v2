@@ -7,11 +7,13 @@ import { formatDate } from "@/helpers/format-date";
 import ProductCostCell from "./components/product-cost-cell";
 import QuantityCell from "./components/quantity-cell";
 import TotalAmountCell from "./components/total-amount-cell";
+import ActionsCell from "./components/actions-cell";
 
 export interface CustomTrackedProduct extends TrackedProductsOfTheOrder {
   sellable_quantity: number;
   total_amount: number;
   quantity_purchased: number;
+  purchaseOrderProductId: number;
 }
 
 export const columns: ColumnDef<CustomTrackedProduct>[] = [
@@ -64,13 +66,8 @@ export const columns: ColumnDef<CustomTrackedProduct>[] = [
     header: "Product Cost",
     cell: ({ row }) => {
       const product_cost = parseFloat(row.getValue("product_cost"));
-      const productQuantity = row.original.sellable_quantity;
       return (
-        <ProductCostCell
-          value={product_cost}
-          productId={row.original.id}
-          productQuantity={productQuantity}
-        />
+        <ProductCostCell value={product_cost} productId={row.original.id} />
       );
     },
   },
@@ -102,16 +99,12 @@ export const columns: ColumnDef<CustomTrackedProduct>[] = [
     header: "Seller SKU",
   },
   {
-    id: "sellable_quanity",
-    header: "Sellable Quantity",
+    id: "quantity_purchased",
+    header: "Quantity Purchased",
     cell: ({ row }) => {
-      const sellable_quanity = row.original.sellable_quantity;
+      const quantity_purchased = row.original.quantity_purchased;
       return (
-        <QuantityCell
-          value={sellable_quanity}
-          productId={row.original.id}
-          productCost={row.original.product_cost}
-        />
+        <QuantityCell value={quantity_purchased} productId={row.original.id} />
       );
     },
   },
@@ -125,5 +118,12 @@ export const columns: ColumnDef<CustomTrackedProduct>[] = [
   {
     id: "actions",
     header: "Actions",
+    cell: ({ row }) => {
+      return (
+        <span className="flex items-center justify-center">
+          <ActionsCell row={row.original} />
+        </span>
+      );
+    },
   },
 ];

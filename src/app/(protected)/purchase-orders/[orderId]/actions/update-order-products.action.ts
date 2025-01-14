@@ -16,7 +16,9 @@ export default function updateOrderProducts({
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(purchaseOrderProductsUpdates),
+    body: JSON.stringify({
+      purchaseOrderProductsUpdates: purchaseOrderProductsUpdates,
+    }),
   };
   return apiRequest<string>(url, options);
 }

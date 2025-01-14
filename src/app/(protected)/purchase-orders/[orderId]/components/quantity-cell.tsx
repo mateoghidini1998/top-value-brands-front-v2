@@ -7,14 +7,9 @@ import { useEffect, useState } from "react";
 interface QuantityCellProps {
   value: number;
   productId: number;
-  productCost: string;
 }
 
-export default function QuantityCell({
-  value,
-  productId,
-  productCost,
-}: QuantityCellProps) {
+export default function QuantityCell({ value, productId }: QuantityCellProps) {
   const [quantity, setQuantity] = useState(value);
   const { updateProduct } = usePurchaseOrderContext();
 
@@ -27,7 +22,6 @@ export default function QuantityCell({
     setQuantity(newValue);
     updateProduct(productId, {
       quantity_purchased: newValue,
-      total_amount: newValue * parseFloat(productCost),
     });
   };
 
