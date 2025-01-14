@@ -180,3 +180,11 @@ export interface CustomTrackedProduct extends TrackedProductsOfTheOrder {
   purchase_order_product_id: number;
   purchaseOrderProductId: number;
 }
+
+export interface PurchaseOrderProductsUpdates {
+  purchaseOrderProductId: number;
+  quantityPurchased: number;
+  product_cost: string;
+  profit: string;
+  unit_price: string;
+}

@@ -4,7 +4,7 @@ import { MutationConfig } from "./types";
 import { toast } from "sonner";
 
 // Remove the type constraint since we handle different types of mutations
-export function createMutation<T>(config: MutationConfig<T>) {
+export function useCreateMutation<T>(config: MutationConfig<T>) {
   const queryClient = useQueryClient();
 
   return useMutation({

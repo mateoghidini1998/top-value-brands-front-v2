@@ -7,7 +7,6 @@ import {
   QUERY_KEYS,
   SUCCESS_MESSAGES,
 } from "./constants";
-import { createMutation } from "./mutation-factory";
 import { PurchaseOrderHookResult } from "./types";
 import {
   getPurchaseOrderSummary,
@@ -15,6 +14,7 @@ import {
   updateOrderNumber,
   updateOrderProducts,
 } from "../actions";
+import { useCreateMutation } from "./mutation-factory";
 import { GetPurchaseOrderSummaryResponse } from "@/types";
 
 export const usePurchaseOrder = (orderId: string): PurchaseOrderHookResult => {
@@ -26,21 +26,21 @@ export const usePurchaseOrder = (orderId: string): PurchaseOrderHookResult => {
   });
 
   // Mutations for updating different aspects of the purchase order
-  const updatePOProductsMutation = createMutation({
+  const updatePOProductsMutation = useCreateMutation({
     mutationFn: updateOrderProducts,
     orderId: Number(orderId), // Convert to number for the products mutation
     errorMessage: ERROR_MESSAGES.UPDATE_PRODUCTS,
     successMessage: SUCCESS_MESSAGES.UPDATE_PRODUCTS,
   });
 
-  const updatePONotesMutation = createMutation({
+  const updatePONotesMutation = useCreateMutation({
     mutationFn: updateOrderNotes,
     orderId,
     errorMessage: ERROR_MESSAGES.UPDATE_NOTES,
     successMessage: SUCCESS_MESSAGES.UPDATE_NOTES,
   });
 
-  const updatePONumberMutation = createMutation({
+  const updatePONumberMutation = useCreateMutation({
     mutationFn: updateOrderNumber,
     orderId,
     errorMessage: ERROR_MESSAGES.UPDATE_NUMBER,

@@ -1,14 +1,9 @@
 "use client";
-import { PurchaseOrderSummaryProducts } from "@/types";
+import {
+  PurchaseOrderProductsUpdates,
+  PurchaseOrderSummaryProducts,
+} from "@/types";
 import { createContext, useContext, useState } from "react";
-
-interface PurchaseOrderProductsUpdates {
-  purchaseOrderProductId: number;
-  quantityPurchased: number;
-  product_cost: string;
-  profit: string;
-  unit_price: string;
-}
 
 interface PurchaseOrderContextType {
   products: PurchaseOrderSummaryProducts[];
