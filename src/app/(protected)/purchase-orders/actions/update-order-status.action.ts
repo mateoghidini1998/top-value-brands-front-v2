@@ -2,7 +2,7 @@ import { apiRequest } from "@/helpers/http.adapter";
 
 export interface UpdateOrderStatusProps {
   orderId: string;
-  status: string;
+  status: number;
 }
 
 export const updateOrderStatus = ({

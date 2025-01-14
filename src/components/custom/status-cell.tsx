@@ -21,7 +21,7 @@ export function StatusCell({ orderId, statusDescription }: StatusCellProps) {
     <StatusBadge
       status={statusDescription}
       onStatusChange={async (newStatus) => {
-        updateOrderStatus({ orderId, status: newStatus.toString() });
+        updateOrderStatus({ orderId, status: newStatus });
       }}
     />
   );
