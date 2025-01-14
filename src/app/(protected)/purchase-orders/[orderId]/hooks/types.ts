@@ -3,10 +3,12 @@ import { UpdateOrderProductsProps } from "../actions/update-order-products.actio
 import { UpdateOrderNotesProps } from "../actions/update-purchase-order-notes.action";
 import { UpdateOrderNumberProps } from "../actions/update-order-number.action";
 
+// Make MutationConfig more flexible by not constraining the generic type
 export interface MutationConfig<T> {
   mutationFn: (data: T) => Promise<unknown>;
-  orderId: string;
+  orderId: string | number; // Support both string and number
   errorMessage: string;
+  successMessage: string;
 }
 
 export interface PurchaseOrderHookResult {

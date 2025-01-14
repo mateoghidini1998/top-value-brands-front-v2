@@ -11,3 +11,9 @@ export const ERROR_MESSAGES = {
   UPDATE_NOTES: "Error updating notes",
   UPDATE_NUMBER: "Error updating order number",
 } as const;
+
+export const SUCCESS_MESSAGES = {
+  UPDATE_PRODUCTS: "Products updated successfully",
+  UPDATE_NOTES: "Notes updated successfully",
+  UPDATE_NUMBER: "Order number updated successfully",
+} as const;
