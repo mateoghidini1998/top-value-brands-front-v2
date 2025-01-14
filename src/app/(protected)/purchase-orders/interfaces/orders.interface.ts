@@ -110,6 +110,45 @@ export interface GetPurchaseOrderSummaryResponse {
   data: GetPurchaseOrderSummaryData;
 }
 
+export interface Data {
+  order: Order;
+  purchaseOrderProducts: PurchaseOrderProduct[];
+}
+
+export interface Order {
+  status: Status;
+  order_number: string;
+  total_price: string;
+  createdAt: Date;
+  updatedAt: Date;
+  updatedStatusAt: Date | null;
+  supplier_name: string;
+  notes: null | string;
+}
+
+export interface PurchaseOrderProduct {
+  id: number;
+  product_name: string;
+  in_seller_account: boolean;
+  ASIN: string;
+  seller_sku: string;
+  supplier_name: string;
+  product_image: string;
+  product_cost: string;
+  product_velocity: number;
+  units_sold: number;
+  thirty_days_rank: number;
+  ninety_days_rank: number;
+  lowest_fba_price: number;
+  fees: number;
+  profit: string;
+  roi: string;
+  updatedAt: Date;
+  supplier_item_number: null;
+  total_amount: string;
+  quantity_purchased: number;
+}
+
 export interface GetPurchaseOrderSummaryData {
   purchaseOrder: PurchaseOrder;
   trackedProductsOfTheOrder: TrackedProductsOfTheOrder[];

@@ -17,8 +17,6 @@ export default function PurchaseOrderPage({
 }) {
   const { data, isLoading, error } = usePurchaseOrder(params.orderId);
 
-  console.log(data);
-
   if (isLoading) {
     return <LoadingSpinner />;
   }
