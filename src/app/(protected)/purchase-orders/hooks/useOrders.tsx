@@ -1,10 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createOrder } from "../actions/create-order.action";
-import { getOrders } from "../actions/get-orders.action";
 import { useState } from "react";
 import { toast } from "sonner";
-import { deleteOrder } from "../actions/delete-order.action";
-import { downloadPDF } from "../actions/download-pdf.action";
+import { createOrder, deleteOrder, downloadPDF, getOrders } from "../actions";
 
 export const useOrders = () => {
   // Obtén la instancia de QueryClient proporcionada por el contexto de React Query

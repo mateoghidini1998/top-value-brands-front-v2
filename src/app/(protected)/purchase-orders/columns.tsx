@@ -1,8 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import ActionsCell from "./components/actions-cell";
-import { Order } from "./interfaces/orders.interface";
 import { formatDate } from "@/helpers/format-date";
+import { ActionsCell } from "./components";
+import { Order } from "@/types";
 
 export const columns: ColumnDef<Order>[] = [
   {

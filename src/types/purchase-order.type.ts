@@ -8,7 +8,7 @@ export interface GetPurchaseOrdersResponse {
   data: Order[];
 }
 
-interface Order {
+export interface Order {
   id: number;
   order_number: string;
   supplier_id: number;

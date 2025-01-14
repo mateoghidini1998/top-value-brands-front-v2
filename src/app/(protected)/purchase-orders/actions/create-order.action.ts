@@ -14,12 +14,12 @@ interface CreateOrderProduct {
   quantity: number;
 }
 
-export interface CreateOrderResponse {
+interface CreateOrderResponse {
   success: boolean;
   data: Data;
 }
 
-export interface Data {
+interface Data {
   id: number;
   order_number: string;
   supplier_id: number;
@@ -33,7 +33,7 @@ export interface Data {
   purchaseOrderProducts: PurchaseOrderProduct[];
 }
 
-export interface PurchaseOrderProduct {
+interface PurchaseOrderProduct {
   id: number;
   purchase_order_id: number;
   product_id: number;

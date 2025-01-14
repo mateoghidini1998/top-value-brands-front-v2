@@ -23,10 +23,10 @@ import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { DataTable } from "../../../components/custom/data-table";
-import { useSuppliers } from "../suppliers/hooks/useSuppliers";
-import { Supplier } from "../suppliers/interfaces/supplier.interface";
+import { useSuppliers } from "../suppliers/hooks";
 import { columns } from "./columns";
 import { useOrders } from "./hooks/useOrders";
+import { Supplier } from "@/types/supplier.type";
 
 type PaginationRange = number | "...";
 export interface SupplierItem {
