@@ -33,11 +33,11 @@ export default function PurchaseOrderPage({
     isLoading,
     error,
     updateOrderNotes,
-    isErrorNotes,
-    isSuccessNotes,
+    // isErrorNotes,
+    // isSuccessNotes,
     updateOrderNumber,
-    isErrorNumber,
-    isSuccessNumber,
+    // isErrorNumber,
+    // isSuccessNumber,
   } = usePurchaseOrder(params.orderId);
 
   const [isEditingNotes, setIsEditingNotes] = useState(false);
@@ -66,10 +66,12 @@ export default function PurchaseOrderPage({
     total_price,
     updatedAt,
     supplier_name,
-    updatedStatusAt,
+    // updatedStatusAt,
     notes,
   } = data.data.order;
   const { purchaseOrderProducts } = data.data;
+
+  console.log(purchaseOrderProducts);
 
   // Notes handlers
   const handleEditNotes = () => {
@@ -218,7 +220,7 @@ export default function PurchaseOrderPage({
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {formatDate(updatedAt) || "N/A"}
+                  {formatDate(updatedAt.toString()) || "N/A"}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Last modification date

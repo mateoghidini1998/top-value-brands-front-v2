@@ -1,13 +1,21 @@
 "use client";
-
-import {
-  CustomTrackedProduct,
-  PurchaseOrderProductsUpdates,
-} from "@/app/(protected)/purchase-orders/interfaces/orders.interface";
+import { PurchaseOrderSummaryProducts } from "@/types";
 import { createContext, useContext, useState } from "react";
+
+interface PurchaseOrderProductsUpdates {
+  purchaseOrderProductId: number;
+  quantityPurchased: number;
+  product_cost: string;
+  profit: string;
+  unit_price: string;
+}
+
 interface PurchaseOrderContextType {
-  products: CustomTrackedProduct[];
-  updateProduct: (id: number, updates: Partial<CustomTrackedProduct>) => void;
+  products: PurchaseOrderSummaryProducts[];
+  updateProduct: (
+    id: number,
+    updates: Partial<PurchaseOrderSummaryProducts>
+  ) => void;
   updatedPOProducts: PurchaseOrderProductsUpdates[];
   setUpdatedPOProducts: React.Dispatch<
     React.SetStateAction<PurchaseOrderProductsUpdates[]>
@@ -23,10 +31,10 @@ export function PurchaseOrderProvider({
   initialProducts,
 }: {
   children: React.ReactNode;
-  initialProducts: CustomTrackedProduct[];
+  initialProducts: PurchaseOrderSummaryProducts[];
 }) {
   const [products, setProducts] =
-    useState<CustomTrackedProduct[]>(initialProducts);
+    useState<PurchaseOrderSummaryProducts[]>(initialProducts);
 
   const [updatedPOProducts, setUpdatedPOProducts] = useState<
     PurchaseOrderProductsUpdates[]
@@ -34,7 +42,7 @@ export function PurchaseOrderProvider({
 
   const updateProduct = (
     id: number,
-    updates: Partial<CustomTrackedProduct>
+    updates: Partial<PurchaseOrderSummaryProducts>
   ) => {
     setProducts((currentProducts) => {
       const updatedProducts = currentProducts.map((product) => {
@@ -55,7 +63,7 @@ export function PurchaseOrderProvider({
 
   // transform the products into an array of product updates
   const transformProductsUpdates = (
-    productsToUpdate: CustomTrackedProduct[]
+    productsToUpdate: PurchaseOrderSummaryProducts[]
   ) => {
     return productsToUpdate.map((product): PurchaseOrderProductsUpdates => {
       return {

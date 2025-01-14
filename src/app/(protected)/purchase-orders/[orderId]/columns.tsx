@@ -1,22 +1,12 @@
 "use client";
 
 import { ProductTitle } from "@/components/custom/product-title";
-import { ColumnDef } from "@tanstack/react-table";
-import { TrackedProductsOfTheOrder } from "../interfaces/orders.interface";
 import { formatDate } from "@/helpers/format-date";
-import ProductCostCell from "./components/product-cost-cell";
-import QuantityCell from "./components/quantity-cell";
-import TotalAmountCell from "./components/total-amount-cell";
-import ActionsCell from "./components/actions-cell";
+import { PurchaseOrderSummaryProducts } from "@/types";
+import { ColumnDef } from "@tanstack/react-table";
+import { ProductCostCell, QuantityCell, TotalAmountCell } from "./components";
 
-export interface CustomTrackedProduct extends TrackedProductsOfTheOrder {
-  sellable_quantity: number;
-  total_amount: number;
-  quantity_purchased: number;
-  purchaseOrderProductId: number;
-}
-
-export const columns: ColumnDef<CustomTrackedProduct>[] = [
+export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   {
     id: "product_title",
     header: "Product Name",
@@ -118,10 +108,10 @@ export const columns: ColumnDef<CustomTrackedProduct>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => {
+    cell: () => {
       return (
         <span className="flex items-center justify-center">
-          <ActionsCell row={row.original} />
+          <p>missing implemetation</p>
         </span>
       );
     },

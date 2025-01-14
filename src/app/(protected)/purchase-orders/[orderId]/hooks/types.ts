@@ -1,6 +1,6 @@
-import { GetPurchaseOrderSummaryResponse } from "../../interfaces/orders.interface";
+import { GetPurchaseOrderSummaryResponse } from "@/types";
 import { UpdateOrderProductsProps } from "../actions/update-order-products.action";
-import { UpdateOrderNotesProps } from "../actions/update-purchase-order-notes.action";
+import { UpdateOrderNotesProps } from "../actions/update-order-notes.action";
 import { UpdateOrderNumberProps } from "../actions/update-order-number.action";
 
 // Make MutationConfig more flexible by not constraining the generic type

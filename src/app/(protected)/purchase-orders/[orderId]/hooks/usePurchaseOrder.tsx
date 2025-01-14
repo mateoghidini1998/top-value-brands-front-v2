@@ -1,11 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { GetPurchaseOrderSummaryResponse } from "../../interfaces/orders.interface";
-import { getPurchaseOrderSummary } from "../actions/get-purchase-order.action";
-import updateOrderProducts from "../actions/update-order-products.action";
-import updateOrderNotes from "../actions/update-purchase-order-notes.action";
-import updateOrderNumber from "../actions/update-order-number.action";
 import {
   CACHE_TIMES,
   ERROR_MESSAGES,
@@ -14,6 +9,13 @@ import {
 } from "./constants";
 import { createMutation } from "./mutation-factory";
 import { PurchaseOrderHookResult } from "./types";
+import {
+  getPurchaseOrderSummary,
+  updateOrderNotes,
+  updateOrderNumber,
+  updateOrderProducts,
+} from "../actions";
+import { GetPurchaseOrderSummaryResponse } from "@/types";
 
 export const usePurchaseOrder = (orderId: string): PurchaseOrderHookResult => {
   // Query for fetching purchase order data
