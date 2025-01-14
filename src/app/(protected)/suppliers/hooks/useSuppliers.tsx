@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getSuppliers } from "../actions/get-suppliers.action";
+import { getSuppliers } from "../actions";
 export const useSuppliers = () => {
   const suppliersQuery = useQuery({
     queryKey: ["suppliers"],
