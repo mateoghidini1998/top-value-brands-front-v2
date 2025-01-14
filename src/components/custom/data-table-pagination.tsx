@@ -9,7 +9,15 @@ import {
 } from "@/components/ui/pagination";
 
 type Props = {
-  table: any;
+  table: {
+    getState: () => { pagination: { pageIndex: number } };
+    getPageCount: () => number;
+    getCanPreviousPage: () => boolean;
+    previousPage: () => void;
+    setPageIndex: (index: number) => void;
+    getCanNextPage: () => boolean;
+    nextPage: () => void;
+  };
 };
 
 export function PaginationComponent({ table }: Props) {
@@ -44,7 +52,9 @@ export function PaginationComponent({ table }: Props) {
               }
             }}
             href={table.getCanPreviousPage() ? "#" : undefined}
-            className={`h-9 w-9 p-0 ${!table.getCanPreviousPage() ? "cursor-not-allowed opacity-50" : ""}`}
+            className={`h-9 w-9 p-0 ${
+              !table.getCanPreviousPage() ? "cursor-not-allowed opacity-50" : ""
+            }`}
           />
         </PaginationItem>
 
@@ -70,7 +80,9 @@ export function PaginationComponent({ table }: Props) {
                 table.nextPage();
               }
             }}
-            className={`h-9 w-9 p-0 ${!table.getCanNextPage() ? "cursor-not-allowed opacity-50" : ""}`}
+            className={`h-9 w-9 p-0 ${
+              !table.getCanNextPage() ? "cursor-not-allowed opacity-50" : ""
+            }`}
           />
         </PaginationItem>
       </PaginationContent>
