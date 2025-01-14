@@ -3,19 +3,47 @@
 import { DataTable } from "@/components/custom/data-table";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { PurchaseOrderProvider } from "@/contexts/orders.context";
+import { formatDate } from "@/helpers/format-date";
+import {
+  Check,
+  Clock,
+  DollarSign,
+  Pencil,
+  Store,
+  Truck,
+  X,
+} from "lucide-react";
+import { useState } from "react";
 import { columns } from "./columns";
 import SaveOrder from "./components/save-order-button";
 import { usePurchaseOrder } from "./hooks/usePurchaseOrder";
-import { formatDate } from "@/helpers/format-date";
 
 export default function PurchaseOrderPage({
   params,
 }: {
   params: { orderId: string };
 }) {
-  const { data, isLoading, error } = usePurchaseOrder(params.orderId);
+  const {
+    data,
+    isLoading,
+    error,
+    updateOrderNotes,
+    isErrorNotes,
+    isSuccessNotes,
+    updateOrderNumber,
+    isErrorNumber,
+    isSuccessNumber,
+  } = usePurchaseOrder(params.orderId);
+
+  const [isEditingNotes, setIsEditingNotes] = useState(false);
+  const [editedNotes, setEditedNotes] = useState("");
+  const [isEditingOrderNumber, setIsEditingOrderNumber] = useState(false);
+  const [editedOrderNumber, setEditedOrderNumber] = useState("");
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -33,62 +61,236 @@ export default function PurchaseOrderPage({
 
   if (!data) return null;
 
-  // Desestructuración de los datos de la orden y productos
   const {
     order_number,
     total_price,
     updatedAt,
     supplier_name,
     updatedStatusAt,
+    notes,
   } = data.data.order;
-  const { purchaseOrderProducts } = data.data; // Los productos ahora están en purchaseOrderProducts
+  const { purchaseOrderProducts } = data.data;
+
+  // Notes handlers
+  const handleEditNotes = () => {
+    setEditedNotes(notes || "");
+    setIsEditingNotes(true);
+  };
+
+  const handleSaveNotes = () => {
+    updateOrderNotes({
+      orderId: params.orderId,
+      notes: editedNotes,
+    });
+    setIsEditingNotes(false);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingNotes(false);
+    setEditedNotes("");
+  };
+
+  // Order Number handlers
+  const handleEditOrderNumber = () => {
+    setEditedOrderNumber(order_number || "");
+    setIsEditingOrderNumber(true);
+  };
+
+  const handleSaveOrderNumber = () => {
+    updateOrderNumber({
+      orderId: params.orderId,
+      order_number: editedOrderNumber,
+    });
+    setIsEditingOrderNumber(false);
+  };
+
+  const handleCancelOrderNumber = () => {
+    setIsEditingOrderNumber(false);
+    setEditedOrderNumber("");
+  };
 
   return (
     <PurchaseOrderProvider initialProducts={purchaseOrderProducts}>
       <div className="py-6 space-y-8">
         <div className="space-y-4">
-          <h1 className="text-2xl font-bold">Purchase Order {order_number}</h1>
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold">
+              Purchase Order {order_number}
+            </h1>
+            <SaveOrder orderId={params.orderId} />
+          </div>
+
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {/* Render cards for order info */}
-            <div className="col-span-1">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Order Details</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>
-                    <strong>Order Number:</strong> {order_number}
-                  </p>
-                  <p>
-                    <strong>Total Price:</strong> ${total_price}
-                  </p>
-                  <p>
-                    <strong>Supplier:</strong> {supplier_name}
-                  </p>
-                  <p>
-                    <strong>Updated At: </strong>
-                    {formatDate(updatedAt) || "N/A"}
-                  </p>
-                  <p>
-                    <strong>Updated Status At: </strong>
-                    {formatDate(updatedStatusAt) || "N/A"}
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
+            {/* Order Number Card */}
+            <Card>
+              <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Order Number
+                </CardTitle>
+                {!isEditingOrderNumber ? (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleEditOrderNumber}
+                    className="ml-auto"
+                  >
+                    <Pencil className="w-4 h-4 text-muted-foreground" />
+                  </Button>
+                ) : (
+                  <div className="flex gap-2 ml-auto">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleSaveOrderNumber}
+                    >
+                      <Check className="w-4 h-4 text-green-500" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleCancelOrderNumber}
+                    >
+                      <X className="w-4 h-4 text-red-500" />
+                    </Button>
+                  </div>
+                )}
+              </CardHeader>
+              <CardContent>
+                {isEditingOrderNumber ? (
+                  <Input
+                    value={editedOrderNumber}
+                    onChange={(e) => setEditedOrderNumber(e.target.value)}
+                    className="font-bold text-2xl"
+                    placeholder="Enter order number..."
+                  />
+                ) : (
+                  <>
+                    <div className="text-2xl font-bold">{order_number}</div>
+                    <p className="text-xs text-muted-foreground">
+                      Purchase Order ID
+                    </p>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Total Price Card */}
+            <Card>
+              <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Total Amount
+                </CardTitle>
+                <DollarSign className="w-4 h-4 text-muted-foreground ml-auto" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  ${Number(total_price).toFixed(2)}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Total order value
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Supplier Card */}
+            <Card>
+              <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Supplier</CardTitle>
+                <Store className="w-4 h-4 text-muted-foreground ml-auto" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold truncate">
+                  {supplier_name}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Supplier details
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Last Updated Card */}
+            <Card>
+              <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Last Updated
+                </CardTitle>
+                <Clock className="w-4 h-4 text-muted-foreground ml-auto" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {formatDate(updatedAt) || "N/A"}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Last modification date
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid gap-4 grid-cols-1">
+            {/* Notes Card */}
+            <Card>
+              <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Notes</CardTitle>
+                {!isEditingNotes ? (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleEditNotes}
+                    className="ml-auto"
+                  >
+                    <Pencil className="w-4 h-4 text-muted-foreground" />
+                  </Button>
+                ) : (
+                  <div className="flex gap-2 ml-auto">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleSaveNotes}
+                    >
+                      <Check className="w-4 h-4 text-green-500" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleCancelEdit}
+                    >
+                      <X className="w-4 h-4 text-red-500" />
+                    </Button>
+                  </div>
+                )}
+              </CardHeader>
+              <CardContent>
+                {isEditingNotes ? (
+                  <Textarea
+                    value={editedNotes}
+                    onChange={(e) => setEditedNotes(e.target.value)}
+                    className="min-h-[100px]"
+                    placeholder="Enter notes here..."
+                  />
+                ) : (
+                  <>
+                    <div className="text-lg">
+                      {notes || "No notes available"}
+                    </div>
+                    <p className="text-xs text-muted-foreground">Order notes</p>
+                  </>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </div>
 
+        {/* Products Table Card */}
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center">
             <CardTitle>Products</CardTitle>
+            <Truck className="w-4 h-4 text-muted-foreground ml-auto" />
           </CardHeader>
           <CardContent className="p-0">
             <DataTable columns={columns} data={purchaseOrderProducts} />
           </CardContent>
         </Card>
-
-        <SaveOrder orderId={params.orderId} />
       </div>
     </PurchaseOrderProvider>
   );

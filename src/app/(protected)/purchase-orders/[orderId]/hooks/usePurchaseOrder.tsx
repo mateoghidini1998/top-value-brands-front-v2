@@ -1,39 +1,64 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { GetPurchaseOrderSummaryResponse } from "../../interfaces/orders.interface";
 import { getPurchaseOrderSummary } from "../actions/get-purchase-order.action";
-import updateOrderProducts, {
-  UpdateOrderProductsProps,
-} from "../actions/update-order-products.action";
-export const usePurchaseOrder = (orderId: string) => {
-  const queryClient = useQueryClient();
+import updateOrderProducts from "../actions/update-order-products.action";
+import updateOrderNotes from "../actions/update-purchase-order-notes.action";
+import updateOrderNumber from "../actions/update-order-number.action";
+import { CACHE_TIMES, ERROR_MESSAGES, QUERY_KEYS } from "./constants";
+import { createMutation } from "./mutation-factory";
+import { PurchaseOrderHookResult } from "./types";
 
+export const usePurchaseOrder = (orderId: string): PurchaseOrderHookResult => {
+  // Query for fetching purchase order data
   const purchaseOrderQuery = useQuery<GetPurchaseOrderSummaryResponse>({
-    queryKey: ["purchase-order", orderId],
+    queryKey: [QUERY_KEYS.PURCHASE_ORDER, orderId],
     queryFn: () => getPurchaseOrderSummary({ orderId }),
-    staleTime: 1000 * 60 * 60 * 1, // -> 1 hour
+    staleTime: CACHE_TIMES.ONE_HOUR,
   });
 
-  const mutation = useMutation({
-    mutationFn: (data: UpdateOrderProductsProps) => updateOrderProducts(data),
-    onSuccess: (_, { orderId }) => {
-      // Invalida la cache para refrescar los datos actualizados
-      queryClient.invalidateQueries({ queryKey: ["purchase-order", orderId] });
-    },
-    onError: (error) => {
-      console.error("Error al actualizar los productos:", error);
-    },
+  // Mutations for updating different aspects of the purchase order
+  const updatePOProductsMutation = createMutation({
+    mutationFn: updateOrderProducts,
+    orderId,
+    errorMessage: ERROR_MESSAGES.UPDATE_PRODUCTS,
+  });
+
+  const updatePONotesMutation = createMutation({
+    mutationFn: updateOrderNotes,
+    orderId,
+    errorMessage: ERROR_MESSAGES.UPDATE_NOTES,
+  });
+
+  const updatePONumberMutation = createMutation({
+    mutationFn: updateOrderNumber,
+    orderId,
+    errorMessage: ERROR_MESSAGES.UPDATE_NUMBER,
   });
 
   return {
-    purchaseOrderQuery,
+    // Query results
     data: purchaseOrderQuery.data,
     isLoading: purchaseOrderQuery.isLoading,
-    error: purchaseOrderQuery.error,
-    updateOrderProducts: mutation.mutate,
-    updateOrderProductsAsync: mutation.mutateAsync,
-    isError: mutation.isError,
-    isSuccess: mutation.isSuccess,
+    error: purchaseOrderQuery.error as Error | null,
+
+    // Products mutation
+    updateOrderProducts: updatePOProductsMutation.mutate,
+    updateOrderProductsAsync: updatePOProductsMutation.mutateAsync,
+    isError: updatePOProductsMutation.isError,
+    isSuccess: updatePOProductsMutation.isSuccess,
+
+    // Notes mutation
+    updateOrderNotes: updatePONotesMutation.mutate,
+    updateOrderNotesAsync: updatePONotesMutation.mutateAsync,
+    isErrorNotes: updatePONotesMutation.isError,
+    isSuccessNotes: updatePONotesMutation.isSuccess,
+
+    // Order number mutation
+    updateOrderNumber: updatePONumberMutation.mutate,
+    updateOrderNumberAsync: updatePONumberMutation.mutateAsync,
+    isErrorNumber: updatePONumberMutation.isError,
+    isSuccessNumber: updatePONumberMutation.isSuccess,
   };
 };

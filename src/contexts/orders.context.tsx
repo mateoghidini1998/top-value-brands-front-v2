@@ -61,14 +61,12 @@ export function PurchaseOrderProvider({
       return {
         product_cost: product.product_cost,
         profit: product.profit?.toString(),
-        purchaseOrderProductId: product.purchaseOrderProductId,
+        purchaseOrderProductId: product.purchase_order_product_id,
         quantityPurchased: product.quantity_purchased,
         unit_price: product.product_cost,
       };
     });
   };
-
-  console.log(products);
 
   return (
     <PurchaseOrderContext.Provider
