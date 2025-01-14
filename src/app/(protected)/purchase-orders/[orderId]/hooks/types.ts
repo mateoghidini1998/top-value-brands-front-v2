@@ -2,6 +2,7 @@ import { GetPurchaseOrderSummaryResponse } from "@/types";
 import { UpdateOrderProductsProps } from "../actions/update-order-products.action";
 import { UpdateOrderNotesProps } from "../actions/update-order-notes.action";
 import { UpdateOrderNumberProps } from "../actions/update-order-number.action";
+import { UpdateOrderStatusProps } from "../../actions";
 
 // Make MutationConfig more flexible by not constraining the generic type
 export interface MutationConfig<T> {
@@ -35,4 +36,10 @@ export interface PurchaseOrderHookResult {
   updateOrderNumberAsync: (data: UpdateOrderNumberProps) => Promise<unknown>;
   isErrorNumber: boolean;
   isSuccessNumber: boolean;
+
+  // Status
+  updateOrderStatus: (data: UpdateOrderStatusProps) => void;
+  updateOrderStatusAsync: (data: UpdateOrderStatusProps) => Promise<unknown>;
+  isErrorStatus: boolean;
+  isSuccessStatus: boolean;
 }

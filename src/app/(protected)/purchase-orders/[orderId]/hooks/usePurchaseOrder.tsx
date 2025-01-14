@@ -16,6 +16,7 @@ import {
 } from "../actions";
 import { useCreateMutation } from "./mutation-factory";
 import { GetPurchaseOrderSummaryResponse } from "@/types";
+import { updateOrderStatus } from "../../actions";
 
 export const usePurchaseOrder = (orderId: string): PurchaseOrderHookResult => {
   // Query for fetching purchase order data
@@ -47,6 +48,13 @@ export const usePurchaseOrder = (orderId: string): PurchaseOrderHookResult => {
     successMessage: SUCCESS_MESSAGES.UPDATE_NUMBER,
   });
 
+  const updatePOStatusMutation = useCreateMutation({
+    mutationFn: updateOrderStatus,
+    orderId,
+    errorMessage: ERROR_MESSAGES.UPDATE_STATUS,
+    successMessage: SUCCESS_MESSAGES.UPDATE_STATUS,
+  });
+
   return {
     // Query results
     data: purchaseOrderQuery.data,
@@ -70,5 +78,11 @@ export const usePurchaseOrder = (orderId: string): PurchaseOrderHookResult => {
     updateOrderNumberAsync: updatePONumberMutation.mutateAsync,
     isErrorNumber: updatePONumberMutation.isError,
     isSuccessNumber: updatePONumberMutation.isSuccess,
+
+    // Order status mutation
+    updateOrderStatus: updatePOStatusMutation.mutate,
+    updateOrderStatusAsync: updatePOStatusMutation.mutateAsync,
+    isErrorStatus: updatePOStatusMutation.isError,
+    isSuccessStatus: updatePOStatusMutation.isSuccess,
   };
 };
