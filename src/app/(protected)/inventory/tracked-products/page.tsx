@@ -3,7 +3,7 @@
 import { DataTable } from "@/components/custom/data-table";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { columns } from "./columns";
-import { useTrackedProducts } from "./hooks/useTrackedProducts";
+import { useTrackedProducts } from "./hooks";
 
 export default function Page() {
   const { trackedProductsQuery } = useTrackedProducts();

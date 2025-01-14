@@ -8,7 +8,7 @@ export interface GetTrackedProductsResponse {
   data: TrackedProduct[];
 }
 
-interface TrackedProduct {
+export interface TrackedProduct {
   id: number;
   product_id: number;
   current_rank: number;

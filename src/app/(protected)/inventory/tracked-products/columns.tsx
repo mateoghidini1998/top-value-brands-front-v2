@@ -1,8 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { TrackedProduct } from "./interfaces/tracked-product.interface";
 import { ProductTitle } from "@/components/custom/product-title";
+import { TrackedProduct } from "@/types";
 
 export const columns: ColumnDef<TrackedProduct>[] = [
   {

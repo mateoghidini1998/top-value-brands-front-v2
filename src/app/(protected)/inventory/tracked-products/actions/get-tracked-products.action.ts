@@ -1,5 +1,5 @@
 import { apiRequest } from "@/helpers/http.adapter";
-import { GetTrackedProductsResponse } from "../interfaces/tracked-product.interface";
+import { GetTrackedProductsResponse } from "@/types";
 
 export interface GetTrackedProductsProps {
   page?: number;

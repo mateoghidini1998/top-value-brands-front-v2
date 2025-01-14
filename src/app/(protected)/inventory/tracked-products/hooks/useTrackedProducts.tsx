@@ -1,11 +1,8 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  getTrackedProducts,
-  GetTrackedProductsProps,
-} from "../actions/get-tracked-products.action";
 import { useState } from "react";
+import { getTrackedProducts, GetTrackedProductsProps } from "../actions";
 
 export const useTrackedProducts = () => {
   const queryClient = useQueryClient();
