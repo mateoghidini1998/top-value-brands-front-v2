@@ -6,10 +6,11 @@ import { UpdateOrderStatusProps } from "../../actions";
 
 // Make MutationConfig more flexible by not constraining the generic type
 export interface MutationConfig<T> {
-  mutationFn: (data: T) => Promise<unknown>;
-  orderId: string | number; // Support both string and number
-  errorMessage: string;
+  mutationFn: (variables: T) => Promise<unknown>;
+  orderId: number | string;
   successMessage: string;
+  errorMessage: string;
+  invalidateKeys?: (string | number)[][]; // Keys a invalidar
 }
 
 export interface PurchaseOrderHookResult {

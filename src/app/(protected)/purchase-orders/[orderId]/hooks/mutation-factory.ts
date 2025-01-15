@@ -1,19 +1,24 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { QUERY_KEYS } from "./constants";
-import { MutationConfig } from "./types";
 import { toast } from "sonner";
+import { MutationConfig } from "./types";
 
-// Remove the type constraint since we handle different types of mutations
 export function useCreateMutation<T>(config: MutationConfig<T>) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: config.mutationFn,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.ORDER_SUMMARY, config.orderId.toString()],
+      // Si no se pasan keys específicas, invalida ORDER_SUMMARY y ORDERS por defecto
+      const keysToInvalidate = config.invalidateKeys ?? [
+        ["ORDER_SUMMARY", config.orderId.toString()],
+        ["ORDERS"],
+      ];
+
+      // Recorre e invalida cada key
+      keysToInvalidate.forEach((key) => {
+        queryClient.invalidateQueries({ queryKey: key });
       });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
+
       toast.success(config.successMessage);
     },
 
