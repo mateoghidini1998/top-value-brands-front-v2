@@ -11,7 +11,7 @@ export function useCreateMutation<T>(config: MutationConfig<T>) {
     mutationFn: config.mutationFn,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.PURCHASE_ORDER, config.orderId.toString()],
+        queryKey: [QUERY_KEYS.ORDER_SUMMARY, config.orderId.toString()],
       });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
       toast.success(config.successMessage);

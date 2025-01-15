@@ -1,5 +1,5 @@
 import { apiRequest } from "@/helpers/http.adapter";
-import { GetPurchaseOrderSummaryResponse } from "../../interfaces/orders.interface";
+import { GetPurchaseOrderSummaryResponse } from "@/types";
 
 export const getPurchaseOrderSummary = async (props: {
   orderId: string;

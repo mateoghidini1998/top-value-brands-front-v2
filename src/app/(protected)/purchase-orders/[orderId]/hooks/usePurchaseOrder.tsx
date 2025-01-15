@@ -21,7 +21,7 @@ import { updateOrderStatus } from "../../actions";
 export const usePurchaseOrder = (orderId: string): PurchaseOrderHookResult => {
   // Query for fetching purchase order data
   const purchaseOrderQuery = useQuery<GetPurchaseOrderSummaryResponse>({
-    queryKey: [QUERY_KEYS.PURCHASE_ORDER, orderId],
+    queryKey: [QUERY_KEYS.ORDER_SUMMARY, orderId],
     queryFn: () => getPurchaseOrderSummary({ orderId }),
     staleTime: CACHE_TIMES.ONE_HOUR,
   });

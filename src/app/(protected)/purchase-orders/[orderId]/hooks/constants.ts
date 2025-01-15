@@ -1,5 +1,5 @@
 export const QUERY_KEYS = {
-  PURCHASE_ORDER: "purchase-order",
+  ORDER_SUMMARY: "order-summary",
   ORDERS: "orders",
 } as const;
 

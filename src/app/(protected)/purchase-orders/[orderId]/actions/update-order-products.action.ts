@@ -1,5 +1,5 @@
 import { apiRequest } from "@/helpers/http.adapter";
-import { PurchaseOrderProductsUpdates } from "../../interfaces/orders.interface";
+import { PurchaseOrderProductsUpdates } from "@/types";
 
 export interface UpdateOrderProductsProps {
   orderId: number;

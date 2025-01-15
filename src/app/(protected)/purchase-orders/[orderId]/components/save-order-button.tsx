@@ -14,8 +14,6 @@ const SaveOrder = ({ orderId }: Props) => {
   const { updateOrderProducts, isLoading } = usePurchaseOrder(orderId);
   const { updatedPOProducts } = usePurchaseOrderContext();
 
-  console.log(updatedPOProducts);
-
   const handleUpdate = () => {
     updateOrderProducts({
       orderId: parseInt(orderId),
