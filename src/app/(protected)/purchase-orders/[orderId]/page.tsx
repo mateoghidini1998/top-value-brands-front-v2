@@ -21,7 +21,7 @@ import {
 import { useState } from "react";
 import { columns } from "./columns";
 import SaveOrder from "./components/save-order-button";
-import { usePurchaseOrder } from "./hooks/usePurchaseOrder";
+import { useOrderSummaryMutations, useOrderSummaryQuery } from "./hooks";
 
 export default function PurchaseOrderPage({
   params,
@@ -32,13 +32,17 @@ export default function PurchaseOrderPage({
     data,
     isLoading,
     error,
-    updateOrderNotes,
+
     // isErrorNotes,
     // isSuccessNotes,
-    updateOrderNumber,
+
     // isErrorNumber,
     // isSuccessNumber,
-  } = usePurchaseOrder(params.orderId);
+  } = useOrderSummaryQuery(params.orderId);
+
+  const { updateOrderNotes, updateOrderNumber } = useOrderSummaryMutations(
+    params.orderId
+  );
 
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [editedNotes, setEditedNotes] = useState("");
@@ -70,8 +74,6 @@ export default function PurchaseOrderPage({
     notes,
   } = data.data.order;
   const { purchaseOrderProducts } = data.data;
-
-  console.log(purchaseOrderProducts);
 
   // Notes handlers
   const handleEditNotes = () => {
