@@ -22,6 +22,7 @@ import { useState } from "react";
 import { columns } from "./columns";
 import SaveOrder from "./components/save-order-button";
 import { useOrderSummaryMutations, useOrderSummaryQuery } from "./hooks";
+import Link from "next/link";
 
 export default function PurchaseOrderPage({
   params,
@@ -278,7 +279,14 @@ export default function PurchaseOrderPage({
         {/* Products Table Card */}
         <Card>
           <CardHeader className="flex flex-row items-center">
-            <CardTitle>Products</CardTitle>
+            <div className="flex flex-col items-start gap-4 justify-center w-fit space-y-0 pb-2">
+              <CardTitle>Products</CardTitle>
+              <button>
+                <Link href={`/purchase-orders/create?update=${params.orderId}`}>
+                  Add Products
+                </Link>
+              </button>
+            </div>
             <Truck className="w-4 h-4 text-muted-foreground ml-auto" />
           </CardHeader>
           <CardContent className="p-0">
