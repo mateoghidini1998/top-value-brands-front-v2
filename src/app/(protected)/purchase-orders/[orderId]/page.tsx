@@ -28,17 +28,7 @@ export default function PurchaseOrderPage({
 }: {
   params: { orderId: string };
 }) {
-  const {
-    data,
-    isLoading,
-    error,
-
-    // isErrorNotes,
-    // isSuccessNotes,
-
-    // isErrorNumber,
-    // isSuccessNumber,
-  } = useOrderSummaryQuery(params.orderId);
+  const { data, isLoading, error } = useOrderSummaryQuery(params.orderId);
 
   const { updateOrderNotes, updateOrderNumber } = useOrderSummaryMutations(
     params.orderId
