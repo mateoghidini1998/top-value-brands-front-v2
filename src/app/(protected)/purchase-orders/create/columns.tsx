@@ -4,13 +4,13 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Dispatch, SetStateAction } from "react";
 import AddProduct from "./components/add-product";
 import { ProductInOrder } from "./interface/product-added.interface";
-import { TrackedProduct } from "../../inventory/tracked-products/interfaces/tracked-product.interface";
 import RemoveProduct from "./components/remove-product";
 import { ProductTitle } from "@/components/custom/product-title";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/helpers/format-date";
 import AddQuantity from "./components/add-quantity";
 import AddProductCost from "./components/add-product-cost";
+import { TrackedProduct } from "@/types";
 
 export const getTrackedProductsColumns = (
   setProductsAdded: Dispatch<SetStateAction<ProductInOrder[]>>
