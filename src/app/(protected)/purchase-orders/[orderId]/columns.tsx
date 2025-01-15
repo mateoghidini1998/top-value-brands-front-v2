@@ -4,7 +4,12 @@ import { ProductTitle } from "@/components/custom/product-title";
 import { formatDate } from "@/helpers/format-date";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { ProductCostCell, QuantityCell, TotalAmountCell } from "./components";
+import {
+  ActionsCell,
+  ProductCostCell,
+  QuantityCell,
+  TotalAmountCell,
+} from "./components";
 
 export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   {
@@ -108,10 +113,13 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: () => {
+
+    cell: ({ row }) => {
       return (
         <span className="flex items-center justify-center">
-          <p>missing implemetation</p>
+          <ActionsCell
+            orderProductId={row.original.purchase_order_product_id}
+          />
         </span>
       );
     },

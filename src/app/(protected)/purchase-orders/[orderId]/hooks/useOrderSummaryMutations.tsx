@@ -24,7 +24,7 @@ export const useOrderSummaryMutations = (orderId: string) => {
     orderId,
     errorMessage: ERROR_MESSAGES.UPDATE_NOTES,
     successMessage: SUCCESS_MESSAGES.UPDATE_NOTES,
-    invalidateKeys: [[QUERY_KEYS.ORDER_SUMMARY, orderId], [QUERY_KEYS.ORDERS]], // Solo ORDER_SUMMARY
+    invalidateKeys: [[QUERY_KEYS.ORDER_SUMMARY, orderId], [QUERY_KEYS.ORDERS]],
   });
 
   const updatePONumberMutation = useCreateMutation({
@@ -32,7 +32,7 @@ export const useOrderSummaryMutations = (orderId: string) => {
     orderId,
     errorMessage: ERROR_MESSAGES.UPDATE_NUMBER,
     successMessage: SUCCESS_MESSAGES.UPDATE_NUMBER,
-    invalidateKeys: [[QUERY_KEYS.ORDER_SUMMARY, orderId], [QUERY_KEYS.ORDERS]], // Solo ORDER_SUMMARY
+    invalidateKeys: [[QUERY_KEYS.ORDER_SUMMARY, orderId], [QUERY_KEYS.ORDERS]],
   });
 
   const updatePOStatusMutation = useCreateMutation({
@@ -47,14 +47,25 @@ export const useOrderSummaryMutations = (orderId: string) => {
   return {
     updateOrderProducts: updatePOProductsMutation.mutate,
     updateOrderProductsAsync: updatePOProductsMutation.mutateAsync,
+    isError: updatePOProductsMutation.isError,
+    isSuccess: updatePOProductsMutation.isSuccess,
 
     updateOrderNotes: updatePONotesMutation.mutate,
     updateOrderNotesAsync: updatePONotesMutation.mutateAsync,
 
+    isErrorNotes: updatePONotesMutation.isError,
+    isSuccessNotes: updatePONotesMutation.isSuccess,
+
     updateOrderNumber: updatePONumberMutation.mutate,
     updateOrderNumberAsync: updatePONumberMutation.mutateAsync,
 
+    isErrorNumber: updatePONumberMutation.isError,
+    isSuccessNumber: updatePONumberMutation.isSuccess,
+
     updateOrderStatus: updatePOStatusMutation.mutate,
     updateOrderStatusAsync: updatePOStatusMutation.mutateAsync,
+
+    isErrorStatus: updatePOStatusMutation.isError,
+    isSuccessStatus: updatePOStatusMutation.isSuccess,
   };
 };
