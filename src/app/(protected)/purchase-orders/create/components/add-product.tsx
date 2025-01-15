@@ -1,12 +1,12 @@
 import { SquarePlus } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
-import { TrackedProduct } from "../../../inventory/tracked-products/interfaces/tracked-product.interface";
 import {
   LocalStorageProduct,
   ProductInOrder,
 } from "../interface/product-added.interface";
 import { formatTrackedProduct } from "../utils/format-tracked-product";
+import { TrackedProduct } from "@/types";
 
 interface ActionsCellRow {
   trackedProduct: TrackedProduct;
