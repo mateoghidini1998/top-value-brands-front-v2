@@ -8,6 +8,7 @@ import { PurchaseOrderSummaryProducts } from "@/types";
 import { useState } from "react";
 import { columns } from "./columns";
 import { Button } from "@/components/ui/button";
+import { useIncomingShipmentsMutations } from "../hooks/useIncomingShipmentsMutation";
 
 export default function Page({
   params,
@@ -19,6 +20,10 @@ export default function Page({
   const { data, isLoading, error } = useOrderSummaryQuery(params.orderId);
   const [tableData, setTableData] = useState<PurchaseOrderSummaryProducts[]>(
     data?.data.purchaseOrderProducts || []
+  );
+
+  const { updateIncomingOrderProducts } = useIncomingShipmentsMutations(
+    params.orderId
   );
 
   const handleQuantityReceivedChange = (rowId: string, value: number) => {
@@ -94,10 +99,15 @@ export default function Page({
       };
     });
 
-    return {
+    const data = {
       orderId: params.orderId,
       purchaseOrderProductsUpdates: updatedProducts,
     };
+
+    updateIncomingOrderProducts({
+      orderId: Number(params.orderId),
+      incomingOrderProductUpdates: data.purchaseOrderProductsUpdates,
+    });
   };
 
   if (isLoading) {
