@@ -140,6 +140,8 @@ export interface PurchaseOrderSummaryProducts {
   quantity_missing: number;
   quantity_received: number;
   reason_id: number | null;
+  upc: string | null;
+  expire_date: string | null;
 }
 
 export interface Order {

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
+import { ExpireDateCell } from "../components/expire-date-cell";
 
 export const reasons = [
   { id: 1, label: "ok" },
@@ -25,7 +26,9 @@ export type ReasonId = (typeof reasons)[number]["id"];
 
 export const columns = (
   onQuantityReceivedChange: (rowId: string, value: number) => void,
-  onReasonChange: (rowId: string, value: number) => void
+  onReasonChange: (rowId: string, value: number) => void,
+  onUpcChange: (rowId: string, value: string) => void,
+  onExpireDateChange: (rowId: string, value: Date | undefined) => void
 ): ColumnDef<PurchaseOrderSummaryProducts>[] => [
   {
     id: "product_title",
@@ -58,6 +61,19 @@ export const columns = (
   {
     accessorKey: "upc",
     header: "UPC",
+    cell: ({ row }) => {
+      return (
+        <Input
+          type="text"
+          defaultValue={row.original.upc || ""}
+          onBlur={(e) => {
+            onUpcChange(row.original.id.toString(), e.target.value);
+          }}
+          className="w-52"
+          placeholder="Enter UPC"
+        />
+      );
+    },
   },
   {
     accessorKey: "quantity_purchased",
@@ -84,10 +100,6 @@ export const columns = (
   {
     accessorKey: "quantity_missing",
     header: "Quantity Missing",
-  },
-  {
-    accessorKey: "quantity_shipped",
-    header: "Quantity Shipped",
   },
   {
     accessorKey: "reason_id",
@@ -117,5 +129,13 @@ export const columns = (
   {
     accessorKey: "expire_date",
     header: "Expire Date",
+    cell: ({ row }) => {
+      return (
+        <ExpireDateCell
+          row={row.original}
+          onExpireDateChange={onExpireDateChange}
+        />
+      );
+    },
   },
 ];

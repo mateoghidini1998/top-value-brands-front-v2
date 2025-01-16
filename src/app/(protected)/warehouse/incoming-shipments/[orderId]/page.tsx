@@ -21,7 +21,6 @@ export default function Page({
   );
 
   const handleQuantityReceivedChange = (rowId: string, value: number) => {
-    // add that if quantity_missing == 0 then reason_id = 1
     setTableData((prevData) =>
       prevData.map((row) => {
         if (row.id === Number(rowId)) {
@@ -52,6 +51,34 @@ export default function Page({
     );
   };
 
+  const handleUpcChange = (rowId: string, value: string) => {
+    setTableData((prevData) =>
+      prevData.map((row) => {
+        if (row.id === Number(rowId)) {
+          return {
+            ...row,
+            upc: value,
+          };
+        }
+        return row;
+      })
+    );
+  };
+
+  const handleExpireDateChange = (rowId: string, value: Date | undefined) => {
+    setTableData((prevData) =>
+      prevData.map((row) => {
+        if (row.id === Number(rowId)) {
+          return {
+            ...row,
+            expire_date: value ? value.toISOString() : null,
+          };
+        }
+        return row;
+      })
+    );
+  };
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -66,27 +93,18 @@ export default function Page({
     );
   }
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertDescription>
-          Error loading purchase order: {error}
-        </AlertDescription>
-      </Alert>
-    );
-  }
-
   if (!data) return null;
 
   return (
     <div className="py-6 space-y-8">
       <p>Purchase order {params.orderId}</p>
       <DataTable
-        columns={columns(handleQuantityReceivedChange, handleReasonChange)}
+        columns={columns(
+          handleQuantityReceivedChange,
+          handleReasonChange,
+          handleUpcChange,
+          handleExpireDateChange
+        )}
         data={tableData}
         dataLength={tableData.length}
       />
