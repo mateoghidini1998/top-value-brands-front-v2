@@ -21,10 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useMemo, useState } from "react";
+import { PurchaseOrderSummaryProducts } from "@/types";
+import { Supplier } from "@/types/supplier.type";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import { useTrackedProducts } from "../../inventory/tracked-products/hooks/useTrackedProducts";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
-import { Supplier } from "../../suppliers/interfaces/supplier.interface";
+import { useOrderSummaryQuery } from "../[orderId]/hooks";
 import { getAddedProductsColumns, getTrackedProductsColumns } from "./columns";
 import CreateOrderSummary from "./components/create-order-summary";
 import { ProductInOrder } from "./interface/product-added.interface";
@@ -47,11 +51,93 @@ export default function Page() {
   } = useTrackedProducts();
 
   const { suppliersQuery } = useSuppliers();
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get("update");
+  const { data } = useOrderSummaryQuery(orderId as string);
 
-  const [productsAdded, setProductsAdded] = useState<ProductInOrder[]>([]);
+  const transoformProducts = (data: PurchaseOrderSummaryProducts[]) => {
+    return data.map((product) => ({
+      id: product.id,
+      product_id: product.product_id,
+      supplier_id: product.supplier_id,
+      pack_type: product.pack_type,
+      product_name: product.product_name,
+      product_image: product.product_image,
+      ASIN: product.ASIN,
+      supplier_name: product.supplier_name,
+      quantity: product.quantity_purchased,
+      product_cost: parseFloat(product.product_cost),
+      total_amount: product.total_amount,
+      units_sold: product.units_sold,
+      fees: product.fees ?? 0,
+      lowest_fba_price: product.lowest_fba_price,
+      in_seller_account: product.in_seller_account,
+    }));
+  };
 
+  const addTransformedProducts = (
+    transformedProducts: ProductInOrder[],
+    setData: React.Dispatch<React.SetStateAction<ProductInOrder[]>>
+  ) => {
+    setData((prev: ProductInOrder[]) => {
+      if (prev.length > 0) {
+        const supplierId = prev[0].supplier_id;
+        const hasDifferentSupplier = transformedProducts.some(
+          (product) => product.supplier_id !== supplierId
+        );
+
+        if (hasDifferentSupplier) {
+          toast.error("Products must have the same supplier");
+          return prev;
+        }
+      }
+
+      const newProducts = transformedProducts.filter(
+        (product) => !productsAdded.some((p) => p.id === product.id)
+      );
+
+      const updatedLocalStorage = [
+        ...newProducts.map((product) => ({
+          product_id: product.product_id,
+          quantity: product.quantity || 1,
+          cost: product.product_cost,
+        })),
+      ];
+
+      localStorage.setItem(
+        "productsAdded",
+        JSON.stringify(updatedLocalStorage)
+      );
+      toast.success("Products added successfully");
+
+      return [...newProducts];
+    });
+  };
+
+  const [productsAdded, setProductsAdded] = useState<ProductInOrder[]>(
+    transoformProducts([])
+  );
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
+  const [selectedSupplier, setSelectedSupplier] = useState<number | null>(
+    data?.data.order.supplier_id ?? null
+  );
+
+  const handleFilterBySupplier = (supplier_id: number | null) => {
+    filterBySupplier(supplier_id);
+  };
+
+  useEffect(() => {
+    if (orderId) {
+      // add the data.data.purchaseOrderProducts to the productsAdded state
+      handleFilterBySupplier(data?.data.order.supplier_id ?? null);
+
+      addTransformedProducts(
+        transoformProducts(data?.data.purchaseOrderProducts ?? []),
+        setProductsAdded
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Total pages calculation
   const totalPages = useMemo(() => {
@@ -109,10 +195,6 @@ export default function Page() {
       name: supplier.supplier_name,
       value: supplier.id,
     }));
-
-  const handleFilterBySupplier = (supplier_id: number | null) => {
-    filterBySupplier(supplier_id);
-  };
 
   if (trackedProductsQuery.isLoading) {
     return <LoadingSpinner />;
@@ -233,6 +315,12 @@ export default function Page() {
           <CreateOrderSummary
             productsAdded={productsAdded}
             setProductsAdded={setProductsAdded}
+            orderNumber={
+              data?.data.order.order_number ||
+              "The order number would be automatically generated"
+            }
+            notes={data?.data.order.notes || ""}
+            isEditing={true}
           />
         </>
       )}

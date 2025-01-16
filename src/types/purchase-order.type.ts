@@ -119,6 +119,8 @@ export interface PurchaseOrderSummaryProducts {
   ASIN: string;
   seller_sku: string;
   supplier_name: string;
+  supplier_id: string;
+  pack_type: number | null;
   product_image: string;
   supplier_item_number: null;
   product_velocity: number;

@@ -8,46 +8,59 @@ import { useState } from "react";
 interface CreateOrderSummaryProps {
   productsAdded: ProductInOrder[];
   setProductsAdded: React.Dispatch<React.SetStateAction<ProductInOrder[]>>;
+  orderNumber: string;
+  notes: string;
+  isEditing?: boolean;
 }
 
 export default function CreateOrderSummary({
   productsAdded,
   setProductsAdded,
+  orderNumber,
+  notes,
+  isEditing = false,
 }: CreateOrderSummaryProps) {
   const { createOrderMutation } = useOrders();
 
-  const [orderNotes, setOrderNotes] = useState<string>("");
+  const [orderNotes, setOrderNotes] = useState<string>(notes);
 
-  const handleCreateOrder = async (productsAdded: ProductInOrder[]) => {
-    if (productsAdded.length === 0) {
-      toast.error("No products added");
-      return;
+  const handleCreateOrder = async (
+    productsAdded: ProductInOrder[],
+    isEditing: boolean
+  ) => {
+    if (!isEditing) {
+      if (productsAdded.length === 0) {
+        toast.error("No products added");
+        return;
+      }
+
+      await createOrderMutation
+        .mutateAsync({
+          products: productsAdded.map((product) => {
+            return {
+              product_id: product.product_id,
+              quantity: product.quantity,
+              product_cost: product.product_cost,
+            };
+          }),
+          order_number: generateId(productsAdded[0].supplier_name),
+          supplier_id: parseInt(productsAdded[0].supplier_id),
+          purchase_order_status_id: 1,
+          notes: orderNotes,
+        })
+        .then(() => {
+          localStorage.removeItem("productsAdded");
+          setOrderNotes("");
+          setProductsAdded([]);
+          return toast.success("Order created successfully");
+        })
+        .catch((error) => {
+          console.error("Error creating order:", error);
+          return toast.error("Error creating order");
+        });
+    } else {
+      alert("hello");
     }
-
-    await createOrderMutation
-      .mutateAsync({
-        products: productsAdded.map((product) => {
-          return {
-            product_id: product.product_id,
-            quantity: product.quantity,
-            product_cost: product.product_cost,
-          };
-        }),
-        order_number: generateId(productsAdded[0].supplier_name),
-        supplier_id: parseInt(productsAdded[0].supplier_id),
-        purchase_order_status_id: 1,
-        notes: orderNotes,
-      })
-      .then(() => {
-        localStorage.removeItem("productsAdded");
-        setOrderNotes("");
-        setProductsAdded([]);
-        return toast.success("Order created successfully");
-      })
-      .catch((error) => {
-        console.error("Error creating order:", error);
-        return toast.error("Error creating order");
-      });
   };
 
   const handleCleanOrder = () => {
@@ -63,7 +76,7 @@ export default function CreateOrderSummary({
         <h6 className="font-bold">Order Summary</h6>
         <div className="flex justify-between items-center">
           <p>Order Number:</p>
-          <p>The order number would be automatically generated</p>
+          <p>{orderNumber}</p>
         </div>
         <div className="flex justify-between items-center">
           <p>Supplier:</p>
@@ -102,11 +115,11 @@ export default function CreateOrderSummary({
               <>
                 <button
                   onClick={() => {
-                    handleCreateOrder(productsAdded);
+                    handleCreateOrder(productsAdded, isEditing);
                   }}
                   className="bg-[#438EF3] text-white rounded-lg p-2 w-[130px]"
                 >
-                  Submit Order
+                  {isEditing ? "Save Order" : "Submit Order"}
                 </button>
                 <button
                   onClick={handleCleanOrder}
