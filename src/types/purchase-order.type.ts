@@ -139,6 +139,7 @@ export interface PurchaseOrderSummaryProducts {
   quantity_available: number;
   quantity_missing: number;
   quantity_received: number;
+  reason_id: number | null;
 }
 
 export interface Order {
