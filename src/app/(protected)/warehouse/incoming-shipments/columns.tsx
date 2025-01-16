@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/helpers/format-date";
 import { Order } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
+import ActionsCell from "./components/actions-cell";
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -80,13 +81,8 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "actions",
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
-    cell: () => {
-      return (
-        <div className="text-right">
-          {/* <ActionsCell orderId={orderId} /> */}
-          missing implementation
-        </div>
-      );
+    cell: ({ row }) => {
+      return <ActionsCell orderId={row.original.id} />;
     },
   },
 ];
