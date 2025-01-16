@@ -17,6 +17,7 @@ export const ERROR_MESSAGES = {
   UPDATE_SHIPMENT: "Error updating shipment",
 
   DELETE_ORDER_PRODUCT: "Error deleting order product",
+  ADD_PRODUCT_TO_ORDER: "Error adding product to order",
 } as const;
 
 export const SUCCESS_MESSAGES = {
@@ -27,4 +28,5 @@ export const SUCCESS_MESSAGES = {
   UPDATE_SHIPMENT: "Shipment updated successfully",
 
   DELETE_ORDER_PRODUCT: "Order product deleted successfully",
+  ADD_PRODUCT_TO_ORDER: "Product added to order successfully",
 } as const;

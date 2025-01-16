@@ -2,6 +2,7 @@
 
 import { updateOrderStatus } from "../../actions";
 import {
+  addProductsToOrder,
   updateOrderNotes,
   updateOrderNumber,
   updateOrderProducts,
@@ -44,6 +45,15 @@ export const useOrderSummaryMutations = (orderId: string) => {
     invalidateKeys: [[QUERY_KEYS.ORDERS], [QUERY_KEYS.INCOMING_SHIPMENTS]],
   });
 
+  const addProductsToOrderMutation = useCreateMutation({
+    mutationFn: addProductsToOrder,
+    orderId,
+    errorMessage: ERROR_MESSAGES.ADD_PRODUCT_TO_ORDER,
+    successMessage: SUCCESS_MESSAGES.ADD_PRODUCT_TO_ORDER,
+    // Invalida ORDER_SUMMARY y un filtro de estado de ordenes
+    invalidateKeys: [[QUERY_KEYS.ORDERS], [QUERY_KEYS.ORDER_SUMMARY]],
+  });
+
   return {
     updateOrderProducts: updatePOProductsMutation.mutate,
     updateOrderProductsAsync: updatePOProductsMutation.mutateAsync,
@@ -67,5 +77,11 @@ export const useOrderSummaryMutations = (orderId: string) => {
 
     isErrorStatus: updatePOStatusMutation.isError,
     isSuccessStatus: updatePOStatusMutation.isSuccess,
+
+    addProductsToOrder: addProductsToOrderMutation.mutate,
+    addProductsToOrderAsync: addProductsToOrderMutation.mutateAsync,
+
+    isErrorProducts: addProductsToOrderMutation.isError,
+    isSuccessProducts: addProductsToOrderMutation.isSuccess,
   };
 };

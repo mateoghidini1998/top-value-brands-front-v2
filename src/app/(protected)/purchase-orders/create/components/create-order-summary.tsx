@@ -4,6 +4,8 @@ import { ProductInOrder } from "../interface/product-added.interface";
 import generateId from "../utils/generate-po-id";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
+import { useOrderSummaryMutations } from "../../[orderId]/hooks";
+import { ProductsToAdd } from "../../[orderId]/actions";
 
 interface CreateOrderSummaryProps {
   productsAdded: ProductInOrder[];
@@ -11,6 +13,7 @@ interface CreateOrderSummaryProps {
   orderNumber: string;
   notes: string;
   isEditing?: boolean;
+  orderId?: string;
 }
 
 export default function CreateOrderSummary({
@@ -19,8 +22,10 @@ export default function CreateOrderSummary({
   orderNumber,
   notes,
   isEditing = false,
+  orderId = "",
 }: CreateOrderSummaryProps) {
   const { createOrderMutation } = useOrders();
+  const { addProductsToOrder } = useOrderSummaryMutations(orderNumber);
 
   const [orderNotes, setOrderNotes] = useState<string>(notes);
 
@@ -59,7 +64,22 @@ export default function CreateOrderSummary({
           return toast.error("Error creating order");
         });
     } else {
-      alert("hello");
+      const transformedProducts: ProductsToAdd[] = productsAdded.map(
+        (product) => {
+          return {
+            fees: product.fees,
+            lowest_fba_price: product.lowest_fba_price,
+            product_cost: product.product_cost.toString(),
+            product_id: product.product_id,
+            quantity: product.quantity,
+          };
+        }
+      );
+
+      addProductsToOrder({
+        orderId,
+        products: transformedProducts,
+      });
     }
   };
 

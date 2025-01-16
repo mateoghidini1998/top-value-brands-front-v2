@@ -320,7 +320,8 @@ export default function Page() {
               "The order number would be automatically generated"
             }
             notes={data?.data.order.notes || ""}
-            isEditing={true}
+            isEditing={!!orderId}
+            orderId={orderId || ""}
           />
         </>
       )}
