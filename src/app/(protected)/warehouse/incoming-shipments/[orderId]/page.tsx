@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { useState } from "react";
 import { columns } from "./columns";
+import { Button } from "@/components/ui/button";
 
 export default function Page({
   params,
@@ -79,6 +80,26 @@ export default function Page({
     );
   };
 
+  const handleSave = () => {
+    // return an array of updated products to be sent to the backend
+    const updatedProducts = tableData.map((product) => {
+      return {
+        purchase_order_product_id: product.purchase_order_product_id,
+        product_id: product.id,
+        quantity_received: product.quantity_received,
+        quantity_missing: product.quantity_missing,
+        reason_id: product.reason_id,
+        upc: product.upc,
+        expire_date: product.expire_date,
+      };
+    });
+
+    return {
+      orderId: params.orderId,
+      purchaseOrderProductsUpdates: updatedProducts,
+    };
+  };
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -98,6 +119,7 @@ export default function Page({
   return (
     <div className="py-6 space-y-8">
       <p>Purchase order {params.orderId}</p>
+      <Button onClick={() => handleSave()}>Save</Button>
       <DataTable
         columns={columns(
           handleQuantityReceivedChange,
