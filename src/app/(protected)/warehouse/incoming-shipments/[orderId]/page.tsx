@@ -109,12 +109,10 @@ export default function Page({
     console.log("save pallets");
     console.log({
       purchase_order_id: params.orderId,
-      products: productsAddedToCreatePallet.map((prod) => {
-        return {
-          purchaseorderproduct_id: prod.purchase_order_product_id,
-          quantity: prod.pallet_quantity,
-        };
-      }),
+      products: productsAddedToCreatePallet.map((prod) => ({
+        purchaseorderproduct_id: prod.purchase_order_product_id,
+        quantity: prod.pallet_quantity,
+      })),
     });
   };
 
@@ -158,14 +156,28 @@ export default function Page({
         <TabsContent value="pallets">
           <Button onClick={() => handleSavePallets()}>Save Pallet</Button>
           <DataTable
-            columns={availableToCreate(setProductsAddedToCreatePallet)}
-            data={tableData}
-            dataLength={tableData.length}
+            columns={availableToCreate((product) => {
+              setProductsAddedToCreatePallet((prev) => [
+                ...prev,
+                { ...product, pallet_quantity: 1 },
+              ]);
+            })}
+            data={tableData.filter(
+              (product) =>
+                !productsAddedToCreatePallet.some(
+                  (addedProduct) => addedProduct.id === product.id
+                )
+            )}
+            dataLength={1000}
           />
           <DataTable
-            columns={addedToCreate(setProductsAddedToCreatePallet)}
+            columns={addedToCreate((productToRemove) => {
+              setProductsAddedToCreatePallet((prev) =>
+                prev.filter((product) => product.id !== productToRemove.id)
+              );
+            })}
             data={productsAddedToCreatePallet}
-            dataLength={productsAddedToCreatePallet.length}
+            dataLength={1000}
           />
         </TabsContent>
 

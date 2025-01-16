@@ -12,6 +12,7 @@ import {
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { ExpireDateCell } from "../components/expire-date-cell";
+import { Button } from "@/components/ui/button";
 
 export const reasons = [
   { id: 1, label: "ok" },
@@ -141,9 +142,7 @@ export const incomingOrderCols = (
 ];
 
 export const availableToCreate = (
-  setProductsAddedToCreatePallet: (
-    products: PurchaseOrderSummaryProducts[]
-  ) => void
+  onAddProduct: (product: PurchaseOrderSummaryProducts) => void
 ): ColumnDef<PurchaseOrderSummaryProducts>[] => [
   {
     id: "product_title",
@@ -180,15 +179,17 @@ export const availableToCreate = (
   {
     id: "actions",
     cell: ({ row }) => {
-      return <p>➕</p>;
+      return (
+        <Button variant="ghost" onClick={() => onAddProduct(row.original)}>
+          ➕
+        </Button>
+      );
     },
   },
 ];
 
 export const addedToCreate = (
-  setProductsAddedToCreatePallet: (
-    products: PurchaseOrderSummaryProducts[]
-  ) => void
+  onRemoveProduct: (product: PurchaseOrderSummaryProducts) => void
 ): ColumnDef<PurchaseOrderSummaryProducts>[] => [
   {
     id: "product_title",
@@ -219,17 +220,17 @@ export const addedToCreate = (
     header: "Seller SKU",
   },
   {
-    accessorKey: "quantity",
-    header: "Quantity Added",
-  },
-  {
     accessorKey: "pallet_quantity",
     header: "Pallet Quantity",
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      return <picture>➖</picture>;
+      return (
+        <Button variant="ghost" onClick={() => onRemoveProduct(row.original)}>
+          ➖
+        </Button>
+      );
     },
   },
 ];
