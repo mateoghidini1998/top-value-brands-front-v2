@@ -5,7 +5,7 @@ import { DataTable } from "@/components/custom/data-table";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { PurchaseOrderSummaryProducts } from "@/types";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { columns } from "./columns";
 import { Button } from "@/components/ui/button";
 import { useIncomingShipmentsMutations } from "../hooks/useIncomingShipmentsMutation";
@@ -18,95 +18,86 @@ export default function Page({
   };
 }) {
   const { data, isLoading, error } = useOrderSummaryQuery(params.orderId);
-  const [tableData, setTableData] = useState<PurchaseOrderSummaryProducts[]>(
-    data?.data.purchaseOrderProducts || []
-  );
+  const [localChanges, setLocalChanges] = useState<
+    Record<string, Partial<PurchaseOrderSummaryProducts>>
+  >({});
 
   const { updateIncomingOrderProducts } = useIncomingShipmentsMutations(
     params.orderId
   );
 
+  // Combinar datos originales con cambios locales
+  const tableData = useMemo(() => {
+    if (!data?.data.purchaseOrderProducts) return [];
+
+    return data.data.purchaseOrderProducts.map((product) => ({
+      ...product,
+      ...localChanges[product.id],
+    }));
+  }, [data?.data.purchaseOrderProducts, localChanges]);
+
   const handleQuantityReceivedChange = (rowId: string, value: number) => {
-    setTableData((prevData) =>
-      prevData.map((row) => {
-        if (row.id === Number(rowId)) {
-          const quantity_missing = row.quantity_purchased - value;
-          return {
-            ...row,
-            quantity_received: value,
-            quantity_missing: quantity_missing >= 0 ? quantity_missing : 0,
-            reason_id: quantity_missing === 0 ? 1 : row.reason_id,
-          };
-        }
-        return row;
-      })
-    );
+    setLocalChanges((prev) => {
+      const quantity_missing =
+        (data?.data.purchaseOrderProducts.find((p) => p.id === Number(rowId))
+          ?.quantity_purchased || 0) - value;
+
+      return {
+        ...prev,
+        [rowId]: {
+          ...prev[rowId],
+          quantity_received: value,
+          quantity_missing: quantity_missing >= 0 ? quantity_missing : 0,
+          reason_id: quantity_missing === 0 ? 1 : prev[rowId]?.reason_id,
+        },
+      };
+    });
   };
 
   const handleReasonChange = (rowId: string, value: number) => {
-    setTableData((prevData) =>
-      prevData.map((row) => {
-        if (row.id === Number(rowId)) {
-          return {
-            ...row,
-            reason_id: value,
-          };
-        }
-        return row;
-      })
-    );
+    setLocalChanges((prev) => ({
+      ...prev,
+      [rowId]: {
+        ...prev[rowId],
+        reason_id: value,
+      },
+    }));
   };
 
   const handleUpcChange = (rowId: string, value: string) => {
-    setTableData((prevData) =>
-      prevData.map((row) => {
-        if (row.id === Number(rowId)) {
-          return {
-            ...row,
-            upc: value,
-          };
-        }
-        return row;
-      })
-    );
+    setLocalChanges((prev) => ({
+      ...prev,
+      [rowId]: {
+        ...prev[rowId],
+        upc: value,
+      },
+    }));
   };
 
   const handleExpireDateChange = (rowId: string, value: Date | undefined) => {
-    setTableData((prevData) =>
-      prevData.map((row) => {
-        if (row.id === Number(rowId)) {
-          return {
-            ...row,
-            expire_date: value ? value.toISOString() : null,
-          };
-        }
-        return row;
-      })
-    );
+    setLocalChanges((prev) => ({
+      ...prev,
+      [rowId]: {
+        ...prev[rowId],
+        expire_date: value ? value.toISOString() : null,
+      },
+    }));
   };
 
   const handleSave = () => {
-    // return an array of updated products to be sent to the backend
-    const updatedProducts = tableData.map((product) => {
-      return {
-        purchase_order_product_id: product.purchase_order_product_id,
-        product_id: product.id,
-        quantity_received: product.quantity_received,
-        quantity_missing: product.quantity_missing,
-        reason_id: product.reason_id,
-        upc: product.upc,
-        expire_date: product.expire_date,
-      };
-    });
-
-    const data = {
-      orderId: params.orderId,
-      purchaseOrderProductsUpdates: updatedProducts,
-    };
+    const updatedProducts = tableData.map((product) => ({
+      purchase_order_product_id: product.purchase_order_product_id,
+      product_id: product.id,
+      quantity_received: product.quantity_received,
+      quantity_missing: product.quantity_missing,
+      reason_id: product.reason_id,
+      upc: product.upc,
+      expire_date: product.expire_date,
+    }));
 
     updateIncomingOrderProducts({
       orderId: Number(params.orderId),
-      incomingOrderProductUpdates: data.purchaseOrderProductsUpdates,
+      incomingOrderProductUpdates: updatedProducts,
     });
   };
 
@@ -124,7 +115,7 @@ export default function Page({
     );
   }
 
-  if (!data) return null;
+  if (!data || !tableData.length) return null;
 
   return (
     <div className="py-6 space-y-8">
