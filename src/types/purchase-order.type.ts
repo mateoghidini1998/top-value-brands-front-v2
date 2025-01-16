@@ -142,6 +142,9 @@ export interface PurchaseOrderSummaryProducts {
   reason_id: number | null;
   upc: string | null;
   expire_date: string | null;
+
+  // pallet
+  pallet_quantity?: number;
 }
 
 export interface Order {

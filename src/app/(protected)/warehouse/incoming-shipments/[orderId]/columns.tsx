@@ -24,7 +24,7 @@ export const reasons = [
 
 export type ReasonId = (typeof reasons)[number]["id"];
 
-export const columns = (
+export const incomingOrderCols = (
   onQuantityReceivedChange: (rowId: string, value: number) => void,
   onReasonChange: (rowId: string, value: number) => void,
   onUpcChange: (rowId: string, value: string) => void,
@@ -136,6 +136,100 @@ export const columns = (
           onExpireDateChange={onExpireDateChange}
         />
       );
+    },
+  },
+];
+
+export const availableToCreate = (
+  setProductsAddedToCreatePallet: (
+    products: PurchaseOrderSummaryProducts[]
+  ) => void
+): ColumnDef<PurchaseOrderSummaryProducts>[] => [
+  {
+    id: "product_title",
+    header: "Product Name",
+    cell: ({ row }) => {
+      const product_image = row.original.product_image;
+      const product_name = row.original.product_name;
+      const ASIN = row.original.ASIN;
+      const in_seller_account = row.original.in_seller_account;
+      const width = 300;
+      return (
+        <ProductTitle
+          product_image={product_image}
+          product_name={product_name}
+          ASIN={ASIN}
+          in_seller_account={in_seller_account}
+          width={width}
+        />
+      );
+    },
+  },
+  {
+    accessorKey: "ASIN",
+    header: "ASIN",
+  },
+  {
+    accessorKey: "seller_sku",
+    header: "Seller SKU",
+  },
+  {
+    accessorKey: "quantity_available",
+    header: "Quantity Available",
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      return <p>➕</p>;
+    },
+  },
+];
+
+export const addedToCreate = (
+  setProductsAddedToCreatePallet: (
+    products: PurchaseOrderSummaryProducts[]
+  ) => void
+): ColumnDef<PurchaseOrderSummaryProducts>[] => [
+  {
+    id: "product_title",
+    header: "Product Name",
+    cell: ({ row }) => {
+      const product_image = row.original.product_image;
+      const product_name = row.original.product_name;
+      const ASIN = row.original.ASIN;
+      const in_seller_account = row.original.in_seller_account;
+      const width = 300;
+      return (
+        <ProductTitle
+          product_image={product_image}
+          product_name={product_name}
+          ASIN={ASIN}
+          in_seller_account={in_seller_account}
+          width={width}
+        />
+      );
+    },
+  },
+  {
+    accessorKey: "ASIN",
+    header: "ASIN",
+  },
+  {
+    accessorKey: "seller_sku",
+    header: "Seller SKU",
+  },
+  {
+    accessorKey: "quantity",
+    header: "Quantity Added",
+  },
+  {
+    accessorKey: "pallet_quantity",
+    header: "Pallet Quantity",
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      return <picture>➖</picture>;
     },
   },
 ];

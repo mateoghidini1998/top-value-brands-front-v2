@@ -6,9 +6,10 @@ import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { useState, useMemo } from "react";
-import { columns } from "./columns";
+import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
 import { Button } from "@/components/ui/button";
 import { useIncomingShipmentsMutations } from "../hooks/useIncomingShipmentsMutation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Page({
   params,
@@ -25,6 +26,9 @@ export default function Page({
   const { updateIncomingOrderProducts } = useIncomingShipmentsMutations(
     params.orderId
   );
+
+  const [productsAddedToCreatePallet, setProductsAddedToCreatePallet] =
+    useState<PurchaseOrderSummaryProducts[]>([]);
 
   // Combinar datos originales con cambios locales
   const tableData = useMemo(() => {
@@ -84,7 +88,7 @@ export default function Page({
     }));
   };
 
-  const handleSave = () => {
+  const handleSaveIncomingOrder = () => {
     const updatedProducts = tableData.map((product) => ({
       purchase_order_product_id: product.purchase_order_product_id,
       product_id: product.id,
@@ -98,6 +102,19 @@ export default function Page({
     updateIncomingOrderProducts({
       orderId: Number(params.orderId),
       incomingOrderProductUpdates: updatedProducts,
+    });
+  };
+
+  const handleSavePallets = () => {
+    console.log("save pallets");
+    console.log({
+      purchase_order_id: params.orderId,
+      products: productsAddedToCreatePallet.map((prod) => {
+        return {
+          purchaseorderproduct_id: prod.purchase_order_product_id,
+          quantity: prod.pallet_quantity,
+        };
+      }),
     });
   };
 
@@ -120,17 +137,43 @@ export default function Page({
   return (
     <div className="py-6 space-y-8">
       <p>Purchase order {params.orderId}</p>
-      <Button onClick={() => handleSave()}>Save</Button>
-      <DataTable
-        columns={columns(
-          handleQuantityReceivedChange,
-          handleReasonChange,
-          handleUpcChange,
-          handleExpireDateChange
-        )}
-        data={tableData}
-        dataLength={tableData.length}
-      />
+
+      <Tabs
+        defaultValue={"summary"}
+        className="flex flex-col items-center justify-between gap-4"
+      >
+        <TabsContent value="summary">
+          <Button onClick={() => handleSaveIncomingOrder()}>Save Order</Button>
+          <DataTable
+            columns={incomingOrderCols(
+              handleQuantityReceivedChange,
+              handleReasonChange,
+              handleUpcChange,
+              handleExpireDateChange
+            )}
+            data={tableData}
+            dataLength={tableData.length}
+          />
+        </TabsContent>
+        <TabsContent value="pallets">
+          <Button onClick={() => handleSavePallets()}>Save Pallet</Button>
+          <DataTable
+            columns={availableToCreate(setProductsAddedToCreatePallet)}
+            data={tableData}
+            dataLength={tableData.length}
+          />
+          <DataTable
+            columns={addedToCreate(setProductsAddedToCreatePallet)}
+            data={productsAddedToCreatePallet}
+            dataLength={productsAddedToCreatePallet.length}
+          />
+        </TabsContent>
+
+        <TabsList className="grid w-fit px-2 grid-cols-2 items-end self-end mr-4">
+          <TabsTrigger value="summary">summary</TabsTrigger>
+          <TabsTrigger value="pallets">pallets</TabsTrigger>
+        </TabsList>
+      </Tabs>
     </div>
   );
 }
