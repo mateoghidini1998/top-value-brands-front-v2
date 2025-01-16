@@ -246,10 +246,6 @@ export const getAddedProductsColumns = (
     header: "ASIN",
   },
   {
-    accessorKey: "Supplier",
-    header: "supplier_name",
-  },
-  {
     accessorKey: "quantity",
     header: "Quantity",
     cell: ({ row }) => {
