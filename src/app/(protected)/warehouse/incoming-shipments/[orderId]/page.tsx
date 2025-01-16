@@ -116,6 +116,19 @@ export default function Page({
     });
   };
 
+  const handleUpdatePalletQuantity = (
+    productId: number,
+    newQuantity: number
+  ) => {
+    setProductsAddedToCreatePallet((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === productId
+          ? { ...product, pallet_quantity: newQuantity }
+          : product
+      )
+    );
+  };
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -159,7 +172,7 @@ export default function Page({
             columns={availableToCreate((product) => {
               setProductsAddedToCreatePallet((prev) => [
                 ...prev,
-                { ...product, pallet_quantity: 1 },
+                { ...product, pallet_quantity: product.quantity_available },
               ]);
             })}
             data={tableData.filter(
@@ -168,16 +181,16 @@ export default function Page({
                   (addedProduct) => addedProduct.id === product.id
                 )
             )}
-            dataLength={1000}
+            dataLength={10000}
           />
           <DataTable
             columns={addedToCreate((productToRemove) => {
               setProductsAddedToCreatePallet((prev) =>
                 prev.filter((product) => product.id !== productToRemove.id)
               );
-            })}
+            }, handleUpdatePalletQuantity)}
             data={productsAddedToCreatePallet}
-            dataLength={1000}
+            dataLength={10000}
           />
         </TabsContent>
 

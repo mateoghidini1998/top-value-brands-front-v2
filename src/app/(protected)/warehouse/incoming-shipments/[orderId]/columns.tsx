@@ -13,6 +13,7 @@ import { PurchaseOrderSummaryProducts } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { ExpireDateCell } from "../components/expire-date-cell";
 import { Button } from "@/components/ui/button";
+import { PalletQuantityCell } from "../components/pallet-quantity-cell";
 
 export const reasons = [
   { id: 1, label: "ok" },
@@ -189,7 +190,8 @@ export const availableToCreate = (
 ];
 
 export const addedToCreate = (
-  onRemoveProduct: (product: PurchaseOrderSummaryProducts) => void
+  onRemoveProduct: (product: PurchaseOrderSummaryProducts) => void,
+  onUpdatePalletQuantity: (productId: number, newQuantity: number) => void
 ): ColumnDef<PurchaseOrderSummaryProducts>[] => [
   {
     id: "product_title",
@@ -220,8 +222,25 @@ export const addedToCreate = (
     header: "Seller SKU",
   },
   {
+    accessorKey: "quantity_available",
+    header: "Quantity Available",
+    cell: ({ row }) => {
+      const data =
+        row.original.quantity_available - (row.original.pallet_quantity || 0);
+      return <span>{data}</span>;
+    },
+  },
+  {
     accessorKey: "pallet_quantity",
     header: "Pallet Quantity",
+    cell: ({ row }) => (
+      <div className="w-full flex items-center justify-center">
+        <PalletQuantityCell
+          row={row.original}
+          onUpdatePalletQuantity={onUpdatePalletQuantity}
+        />
+      </div>
+    ),
   },
   {
     id: "actions",
