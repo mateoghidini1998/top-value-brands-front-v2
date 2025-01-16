@@ -136,6 +136,9 @@ export interface PurchaseOrderSummaryProducts {
   purchase_order_product_id: number;
   total_amount: number;
   quantity_purchased: number;
+  quantity_available: number;
+  quantity_missing: number;
+  quantity_received: number;
 }
 
 export interface Order {
