@@ -40,6 +40,10 @@ export default function Page({
     useState<PurchaseOrderSummaryProducts[]>([]);
 
   const [warehouseLocation, setWarehouseLocation] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [palletNumber, setPalletNumber] = useState<string>(
+    Math.floor(Math.random() * 10000000).toString()
+  );
 
   // Combinar datos originales con cambios locales
   const tableData = useMemo(() => {
@@ -220,7 +224,7 @@ export default function Page({
               <div className="grid grid-cols-2 gap-4 w-full">
                 <div className="space-y-2">
                   <p className="text-sm text-zinc-400">Pallet Number</p>
-                  <p>Pending</p>
+                  <p># {palletNumber}</p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-zinc-400">Warehouse Location</p>
@@ -230,7 +234,7 @@ export default function Page({
                     }
                     value={warehouseLocation.toString()}
                   >
-                    <SelectTrigger className="w-full bg-zinc-800 border-zinc-700">
+                    <SelectTrigger className="w-52 bg-zinc-800 border-zinc-700">
                       <SelectValue placeholder="Select location" />
                     </SelectTrigger>
                     <SelectContent>
