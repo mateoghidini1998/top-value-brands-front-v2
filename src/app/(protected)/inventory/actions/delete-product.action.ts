@@ -1,5 +1,5 @@
 import { apiRequest } from "@/helpers/http.adapter";
-import { Product } from "@/types";
+import { PalletProductResponse } from "@/types";
 
 interface DeleteProductProps {
   id: number;
@@ -7,7 +7,7 @@ interface DeleteProductProps {
 
 export const deleteProduct = async (
   data: DeleteProductProps
-): Promise<Product> => {
+): Promise<PalletProductResponse> => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products/disable`;
   const options: RequestInit = {
     method: "PATCH",
@@ -16,5 +16,5 @@ export const deleteProduct = async (
     },
     body: JSON.stringify(data),
   };
-  return apiRequest<Product>(url, options);
+  return apiRequest<PalletProductResponse>(url, options);
 };

@@ -1,5 +1,5 @@
 import { apiRequest } from "@/helpers/http.adapter";
-import { Product } from "@/types";
+import { PalletProductResponse } from "@/types";
 
 export interface EditProductProps {
   id: number;
@@ -12,7 +12,9 @@ export interface EditProductProps {
   pack_type?: number | null;
 }
 
-export const editProduct = async (data: EditProductProps): Promise<Product> => {
+export const editProduct = async (
+  data: EditProductProps
+): Promise<PalletProductResponse> => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products/addExtraInfoToProduct`;
   const options: RequestInit = {
     method: "PATCH",
@@ -21,5 +23,5 @@ export const editProduct = async (data: EditProductProps): Promise<Product> => {
     },
     body: JSON.stringify(data),
   };
-  return apiRequest<Product>(url, options);
+  return apiRequest<PalletProductResponse>(url, options);
 };

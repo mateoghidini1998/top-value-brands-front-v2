@@ -19,7 +19,7 @@ import * as z from "zod";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
 import { Supplier } from "../../suppliers/interfaces/supplier.interface";
 import { SupplierItem } from "../page";
-import { Product } from "@/types";
+import { PalletProductResponse } from "@/types";
 import { EditProductProps } from "../actions/edit-product.action";
 import { useInventory } from "../hooks";
 
@@ -34,7 +34,7 @@ const editProductSchema = z.object({
 });
 
 interface EditProductFormProps {
-  product: Product;
+  product: PalletProductResponse;
   onSuccess: () => void;
 }
 

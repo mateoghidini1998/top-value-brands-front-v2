@@ -2,10 +2,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "@/helpers/format-date";
 import { ProductTitle } from "@/components/custom/product-title";
-import { Product } from "@/types";
+import { PalletProductResponse } from "@/types";
 import { ActionsCell } from "./components";
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<PalletProductResponse>[] = [
   {
     id: "product_title",
     header: "Product Name",
