@@ -3,6 +3,7 @@ export const QUERY_KEYS = {
   ORDERS: "orders",
   PRODUCTS: "products",
   INCOMING_SHIPMENTS: "incoming-shipments",
+  PALLETS: "pallets",
 } as const;
 
 export const CACHE_TIMES = {
