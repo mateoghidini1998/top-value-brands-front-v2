@@ -25,7 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { PalletProductResponse } from "@/types";
+import { Product } from "@/types";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -33,14 +33,13 @@ import { useInventory } from "../hooks/useInventory";
 import { EditProductForm } from "./edit-product-form";
 
 interface ActionsCellProps {
-  row: PalletProductResponse;
+  row: Product;
 }
 
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const { deleteProductMutation } = useInventory();
-  const [productToDelete, setProductToDelete] =
-    useState<PalletProductResponse | null>(null);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
   const handleEditSuccess = () => {
     setIsEditDialogOpen(false);

@@ -11,17 +11,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Product } from "@/types";
+import { Supplier } from "@/types/supplier.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
-import { Supplier } from "../../suppliers/interfaces/supplier.interface";
-import { SupplierItem } from "../page";
-import { PalletProductResponse } from "@/types";
 import { EditProductProps } from "../actions/edit-product.action";
 import { useInventory } from "../hooks";
+import { SupplierItem } from "../page";
 
 const editProductSchema = z.object({
   ASIN: z.string().min(1, "ASIN is required"),
@@ -34,7 +34,7 @@ const editProductSchema = z.object({
 });
 
 interface EditProductFormProps {
-  product: PalletProductResponse;
+  product: Product;
   onSuccess: () => void;
 }
 

@@ -1,11 +1,11 @@
 "use client";
-import { ColumnDef } from "@tanstack/react-table";
-import { formatDate } from "@/helpers/format-date";
 import { ProductTitle } from "@/components/custom/product-title";
-import { PalletProductResponse } from "@/types";
+import { formatDate } from "@/helpers/format-date";
+import { Product } from "@/types";
+import { ColumnDef } from "@tanstack/react-table";
 import { ActionsCell } from "./components";
 
-export const columns: ColumnDef<PalletProductResponse>[] = [
+export const columns: ColumnDef<Product>[] = [
   {
     id: "product_title",
     header: "Product Name",
