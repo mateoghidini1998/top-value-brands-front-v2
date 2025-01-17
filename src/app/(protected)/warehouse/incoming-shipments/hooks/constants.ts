@@ -11,8 +11,10 @@ export const CACHE_TIMES = {
 
 export const ERROR_MESSAGES = {
   UPDATE_PRODUCTS: "Error updating products",
+  CREATE_PALLET: "Error creating pallet",
 } as const;
 
 export const SUCCESS_MESSAGES = {
   UPDATE_PRODUCTS: "Products updated successfully",
+  CREATE_PALLET: "Pallet created successfully",
 } as const;

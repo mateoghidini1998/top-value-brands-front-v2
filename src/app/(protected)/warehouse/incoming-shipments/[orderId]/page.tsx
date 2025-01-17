@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 
 export default function Page({
   params,
@@ -32,9 +33,8 @@ export default function Page({
     Record<string, Partial<PurchaseOrderSummaryProducts>>
   >({});
 
-  const { updateIncomingOrderProducts } = useIncomingShipmentsMutations(
-    params.orderId
-  );
+  const { updateIncomingOrderProducts, createPallet } =
+    useIncomingShipmentsMutations(params.orderId);
 
   const [productsAddedToCreatePallet, setProductsAddedToCreatePallet] =
     useState<PurchaseOrderSummaryProducts[]>([]);
@@ -121,16 +121,37 @@ export default function Page({
   };
 
   const handleSavePallets = () => {
-    console.log("save pallets");
-    console.log({
-      purchase_order_id: parseInt(params.orderId),
-      warehouse_location: warehouseLocation,
-      pallet_number: Math.floor(Math.random() * 10000000),
-      products: productsAddedToCreatePallet.map((prod) => ({
-        purchaseorderproduct_id: prod.purchase_order_product_id,
-        quantity: prod.pallet_quantity,
+    if (productsAddedToCreatePallet.length === 0) {
+      toast.error("No products added");
+      return;
+    }
+
+    if (warehouseLocation === 0) {
+      toast.error("Please select a warehouse location");
+      return;
+    }
+
+    const validProducts = productsAddedToCreatePallet.filter(
+      (prod) => prod.purchase_order_product_id && prod.pallet_quantity
+    );
+
+    if (validProducts.length === 0) {
+      throw new Error("No valid products to create a pallet");
+    }
+
+    createPallet({
+      warehouse_location_id: Number(warehouseLocation),
+      pallet_number: Number(palletNumber),
+      purchase_order_id: Number(params.orderId), // Asegúrate de incluir este campo
+      products: validProducts.map((prod) => ({
+        purchaseorderproduct_id: Number(prod.purchase_order_product_id),
+        quantity: Number(prod.pallet_quantity),
       })),
     });
+
+    setProductsAddedToCreatePallet([]);
+    setPalletNumber(Math.floor(Math.random() * 10000000).toString());
+    setWarehouseLocation(0);
   };
 
   const handleUpdatePalletQuantity = (
