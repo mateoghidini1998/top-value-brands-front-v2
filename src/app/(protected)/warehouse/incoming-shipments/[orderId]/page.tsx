@@ -237,12 +237,12 @@ export default function Page({
           />
 
           {/* Pallet Summary */}
-          <Card className="w-full bg-zinc-900 text-zinc-100 mt-10">
+          <Card className="w-full text-zinc-100 mt-10">
             <CardHeader>
               <CardTitle>Pallet Summary</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4 w-full">
+              <div className="flex flex-row items-start justify-between gap-4 w-full">
                 <div className="space-y-2">
                   <p className="text-sm text-zinc-400">Pallet Number</p>
                   <p># {palletNumber}</p>
