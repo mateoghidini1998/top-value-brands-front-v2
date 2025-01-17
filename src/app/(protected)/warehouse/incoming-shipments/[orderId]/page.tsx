@@ -4,12 +4,21 @@ import { useOrderSummaryQuery } from "@/app/(protected)/purchase-orders/[orderId
 import { DataTable } from "@/components/custom/data-table";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { PurchaseOrderSummaryProducts } from "@/types";
-import { useState, useMemo } from "react";
-import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
 import { Button } from "@/components/ui/button";
-import { useIncomingShipmentsMutations } from "../hooks/useIncomingShipmentsMutation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { formatDate } from "@/helpers/format-date";
+import { PurchaseOrderSummaryProducts } from "@/types";
+import { useMemo, useState } from "react";
+import { useIncomingShipmentsMutations } from "../hooks/useIncomingShipmentsMutation";
+import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Page({
   params,
@@ -29,6 +38,8 @@ export default function Page({
 
   const [productsAddedToCreatePallet, setProductsAddedToCreatePallet] =
     useState<PurchaseOrderSummaryProducts[]>([]);
+
+  const [warehouseLocation, setWarehouseLocation] = useState<number>(0);
 
   // Combinar datos originales con cambios locales
   const tableData = useMemo(() => {
@@ -108,7 +119,9 @@ export default function Page({
   const handleSavePallets = () => {
     console.log("save pallets");
     console.log({
-      purchase_order_id: params.orderId,
+      purchase_order_id: parseInt(params.orderId),
+      warehouse_location: warehouseLocation,
+      pallet_number: Math.floor(Math.random() * 10000000),
       products: productsAddedToCreatePallet.map((prod) => ({
         purchaseorderproduct_id: prod.purchase_order_product_id,
         quantity: prod.pallet_quantity,
@@ -151,8 +164,13 @@ export default function Page({
 
       <Tabs
         defaultValue={"summary"}
-        className="flex flex-col items-center justify-between gap-4"
+        className="flex flex-col items-center justify-between gap-4 relative"
       >
+        <TabsList className="grid w-fit px-2 grid-cols-2 items-end self-end mr-4 absolute right-0 top-[7px]">
+          <TabsTrigger value="summary">summary</TabsTrigger>
+          <TabsTrigger value="pallets">pallets</TabsTrigger>
+        </TabsList>
+
         <TabsContent value="summary">
           <Button onClick={() => handleSaveIncomingOrder()}>Save Order</Button>
           <DataTable
@@ -192,12 +210,65 @@ export default function Page({
             data={productsAddedToCreatePallet}
             dataLength={10000}
           />
-        </TabsContent>
 
-        <TabsList className="grid w-fit px-2 grid-cols-2 items-end self-end mr-4">
-          <TabsTrigger value="summary">summary</TabsTrigger>
-          <TabsTrigger value="pallets">pallets</TabsTrigger>
-        </TabsList>
+          {/* Pallet Summary */}
+          <Card className="w-full bg-zinc-900 text-zinc-100 mt-10">
+            <CardHeader>
+              <CardTitle>Pallet Summary</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4 w-full">
+                <div className="space-y-2">
+                  <p className="text-sm text-zinc-400">Pallet Number</p>
+                  <p>Pending</p>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm text-zinc-400">Warehouse Location</p>
+                  <Select
+                    onValueChange={(value) =>
+                      setWarehouseLocation(Number(value))
+                    }
+                    value={warehouseLocation.toString()}
+                  >
+                    <SelectTrigger className="w-full bg-zinc-800 border-zinc-700">
+                      <SelectValue placeholder="Select location" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">A1</SelectItem>
+                      <SelectItem value="2">A2</SelectItem>
+                      <SelectItem value="3">B1</SelectItem>
+                      <SelectItem value="4">B2</SelectItem>
+                      <SelectItem value="5">C1</SelectItem>
+                      <SelectItem value="6">C2</SelectItem>
+                      <SelectItem value="7">D1</SelectItem>
+                      <SelectItem value="8">D2</SelectItem>
+                      <SelectItem value="9">E1</SelectItem>
+                      <SelectItem value="10">E2</SelectItem>
+                      <SelectItem value="11">Floor</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm text-zinc-400">Purchase Order Number</p>
+                  <p>{data.data.order.order_number}</p>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm text-zinc-400">Date</p>
+                  <p>{formatDate(new Date().toString())}</p>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm text-zinc-400">Total Quantity</p>
+                  <p>
+                    {productsAddedToCreatePallet.reduce(
+                      (a, b) => a + (b.pallet_quantity || 0),
+                      0
+                    )}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
   );
