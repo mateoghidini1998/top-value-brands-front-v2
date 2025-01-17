@@ -179,6 +179,7 @@ export const availableToCreate = (
   },
   {
     id: "actions",
+    header: "Add",
     cell: ({ row }) => {
       return (
         <Button variant="ghost" onClick={() => onAddProduct(row.original)}>
@@ -244,6 +245,8 @@ export const addedToCreate = (
   },
   {
     id: "actions",
+    header: "Remove",
+
     cell: ({ row }) => {
       return (
         <Button variant="ghost" onClick={() => onRemoveProduct(row.original)}>
