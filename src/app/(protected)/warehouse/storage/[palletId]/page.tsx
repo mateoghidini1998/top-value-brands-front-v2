@@ -1,9 +1,10 @@
 "use client";
-import { usePallets } from "../hooks";
-import { PalletInfo } from "./_components/pallet-info";
-import { PalletProductCard } from "./_components/pallet-product-card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { usePallets } from "../hooks";
+import { PalletInfo } from "./_components/pallet-info";
+import { DataTable } from "@/components/custom/data-table";
+import { columns } from "./columns";
 
 export default function PalletDetailsPage({
   params,
@@ -12,6 +13,8 @@ export default function PalletDetailsPage({
 }) {
   const { palletByIdQuery } = usePallets(params.palletId);
   const { data: pallet, error } = palletByIdQuery;
+
+  console.log(pallet);
 
   if (error) {
     return (
@@ -31,21 +34,18 @@ export default function PalletDetailsPage({
   if (!pallet) return null;
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="space-y-6">
       <h1 className="text-2xl font-bold">Pallet Details</h1>
 
       <PalletInfo pallet={pallet} />
 
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">Products</h2>
-        <div className="grid gap-4">
-          {pallet.PalletProducts.map((product) => (
-            <PalletProductCard
-              key={product.purchaseorderproduct_id}
-              product={product}
-            />
-          ))}
-        </div>
+        <DataTable
+          columns={columns}
+          data={pallet.PalletProducts || []}
+          dataLength={1000}
+        />
       </div>
     </div>
   );
