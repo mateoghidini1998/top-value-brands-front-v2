@@ -1,9 +1,8 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { getPallets } from "../actions";
+import { getPallets, GetPalletById } from "../actions";
 
-export const usePallets = () => {
-  // Obtén la instancia de QueryClient proporcionada por el contexto de React Query
+export const usePallets = (palletId?: string) => {
   const queryClient = useQueryClient();
 
   const [filters, setFilters] = useState({
@@ -47,7 +46,15 @@ export const usePallets = () => {
       ];
       return fetchPallets(params);
     },
-    staleTime: 1000 * 60 * 10, // -> 10m
+    staleTime: 1000 * 60 * 10,
+  });
+
+  // Query para obtener un pallet por ID
+  const palletByIdQuery = useQuery({
+    queryKey: ["pallet", palletId],
+    queryFn: () => GetPalletById({ palletId: palletId! }),
+    staleTime: 1000 * 60 * 10,
+    enabled: !!palletId,
   });
 
   const filterBySupplier = (supplier_id: number | null) => {
@@ -76,6 +83,7 @@ export const usePallets = () => {
 
   return {
     palletsQuery,
+    palletByIdQuery,
     filterBySupplier,
     filterByKeyword,
     changePage,

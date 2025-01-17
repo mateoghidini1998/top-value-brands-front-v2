@@ -1,6 +1,7 @@
 import { formatDate } from "@/helpers/format-date";
 import { Pallet } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
+import ActionsCell from "./components/actions-cell";
 
 export const columns: ColumnDef<Pallet>[] = [
   {
@@ -41,7 +42,7 @@ export const columns: ColumnDef<Pallet>[] = [
     cell: ({ row }) => {
       return (
         <div className="text-right">
-          <p>missing {row.original.id}</p>
+          <ActionsCell palletId={row.original.id} />
         </div>
       );
     },
