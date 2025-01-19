@@ -14,6 +14,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ExpireDateCell } from "../_components/expire-date-cell";
 import { Button } from "@/components/ui/button";
 import { PalletQuantityCell } from "../_components/pallet-quantity-cell";
+import { Trash2, SquarePlus } from "lucide-react";
 
 export const reasons = [
   { id: 1, label: "ok" },
@@ -179,12 +180,14 @@ export const availableToCreate = (
   },
   {
     id: "actions",
-    header: "Add",
+    header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
       return (
-        <Button variant="ghost" onClick={() => onAddProduct(row.original)}>
-          ➕
-        </Button>
+        <div className="text-right">
+          <Button variant="ghost" onClick={() => onAddProduct(row.original)}>
+            <SquarePlus className="h-4 w-4" />
+          </Button>
+        </div>
       );
     },
   },
@@ -245,13 +248,15 @@ export const addedToCreate = (
   },
   {
     id: "actions",
-    header: "Remove",
+    header: () => <div className="text-right">Actions</div>,
 
     cell: ({ row }) => {
       return (
-        <Button variant="ghost" onClick={() => onRemoveProduct(row.original)}>
-          ➖
-        </Button>
+        <div className="text-right">
+          <Button variant="ghost" onClick={() => onRemoveProduct(row.original)}>
+            <Trash2 className="h-4 w-4 text-destructive" />
+          </Button>
+        </div>
       );
     },
   },
