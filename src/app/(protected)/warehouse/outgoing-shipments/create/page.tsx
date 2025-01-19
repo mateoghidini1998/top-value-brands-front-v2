@@ -7,9 +7,12 @@ import { usePalletProductsQuery } from "../hooks/usePalletProductsQuery";
 import { TabbedDataTable } from "./_components/tables/tabbed-data-table";
 import { SelectedProductsTable } from "./_components/tables/selected-products-table";
 import { GetAllPalletProductsResponsePalletProduct } from "@/types";
+import { useShipmentMutations } from "../hooks/useShipmentMutation";
+import { toast } from "sonner";
 
 export default function Page() {
   const { palletProductsQuery } = usePalletProductsQuery();
+  const { createShipment } = useShipmentMutations();
   const [selectedProducts, setSelectedProducts] = useState<
     GetAllPalletProductsResponsePalletProduct[]
   >([]);
@@ -60,11 +63,25 @@ export default function Page() {
   };
 
   const handleSaveShipment = () => {
-    console.log("Selected products:", selectedProducts);
+    if (selectedProducts.length === 0) {
+      return toast.error("Please select at least one product");
+    }
+    createShipment({
+      shipment_number: `TV-USA-${Math.floor(100000 + Math.random() * 900000)}`,
+      palletproducts: selectedProducts.map((p) => {
+        return {
+          pallet_product_id: p.id,
+          quantity: p.quantity,
+        };
+      }),
+    });
+
+    setSelectedProducts([]);
   };
 
   const handleCancel = () => {
     setSelectedProducts([]);
+    toast.success("Shipment cancelled");
   };
 
   return (

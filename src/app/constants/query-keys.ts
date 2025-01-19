@@ -4,4 +4,5 @@ export const QUERY_KEYS = {
   PRODUCTS: "products",
   INCOMING_SHIPMENTS: "incoming-shipments",
   SHIPMENTS: "shipments",
+  PALLETS: "pallets",
 } as const;
