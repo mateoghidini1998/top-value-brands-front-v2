@@ -30,10 +30,10 @@ import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { DataTable } from "../../../components/custom/data-table";
 import { useSuppliers } from "../suppliers/hooks/useSuppliers";
-import { Supplier } from "../suppliers/interfaces/supplier.interface";
 import { columns } from "./columns";
 import { CreateProductForm } from "./components/create-product-form";
 import { useInventory } from "./hooks";
+import { Supplier } from "@/types/supplier.type";
 
 type PaginationRange = number | "...";
 export interface SupplierItem {
@@ -157,8 +157,8 @@ export default function Page() {
             items={formatSuppliers(suppliersQuery.data.data)}
             value={selectedSupplier}
             onValueChange={(supplier_id) => {
-              setSelectedSupplier(supplier_id);
-              handleFilterBySupplier(supplier_id);
+              setSelectedSupplier(supplier_id as number);
+              handleFilterBySupplier(supplier_id as number);
             }}
           />
         </div>
