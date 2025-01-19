@@ -1,0 +1,245 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { ColumnDef } from "@tanstack/react-table";
+import { Plus } from "lucide-react";
+import { useState } from "react";
+
+import { ProductTitle } from "@/components/custom/product-title";
+import {
+  GetAllPalletProductsResponse,
+  GetAllPalletProductsResponsePallet,
+  GetAllPalletProductsResponsePalletProduct,
+} from "@/types";
+import { DataTable } from "./data-table";
+
+interface TabbedDataTableProps {
+  data: GetAllPalletProductsResponse[];
+  onAddProduct: (product: GetAllPalletProductsResponsePalletProduct) => void;
+  onAddPalletProducts: (palletId: number) => void;
+  onAddPurchaseOrderProducts: (purchaseOrderId: number) => void;
+}
+
+export function TabbedDataTable({
+  data,
+  onAddProduct,
+  onAddPalletProducts,
+  onAddPurchaseOrderProducts,
+}: TabbedDataTableProps) {
+  const [searchOrder, setSearchOrder] = useState("");
+  const [expandedOrders, setExpandedOrders] = useState<number[]>([]);
+  const [expandedPallets, setExpandedPallets] = useState<number[]>([]);
+
+  const purchaseOrderColumns: ColumnDef<GetAllPalletProductsResponse>[] = [
+    {
+      id: "expand",
+      header: "Show Pallets",
+      cell: ({ row }) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => {
+            const orderId = row.original.id;
+            setExpandedOrders(
+              expandedOrders.includes(orderId)
+                ? expandedOrders.filter((id) => id !== orderId)
+                : [...expandedOrders, orderId]
+            );
+          }}
+        >
+          {expandedOrders.includes(row.original.id) ? "▼" : "▶"}
+        </Button>
+      ),
+    },
+    {
+      accessorKey: "order_number",
+      header: "Order Number",
+    },
+    {
+      id: "pallet_count",
+      header: "Pallet Count",
+      cell: ({ row }) => row.original.pallets.length,
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => onAddPurchaseOrderProducts(row.original.id)}
+        >
+          <Plus className="h-4 w-4" />
+        </Button>
+      ),
+    },
+  ];
+
+  const palletColumns: ColumnDef<GetAllPalletProductsResponsePallet>[] = [
+    {
+      id: "expand",
+      header: "Show Products",
+      cell: ({ row }) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => {
+            const palletId = row.original.id;
+            setExpandedPallets(
+              expandedPallets.includes(palletId)
+                ? expandedPallets.filter((id) => id !== palletId)
+                : [...expandedPallets, palletId]
+            );
+          }}
+        >
+          {expandedPallets.includes(row.original.id) ? "▼" : "▶"}
+        </Button>
+      ),
+    },
+    {
+      accessorKey: "pallet_number",
+      header: "Pallet Number",
+    },
+    {
+      accessorKey: "warehouse_location",
+      header: "Location",
+    },
+    {
+      id: "product_count",
+      header: "Product Count",
+      cell: ({ row }) => row.original.palletProducts.length,
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => onAddPalletProducts(row.original.id)}
+        >
+          <Plus className="h-4 w-4" />
+        </Button>
+      ),
+    },
+  ];
+
+  const productColumns: ColumnDef<GetAllPalletProductsResponsePalletProduct>[] =
+    [
+      {
+        accessorKey: "product.seller_sku",
+        header: "SKU",
+      },
+      {
+        id: "product_title",
+        header: "Product Name",
+        cell: ({ row }) => {
+          const product_image = row.original.product.product_image;
+          const product_name = row.original.product.product_name;
+          const ASIN = row.original.product.ASIN;
+          const in_seller_account = row.original.product.in_seller_account;
+          const width = 300;
+          return (
+            <ProductTitle
+              product_image={product_image || ""}
+              product_name={product_name}
+              ASIN={ASIN}
+              in_seller_account={in_seller_account}
+              width={width}
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "product.ASIN",
+        header: "ASIN",
+      },
+      {
+        accessorKey: "available_quantity",
+        header: "Quantity",
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => (
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => onAddProduct(row.original)}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        ),
+      },
+    ];
+
+  const filteredData = data.filter((order) =>
+    order.order_number.toLowerCase().includes(searchOrder.toLowerCase())
+  );
+
+  return (
+    <Tabs defaultValue="purchase_orders" className="w-full">
+      <TabsList>
+        <TabsTrigger value="purchase_orders">Purchase Orders</TabsTrigger>
+        <TabsTrigger value="pallets">Pallets</TabsTrigger>
+        <TabsTrigger value="products">Products</TabsTrigger>
+      </TabsList>
+      <div className="my-4">
+        <Input
+          placeholder="Search by order number..."
+          value={searchOrder}
+          onChange={(e) => setSearchOrder(e.target.value)}
+        />
+      </div>
+      <TabsContent value="purchase_orders">
+        <DataTable
+          columns={purchaseOrderColumns}
+          data={filteredData}
+          expandedRows={expandedOrders}
+          renderSubComponent={({ row }) => (
+            <div className="px-2 py-4">
+              <DataTable
+                columns={palletColumns}
+                data={row.original.pallets}
+                expandedRows={expandedPallets}
+                renderSubComponent={({ row: palletRow }) => (
+                  <div className="px-2 py-4">
+                    <DataTable
+                      columns={productColumns}
+                      data={palletRow.original.palletProducts}
+                    />
+                  </div>
+                )}
+              />
+            </div>
+          )}
+        />
+      </TabsContent>
+      <TabsContent value="pallets">
+        <DataTable
+          columns={palletColumns}
+          data={filteredData.flatMap((order) => order.pallets)}
+          expandedRows={expandedPallets}
+          renderSubComponent={({ row }) => (
+            <div className="px-2 py-4">
+              <DataTable
+                columns={productColumns}
+                data={row.original.palletProducts}
+              />
+            </div>
+          )}
+        />
+      </TabsContent>
+      <TabsContent value="products">
+        <DataTable
+          columns={productColumns}
+          data={filteredData.flatMap((order) =>
+            order.pallets.flatMap((pallet) => pallet.palletProducts)
+          )}
+        />
+      </TabsContent>
+    </Tabs>
+  );
+}

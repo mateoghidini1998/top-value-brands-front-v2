@@ -40,9 +40,13 @@ interface ShipmentStatus {
 
 const shipmentStatuses: ShipmentStatus[] = [
   { value: "PENDING", name: "Pending" },
+  { value: "IN_TRANSIT", name: "In Transit" },
+  { value: "DELIVERED", name: "Delivered" },
+  { value: "WORKING", name: "Working" },
   { value: "RECEIVING", name: "Receiving" },
-  { value: "RECEIVED", name: "Received" },
-  { value: "CANCELLED", name: "Cancelled" },
+  { value: "SHIPPED", name: "Shipped" },
+  { value: "READY_TO_SHIP", name: "Ready to Ship" },
+  { value: "CHECKED_IN", name: "Checked In" },
 ];
 
 export default function Page() {
@@ -146,7 +150,7 @@ export default function Page() {
         <Button
           className="w-fit h-7"
           onClick={() => {
-            router.push("/incoming-shipments/create");
+            router.push("/warehouse/outgoing-shipments/create");
           }}
         >
           <Plus className="mr-2 h-4 w-4" />
