@@ -18,6 +18,6 @@ export const getShipments = async ({
   orderBy = "",
   orderWay = "",
 }: GetShipmentsProps = {}): Promise<GetShipmentsResponse> => {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/purchaseorders?page=${page}&limit=${limit}&keyword=${keyword}&supplier=${supplier}&orderBy=${orderBy}&orderWay=${orderWay}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/shipments?page=${page}&limit=${limit}&keyword=${keyword}&supplier=${supplier}&orderBy=${orderBy}&orderWay=${orderWay}`;
   return apiRequest<GetShipmentsResponse>(url);
 };

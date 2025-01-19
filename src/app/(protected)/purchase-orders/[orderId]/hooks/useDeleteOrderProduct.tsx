@@ -1,9 +1,12 @@
 import { deleteOrderProduct } from "../actions";
-import { ERROR_MESSAGES, SUCCESS_MESSAGES, QUERY_KEYS } from "./constants";
-import { useDeleteMutation } from "./delete-mutation-factory";
-
+import { useCreateMutation } from "../../../../../hooks/mutation-factory";
+import {
+  ERROR_MESSAGES,
+  QUERY_KEYS,
+  SUCCESS_MESSAGES,
+} from "../../../../constants";
 export const useDeleteOrderProduct = (orderProductId: string) => {
-  const deleteOrderProductMutation = useDeleteMutation({
+  const deleteOrderProductMutation = useCreateMutation({
     mutationFn: deleteOrderProduct,
     orderId: Number(orderProductId),
     errorMessage: ERROR_MESSAGES.DELETE_ORDER_PRODUCT,

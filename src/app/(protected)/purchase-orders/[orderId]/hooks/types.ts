@@ -4,15 +4,6 @@ import { UpdateOrderNotesProps } from "../actions/update-order-notes.action";
 import { UpdateOrderNumberProps } from "../actions/update-order-number.action";
 import { UpdateOrderStatusProps } from "../../actions";
 
-// Make MutationConfig more flexible by not constraining the generic type
-export interface MutationConfig<T> {
-  mutationFn: (variables: T) => Promise<unknown>;
-  orderId: number | string;
-  successMessage: string;
-  errorMessage: string;
-  invalidateKeys?: (string | number)[][]; // Keys a invalidar
-}
-
 export interface PurchaseOrderHookResult {
   data: GetPurchaseOrderSummaryResponse | undefined;
   isLoading: boolean;
