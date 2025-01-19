@@ -1,4 +1,3 @@
-import { SupplierItem } from "@/app/(protected)/inventory/page";
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
@@ -13,22 +12,21 @@ import {
 } from "../ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
-interface FilterSuppliersProps {
-  items: SupplierItem[];
-  value: number | null;
-  onValueChange: (value: number | null) => void;
+interface FilterProps {
+  items: { value: number | string; name: string }[];
+  value: number | string | null;
+  onValueChange: (value: number | string | null) => void;
   className?: string;
 }
 
-export function FilterSuppliers({
+export function FilterSearch({
   items,
   value,
   onValueChange,
   className = "w-[250px]",
-}: FilterSuppliersProps) {
+}: FilterProps) {
   const [open, setOpen] = useState<boolean>(false);
   if (items.length === 0) {
-    console.log("No suppliers found");
     return null;
   }
 
@@ -42,16 +40,16 @@ export function FilterSuppliers({
           className={cn("w-full justify-between", className)}
         >
           {value !== null
-            ? items.find((supplier) => supplier.value === value)?.name
-            : "Select supplier..."}
+            ? items.find((item) => item.value === value)?.name
+            : "Select filter..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className={cn("w-full p-0", className)}>
         <Command>
-          <CommandInput placeholder="Search supplier..." className="h-9" />
+          <CommandInput placeholder="Search..." className="h-9" />
           <CommandList>
-            <CommandEmpty>No supplier found.</CommandEmpty>
+            <CommandEmpty>No filter found.</CommandEmpty>
             <CommandGroup>
               <CommandItem
                 onSelect={() => {
@@ -67,19 +65,19 @@ export function FilterSuppliers({
                   )}
                 />
               </CommandItem>
-              {items.map((supplier) => (
+              {items.map((item) => (
                 <CommandItem
-                  key={supplier.value}
+                  key={item.value}
                   onSelect={() => {
-                    onValueChange(supplier.value);
+                    onValueChange(item.value);
                     setOpen(false);
                   }}
                 >
-                  {supplier.name}
+                  {item.name}
                   <Check
                     className={cn(
                       "ml-auto h-4 w-4",
-                      value === supplier.value ? "opacity-100" : "opacity-0"
+                      value === item.value ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>

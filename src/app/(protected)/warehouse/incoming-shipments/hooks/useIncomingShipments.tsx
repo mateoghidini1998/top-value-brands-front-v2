@@ -51,7 +51,7 @@ export const useIncomingShipments = () => {
     staleTime: 1000 * 60 * 10, // -> 10m
   });
 
-  const filterBySupplier = (supplier_id: number | null) => {
+  const filterBySupplier = (supplier_id: string | number | null) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       supplier: supplier_id ? supplier_id.toString() : "",

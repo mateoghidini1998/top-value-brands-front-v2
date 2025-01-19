@@ -1,6 +1,6 @@
 "use client";
 
-import { FilterSuppliers } from "@/components/custom/filter-suppliers";
+import { FilterSearch } from "@/components/custom/filter-search";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,7 +49,9 @@ export default function Page() {
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
+  const [selectedSupplier, setSelectedSupplier] = useState<
+    string | number | null
+  >(null);
 
   // Total pages calculation
   const totalPages = useMemo(() => {
@@ -107,7 +109,7 @@ export default function Page() {
       value: supplier.id,
     }));
 
-  const handleFilterBySupplier = (supplier_id: number | null) => {
+  const handleFilterBySupplier = (supplier_id: string | number | null) => {
     filterBySupplier(supplier_id);
   };
 
@@ -131,7 +133,7 @@ export default function Page() {
           <Button type="submit" onClick={handleSearch}>
             {searchTerm !== "" ? "Search" : "Reset"}
           </Button>
-          <FilterSuppliers
+          <FilterSearch
             items={formatSuppliers(suppliersQuery.data.data)}
             value={selectedSupplier}
             onValueChange={(supplier_id) => {

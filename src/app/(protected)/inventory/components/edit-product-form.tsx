@@ -1,6 +1,6 @@
 "use client";
 
-import { FilterSuppliers } from "@/components/custom/filter-suppliers";
+import { FilterSearch } from "@/components/custom/filter-search";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -140,7 +140,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
             <FormItem className="flex flex-col items-start justify-center gap-1">
               <FormLabel>Supplier ID</FormLabel>
               <FormControl className="">
-                <FilterSuppliers
+                <FilterSearch
                   className="w-full"
                   items={formatSuppliers(suppliersQuery.data.data)}
                   value={selectedSupplier}

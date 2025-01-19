@@ -1,6 +1,7 @@
 "use client";
 
-import { FilterSuppliers } from "@/components/custom/filter-suppliers";
+import { DataTable } from "@/components/custom/data-table";
+import { FilterSearch } from "@/components/custom/filter-search";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,11 +24,8 @@ import {
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { DataTable } from "@/components/custom/data-table";
-import { Supplier } from "@/types/supplier.type";
-import { useSuppliers } from "../../suppliers/hooks";
-import { useShipmentsQuery } from "./hooks/useShipmentsQuery";
 import { columns } from "./columns";
+import { useShipmentsQuery } from "./hooks/useShipmentsQuery";
 
 type PaginationRange = number | "...";
 export interface SupplierItem {
@@ -35,21 +33,32 @@ export interface SupplierItem {
   name: string;
 }
 
+interface ShipmentStatus {
+  value: string;
+  name: string;
+}
+
+const shipmentStatuses: ShipmentStatus[] = [
+  { value: "PENDING", name: "Pending" },
+  { value: "RECEIVING", name: "Receiving" },
+  { value: "RECEIVED", name: "Received" },
+  { value: "CANCELLED", name: "Cancelled" },
+];
+
 export default function Page() {
   const {
     shipmentsQuery,
-    filterBySupplier,
+    filterByStatus,
     filterByKeyword,
     changePage,
     changeLimit,
     currentPage,
     itemsPerPage,
   } = useShipmentsQuery();
-  const { suppliersQuery } = useSuppliers();
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
 
   // Total pages calculation
   const totalPages = useMemo(() => {
@@ -97,18 +106,12 @@ export default function Page() {
     return <LoadingSpinner />;
   }
 
-  if (!shipmentsQuery.data || !suppliersQuery.data) {
+  if (!shipmentsQuery.data) {
     return <div>Error</div>;
   }
 
-  const formatSuppliers = (suppliers: Supplier[]): SupplierItem[] =>
-    suppliers.map((supplier) => ({
-      name: supplier.supplier_name,
-      value: supplier.id,
-    }));
-
-  const handleFilterBySupplier = (supplier_id: number | null) => {
-    filterBySupplier(supplier_id);
+  const handleFilterByStatus = (status: string) => {
+    filterByStatus(status || "");
   };
 
   return (
@@ -131,12 +134,12 @@ export default function Page() {
           <Button type="submit" onClick={handleSearch}>
             {searchTerm !== "" ? "Search" : "Reset"}
           </Button>
-          <FilterSuppliers
-            items={formatSuppliers(suppliersQuery.data.data)}
-            value={selectedSupplier}
-            onValueChange={(supplier_id) => {
-              setSelectedSupplier(supplier_id);
-              handleFilterBySupplier(supplier_id);
+          <FilterSearch
+            items={shipmentStatuses}
+            value={selectedStatus}
+            onValueChange={(status) => {
+              setSelectedStatus(status?.toString() || "");
+              handleFilterByStatus(status?.toString() || "");
             }}
           />
         </div>

@@ -10,7 +10,7 @@ export const useShipmentsQuery = () => {
     page: 1,
     limit: 50,
     keyword: "",
-    supplier: "",
+    status: "",
     orderBy: "",
     orderWay: "",
   });
@@ -19,17 +19,17 @@ export const useShipmentsQuery = () => {
     page = 1,
     limit = 50,
     keyword = "",
-    supplier = "",
+    status = "",
     orderBy = "",
     orderWay = "",
   }: {
     page?: number;
     limit?: number;
     keyword?: string;
-    supplier?: string;
+    status?: string;
     orderBy?: string;
     orderWay?: string;
-  }) => getShipments({ page, limit, keyword, supplier, orderBy, orderWay });
+  }) => getShipments({ page, limit, keyword, status, orderBy, orderWay });
 
   const shipmentsQuery = useQuery({
     queryKey: ["shipments", filters],
@@ -40,7 +40,7 @@ export const useShipmentsQuery = () => {
           page: number;
           limit: number;
           keyword: string;
-          supplier: string;
+          status: string;
           orderBy: string;
           orderWay: string;
         }
@@ -50,10 +50,10 @@ export const useShipmentsQuery = () => {
     staleTime: 1000 * 60 * 10, // -> 10m
   });
 
-  const filterBySupplier = (supplier_id: number | null) => {
+  const filterByStatus = (status: string) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
-      supplier: supplier_id ? supplier_id.toString() : "",
+      status: status ? status.toString() : "",
       page: 1,
       limit: 50,
     }));
@@ -76,7 +76,7 @@ export const useShipmentsQuery = () => {
 
   return {
     shipmentsQuery,
-    filterBySupplier,
+    filterByStatus,
     filterByKeyword,
     changePage,
     changeLimit,
