@@ -213,10 +213,23 @@ export default function Page({
           <Button onClick={() => handleSavePallets()}>Save Pallet</Button>
           <DataTable
             columns={availableToCreate((product) => {
-              setProductsAddedToCreatePallet((prev) => [
-                ...prev,
-                { ...product, pallet_quantity: product.quantity_available },
-              ]);
+              // validate that the queantity is less than or equal to the quantity available
+              setProductsAddedToCreatePallet((prev) => {
+                if (product.quantity_available <= 0) {
+                  toast.error(
+                    "There is no quantity available for this product"
+                  );
+                  return prev;
+                }
+
+                return [
+                  ...prev,
+                  {
+                    ...product,
+                    pallet_quantity: product.quantity_received,
+                  },
+                ];
+              });
             })}
             data={tableData.filter(
               (product) =>
