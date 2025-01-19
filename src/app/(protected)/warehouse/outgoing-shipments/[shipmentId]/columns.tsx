@@ -30,6 +30,7 @@ export const columns: ColumnDef<ShipmentPalletProduct>[] = [
   {
     accessorKey: "pallet_number",
     header: "Pallet",
+    cell: ({ row }) => <span># {row.original.pallet_number}</span>,
   },
   {
     accessorKey: "quantity",

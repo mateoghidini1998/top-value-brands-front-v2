@@ -1,10 +1,11 @@
 "use client";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useShipmentQuery } from "./hooks/useShipmentQuery";
-import { AlertCircle } from "lucide-react";
 import { DataTable } from "@/components/custom/data-table";
-import { columns } from "./columns";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate } from "@/helpers/format-date";
+import { AlertCircle, Clock, DollarSign, Store } from "lucide-react";
+import { columns } from "./columns";
+import { useShipmentQuery } from "./hooks/useShipmentQuery";
 
 export default function Page({ params }: { params: { shipmentId: string } }) {
   const { data, error } = useShipmentQuery(params.shipmentId);
@@ -28,10 +29,64 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
 
   return (
     <div>
-      <div>
-        <h1>Shipment Details</h1>
-        <p>Work Order: {data.shipment_number}</p>
-        <p>Data Work Issued: {formatDate(data.createdAt.toString())}</p>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {/* Shiopment Number Card */}
+        <Card>
+          <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Shipment Number
+            </CardTitle>
+            <DollarSign className="w-4 h-4 text-muted-foreground ml-auto" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">#{data.shipment_number}</div>
+            <p className="text-xs text-muted-foreground">Shipment number</p>
+          </CardContent>
+        </Card>
+
+        {/* Date Work Order Issued Card */}
+        <Card>
+          <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Date Work Order Issued
+            </CardTitle>
+            <Store className="w-4 h-4 text-muted-foreground ml-auto" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold truncate">
+              {formatDate(data.createdAt.toString())}
+            </div>
+            <p className="text-xs text-muted-foreground">Date</p>
+          </CardContent>
+        </Card>
+
+        {/* Status Card */}
+        <Card>
+          <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Status</CardTitle>
+            <Clock className="w-4 h-4 text-muted-foreground ml-auto" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{data.status}</div>
+            <p className="text-xs text-muted-foreground">Shipment status</p>
+          </CardContent>
+        </Card>
+
+        {/* FBA Shipment ID Card */}
+        <Card>
+          <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              FBA Shipment ID
+            </CardTitle>
+            <Clock className="w-4 h-4 text-muted-foreground ml-auto" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {data.fba_shipment_id || "-"}
+            </div>
+            <p className="text-xs text-muted-foreground">FBA shipment ID</p>
+          </CardContent>
+        </Card>
       </div>
       <DataTable
         columns={columns}
