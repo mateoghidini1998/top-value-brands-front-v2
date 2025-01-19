@@ -1,5 +1,4 @@
 "use client";
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,16 +21,25 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useIncomingShipments } from "../hooks";
 
 interface ActionsCellProps {
   orderId: number;
 }
 
 const ActionsCell = ({ orderId }: ActionsCellProps) => {
+  const { deleteOrderMutation } = useIncomingShipments();
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
 
   const handleDeleteOrder = async () => {
-    console.log("deliting incoming-shipment");
+    if (orderToDelete) {
+      try {
+        await deleteOrderMutation.mutateAsync(orderToDelete).then(() => {});
+        setOrderToDelete(0);
+      } catch (error) {
+        console.error("Failed to delete order:", error);
+      }
+    }
   };
 
   return (

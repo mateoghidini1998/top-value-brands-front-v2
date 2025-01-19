@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/select";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { ExpireDateCell } from "../components/expire-date-cell";
+import { ExpireDateCell } from "../_components/expire-date-cell";
 import { Button } from "@/components/ui/button";
-import { PalletQuantityCell } from "../components/pallet-quantity-cell";
+import { PalletQuantityCell } from "../_components/pallet-quantity-cell";
 
 export const reasons = [
   { id: 1, label: "ok" },

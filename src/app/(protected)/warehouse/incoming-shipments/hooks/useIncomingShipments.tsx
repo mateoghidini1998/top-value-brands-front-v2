@@ -1,6 +1,8 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { getIncomingShipments } from "../actions";
+import { deleteOrder } from "@/app/(protected)/purchase-orders/actions";
+import { toast } from "sonner";
 
 export const useIncomingShipments = () => {
   // Obtén la instancia de QueryClient proporcionada por el contexto de React Query
@@ -51,6 +53,17 @@ export const useIncomingShipments = () => {
     staleTime: 1000 * 60 * 10, // -> 10m
   });
 
+  const deleteOrderMutation = useMutation({
+    mutationFn: (orderId: number) => deleteOrder({ orderId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["incoming-shipments"] });
+    },
+    onError(error: Error) {
+      console.error(error);
+      toast.error(error.message);
+    },
+  });
+
   const filterBySupplier = (supplier_id: string | number | null) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
@@ -83,5 +96,7 @@ export const useIncomingShipments = () => {
     changeLimit,
     currentPage: filters.page,
     itemsPerPage: filters.limit,
+
+    deleteOrderMutation,
   };
 };
