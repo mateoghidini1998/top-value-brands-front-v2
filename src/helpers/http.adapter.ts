@@ -1,3 +1,6 @@
+"use server";
+
+import { cookies } from "next/headers";
 import { sleep } from "./sleep";
 
 class HttpError extends Error {
@@ -32,7 +35,11 @@ export const handleResponse = async <T>(response: Response): Promise<T> => {
 
 export const apiRequest = async <T>(
   url: string,
-  options: RequestInit = {},
+  options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${cookies().get("__session")?.value}`,
+    },
+  },
   delay: number = 100
 ): Promise<T> => {
   try {
