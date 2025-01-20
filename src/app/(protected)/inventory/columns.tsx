@@ -66,6 +66,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "product_cost",
     header: "Product Cost",
+    cell: ({ row }) => <span>$ {row.original.product_cost}</span>,
   },
   // {
   //   accessorKey: "is_active",
