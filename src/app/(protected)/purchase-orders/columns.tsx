@@ -16,11 +16,11 @@ export const columns: ColumnDef<Order>[] = [
     header: "Order Number",
   },
   {
-    accessorKey: "updatedStatusAt",
+    accessorKey: "updatedAt",
     header: "Last Update",
     cell: ({ row }) => (
       <div className="max-w-xs overflow-hidden text-ellipsis">
-        {formatDate(row.getValue("updatedStatusAt"))}
+        {formatDate(new Date(row.getValue("updatedAt")).toString())}
       </div>
     ),
   },
