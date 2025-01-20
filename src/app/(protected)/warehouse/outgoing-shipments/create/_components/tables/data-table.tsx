@@ -18,13 +18,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import {
+//   ChevronLeft,
+//   ChevronRight,
+//   ChevronsLeft,
+//   ChevronsRight,
+// } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -39,7 +39,7 @@ export function DataTable<TData, TValue>({
   data,
   expandedRows = [],
   renderSubComponent,
-  pageSize = 10,
+  pageSize = 1000,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -131,7 +131,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      {/* <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
           size="sm"
@@ -171,7 +171,7 @@ export function DataTable<TData, TValue>({
         >
           <ChevronsRight className="h-4 w-4" />
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 }

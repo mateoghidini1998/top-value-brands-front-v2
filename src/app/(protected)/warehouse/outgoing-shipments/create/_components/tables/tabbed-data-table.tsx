@@ -1,19 +1,18 @@
 "use client";
 
+import { useState } from "react";
+import { Plus } from "lucide-react";
+import type { ColumnDef } from "@tanstack/react-table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { ColumnDef } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
-import { useState } from "react";
-
-import { ProductTitle } from "@/components/custom/product-title";
 import {
   GetAllPalletProductsResponse,
   GetAllPalletProductsResponsePallet,
   GetAllPalletProductsResponsePalletProduct,
 } from "@/types";
 import { DataTable } from "./data-table";
+import { ProductTitle } from "@/components/custom/product-title";
 
 interface TabbedDataTableProps {
   data: GetAllPalletProductsResponse[];
@@ -129,10 +128,6 @@ export function TabbedDataTable({
   const productColumns: ColumnDef<GetAllPalletProductsResponsePalletProduct>[] =
     [
       {
-        accessorKey: "product.seller_sku",
-        header: "SKU",
-      },
-      {
         id: "product_title",
         header: "Product Name",
         cell: ({ row }) => {
@@ -151,6 +146,10 @@ export function TabbedDataTable({
             />
           );
         },
+      },
+      {
+        accessorKey: "product.seller_sku",
+        header: "SKU",
       },
       {
         accessorKey: "product.ASIN",
@@ -199,13 +198,13 @@ export function TabbedDataTable({
           data={filteredData}
           expandedRows={expandedOrders}
           renderSubComponent={({ row }) => (
-            <div className="px-2 py-4">
+            <div className="px-8 py-4">
               <DataTable
                 columns={palletColumns}
                 data={row.original.pallets}
                 expandedRows={expandedPallets}
                 renderSubComponent={({ row: palletRow }) => (
-                  <div className="px-2 py-4">
+                  <div className="px-8 py-4">
                     <DataTable
                       columns={productColumns}
                       data={palletRow.original.palletProducts}
@@ -223,7 +222,7 @@ export function TabbedDataTable({
           data={filteredData.flatMap((order) => order.pallets)}
           expandedRows={expandedPallets}
           renderSubComponent={({ row }) => (
-            <div className="px-2 py-4">
+            <div className="px-8 py-4">
               <DataTable
                 columns={productColumns}
                 data={row.original.palletProducts}

@@ -3,9 +3,9 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ProductTitle } from "@/components/custom/product-title";
 import { GetAllPalletProductsResponsePalletProduct } from "@/types";
 import { DataTable } from "./data-table";
-import { ProductTitle } from "@/components/custom/product-title";
 
 interface SelectedProductsTableProps {
   data: GetAllPalletProductsResponsePalletProduct[];
@@ -17,10 +17,6 @@ export function SelectedProductsTable({
   onRemoveProduct,
 }: SelectedProductsTableProps) {
   const columns: ColumnDef<GetAllPalletProductsResponsePalletProduct>[] = [
-    {
-      accessorKey: "product.seller_sku",
-      header: "SKU",
-    },
     {
       id: "product_title",
       header: "Product Name",
@@ -42,11 +38,15 @@ export function SelectedProductsTable({
       },
     },
     {
+      accessorKey: "product.seller_sku",
+      header: "SKU",
+    },
+    {
       accessorKey: "product.ASIN",
       header: "ASIN",
     },
     {
-      accessorKey: "available_quantity",
+      accessorKey: "quantity",
       header: "Quantity",
     },
     {
