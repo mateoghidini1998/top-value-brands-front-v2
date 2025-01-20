@@ -3,6 +3,8 @@ import { formatDate } from "@/helpers/format-date";
 import { Order } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import ActionsCell from "./_components/actions-cell";
+import { StatusCell } from "@/components/custom/status-cell";
+import { StatusType } from "@/components/custom/status-badge";
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -48,6 +50,16 @@ export const columns: ColumnDef<Order>[] = [
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({ row }) => {
+      const status = row.original.purchaseOrderStatus;
+      const description = status.description as StatusType; // type imported from status cell
+      return (
+        <StatusCell
+          orderId={row.original.id.toString()}
+          statusDescription={description}
+        />
+      );
+    },
   },
   {
     accessorKey: "average_roi",
