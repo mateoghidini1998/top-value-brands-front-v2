@@ -1,6 +1,9 @@
 "use client";
 
-import { useOrderSummaryQuery } from "@/app/(protected)/purchase-orders/[orderId]/hooks";
+import {
+  useOrderSummaryMutations,
+  useOrderSummaryQuery,
+} from "@/app/(protected)/purchase-orders/[orderId]/hooks";
 import { DataTable } from "@/components/custom/data-table";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -32,6 +35,8 @@ export default function Page({
   const [localChanges, setLocalChanges] = useState<
     Record<string, Partial<PurchaseOrderSummaryProducts>>
   >({});
+
+  const { updateOrderStatus } = useOrderSummaryMutations(params.orderId);
 
   const { updateIncomingOrderProducts, createPallet } =
     useIncomingShipmentsMutations(params.orderId);
@@ -104,6 +109,7 @@ export default function Page({
   };
 
   const handleSaveIncomingOrder = () => {
+    console.log(tableData);
     const updatedProducts = tableData.map((product) => ({
       purchase_order_product_id: product.purchase_order_product_id,
       product_id: product.id,
@@ -118,6 +124,25 @@ export default function Page({
       orderId: Number(params.orderId),
       incomingOrderProductUpdates: updatedProducts,
     });
+
+    // verificar que si la quantity recieved de cada producto es igual a la quantity purchased => console.log(closed)
+    let shouldCloseTheOrder = false;
+
+    tableData.forEach((product) => {
+      if (product.quantity_received === product.quantity_purchased) {
+        shouldCloseTheOrder = true;
+      } else {
+        shouldCloseTheOrder = false;
+        return;
+      }
+    });
+
+    if (shouldCloseTheOrder) {
+      updateOrderStatus({
+        orderId: params.orderId,
+        status: 7,
+      });
+    }
   };
 
   const handleSavePallets = () => {
