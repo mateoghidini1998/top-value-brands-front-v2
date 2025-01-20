@@ -108,7 +108,7 @@ export default function Page() {
       palletproducts: selectedProducts.map((p) => {
         return {
           pallet_product_id: p.id,
-          quantity: p.quantity,
+          quantity: p.available_quantity!,
         };
       }),
     });
@@ -187,7 +187,7 @@ export default function Page() {
       const selectedProduct = selectedProducts.find(
         (p) => p.id === quantityDialog.product!.id
       );
-      const selectedQuantity = selectedProduct?.quantity || 0;
+      const selectedQuantity = selectedProduct?.available_quantity || 0;
 
       if (quantity === selectedQuantity) {
         setSelectedProducts((prev) =>
@@ -198,7 +198,7 @@ export default function Page() {
         setSelectedProducts((prev) =>
           prev.map((p) =>
             p.id === quantityDialog.product!.id
-              ? { ...p, quantity: selectedQuantity - quantity }
+              ? { ...p, available_quantity: selectedQuantity - quantity }
               : p
           )
         );

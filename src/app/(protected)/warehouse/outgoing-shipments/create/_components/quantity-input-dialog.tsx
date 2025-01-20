@@ -29,7 +29,7 @@ export function QuantityInputDialog({
 
   useEffect(() => {
     if (product) {
-      setQuantity(action === "add" ? 1 : product.quantity);
+      setQuantity(action === "add" ? 1 : product.available_quantity || 0);
     }
   }, [product, action]);
 
