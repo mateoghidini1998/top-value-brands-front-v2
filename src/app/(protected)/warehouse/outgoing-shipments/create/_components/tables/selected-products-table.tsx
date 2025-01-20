@@ -46,7 +46,7 @@ export function SelectedProductsTable({
       header: "ASIN",
     },
     {
-      accessorKey: "quantity",
+      accessorKey: "available_quantity",
       header: "Quantity",
     },
     {

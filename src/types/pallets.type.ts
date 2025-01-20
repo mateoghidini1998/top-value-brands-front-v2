@@ -99,6 +99,7 @@ export interface GetAllPalletProductsResponsePalletProduct {
   createdAt: Date;
   updatedAt: Date;
   product: GetAllPalletProductsResponseProduct;
+  pallet_id: number;
 }
 
 export interface GetAllPalletProductsResponseProduct {

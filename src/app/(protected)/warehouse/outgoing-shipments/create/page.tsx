@@ -30,7 +30,8 @@ export default function Page() {
     action: "add" | "remove";
   }>({ isOpen: false, product: null, action: "add" });
 
-  console.log(selectedProducts);
+  console.log({ selectedProducts });
+  console.log({ availableProducts });
 
   useEffect(() => {
     if (palletProductsQuery.data) {
@@ -214,23 +215,30 @@ export default function Page() {
     setAvailableProducts((prevAvailable) => {
       return prevAvailable.map((order) => ({
         ...order,
-        pallets: order.pallets.map((pallet) => ({
-          ...pallet,
-          palletProducts: pallet.palletProducts.some((p) => p.id === product.id)
-            ? pallet.palletProducts.map((p) =>
-                p.id === product.id
-                  ? {
-                      ...p,
-                      available_quantity:
-                        (p.available_quantity || 0) + quantity,
-                    }
-                  : p
+        pallets: order.pallets.map((pallet) => {
+          if (pallet.id === product.pallet_id) {
+            return {
+              ...pallet,
+              palletProducts: pallet.palletProducts.some(
+                (p) => p.id === product.id
               )
-            : [
-                ...pallet.palletProducts,
-                { ...product, available_quantity: quantity },
-              ],
-        })),
+                ? pallet.palletProducts.map((p) =>
+                    p.id === product.id
+                      ? {
+                          ...p,
+                          available_quantity:
+                            (p.available_quantity || 0) + quantity,
+                        }
+                      : p
+                  )
+                : [
+                    ...pallet.palletProducts,
+                    { ...product, available_quantity: quantity },
+                  ],
+            };
+          }
+          return pallet;
+        }),
       }));
     });
   };
