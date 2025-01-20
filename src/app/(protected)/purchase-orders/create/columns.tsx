@@ -139,7 +139,7 @@ export const getTrackedProductsColumns = (
     header: "Fees",
     cell: ({ row }) => {
       const fees: number = parseFloat(row.getValue("fees"));
-      return <span>{`$ ${fees.toFixed(2) || "N/A"}`}</span>;
+      return <span>{` ${fees ? `$ ${fees.toFixed(2)}` : "-"}`}</span>;
     },
   },
 
