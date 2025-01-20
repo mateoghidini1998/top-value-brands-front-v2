@@ -62,10 +62,10 @@ export const columns: ColumnDef<Order>[] = [
     },
   },
   {
-    accessorKey: "avg_roi",
+    accessorKey: "average_roi",
     header: "avg roi",
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("avg_roi")).toFixed(2);
+      const amount = parseFloat(row.getValue("average_roi")).toFixed(2);
 
       const getBadgeVariant = (amount: number) => {
         if (amount >= 2) {
@@ -84,7 +84,7 @@ export const columns: ColumnDef<Order>[] = [
           variant={getBadgeVariant(parseFloat(amount))}
           className={`cursor-pointer`}
         >
-          {amount}
+          {!isNaN(parseFloat(amount)) ? amount + "%" : "N/A"}
         </Badge>
       );
     },
