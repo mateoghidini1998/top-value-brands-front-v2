@@ -185,7 +185,9 @@ export default function Page({
 
   return (
     <div className="py-6 space-y-8">
-      <p>Purchase order {params.orderId}</p>
+      <h1 className="text-2xl font-bold">
+        Purchase order {data.data.order.order_number}
+      </h1>
 
       <Tabs
         defaultValue={"summary"}
