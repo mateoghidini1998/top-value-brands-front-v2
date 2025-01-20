@@ -1,7 +1,8 @@
 import { formatDate } from "@/helpers/format-date";
 import { Pallet } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import ActionsCell from "./components/actions-cell";
+import ActionsCell from "./_components/actions-cell";
+import QrCodeCell from "./_components/qr-code-cell";
 
 export const columns: ColumnDef<Pallet>[] = [
   {
@@ -30,7 +31,7 @@ export const columns: ColumnDef<Pallet>[] = [
     header: "QR Code",
     cell: ({ row }) => (
       <div className="w-full overflow-hidden text-ellipsis">
-        <p>missing {row.original.id}</p>
+        <QrCodeCell incomingOrder={row.original} />
       </div>
     ),
   },

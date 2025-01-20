@@ -49,10 +49,6 @@ export const columns: ColumnDef<PalletProductByID>[] = [
     header: "Date",
     cell: ({ row }) => <p>{formatDate(row.original.updatedAt.toString())}</p>,
   },
-  {
-    id: "qr_code",
-    header: "QR Code",
-  },
 
   // {
   //   accessorKey: "actions",
