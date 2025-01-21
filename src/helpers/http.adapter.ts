@@ -35,13 +35,19 @@ export const handleResponse = async <T>(response: Response): Promise<T> => {
 
 export const apiRequest = async <T>(
   url: string,
-  options: RequestInit = {
-    headers: {
-      Authorization: `Bearer ${cookies().get("__session")?.value}`,
-    },
-  },
+  options: RequestInit = {},
   delay: number = 100
 ): Promise<T> => {
+  // Obtener la cookie de sesión
+  const sessionToken = cookies().get("__session")?.value;
+  const authHeader = `Bearer ${sessionToken}`;
+
+  // Verificar si ya existen headers, de lo contrario inicializarlos
+  options.headers = {
+    ...options.headers, // Mantiene los headers existentes si hay
+    // @ts-expect-error Authroization no está definido en RequestInit
+    Authorization: options.headers?.Authorization || authHeader, // Agregar el header si no existe
+  };
   try {
     await sleep(delay);
     const response = await fetch(url, options);
