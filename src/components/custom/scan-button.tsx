@@ -53,7 +53,7 @@ const ScanButton: React.FC = () => {
         <Button
           variant="outline"
           size="icon"
-          className="fixed bottom-24 left-[9.5px] z-50 w-10 h-10 rounded-full bg-white dark:bg-gray-800 border-2 border-blue-500 shadow-lg hover:bg-blue-100 dark:hover:bg-gray-700"
+          className="fixed bottom-10 right-[20px] z-50 w-10 h-10 rounded-full bg-white dark:bg-gray-800 border-2 border-blue-500 shadow-lg hover:bg-blue-100 dark:hover:bg-gray-700"
         >
           <ScanBarcode className="w-6 h-6 text-blue-500" />
         </Button>
