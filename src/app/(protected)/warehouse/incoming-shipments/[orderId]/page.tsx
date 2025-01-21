@@ -109,7 +109,6 @@ export default function Page({
   };
 
   const handleSaveIncomingOrder = () => {
-    console.log(tableData);
     const updatedProducts = tableData.map((product) => ({
       purchase_order_product_id: product.purchase_order_product_id,
       product_id: product.id,

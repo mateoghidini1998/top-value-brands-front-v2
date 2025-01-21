@@ -9,7 +9,6 @@ export const columns: ColumnDef<PalletProductByID>[] = [
     id: "product_title",
     header: "Product Name",
     cell: ({ row }) => {
-      console.log(row.original);
       const product_image =
         row.original.purchaseOrderProduct.Product.product_image;
       const product_name =

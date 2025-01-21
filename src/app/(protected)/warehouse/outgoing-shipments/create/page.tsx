@@ -30,9 +30,6 @@ export default function Page() {
     action: "add" | "remove";
   }>({ isOpen: false, product: null, action: "add" });
 
-  console.log({ selectedProducts });
-  console.log({ availableProducts });
-
   useEffect(() => {
     if (palletProductsQuery.data) {
       setAvailableProducts(palletProductsQuery.data);

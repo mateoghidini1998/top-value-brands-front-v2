@@ -41,7 +41,6 @@ export const columns: ColumnDef<ShipmentPalletProduct>[] = [
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
-      console.log(row.original);
       return (
         <div className="w-full text-right">
           {/* <ActionsCell shipmentId={row.original.id} /> */}-

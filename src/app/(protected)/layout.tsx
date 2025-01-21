@@ -1,4 +1,5 @@
 import { DynamicBreadcrumb } from "@/components/custom/dynamic.breadcrumb";
+import ScanButton from "@/components/custom/scan-button";
 import { AppSidebar } from "@/components/custom/sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -25,7 +26,10 @@ export default function AuthenticatedLayout({
             <DynamicBreadcrumb />
           </div>
         </header>
-        <main className="px-[20px] py-4">{children}</main>
+        <main className="px-[20px] py-4">
+          {children}
+          <ScanButton />
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );

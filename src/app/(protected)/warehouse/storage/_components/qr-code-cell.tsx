@@ -7,8 +7,6 @@ type QrCodeCellProps = {
 };
 
 const QrCodeCell = ({ incomingOrder }: QrCodeCellProps) => {
-  console.log(incomingOrder);
-
   return (
     <QrCodeDialog
       palletNumber={incomingOrder.pallet_number}
