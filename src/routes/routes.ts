@@ -4,9 +4,11 @@ import {
   SquareTerminal,
   Bot,
   BookOpen,
-  Settings2,
+  // Settings2,
   Frame,
   PieChart,
+  PersonStandingIcon,
+  User,
 } from "lucide-react";
 
 export const routes = {
@@ -39,17 +41,17 @@ export const routes = {
       icon: SquareTerminal,
       items: [
         {
-          title: "All Products",
+          title: "Inventory",
           url: "/inventory",
         },
         {
           title: "Tracked Products",
           url: "/inventory/tracked-products",
         },
-        {
-          title: "Deleted Products",
-          url: "/inventory/manage-products",
-        },
+        // {
+        //   title: "Deleted Products",
+        //   url: "/inventory/manage-products",
+        // },
       ],
     },
     {
@@ -76,10 +78,10 @@ export const routes = {
       url: "/warehouse",
       icon: BookOpen,
       items: [
-        {
-          title: "Warehouse",
-          url: "/warehouse",
-        },
+        // {
+        //   title: "Warehouse",
+        //   url: "/warehouse",
+        // },
         {
           title: "Incoming Shipments",
           url: "/warehouse/incoming-shipments",
@@ -92,16 +94,16 @@ export const routes = {
           title: "Storage",
           url: "/warehouse/storage",
         },
-        {
-          title: "Changelog",
-          url: "#",
-        },
+        // {
+        //   title: "Changelog",
+        //   url: "#",
+        // },
       ],
     },
     {
       title: "Users",
       url: "/users",
-      icon: BookOpen,
+      icon: User,
       items: [
         {
           title: "Introduction",
@@ -122,28 +124,51 @@ export const routes = {
       ],
     },
     {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
+      title: "Suppliers",
+      url: "/suppliers",
+      icon: PersonStandingIcon,
+      // items: [
+      //   {
+      //     title: "General",
+      //     url: "#",
+      //   },
+      //   {
+      //     title: "Team",
+      //     url: "#",
+      //   },
+      //   {
+      //     title: "Billing",
+      //     url: "#",
+      //   },
+      //   {
+      //     title: "Limits",
+      //     url: "#",
+      //   },
+      // ],
     },
+    // {
+    //   title: "Settings",
+    //   url: "#",
+    //   icon: Settings2,
+    //   items: [
+    //     {
+    //       title: "General",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Team",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Billing",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Limits",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
   ],
   projects: [
     {

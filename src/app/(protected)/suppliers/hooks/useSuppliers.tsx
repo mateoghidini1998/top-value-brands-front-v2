@@ -4,7 +4,7 @@ export const useSuppliers = () => {
   const suppliersQuery = useQuery({
     queryKey: ["suppliers"],
     queryFn: () => getSuppliers(),
-    staleTime: 1000 * 60 * 60 * 24, // -> 1 day
+    staleTime: 1000 * 60 * 60 * 24 * 7, // -> 7 days
   });
 
   return {
