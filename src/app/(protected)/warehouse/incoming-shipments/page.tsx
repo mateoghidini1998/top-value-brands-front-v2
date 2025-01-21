@@ -137,8 +137,8 @@ export default function Page() {
             items={formatSuppliers(suppliersQuery.data.data)}
             value={selectedSupplier}
             onValueChange={(supplier_id) => {
-              setSelectedSupplier(supplier_id);
-              handleFilterBySupplier(supplier_id);
+              setSelectedSupplier(supplier_id as number);
+              handleFilterBySupplier(supplier_id as number);
             }}
           />
         </div>
