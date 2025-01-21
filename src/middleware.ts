@@ -13,7 +13,7 @@ export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req))
     await auth.protect({
       unauthorizedUrl: "/auth",
-      unauthenticatedUrl: "http://localhost:3000/auth",
+      unauthenticatedUrl: `${process.env.NEXT_PUBLIC_FRONT_URL}/auth`,
     });
 });
 
