@@ -8,7 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { formatDate } from "@/helpers/format-date";
+import { formatDateWithoutHours } from "@/helpers/format-date";
 import { cn } from "@/lib/utils";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { CalendarIcon } from "lucide-react";
@@ -27,7 +27,7 @@ export const ExpireDateCell = ({
     row.expire_date ? new Date(row.expire_date) : new Date()
   );
   const [inputValue, setInputValue] = useState(
-    date ? formatDate(date.toString()) : ""
+    date ? formatDateWithoutHours(date.toString()) : ""
   );
   const [open, setOpen] = useState(false);
 
@@ -48,18 +48,18 @@ export const ExpireDateCell = ({
         onExpireDateChange(row.id.toString(), newDate);
       } else {
         // Restablecer el valor si la fecha no es válida.
-        setInputValue(date ? formatDate(date.toString()) : "");
+        setInputValue(date ? formatDateWithoutHours(date.toString()) : "");
       }
     } else {
       // Restablecer el valor si el formato es incorrecto.
-      setInputValue(date ? formatDate(date.toString()) : "");
+      setInputValue(date ? formatDateWithoutHours(date.toString()) : "");
     }
   };
 
   const handleCalendarSelect = (newDate: Date | undefined) => {
     setDate(newDate);
     if (newDate) {
-      setInputValue(formatDate(newDate.toString()));
+      setInputValue(formatDateWithoutHours(newDate.toString()));
     }
     onExpireDateChange(row.id.toString(), newDate);
     setOpen(false);
