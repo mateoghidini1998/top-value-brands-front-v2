@@ -6,7 +6,7 @@ import { DataTableColumnHeader } from "./data-table-column-header";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { productColumns } from "./product-columns";
-import { DataTable } from "../data-table2";
+import { DataTable } from "../data-table";
 
 export const palletColumns: ColumnDef<GetAllPalletProductsResponsePallet>[] = [
   {

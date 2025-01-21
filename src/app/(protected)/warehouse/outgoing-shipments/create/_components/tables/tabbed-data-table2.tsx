@@ -5,7 +5,7 @@ import { GetAllPalletProductsResponse } from "@/types";
 import { purchaseOrderColumns } from "./columns/purchase-order-columns";
 import { palletColumns } from "./columns/pallet-columns";
 import { productColumns } from "./columns/product-columns";
-import { DataTable } from "./data-table2";
+import { DataTable } from "./data-table";
 
 interface TabbedDataTableProps {
   data: GetAllPalletProductsResponse[];
