@@ -97,7 +97,7 @@ DataTableProps<TData, TValue>) {
   }, [sorting]);
 
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col">
       <div className="flex items-center justify-end pb-2">
         {searchInput !== "" && (
           <Input
@@ -115,7 +115,6 @@ DataTableProps<TData, TValue>) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
-                {/* <SlidersHorizontal /> */}
                 <Settings2 className="h-[16px] w-[16px]" />
               </Button>
             </DropdownMenuTrigger>
@@ -141,14 +140,9 @@ DataTableProps<TData, TValue>) {
           </DropdownMenu>
         )}
       </div>
-      <ScrollArea className="w-fit rounded-md border">
-        <div
-          data-state={state}
-          className="shrink-0 items-center gap-2 transition-[width,height] ease-linear
-        data-[state=expanded]:w-[calc(96.5vw_-_var(--sidebar-width))]
-        data-[state=collapsed]:w-[calc(96.5vw_-_var(--sidebar-width-icon))]"
-        >
-          <Table>
+      <ScrollArea className="flex-1 overflow-auto rounded-md border">
+        <div data-state={state} className="w-full">
+          <Table className="w-full">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
@@ -192,7 +186,10 @@ DataTableProps<TData, TValue>) {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 ">
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
                     No results.
                   </TableCell>
                 </TableRow>
