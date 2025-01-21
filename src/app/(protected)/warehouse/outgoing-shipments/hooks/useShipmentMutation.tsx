@@ -3,6 +3,7 @@
 import { useCreateMutation } from "@/hooks/mutation-factory";
 import { createShipment } from "../actions/create-shipment.action";
 import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/app/constants";
+import { deleteShipment } from "../actions";
 
 export const useShipmentMutations = () => {
   const createShipmentMutation = useCreateMutation({
@@ -12,10 +13,22 @@ export const useShipmentMutations = () => {
     invalidateKeys: [[QUERY_KEYS.SHIPMENTS], [QUERY_KEYS.PALLETS]],
   });
 
+  const deleteShipmentMutation = useCreateMutation({
+    mutationFn: deleteShipment,
+    errorMessage: ERROR_MESSAGES.DELETE_SHIPMENT,
+    successMessage: SUCCESS_MESSAGES.DELETE_SHIPMENT,
+    invalidateKeys: [[QUERY_KEYS.SHIPMENTS], [QUERY_KEYS.PALLETS]],
+  });
+
   return {
     createShipment: createShipmentMutation.mutate,
     createShipmentAsync: createShipmentMutation.mutateAsync,
     isErrorShipment: createShipmentMutation.isError,
     isSuccessShipment: createShipmentMutation.isSuccess,
+
+    deleteShipment: deleteShipmentMutation.mutate,
+    deleteShipmentAsync: deleteShipmentMutation.mutateAsync,
+    isErrorDeleteShipment: deleteShipmentMutation.isError,
+    isSuccessDeleteShipment: deleteShipmentMutation.isSuccess,
   };
 };

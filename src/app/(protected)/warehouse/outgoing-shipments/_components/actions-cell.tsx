@@ -22,6 +22,7 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useShipmentMutations } from "../hooks/useShipmentMutation";
 
 interface ActionsCellProps {
   shipmentId: number;
@@ -29,9 +30,17 @@ interface ActionsCellProps {
 
 const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
   const [shipmentToDelete, setShipmentToDelete] = useState<number>(0);
+  const { deleteShipmentAsync } = useShipmentMutations();
 
   const handleDeleteShipment = async () => {
-    console.log("deliting incoming-shipment");
+    if (shipmentToDelete) {
+      try {
+        await deleteShipmentAsync({ shipmentId: shipmentToDelete });
+        setShipmentToDelete(0);
+      } catch (error) {
+        console.error("Failed to delete shipment:", error);
+      }
+    }
   };
 
   return (
@@ -50,7 +59,7 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
             <Link href={`outgoing-shipments/${shipmentId}`}>View Details</Link>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setShipmentToDelete(shipmentId)}>
-            Delete Order
+            Delete Shipment
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
