@@ -36,16 +36,4 @@ export const columns: ColumnDef<ShipmentPalletProduct>[] = [
     accessorKey: "OutgoingShipmentProduct.quantity",
     header: "Quantity",
   },
-  {
-    accessorKey: "actions",
-    id: "actions",
-    header: () => <div className="text-right">Actions</div>,
-    cell: ({ row }) => {
-      return (
-        <div className="w-full text-right">
-          {/* <ActionsCell shipmentId={row.original.id} /> */}-
-        </div>
-      );
-    },
-  },
 ];
