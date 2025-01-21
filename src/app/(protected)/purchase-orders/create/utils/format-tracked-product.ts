@@ -1,4 +1,5 @@
-import { TrackedProduct } from "../../../inventory/tracked-products/interfaces/tracked-product.interface";
+// import { TrackedProduct } from "../../../inventory/tracked-products/interfaces/tracked-product.interface";
+import { TrackedProduct } from "@/types";
 import { ProductInOrder } from "../interface/product-added.interface";
 
 export const formatTrackedProduct = (
@@ -25,5 +26,6 @@ export const formatTrackedProduct = (
     units_sold: product.units_sold,
     fees: product.fees ?? 0,
     lowest_fba_price: product.lowest_fba_price,
+    in_seller_account: product.in_seller_account || false,
   };
 };
