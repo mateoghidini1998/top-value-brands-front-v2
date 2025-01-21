@@ -1,3 +1,3 @@
 export { default as ActionsCell } from "./actions-cell";
-export * from "./create-product-form";
-export * from "./edit-product-form";
+export * from "./create-supplier-form";
+export * from "./edit-supplier-form";

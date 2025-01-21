@@ -29,7 +29,7 @@ import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { Supplier } from "@/types/supplier.type";
 import { useSupplierMutations } from "../hooks/useSuppliersMutation";
-import { EditProductForm } from "./edit-product-form";
+import { EditSupplierForm } from "./edit-supplier-form";
 
 interface ActionsCellProps {
   row: Supplier;
@@ -88,7 +88,7 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
           <DialogHeader>
             <DialogTitle>Edit Supplier</DialogTitle>
           </DialogHeader>
-          <EditProductForm product={row} onSuccess={handleEditSuccess} />
+          <EditSupplierForm supplier={row} onSuccess={handleEditSuccess} />
         </DialogContent>
       </Dialog>
       <AlertDialog
