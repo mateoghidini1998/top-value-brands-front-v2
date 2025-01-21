@@ -49,14 +49,4 @@ export const columns: ColumnDef<TrackedProduct>[] = [
     accessorKey: "product_cost",
     header: "Product Cost",
   },
-  {
-    accessorKey: "is_active",
-    header: "Active",
-    cell: ({ row }) => <span>{row.original.is_active ? "Yes " : "No"}</span>,
-  },
-  {
-    accessorKey: "actions",
-    id: "actions",
-    header: () => <div className="text-right">Actions</div>,
-  },
 ];
