@@ -16,9 +16,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
-import { Supplier } from "../../suppliers/interfaces/supplier.interface";
-import { useInventory } from "../hooks";
 import { SupplierItem } from "../page";
+import { useInventory } from "../hooks";
+import { Supplier } from "@/types/supplier.type";
 
 const formSchema = z.object({
   ASIN: z.string().min(1, "ASIN is required"),
@@ -107,7 +107,7 @@ export function CreateProductForm() {
                   items={formatSuppliers(suppliersQuery.data.data)}
                   value={selectedSupplier}
                   onValueChange={(supplier_id) => {
-                    setSelectedSupplier(supplier_id);
+                    setSelectedSupplier(supplier_id as number);
                     field.onChange(supplier_id);
                   }}
                 />

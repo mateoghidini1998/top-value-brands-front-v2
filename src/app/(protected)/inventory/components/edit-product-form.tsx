@@ -145,7 +145,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
                   items={formatSuppliers(suppliersQuery.data.data)}
                   value={selectedSupplier}
                   onValueChange={(supplier_id) => {
-                    setSelectedSupplier(supplier_id);
+                    setSelectedSupplier(supplier_id as number);
                     field.onChange(supplier_id);
                   }}
                 />
