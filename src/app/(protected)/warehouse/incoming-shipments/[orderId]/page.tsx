@@ -222,6 +222,7 @@ export default function Page({
           <TabsTrigger value="pallets">pallets</TabsTrigger>
         </TabsList>
 
+        {/* Summary */}
         <TabsContent value="summary">
           <Button onClick={() => handleSaveIncomingOrder()}>Save Order</Button>
           <DataTable
@@ -235,6 +236,7 @@ export default function Page({
             dataLength={tableData.length}
           />
         </TabsContent>
+        {/* Pallet */}
         <TabsContent value="pallets">
           <Button onClick={() => handleSavePallets()}>Save Pallet</Button>
           <DataTable
@@ -252,7 +254,7 @@ export default function Page({
                   ...prev,
                   {
                     ...product,
-                    pallet_quantity: product.quantity_received,
+                    pallet_quantity: product.quantity_available,
                   },
                 ];
               });
