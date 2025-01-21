@@ -28,10 +28,6 @@ export const columns: ColumnDef<PalletProductByID>[] = [
     },
   },
   {
-    accessorKey: "quantity",
-    header: "Quantity",
-  },
-  {
     accessorKey: "available_quantity",
     header: "Available",
   },
