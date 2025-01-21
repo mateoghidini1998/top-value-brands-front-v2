@@ -2,6 +2,7 @@ import { formatDate } from "@/helpers/format-date";
 import { ColumnDef } from "@tanstack/react-table";
 // import { ActionsCell } from "./components";
 import { Supplier } from "@/types/supplier.type";
+import { ActionsCell } from "./_components";
 
 export const columns: ColumnDef<Supplier>[] = [
   {
@@ -40,11 +41,9 @@ export const columns: ColumnDef<Supplier>[] = [
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
-      const orderId: number = row.original.id;
       return (
         <div className="text-right">
-          {/* <ActionsCell orderId={orderId} /> */}
-          <p>{orderId}</p>
+          <ActionsCell row={row.original} />
         </div>
       );
     },

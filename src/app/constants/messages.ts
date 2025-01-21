@@ -10,6 +10,9 @@ export const ERROR_MESSAGES = {
   ADD_PRODUCT_TO_ORDER: "Error adding product to order",
 
   DELETE_SHIPMENT: "Error deleting shipment",
+
+  CREATE_SUPPLIER: "Error creating supplier",
+  DELETE_SUPPLIER: "Error deleting supplier",
 } as const;
 
 export const SUCCESS_MESSAGES = {
@@ -24,4 +27,7 @@ export const SUCCESS_MESSAGES = {
   ADD_PRODUCT_TO_ORDER: "Product added to order successfully",
 
   DELETE_SHIPMENT: "Shipment deleted successfully",
+
+  CREATE_SUPPLIER: "Supplier created successfully",
+  DELETE_SUPPLIER: "Supplier deleted successfully",
 } as const;

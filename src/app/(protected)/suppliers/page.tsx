@@ -22,7 +22,11 @@ export default function Page() {
   return (
     <div>
       <h1>Suppliers</h1>
-      <DataTable columns={columns} data={suppliersQuery.data.data} />
+      <DataTable
+        columns={columns}
+        data={suppliersQuery.data.data}
+        dataLength={50}
+      />
     </div>
   );
 }
