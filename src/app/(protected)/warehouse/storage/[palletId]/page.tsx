@@ -14,8 +14,6 @@ export default function PalletDetailsPage({
   const { palletByIdQuery } = usePallets(params.palletId);
   const { data: pallet, error } = palletByIdQuery;
 
-  console.log(pallet);
-
   if (error) {
     return (
       <div className="container mx-auto p-6">

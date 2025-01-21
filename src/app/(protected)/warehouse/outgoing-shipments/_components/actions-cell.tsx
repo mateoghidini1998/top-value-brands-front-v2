@@ -70,11 +70,11 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Are you sure you want to delete this order?
+              Are you sure you want to delete this shipmnet?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              order from your account.
+              This action cannot be undone. Pallets available quantity will be
+              restored.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

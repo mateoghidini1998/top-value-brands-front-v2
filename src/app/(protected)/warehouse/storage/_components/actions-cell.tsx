@@ -60,9 +60,9 @@ const ActionsCell = ({ palletId }: ActionsCellProps) => {
           <DropdownMenuItem>
             <Link href={`storage/${palletId}`}>View Details</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOrderToDelete(palletId)}>
+          {/* <DropdownMenuItem onClick={() => setOrderToDelete(palletId)}>
             Delete Order
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>
       <AlertDialog

@@ -10,14 +10,22 @@ export const useShipmentMutations = () => {
     mutationFn: createShipment,
     errorMessage: ERROR_MESSAGES.CREATE_SHIPMENT,
     successMessage: SUCCESS_MESSAGES.CREATE_SHIPMENT,
-    invalidateKeys: [[QUERY_KEYS.SHIPMENTS], [QUERY_KEYS.PALLETS]],
+    invalidateKeys: [
+      [QUERY_KEYS.SHIPMENTS],
+      [QUERY_KEYS.PALLET],
+      [QUERY_KEYS.PALLET_PRODUCTS],
+    ],
   });
 
   const deleteShipmentMutation = useCreateMutation({
     mutationFn: deleteShipment,
     errorMessage: ERROR_MESSAGES.DELETE_SHIPMENT,
     successMessage: SUCCESS_MESSAGES.DELETE_SHIPMENT,
-    invalidateKeys: [[QUERY_KEYS.SHIPMENTS], [QUERY_KEYS.PALLETS]],
+    invalidateKeys: [
+      [QUERY_KEYS.SHIPMENTS],
+      [QUERY_KEYS.PALLET],
+      [QUERY_KEYS.PALLET_PRODUCTS],
+    ],
   });
 
   return {
