@@ -43,6 +43,8 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
     }
   };
 
+  //TODO: Add download 2d workflow
+
   return (
     <>
       <DropdownMenu>
