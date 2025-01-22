@@ -24,6 +24,7 @@ export interface ShipmentPalletProduct {
   createdAt: Date;
   updatedAt: Date;
   OutgoingShipmentProduct: OutgoingShipmentProduct;
+  warehouse_location: string;
 }
 
 export interface OutgoingShipmentProduct {

@@ -7,6 +7,7 @@ export const columns: ColumnDef<ShipmentPalletProduct>[] = [
     id: "product_title",
     header: "Product Name",
     cell: ({ row }) => {
+      console.log(row.original);
       const product_image = row.original.product_image;
       const product_name = row.original.product_name;
       const in_seller_account = row.original.in_seller_account;
@@ -32,6 +33,12 @@ export const columns: ColumnDef<ShipmentPalletProduct>[] = [
     header: "Pallet",
     cell: ({ row }) => <span># {row.original.pallet_number}</span>,
   },
+
+  {
+    accessorKey: "warehouse_location",
+    header: "Warehouse Location",
+  },
+
   {
     accessorKey: "OutgoingShipmentProduct.quantity",
     header: "Quantity",
