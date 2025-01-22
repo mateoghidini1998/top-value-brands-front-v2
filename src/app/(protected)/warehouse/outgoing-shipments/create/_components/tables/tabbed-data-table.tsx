@@ -60,24 +60,31 @@ export function TabbedDataTable({
     },
     {
       accessorKey: "order_number",
-      header: "Order Number",
+      header: () => <div className="text-center">Order Number</div>,
+      cell: ({ row }) => (
+        <div className="text-center">{row.original.order_number}</div>
+      ),
     },
     {
       id: "pallet_count",
-      header: "Pallet Count",
-      cell: ({ row }) => row.original.pallets.length,
+      header: () => <div className="text-center">Pallet Count</div>,
+      cell: ({ row }) => (
+        <div className="text-center">{row.original.pallets.length}</div>
+      ),
     },
     {
       id: "actions",
-      header: "Actions",
+      header: () => <div className="text-right">Actions</div>,
       cell: ({ row }) => (
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => onAddPurchaseOrderProducts(row.original.id)}
-        >
-          <Plus className="h-4 w-4" />
-        </Button>
+        <div className="text-right">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => onAddPurchaseOrderProducts(row.original.id)}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
       ),
     },
   ];
@@ -105,28 +112,38 @@ export function TabbedDataTable({
     },
     {
       accessorKey: "pallet_number",
-      header: "Pallet Number",
+      header: () => <div className="text-center">Pallet Number</div>,
+      cell: ({ row }) => (
+        <div className="text-center">{row.original.pallet_number}</div>
+      ),
     },
     {
       accessorKey: "warehouse_location",
-      header: "Location",
+      header: () => <div className="text-center">Location</div>,
+      cell: ({ row }) => (
+        <div className="text-center">{row.original.warehouse_location}</div>
+      ),
     },
     {
       id: "product_count",
-      header: "Product Count",
-      cell: ({ row }) => row.original.palletProducts.length,
+      header: () => <div className="text-center">Product Count</div>,
+      cell: ({ row }) => (
+        <div className="text-center">{row.original.palletProducts.length}</div>
+      ),
     },
     {
       id: "actions",
-      header: "Actions",
+      header: () => <div className="text-right">Actions</div>,
       cell: ({ row }) => (
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => onAddPalletProducts(row.original.id)}
-        >
-          <Plus className="h-4 w-4" />
-        </Button>
+        <div className="text-right">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => onAddPalletProducts(row.original.id)}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
       ),
     },
   ];
@@ -135,7 +152,7 @@ export function TabbedDataTable({
     [
       {
         id: "product_title",
-        header: "Product Name",
+        header: () => <div className="text-center">Product Name</div>,
         cell: ({ row }) => {
           const product_image = row.original.product.product_image;
           const product_name = row.original.product.product_name;
@@ -143,39 +160,52 @@ export function TabbedDataTable({
           const in_seller_account = row.original.product.in_seller_account;
           const width = 300;
           return (
-            <ProductTitle
-              product_image={product_image || ""}
-              product_name={product_name}
-              ASIN={ASIN}
-              in_seller_account={in_seller_account}
-              width={width}
-            />
+            <div className="text-center">
+              <ProductTitle
+                product_image={product_image || ""}
+                product_name={product_name}
+                ASIN={ASIN}
+                in_seller_account={in_seller_account}
+                width={width}
+              />
+            </div>
           );
         },
       },
       {
         accessorKey: "product.upc",
-        header: "UPC",
+        header: () => <div className="text-center">UPC</div>,
+        cell: ({ row }) => (
+          <div className="text-center">{row.original.product.upc}</div>
+        ),
       },
       {
         accessorKey: "product.ASIN",
-        header: "ASIN",
+        header: () => <div className="text-center">ASIN</div>,
+        cell: ({ row }) => (
+          <div className="text-center">{row.original.product.ASIN}</div>
+        ),
       },
       {
         accessorKey: "available_quantity",
-        header: "Quantity",
+        header: () => <div className="text-center">Quantity</div>,
+        cell: ({ row }) => (
+          <div className="text-center">{row.original.available_quantity}</div>
+        ),
       },
       {
         id: "actions",
-        header: "Actions",
+        header: () => <div className="text-right">Actions</div>,
         cell: ({ row }) => (
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => onAddProduct(row.original)}
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
+          <div className="text-right">
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => onAddProduct(row.original)}
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
         ),
       },
     ];
