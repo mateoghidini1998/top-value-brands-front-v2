@@ -94,6 +94,7 @@ DataTableProps<TData, TValue>) {
       };
       fetchSortedData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sorting]);
 
   return (
