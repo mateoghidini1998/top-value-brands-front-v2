@@ -280,12 +280,12 @@ export default function PurchaseOrderPage({
         <Card>
           <CardHeader className="flex flex-row items-center">
             <div className="flex flex-col items-start gap-4 justify-center w-fit space-y-0 pb-2">
-              <CardTitle>Products</CardTitle>
-              <button>
+              {/* <CardTitle>Products</CardTitle> */}
+              <Button className="">
                 <Link href={`/purchase-orders/create?update=${params.orderId}`}>
                   Add Products
                 </Link>
-              </button>
+              </Button>
             </div>
             <Truck className="w-4 h-4 text-muted-foreground ml-auto" />
           </CardHeader>
