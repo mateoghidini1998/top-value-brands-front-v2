@@ -27,7 +27,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarFooter>
         <ModeToggle />
-        <NavUser user={routes.user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
