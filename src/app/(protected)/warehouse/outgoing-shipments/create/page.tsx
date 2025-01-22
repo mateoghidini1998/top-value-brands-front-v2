@@ -142,10 +142,23 @@ export default function Page() {
 
       if (quantity === availableQuantity) {
         setSelectedProducts((prev) => {
+          // validate that the product is not already added. Else updates the quantity
           if (prev.some((p) => p.id === quantityDialog.product!.id)) {
-            return prev.map((p) => {
-              return { ...p, quantity: (p.quantity += quantity) };
+            //1. find the product
+            //2. update the quantity
+            //3. return the new array with the updated produc
+
+            const newSelectedProducts = prev.map((p) => {
+              if (p.id === quantityDialog.product!.id) {
+                return {
+                  ...p,
+                  available_quantity: p.available_quantity! + quantity,
+                };
+              }
+              return p;
             });
+
+            return newSelectedProducts;
           } else {
             return [...prev, { ...quantityDialog.product!, quantity }];
           }
@@ -156,11 +169,26 @@ export default function Page() {
         setSelectedProducts((prev) => {
           // validate that the product is not already added. Else updates the quantity
           if (prev.some((p) => p.id === quantityDialog.product!.id)) {
-            return prev.map((p) => {
-              return { ...p, quantity: (p.quantity += quantity) };
+            //1. find the product
+            //2. update the quantity
+            //3. return the new array with the updated produc
+
+            const newSelectedProducts = prev.map((p) => {
+              if (p.id === quantityDialog.product!.id) {
+                return {
+                  ...p,
+                  available_quantity: p.available_quantity! + quantity,
+                };
+              }
+              return p;
             });
+
+            return newSelectedProducts;
           } else {
-            return [...prev, { ...quantityDialog.product!, quantity }];
+            return [
+              ...prev,
+              { ...quantityDialog.product!, available_quantity: quantity },
+            ];
           }
         });
         setAvailableProducts((prevAvailable) => {
