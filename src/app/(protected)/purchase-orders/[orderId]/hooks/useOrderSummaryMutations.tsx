@@ -13,6 +13,7 @@ import {
   QUERY_KEYS,
 } from "../../../../constants";
 import { useCreateMutation } from "../../../../../hooks/mutation-factory";
+import updatePurchaseOrder from "../actions/update-purchase-order.action";
 
 export const useOrderSummaryMutations = (orderId: string) => {
   const updatePOProductsMutation = useCreateMutation({
@@ -57,6 +58,14 @@ export const useOrderSummaryMutations = (orderId: string) => {
     invalidateKeys: [[QUERY_KEYS.ORDERS], [QUERY_KEYS.ORDER_SUMMARY]],
   });
 
+  const updatePurchaseOrderMutation = useCreateMutation({
+    mutationFn: updatePurchaseOrder,
+    orderId,
+    errorMessage: ERROR_MESSAGES.UPDATE_ORDER,
+    successMessage: SUCCESS_MESSAGES.UPDATE_ORDER,
+    invalidateKeys: [[QUERY_KEYS.ORDER_SUMMARY, orderId], [QUERY_KEYS.ORDERS]],
+  });
+
   return {
     updateOrderProducts: updatePOProductsMutation.mutate,
     updateOrderProductsAsync: updatePOProductsMutation.mutateAsync,
@@ -86,5 +95,10 @@ export const useOrderSummaryMutations = (orderId: string) => {
 
     isErrorProducts: addProductsToOrderMutation.isError,
     isSuccessProducts: addProductsToOrderMutation.isSuccess,
+
+    updatePurchaseOrder: updatePurchaseOrderMutation.mutate,
+    updatePurchaseOrderAsync: updatePurchaseOrderMutation.mutateAsync,
+    isErrorOrder: updatePurchaseOrderMutation.isError,
+    isSuccessOrder: updatePurchaseOrderMutation.isSuccess,
   };
 };
