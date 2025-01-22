@@ -19,7 +19,7 @@ export function SelectedProductsTable({
   const columns: ColumnDef<GetAllPalletProductsResponsePalletProduct>[] = [
     {
       id: "product_title",
-      header: "Product Name",
+      header: () => <div className="text-center">Product Name</div>,
       cell: ({ row }) => {
         const product_image = row.original.product.product_image;
         const product_name = row.original.product.product_name;
@@ -27,39 +27,52 @@ export function SelectedProductsTable({
         const in_seller_account = row.original.product.in_seller_account;
         const width = 300;
         return (
-          <ProductTitle
-            product_image={product_image || ""}
-            product_name={product_name}
-            ASIN={ASIN}
-            in_seller_account={in_seller_account}
-            width={width}
-          />
+          <div className="text-center">
+            <ProductTitle
+              product_image={product_image || ""}
+              product_name={product_name}
+              ASIN={ASIN}
+              in_seller_account={in_seller_account}
+              width={width}
+            />
+          </div>
         );
       },
     },
     {
       accessorKey: "product.seller_sku",
-      header: "SKU",
+      header: () => <div className="text-center">Seller SKU</div>,
+      cell: ({ row }) => (
+        <div className="text-center">{row.original.product.seller_sku}</div>
+      ),
     },
     {
       accessorKey: "product.ASIN",
-      header: "ASIN",
+      header: () => <div className="text-center">ASIN</div>,
+      cell: ({ row }) => (
+        <div className="text-center">{row.original.product.ASIN}</div>
+      ),
     },
     {
       accessorKey: "available_quantity",
-      header: "Quantity",
+      header: () => <div className="text-center">Quantity</div>,
+      cell: ({ row }) => (
+        <div className="text-center">{row.original.available_quantity}</div>
+      ),
     },
     {
       id: "actions",
-      header: "Actions",
+      header: () => <div className="text-right">Actions</div>,
       cell: ({ row }) => (
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => onRemoveProduct(row.original.id)}
-        >
-          <Trash2 className="h-4 w-4 text-destructive" />
-        </Button>
+        <div className="text-right">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => onRemoveProduct(row.original.id)}
+          >
+            <Trash2 className="h-4 w-4 text-destructive" />
+          </Button>
+        </div>
       ),
     },
   ];
