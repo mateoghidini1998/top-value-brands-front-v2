@@ -55,11 +55,7 @@ export function QuantityInputDialog({
             value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value))}
             min={1}
-            max={
-              action === "add"
-                ? product?.available_quantity ?? 1
-                : product?.quantity ?? 1
-            }
+            max={product?.available_quantity ?? 1}
           />
         </div>
         <DialogFooter>
