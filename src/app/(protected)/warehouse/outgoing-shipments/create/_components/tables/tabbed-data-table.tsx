@@ -148,8 +148,8 @@ export function TabbedDataTable({
         },
       },
       {
-        accessorKey: "product.seller_sku",
-        header: "SKU",
+        accessorKey: "product.upc",
+        header: "UPC",
       },
       {
         accessorKey: "product.ASIN",

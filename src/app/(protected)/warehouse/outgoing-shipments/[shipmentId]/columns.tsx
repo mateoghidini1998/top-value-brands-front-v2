@@ -7,7 +7,6 @@ export const columns: ColumnDef<ShipmentPalletProduct>[] = [
     id: "product_title",
     header: "Product Name",
     cell: ({ row }) => {
-      console.log(row.original);
       const product_image = row.original.product_image;
       const product_name = row.original.product_name;
       const in_seller_account = row.original.in_seller_account;
