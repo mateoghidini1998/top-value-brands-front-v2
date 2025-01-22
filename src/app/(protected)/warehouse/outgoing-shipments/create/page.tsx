@@ -14,10 +14,12 @@ import type {
 } from "@/types";
 import { toast } from "sonner";
 import { useShipmentMutations } from "../hooks/useShipmentMutation";
+import LoadingSpinner from "@/components/custom/loading-spinner";
 
 export default function Page() {
   const { palletProductsQuery } = usePalletProductsQuery();
-  const { createShipment } = useShipmentMutations();
+  const { createShipmentAsync, isLoadingCreateShipment } =
+    useShipmentMutations();
   const [availableProducts, setAvailableProducts] = useState<
     GetAllPalletProductsResponse[]
   >([]);
@@ -36,12 +38,16 @@ export default function Page() {
     }
   }, [palletProductsQuery.data]);
 
-  if (palletProductsQuery.isError) {
-    return <div>Error</div>;
+  if (isLoadingCreateShipment) {
+    return <LoadingSpinner />;
   }
 
   if (palletProductsQuery.isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
+  }
+
+  if (palletProductsQuery.isError) {
+    return <div>Error</div>;
   }
 
   if (!availableProducts.length) {
@@ -96,11 +102,11 @@ export default function Page() {
     }
   };
 
-  const handleSaveShipment = () => {
+  const handleSaveShipment = async () => {
     if (selectedProducts.length === 0) {
       return toast.error("Please select at least one product");
     }
-    createShipment({
+    await createShipmentAsync({
       shipment_number: `TV-USA-${Math.floor(100000 + Math.random() * 900000)}`,
       palletproducts: selectedProducts.map((p) => {
         return {

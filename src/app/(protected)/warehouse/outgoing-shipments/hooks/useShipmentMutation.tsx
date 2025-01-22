@@ -33,10 +33,12 @@ export const useShipmentMutations = () => {
     createShipmentAsync: createShipmentMutation.mutateAsync,
     isErrorShipment: createShipmentMutation.isError,
     isSuccessShipment: createShipmentMutation.isSuccess,
+    isLoadingCreateShipment: createShipmentMutation.isPending, // Agregado
 
     deleteShipment: deleteShipmentMutation.mutate,
     deleteShipmentAsync: deleteShipmentMutation.mutateAsync,
     isErrorDeleteShipment: deleteShipmentMutation.isError,
     isSuccessDeleteShipment: deleteShipmentMutation.isSuccess,
+    isLoadingDeleteShipment: deleteShipmentMutation.isPending, // Agregado
   };
 };
