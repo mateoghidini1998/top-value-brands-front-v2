@@ -28,6 +28,12 @@ export function TabbedDataTable({
   onAddPurchaseOrderProducts,
 }: TabbedDataTableProps) {
   const [searchOrder, setSearchOrder] = useState("");
+  const [searchPalletNumber, setSearchPalletNumber] = useState("");
+  const [searchProduct, setSearchProduct] = useState("");
+
+  const filteredData = data.filter((order) =>
+    order.order_number.toLowerCase().includes(searchOrder.toLowerCase())
+  );
   const [expandedOrders, setExpandedOrders] = useState<number[]>([]);
   const [expandedPallets, setExpandedPallets] = useState<number[]>([]);
 
@@ -174,10 +180,6 @@ export function TabbedDataTable({
       },
     ];
 
-  const filteredData = data.filter((order) =>
-    order.order_number.toLowerCase().includes(searchOrder.toLowerCase())
-  );
-
   return (
     <Tabs defaultValue="purchase_orders" className="w-full">
       <TabsList>
@@ -185,11 +187,21 @@ export function TabbedDataTable({
         <TabsTrigger value="pallets">Pallets</TabsTrigger>
         <TabsTrigger value="products">Products</TabsTrigger>
       </TabsList>
-      <div className="my-4">
+      <div className="my-4 flex items-center justify-between space-x-4">
         <Input
           placeholder="Search by order number..."
           value={searchOrder}
           onChange={(e) => setSearchOrder(e.target.value)}
+        />
+        <Input
+          placeholder="Search by pallet number..."
+          value={searchPalletNumber}
+          onChange={(e) => setSearchPalletNumber(e.target.value)}
+        />
+        <Input
+          placeholder="Search by product name..."
+          value={searchProduct}
+          onChange={(e) => setSearchProduct(e.target.value)}
         />
       </div>
       <TabsContent value="purchase_orders">
@@ -219,7 +231,13 @@ export function TabbedDataTable({
       <TabsContent value="pallets">
         <DataTable
           columns={palletColumns}
-          data={filteredData.flatMap((order) => order.pallets)}
+          data={filteredData
+            .flatMap((order) => order.pallets)
+            .filter((pallet) =>
+              pallet.pallet_number
+                .toLowerCase()
+                .includes(searchPalletNumber.toLowerCase())
+            )}
           expandedRows={expandedPallets}
           renderSubComponent={({ row }) => (
             <div className="px-8 py-4">
@@ -235,7 +253,18 @@ export function TabbedDataTable({
         <DataTable
           columns={productColumns}
           data={filteredData.flatMap((order) =>
-            order.pallets.flatMap((pallet) => pallet.palletProducts)
+            order.pallets
+              .filter((pallet) =>
+                pallet.pallet_number
+                  .toLowerCase()
+                  .includes(searchPalletNumber.toLowerCase())
+              )
+              .flatMap((pallet) => pallet.palletProducts)
+              .filter((product) =>
+                product.product.product_name
+                  .toLowerCase()
+                  .includes(searchProduct.toLowerCase())
+              )
           )}
         />
       </TabsContent>
