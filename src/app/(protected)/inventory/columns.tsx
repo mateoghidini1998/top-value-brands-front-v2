@@ -34,13 +34,35 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: "seller_sku",
     header: "Seller SKU",
   },
+
+  {
+    accessorKey: "product_cost",
+    header: "Product Cost",
+    cell: ({ row }) => <span>$ {row.original.product_cost}</span>,
+  },
+
+  {
+    accessorKey: "supplier",
+    header: "Supplier",
+    cell: ({ row }) => (
+      <span>
+        {row.original.supplier?.supplier_name || "No supplier Listed"}
+      </span>
+    ),
+  },
   {
     accessorKey: "supplier_item_number",
     header: "Supplier Item No",
+    cell: ({ row }) => <span>{row.original.supplier_item_number || "-"}</span>,
   },
   {
     accessorKey: "pack_type",
     header: "Pack Type",
+    cell: ({ row }) => (
+      <span>
+        {row.original.pack_type ? `${row.original.pack_type} Pack` : "1 Pack"}
+      </span>
+    ),
   },
   // {
   //   accessorKey: "upc",
@@ -48,7 +70,7 @@ export const columns: ColumnDef<Product>[] = [
   // },
   {
     accessorKey: "FBA_available_inventory",
-    header: "FBA Available Inventory",
+    header: "FBA Stock",
   },
   {
     accessorKey: "reserved_quantity",
@@ -57,16 +79,6 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "Inbound_to_FBA",
     header: "Inbound to FBA",
-  },
-  {
-    accessorKey: "supplier",
-    header: "Supplier",
-    cell: ({ row }) => <span>{row.original.supplier?.supplier_name}</span>,
-  },
-  {
-    accessorKey: "product_cost",
-    header: "Product Cost",
-    cell: ({ row }) => <span>$ {row.original.product_cost}</span>,
   },
   // {
   //   accessorKey: "is_active",
