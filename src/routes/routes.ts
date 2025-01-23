@@ -44,10 +44,10 @@ export const routes = {
           title: "Inventory",
           url: "/inventory",
         },
-        {
-          title: "Tracked Products",
-          url: "/inventory/tracked-products",
-        },
+        // {
+        //   title: "Tracked Products",
+        //   url: "/inventory/tracked-products",
+        // },
         // {
         //   title: "Deleted Products",
         //   url: "/inventory/manage-products",
