@@ -23,6 +23,7 @@ import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useShipmentMutations } from "../hooks/useShipmentMutation";
+import { toast } from "sonner";
 
 interface ActionsCellProps {
   shipmentId: number;
@@ -44,6 +45,41 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
   };
 
   //TODO: Add download 2d workflow
+  const handleDownload2DWorkflow = async (id: number) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/shipments/${id}/download`
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al descargar el archivo");
+      }
+
+      // Crear un blob con los datos de la respuesta
+      const blob = await response.blob();
+
+      // Crear una URL para el blob
+      const url = window.URL.createObjectURL(blob);
+
+      // Crear un enlace temporal para la descarga
+      const link = document.createElement("a");
+      link.href = url;
+
+      // Asignar el nombre del archivo (puedes personalizar este nombre si lo necesitas)
+      link.download = `2DWorkflow_Shipment_${id}.xlsx`;
+
+      // Simular un clic en el enlace para iniciar la descarga
+      document.body.appendChild(link);
+      link.click();
+
+      // Limpiar el DOM
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error al descargar el archivo:", error);
+      toast.error("Error al descargar el archivo");
+    }
+  };
 
   return (
     <>
@@ -59,6 +95,11 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             <Link href={`outgoing-shipments/${shipmentId}`}>View Details</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => handleDownload2DWorkflow(shipmentId)}
+          >
+            Download 2D Workflow
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setShipmentToDelete(shipmentId)}>
             Delete Shipment
