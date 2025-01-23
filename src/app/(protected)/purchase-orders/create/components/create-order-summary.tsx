@@ -25,9 +25,11 @@ export default function CreateOrderSummary({
   orderId = "",
 }: CreateOrderSummaryProps) {
   const { createOrderMutation } = useOrders();
-  const { addProductsToOrder } = useOrderSummaryMutations(orderNumber);
+  const { updatePurchaseOrderAsync } = useOrderSummaryMutations(orderNumber);
 
   const [orderNotes, setOrderNotes] = useState<string>(notes);
+
+  console.log(orderNotes);
 
   const handleCreateOrder = async (
     productsAdded: ProductInOrder[],
@@ -76,10 +78,19 @@ export default function CreateOrderSummary({
         }
       );
 
-      addProductsToOrder({
+      updatePurchaseOrderAsync({
         orderId,
         products: transformedProducts,
-      });
+        notes: orderNotes,
+      })
+        .then(() => {
+          localStorage.removeItem("productsAdded");
+          setOrderNotes("");
+          setProductsAdded([]);
+        })
+        .catch((error) => {
+          console.error("Error creating order:", error);
+        });
     }
   };
 

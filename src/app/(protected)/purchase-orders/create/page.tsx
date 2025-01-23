@@ -204,6 +204,8 @@ export default function Page() {
     return <div>Error</div>;
   }
 
+  console.log(productsAdded);
+
   return (
     <section className="flex flex-col gap-6 w-full">
       {/* 1. Search and filter */}

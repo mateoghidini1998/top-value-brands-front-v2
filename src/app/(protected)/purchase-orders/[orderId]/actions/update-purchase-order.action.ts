@@ -5,9 +5,11 @@ export interface UpdatePurchaseOrderProps {
   notes?: string;
   purchase_order_status_id?: number;
   products?: {
+    fees: number;
+    lowest_fba_price: number;
+    product_cost: string;
     product_id: number;
     quantity: number;
-    product_cost: number;
   }[];
 }
 

@@ -63,7 +63,7 @@ export const useOrderSummaryMutations = (orderId: string) => {
     orderId,
     errorMessage: ERROR_MESSAGES.UPDATE_ORDER,
     successMessage: SUCCESS_MESSAGES.UPDATE_ORDER,
-    invalidateKeys: [[QUERY_KEYS.ORDER_SUMMARY, orderId], [QUERY_KEYS.ORDERS]],
+    invalidateKeys: [[QUERY_KEYS.ORDER_SUMMARY], [QUERY_KEYS.ORDERS]],
   });
 
   return {
