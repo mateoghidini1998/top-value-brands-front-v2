@@ -259,12 +259,15 @@ export default function Page({
                 ];
               });
             })}
-            data={tableData.filter(
-              (product) =>
+            data={tableData.filter((product) => {
+              // validate that the product has quantity available
+              return (
+                product.quantity_available > 0 &&
                 !productsAddedToCreatePallet.some(
                   (addedProduct) => addedProduct.id === product.id
                 )
-            )}
+              );
+            })}
             dataLength={10000}
           />
           <DataTable
