@@ -26,7 +26,10 @@ export const columns: ColumnDef<ShipmentPalletProduct>[] = [
     accessorKey: "seller_sku",
     header: "Seller SKU",
   },
-
+  {
+    accessorKey: "upc",
+    header: "UPC",
+  },
   {
     accessorKey: "pallet_number",
     header: "Pallet",

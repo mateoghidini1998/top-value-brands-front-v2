@@ -25,6 +25,7 @@ export interface ShipmentPalletProduct {
   updatedAt: Date;
   OutgoingShipmentProduct: OutgoingShipmentProduct;
   warehouse_location: string;
+  upc: string;
 }
 
 export interface OutgoingShipmentProduct {
@@ -57,6 +58,7 @@ export interface ShipmentPalletProduct {
   product_name: string;
   product_image: string;
   seller_sku: string;
+  upc: string;
   in_seller_account: boolean | null;
 }
 

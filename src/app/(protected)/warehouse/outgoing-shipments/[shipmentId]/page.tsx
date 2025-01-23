@@ -3,7 +3,13 @@ import { DataTable } from "@/components/custom/data-table";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate } from "@/helpers/format-date";
-import { AlertCircle, Clock, DollarSign, Store } from "lucide-react";
+import {
+  AlertCircle,
+  ClockIcon,
+  IdCardIcon,
+  PlaneIcon,
+  StoreIcon,
+} from "lucide-react";
 import { columns } from "./columns";
 import { useShipmentQuery } from "./hooks/useShipmentQuery";
 
@@ -36,7 +42,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
             <CardTitle className="text-sm font-medium">
               Shipment Number
             </CardTitle>
-            <DollarSign className="w-4 h-4 text-muted-foreground ml-auto" />
+            <PlaneIcon className="w-4 h-4 text-muted-foreground ml-auto" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">#{data.shipment_number}</div>
@@ -50,7 +56,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
             <CardTitle className="text-sm font-medium">
               Date Work Order Issued
             </CardTitle>
-            <Store className="w-4 h-4 text-muted-foreground ml-auto" />
+            <ClockIcon className="w-4 h-4 text-muted-foreground ml-auto" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold truncate">
@@ -64,7 +70,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
         <Card>
           <CardHeader className="flex flex-row items-center space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Status</CardTitle>
-            <Clock className="w-4 h-4 text-muted-foreground ml-auto" />
+            <StoreIcon className="w-4 h-4 text-muted-foreground ml-auto" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{data.status}</div>
@@ -78,7 +84,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
             <CardTitle className="text-sm font-medium">
               FBA Shipment ID
             </CardTitle>
-            <Clock className="w-4 h-4 text-muted-foreground ml-auto" />
+            <IdCardIcon className="w-4 h-4 text-muted-foreground ml-auto" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
