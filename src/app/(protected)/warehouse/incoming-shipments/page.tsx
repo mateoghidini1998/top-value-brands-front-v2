@@ -145,7 +145,7 @@ export default function Page() {
         <Button
           className="w-fit h-7"
           onClick={() => {
-            router.push("/incoming-shipments/create");
+            router.push("/warehouse/outgoing-shipments/create");
           }}
         >
           <Plus className="mr-2 h-4 w-4" />
