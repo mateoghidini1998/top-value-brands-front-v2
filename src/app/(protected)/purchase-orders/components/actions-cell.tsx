@@ -30,7 +30,7 @@ interface ActionsCellProps {
 }
 
 const ActionsCell = ({ orderId }: ActionsCellProps) => {
-  const { deleteOrderMutation, downloadPDF } = useOrders();
+  const { deleteOrderMutation } = useOrders();
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
 
   const handleDeleteOrder = async () => {
@@ -49,11 +49,25 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
 
   const handleDownloadPDF = async () => {
     try {
-      await downloadPDF({ orderId }).then(() => {
-        toast.success("PDF downloaded successfully");
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/purchaseorders/download/${orderId}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Error fetching data");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `purchase-order-${orderId}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("Failed to download PDF:", error);
+      console.error("Error downloading PDF:", error);
       toast.error("Failed to download PDF");
     }
   };
