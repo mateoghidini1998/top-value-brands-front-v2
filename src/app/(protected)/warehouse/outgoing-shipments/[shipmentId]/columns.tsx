@@ -2,6 +2,7 @@ import { ProductTitle } from "@/components/custom/product-title";
 import { ShipmentPalletProduct } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { PalletTable } from "./page";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const columns: ColumnDef<ShipmentPalletProduct>[] = [
   {
@@ -45,6 +46,19 @@ export const columns: ColumnDef<ShipmentPalletProduct>[] = [
   {
     accessorKey: "OutgoingShipmentProduct.quantity",
     header: "Quantity",
+  },
+  {
+    id: "actions",
+    header: () => <span className="w-full flex justify-end pr-6">Actions</span>,
+    cell: () => (
+      <div className="text-right pr-6">
+        <Checkbox id="terms" />
+        <label
+          htmlFor="terms"
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        ></label>
+      </div>
+    ),
   },
 ];
 
