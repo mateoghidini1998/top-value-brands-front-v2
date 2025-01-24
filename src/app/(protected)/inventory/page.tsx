@@ -26,14 +26,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Supplier } from "@/types/supplier.type";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { DataTable } from "../../../components/custom/data-table";
 import { useSuppliers } from "../suppliers/hooks/useSuppliers";
-import { columns } from "./columns";
+import { getColumns } from "./columns";
 import { CreateProductForm } from "./components/create-product-form";
 import { useInventory } from "./hooks";
-import { Supplier } from "@/types/supplier.type";
 
 type PaginationRange = number | "...";
 export interface SupplierItem {
@@ -46,6 +46,7 @@ export default function Page() {
     inventoryQuery,
     filterBySupplier,
     filterByKeyword,
+    orderBy,
     changePage,
     changeLimit,
     currentPage,
@@ -117,6 +118,10 @@ export default function Page() {
     filterBySupplier(supplier_id);
   };
 
+  const handleOrderBy = (orderByCol: string) => {
+    orderBy(orderByCol);
+  };
+
   return (
     <>
       <div className="w-full flex items-center justify-between">
@@ -165,7 +170,7 @@ export default function Page() {
 
       <DataTable
         data={inventoryQuery.data.data}
-        columns={columns}
+        columns={getColumns({ handleOrderBy })}
         dataLength={inventoryQuery.data.total}
       />
 
