@@ -1,5 +1,4 @@
 "use client";
-import { DataTable } from "@/components/custom/data-table";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate } from "@/helpers/format-date";
@@ -10,11 +9,39 @@ import {
   PlaneIcon,
   StoreIcon,
 } from "lucide-react";
-import { columns } from "./columns";
+import { useEffect, useState } from "react";
+import { DataTable } from "../create/_components/tables/data-table";
+import { columns, palletCols } from "./columns";
 import { useShipmentQuery } from "./hooks/useShipmentQuery";
+
+export interface PalletTable {
+  pallet_id: number;
+  pallet_number: string;
+  warehouse_location: string;
+}
 
 export default function Page({ params }: { params: { shipmentId: string } }) {
   const { data, error } = useShipmentQuery(params.shipmentId);
+
+  const [pallets, setPallets] = useState<PalletTable[]>([]);
+
+  useEffect(() => {
+    if (data?.PalletProducts) {
+      const uniquePallets: PalletTable[] = [];
+
+      data.PalletProducts.forEach((item) => {
+        if (!uniquePallets.some((p) => p.pallet_id === item.pallet_id)) {
+          uniquePallets.push({
+            pallet_id: item.pallet_id,
+            pallet_number: item.pallet_number,
+            warehouse_location: item.warehouse_location,
+          });
+        }
+      });
+
+      setPallets(uniquePallets);
+    }
+  }, [data]);
 
   if (error) {
     return (
@@ -35,7 +62,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
 
   return (
     <div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-12">
         {/* Shiopment Number Card */}
         <Card>
           <CardHeader className="flex flex-row items-center space-y-0 pb-2">
@@ -94,11 +121,9 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
           </CardContent>
         </Card>
       </div>
-      <DataTable
-        columns={columns}
-        data={data?.PalletProducts}
-        dataLength={50}
-      />
+
+      <DataTable pagination columns={palletCols} data={pallets} />
+      <DataTable pagination columns={columns} data={data?.PalletProducts} />
     </div>
   );
 }

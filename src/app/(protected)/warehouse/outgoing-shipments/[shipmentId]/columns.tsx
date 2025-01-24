@@ -1,6 +1,7 @@
 import { ProductTitle } from "@/components/custom/product-title";
 import { ShipmentPalletProduct } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
+import { PalletTable } from "./page";
 
 export const columns: ColumnDef<ShipmentPalletProduct>[] = [
   {
@@ -44,5 +45,26 @@ export const columns: ColumnDef<ShipmentPalletProduct>[] = [
   {
     accessorKey: "OutgoingShipmentProduct.quantity",
     header: "Quantity",
+  },
+];
+
+export const palletCols: ColumnDef<PalletTable>[] = [
+  {
+    accessorKey: "pallet_number",
+    header: ({ column }) => (
+      <span
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Pallet
+      </span>
+    ),
+    cell: ({ row }) => (
+      <span className="flex items-center"># {row.original.pallet_number}</span>
+    ),
+  },
+
+  {
+    accessorKey: "warehouse_location",
+    header: "Warehouse Location",
   },
 ];
