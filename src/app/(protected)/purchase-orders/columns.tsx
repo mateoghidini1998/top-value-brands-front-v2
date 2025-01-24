@@ -5,6 +5,7 @@ import { Order } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { ActionsCell } from "./components";
 import { StatusType } from "@/components/custom/status-badge";
+import NotesCell from "@/components/custom/notes-cell";
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -40,12 +41,15 @@ export const columns: ColumnDef<Order>[] = [
   },
   {
     accessorKey: "notes",
-    header: "Notes",
-    cell: ({ row }) => (
-      <div className="w-full overflow-hidden text-ellipsis">
-        {row.getValue("notes")}
-      </div>
-    ),
+    header: () => <div className="">Notes</div>,
+    cell: ({ row }) => {
+      const notes = row.original.notes;
+      return (
+        <div className="flex item-center justify-center">
+          <NotesCell notes={notes} width={"400px"} />
+        </div>
+      );
+    },
   },
   {
     accessorKey: "status",
