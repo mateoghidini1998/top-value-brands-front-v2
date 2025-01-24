@@ -1,7 +1,7 @@
 import { ProductTitle } from "@/components/custom/product-title";
 import { ShipmentPalletProduct } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { PalletTable } from "./page";
+import { ManifestPalletTable } from "./page";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export const columns: ColumnDef<ShipmentPalletProduct>[] = [
@@ -62,7 +62,7 @@ export const columns: ColumnDef<ShipmentPalletProduct>[] = [
   },
 ];
 
-export const palletCols: ColumnDef<PalletTable>[] = [
+export const palletCols: ColumnDef<ManifestPalletTable>[] = [
   {
     accessorKey: "pallet_number",
     header: ({ column }) => (

@@ -14,7 +14,7 @@ import { DataTable } from "../create/_components/tables/data-table";
 import { columns, palletCols } from "./columns";
 import { useShipmentQuery } from "./hooks/useShipmentQuery";
 
-export interface PalletTable {
+export interface ManifestPalletTable {
   pallet_id: number;
   pallet_number: string;
   warehouse_location: string;
@@ -23,11 +23,11 @@ export interface PalletTable {
 export default function Page({ params }: { params: { shipmentId: string } }) {
   const { data, error } = useShipmentQuery(params.shipmentId);
 
-  const [pallets, setPallets] = useState<PalletTable[]>([]);
+  const [pallets, setPallets] = useState<ManifestPalletTable[]>([]);
 
   useEffect(() => {
     if (data?.PalletProducts) {
-      const uniquePallets: PalletTable[] = [];
+      const uniquePallets: ManifestPalletTable[] = [];
 
       data.PalletProducts.forEach((item) => {
         if (!uniquePallets.some((p) => p.pallet_id === item.pallet_id)) {
