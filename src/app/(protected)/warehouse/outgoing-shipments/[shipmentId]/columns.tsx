@@ -1,8 +1,8 @@
 import { ProductTitle } from "@/components/custom/product-title";
 import { ShipmentPalletProduct } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
+import CheckPalletProducts from "../_components/check-pallet-product";
 import { ManifestPalletTable } from "./page";
-import { Checkbox } from "@/components/ui/checkbox";
 
 export const columns: ColumnDef<ShipmentPalletProduct>[] = [
   {
@@ -50,13 +50,9 @@ export const columns: ColumnDef<ShipmentPalletProduct>[] = [
   {
     id: "actions",
     header: () => <span className="w-full flex justify-end pr-6">Actions</span>,
-    cell: () => (
+    cell: ({ row }) => (
       <div className="text-right pr-6">
-        <Checkbox id="terms" />
-        <label
-          htmlFor="terms"
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        ></label>
+        <CheckPalletProducts row={row.original} />
       </div>
     ),
   },
