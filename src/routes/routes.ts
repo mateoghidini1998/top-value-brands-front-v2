@@ -83,7 +83,7 @@ export const routes = {
         //   url: "/warehouse",
         // },
         {
-          title: "Incoming Shipments",
+          title: "Incoming POs",
           url: "/warehouse/incoming-shipments",
         },
         {
