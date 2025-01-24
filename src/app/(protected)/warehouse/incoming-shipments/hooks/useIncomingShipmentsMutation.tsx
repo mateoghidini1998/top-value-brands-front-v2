@@ -22,6 +22,7 @@ export const useIncomingShipmentsMutations = (orderId: string) => {
       [QUERY_KEYS.ORDER_SUMMARY, orderId],
       [QUERY_KEYS.ORDERS],
       [QUERY_KEYS.PALLETS],
+      [QUERY_KEYS.PALLET_PRODUCTS],
     ],
   });
 

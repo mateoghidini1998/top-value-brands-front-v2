@@ -4,6 +4,7 @@ export const QUERY_KEYS = {
   PRODUCTS: "products",
   INCOMING_SHIPMENTS: "incoming-shipments",
   PALLETS: "pallets",
+  PALLET_PRODUCTS: "pallet-products",
 } as const;
 
 export const CACHE_TIMES = {
