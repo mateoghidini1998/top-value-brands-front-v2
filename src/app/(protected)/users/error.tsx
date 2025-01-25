@@ -1,14 +1,27 @@
 "use client";
 
-export default function Page() {
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  useEffect(() => {
+    // Log the error to an error reporting service
+    console.error(error);
+  }, [error]);
+
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-        <div className="aspect-video rounded-xl bg-muted/50" />
-        <div className="aspect-video rounded-xl bg-muted/50" />
-        <div className="aspect-video rounded-xl bg-muted/50" />
-      </div>
-      <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+    <div className="container mx-auto py-10 text-center">
+      <h2 className="text-2xl font-bold mb-4">Something went wrong!</h2>
+      <p className="text-muted-foreground mb-6">
+        We apologize for the inconvenience. Please try again later.
+      </p>
+      <Button onClick={() => reset()}>Try again</Button>
     </div>
   );
 }
