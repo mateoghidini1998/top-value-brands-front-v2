@@ -114,6 +114,7 @@ body {
     --cancelled-foreground: 4, 100%, 62%, 10%;
     --waiting: 58, 100%, 57%;
     --waiting-foreground: 58, 100%, 57%, 10%;
+    --table-header: 228, 16%, 18%;
   }
 }
 

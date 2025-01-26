@@ -18,6 +18,7 @@ const config: Config = {
         "light-3": "#EFF1F3",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        table_header: "hsl(var(--table-header))",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

@@ -281,7 +281,7 @@ export default function Page() {
           <div className="flex items-center justify-between">
             <CardTitle>Manage Shipment</CardTitle>
             <div className="flex gap-3">
-              <Button variant="outline" onClick={handleSaveShipment}>
+              <Button variant="default" onClick={handleSaveShipment}>
                 Save Shipment
               </Button>
               <Button variant="destructive" onClick={handleCancel}>

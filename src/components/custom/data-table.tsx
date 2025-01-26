@@ -156,7 +156,7 @@ DataTableProps<TData, TValue>) {
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead
-                        className="whitespace-nowrap text-center dark:bg-[#262935] root:bg-[#F8FAFC]"
+                        className="whitespace-nowrap text-center dark:bg-table_header root:bg-[#F8FAFC]"
                         key={header.id}
                       >
                         {header.isPlaceholder
