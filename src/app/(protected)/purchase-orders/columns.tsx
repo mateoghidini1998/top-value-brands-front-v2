@@ -42,11 +42,11 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "notes",
     header: "Notes",
     cell: ({ row }) => (
-      <div className="w-full overflow-hidden text-ellipsis">
+      <div className="break-words whitespace-normal max-w-xs w-full">
         {row.getValue("notes")}
       </div>
     ),
-  },
+  },  
   {
     accessorKey: "status",
     header: "Status",
@@ -63,7 +63,7 @@ export const columns: ColumnDef<Order>[] = [
   },
   {
     accessorKey: "average_roi",
-    header: "avg roi",
+    header: "ROI",
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("average_roi")).toFixed(2);
 
