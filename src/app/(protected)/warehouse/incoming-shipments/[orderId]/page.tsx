@@ -281,7 +281,7 @@ export default function Page({
           />
 
           {/* Pallet Summary */}
-          <Card className="w-full text-zinc-100 mt-10">
+          <Card className="w-full text-zinc-100 mt-10 bg-background">
             <CardHeader>
               <CardTitle>Pallet Summary</CardTitle>
             </CardHeader>

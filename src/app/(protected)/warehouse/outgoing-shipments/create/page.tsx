@@ -276,7 +276,7 @@ export default function Page() {
 
   return (
     <div className="min-h-[60vh] bg-transparent p-6 w-full">
-      <Card className="w-full mx-auto">
+      <Card className="w-full mx-auto bg-background">
         <CardHeader className="border-b">
           <div className="flex items-center justify-between">
             <CardTitle>Manage Shipment</CardTitle>
@@ -294,7 +294,7 @@ export default function Page() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
               <h2 className="text-lg font-semibold">Available Products</h2>
-              <div className="rounded-lg border bg-card p-4">
+              <div className="rounded-lg border p-4 bg-background">
                 <TabbedDataTable
                   data={availableProducts}
                   onAddProduct={handleAddProduct}
@@ -305,7 +305,7 @@ export default function Page() {
             </div>
             <div className="space-y-4">
               <h2 className="text-lg font-semibold">Selected Products</h2>
-              <div className="rounded-lg border bg-card p-4">
+              <div className="rounded-lg border bg-background p-4">
                 <SelectedProductsTable
                   data={selectedProducts}
                   onRemoveProduct={handleRemoveProduct}
