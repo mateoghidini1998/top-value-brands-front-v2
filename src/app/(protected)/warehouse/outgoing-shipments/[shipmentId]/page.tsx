@@ -64,7 +64,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
     <div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-12">
         {/* Shiopment Number Card */}
-        <Card>
+        <Card className="bg-background">
           <CardHeader className="flex flex-row items-center space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Shipment Number
@@ -78,7 +78,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
         </Card>
 
         {/* Date Work Order Issued Card */}
-        <Card>
+        <Card className="bg-background">
           <CardHeader className="flex flex-row items-center space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Date Work Order Issued
@@ -94,7 +94,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
         </Card>
 
         {/* Status Card */}
-        <Card>
+        <Card className="bg-background">
           <CardHeader className="flex flex-row items-center space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Status</CardTitle>
             <StoreIcon className="w-4 h-4 text-muted-foreground ml-auto" />
@@ -106,7 +106,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
         </Card>
 
         {/* FBA Shipment ID Card */}
-        <Card>
+        <Card className="bg-background">
           <CardHeader className="flex flex-row items-center space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               FBA Shipment ID

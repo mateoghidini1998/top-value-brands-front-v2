@@ -46,7 +46,7 @@ export function FilterSearch({
         </Button>
       </PopoverTrigger>
       <PopoverContent className={cn("w-full p-0", className)}>
-        <Command>
+        <Command className="bg-background">
           <CommandInput placeholder="Search..." className="h-9" />
           <CommandList>
             <CommandEmpty>No filter found.</CommandEmpty>
