@@ -69,11 +69,11 @@ export const columns: ColumnDef<Order>[] = [
 
       const getBadgeVariant = (amount: number) => {
         if (amount >= 2) {
-          return "default";
+          return "arrived";
         }
 
         if (amount <= 0) {
-          return "destructive";
+          return "cancelled";
         }
 
         return "secondary";

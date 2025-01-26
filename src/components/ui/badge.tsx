@@ -15,6 +15,12 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
         outline: "text-foreground",
+        arrived: "border-transparent bg-arrived-foreground text-arrived",
+        pending: "border-transparent bg-pending-foreground text-pending",
+        closed: "border-transparent bg-closed-foreground text-closed",
+        cancelled: "border-transparent bg-cancelled-foreground text-cancelled",
+        waiting: "border-transparent bg-waiting-foreground text-waiting",
+        intransit: "border-transparent bg-intransit-foreground text-intransit",
       },
     },
     defaultVariants: {

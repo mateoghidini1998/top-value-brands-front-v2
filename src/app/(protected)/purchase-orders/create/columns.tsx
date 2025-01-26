@@ -151,11 +151,11 @@ export const getTrackedProductsColumns = (
 
       const getBadgeVariant = (amount: number) => {
         if (amount > 2) {
-          return "default";
+          return "arrived";
         }
 
         if (amount < 2) {
-          return "destructive";
+          return "cancelled";
         }
 
         return "secondary";
@@ -176,11 +176,11 @@ export const getTrackedProductsColumns = (
 
       const getBadgeVariant = (amount: number) => {
         if (amount > 2) {
-          return "default";
+          return "arrived";
         }
 
         if (amount < 2) {
-          return "destructive";
+          return "cancelled";
         }
 
         return "secondary";
