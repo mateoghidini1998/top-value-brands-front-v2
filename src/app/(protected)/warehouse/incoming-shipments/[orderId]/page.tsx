@@ -305,14 +305,32 @@ export default function Page({
                     <SelectContent>
                       <SelectItem value="1">A1</SelectItem>
                       <SelectItem value="2">A2</SelectItem>
+                      <SelectItem value="12">A3</SelectItem>
+                      <SelectItem value="13">A4</SelectItem>
                       <SelectItem value="3">B1</SelectItem>
                       <SelectItem value="4">B2</SelectItem>
+                      <SelectItem value="14">B3</SelectItem>
+                      <SelectItem value="15">B4</SelectItem>
                       <SelectItem value="5">C1</SelectItem>
                       <SelectItem value="6">C2</SelectItem>
+                      <SelectItem value="16">C3</SelectItem>
+                      <SelectItem value="17">C4</SelectItem>
                       <SelectItem value="7">D1</SelectItem>
                       <SelectItem value="8">D2</SelectItem>
+                      <SelectItem value="18">D3</SelectItem>
+                      <SelectItem value="19">D4</SelectItem>
                       <SelectItem value="9">E1</SelectItem>
                       <SelectItem value="10">E2</SelectItem>
+                      <SelectItem value="20">E3</SelectItem>
+                      <SelectItem value="21">E4</SelectItem>
+                      <SelectItem value="22">F1</SelectItem>
+                      <SelectItem value="23">F2</SelectItem>
+                      <SelectItem value="24">F3</SelectItem>
+                      <SelectItem value="25">F4</SelectItem>
+                      <SelectItem value="26">G1</SelectItem>
+                      <SelectItem value="27">G2</SelectItem>
+                      <SelectItem value="28">G3</SelectItem>
+                      <SelectItem value="29">G4</SelectItem>
                       <SelectItem value="11">Floor</SelectItem>
                     </SelectContent>
                   </Select>
