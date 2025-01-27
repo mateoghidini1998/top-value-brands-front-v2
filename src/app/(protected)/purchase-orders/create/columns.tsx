@@ -11,9 +11,11 @@ import { formatDate } from "@/helpers/format-date";
 import AddQuantity from "./components/add-quantity";
 import AddProductCost from "./components/add-product-cost";
 import { TrackedProduct } from "@/types";
+import { ArrowUpDown } from "lucide-react";
 
 export const getTrackedProductsColumns = (
-  setProductsAdded: Dispatch<SetStateAction<ProductInOrder[]>>
+  setProductsAdded: Dispatch<SetStateAction<ProductInOrder[]>>,
+  handleOrderBy: (orderBy: string) => void
 ): ColumnDef<TrackedProduct>[] => [
   {
     id: "product_title",
@@ -51,7 +53,17 @@ export const getTrackedProductsColumns = (
   },
   {
     accessorKey: "product_velocity",
-    header: "Product Velocity",
+    header: () => {
+      return (
+        <div
+          className="text-right flex items-center cursor-pointer justify-center gap-2"
+          onClick={() => handleOrderBy("product_velocity")}
+        >
+          <ArrowUpDown className="mr-2 w-4 h-4 " />
+          Product Velocity
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const product_velocity: number = row.getValue("product_velocity");
       return <span>{product_velocity.toFixed(3) || "N/A"}</span>;
@@ -59,7 +71,17 @@ export const getTrackedProductsColumns = (
   },
   {
     accessorKey: "units_sold",
-    header: "Units Sold",
+    header: () => {
+      return (
+        <div
+          className="text-right flex items-center cursor-pointer justify-center gap-2"
+          onClick={() => handleOrderBy("units_sold")}
+        >
+          <ArrowUpDown className="mr-2 w-4 h-4 " />
+          Units Sold
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const units_sold: number = row.getValue("units_sold");
       return <span>{units_sold.toLocaleString() || 0}</span>;
@@ -67,7 +89,17 @@ export const getTrackedProductsColumns = (
   },
   {
     accessorKey: "thirty_days_rank",
-    header: "30 Day Rank",
+    header: () => {
+      return (
+        <div
+          className="text-right flex items-center cursor-pointer justify-center gap-2"
+          onClick={() => handleOrderBy("thirty_days_rank")}
+        >
+          <ArrowUpDown className="mr-2 w-4 h-4 " />
+          30 Day Rank
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const thirty_days_rank: number = row.getValue("thirty_days_rank");
       return <span>{thirty_days_rank.toLocaleString() || "N/A"}</span>;
@@ -75,7 +107,17 @@ export const getTrackedProductsColumns = (
   },
   {
     accessorKey: "ninety_days_rank",
-    header: "90 Day Rank",
+    header: () => {
+      return (
+        <div
+          className="text-right flex items-center cursor-pointer justify-center gap-2"
+          onClick={() => handleOrderBy("ninety_days_rank")}
+        >
+          <ArrowUpDown className="mr-2 w-4 h-4 " />
+          90 Day Rank
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const ninety_days_rank: number = row.getValue("ninety_days_rank");
       return <span>{ninety_days_rank.toLocaleString() || "N/A"}</span>;
@@ -91,7 +133,17 @@ export const getTrackedProductsColumns = (
   },
   {
     accessorKey: "product_cost",
-    header: "Product Cost",
+    header: () => {
+      return (
+        <div
+          className="text-right flex items-center cursor-pointer justify-center gap-2"
+          onClick={() => handleOrderBy("product_cost")}
+        >
+          <ArrowUpDown className="mr-2 w-4 h-4 " />
+          Product Cost
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const product_cost: number = parseFloat(row.getValue("product_cost"));
       return <span>{`$ ${product_cost.toFixed(2) || "N/A"}`}</span>;
@@ -99,7 +151,17 @@ export const getTrackedProductsColumns = (
   },
   {
     accessorKey: "lowest_fba_price",
-    header: "Lowest FBA Price",
+    header: () => {
+      return (
+        <div
+          className="text-right flex items-center cursor-pointer justify-center gap-2"
+          onClick={() => handleOrderBy("lowest_fba_price")}
+        >
+          <ArrowUpDown className="mr-2 w-4 h-4 " />
+          Lowest FBA Price
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const lowest_fba_price: number = parseFloat(
         row.getValue("lowest_fba_price")
@@ -109,6 +171,17 @@ export const getTrackedProductsColumns = (
   },
   {
     accessorKey: "FBA_available_inventory",
+    // header: () => {
+    //   return (
+    //     <div
+    //       className="text-right flex items-center cursor-pointer justify-center gap-2"
+    //       onClick={() => handleOrderBy("FBA_available_inventory")}
+    //     >
+    //       <ArrowUpDown className="mr-2 w-4 h-4 " />
+    //       FBA Inventory
+    //     </div>
+    //   );
+    // },
     header: "FBA Inventory",
     cell: ({ row }) => {
       const FBA_available_inventory: number = row.getValue(
@@ -119,6 +192,17 @@ export const getTrackedProductsColumns = (
   },
   {
     accessorKey: "reserved_quantity",
+    // header: () => {
+    //   return (
+    //     <div
+    //       className="text-right flex items-center cursor-pointer justify-center gap-2"
+    //       onClick={() => handleOrderBy("reserved_quantity")}
+    //     >
+    //       <ArrowUpDown className="mr-2 w-4 h-4 " />
+    //       Reserved Quantity
+    //     </div>
+    //   );
+    // },
     header: "Reserved Quantity",
     cell: ({ row }) => {
       const reserved_quantity: number = row.getValue("reserved_quantity");
@@ -127,6 +211,17 @@ export const getTrackedProductsColumns = (
   },
   {
     accessorKey: "Inbound_to_FBA",
+    // header: () => {
+    //   return (
+    //     <div
+    //       className="text-right flex items-center cursor-pointer justify-center gap-2"
+    //       onClick={() => handleOrderBy("Inbound_to_FBA")}
+    //     >
+    //       <ArrowUpDown className="mr-2 w-4 h-4 " />
+    //       Inbound to FBA
+    //     </div>
+    //   );
+    // },
     header: "Inbound to FBA",
     cell: ({ row }) => {
       const Inbound_to_FBA: number = row.getValue("Inbound_to_FBA");
@@ -136,7 +231,17 @@ export const getTrackedProductsColumns = (
 
   {
     accessorKey: "fees",
-    header: "Fees",
+    header: () => {
+      return (
+        <div
+          className="text-right flex items-center cursor-pointer justify-center gap-2"
+          onClick={() => handleOrderBy("fees")}
+        >
+          <ArrowUpDown className="mr-2 w-4 h-4 " />
+          Fees
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const fees: number = parseFloat(row.getValue("fees"));
       return <span>{` ${fees ? `$ ${fees.toFixed(2)}` : "-"}`}</span>;
@@ -145,7 +250,17 @@ export const getTrackedProductsColumns = (
 
   {
     accessorKey: "profit",
-    header: "Profit",
+    header: () => {
+      return (
+        <div
+          className="text-right flex items-center cursor-pointer justify-center gap-2"
+          onClick={() => handleOrderBy("profit")}
+        >
+          <ArrowUpDown className="mr-2 w-4 h-4 " />
+          Profit
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("profit"));
 
@@ -195,7 +310,17 @@ export const getTrackedProductsColumns = (
   },
   {
     accessorKey: "updatedAt",
-    header: "Last Update",
+    header: () => {
+      return (
+        <div
+          className="text-right flex items-center cursor-pointer justify-center gap-2"
+          onClick={() => handleOrderBy("updatedAt")}
+        >
+          <ArrowUpDown className="mr-2 w-4 h-4 " />
+          Last Update
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const updatedAt = row.original.updatedAt;
       return <span>{formatDate(updatedAt.toString())}</span>;

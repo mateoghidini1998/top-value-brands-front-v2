@@ -53,6 +53,21 @@ export const useTrackedProducts = () => {
     queryClient.invalidateQueries({ queryKey: ["tracked-products"] });
   };
 
+  const orderBy = (orderBy: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      orderBy,
+      page: 1,
+      limit: 50,
+      orderWay:
+        prev.orderBy === orderBy
+          ? prev.orderWay === "asc"
+            ? "desc"
+            : "asc"
+          : "desc",
+    }));
+  };
+
   const changePage = (page: number) => {
     setFilters((prev) => ({ ...prev, page }));
   };
@@ -64,6 +79,7 @@ export const useTrackedProducts = () => {
     trackedProductsQuery,
     filterBySupplier,
     filterByKeyword,
+    orderBy,
     changePage,
     changeLimit,
     currentPage: filters.page,

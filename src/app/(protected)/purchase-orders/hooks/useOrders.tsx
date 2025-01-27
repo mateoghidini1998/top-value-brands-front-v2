@@ -75,6 +75,21 @@ export const useOrders = () => {
     setFilters((prev) => ({ ...prev, limit, page: 1 }));
   };
 
+  const orderBy = (orderBy: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      orderBy,
+      page: 1,
+      limit: 50,
+      orderWay:
+        prev.orderBy === orderBy
+          ? prev.orderWay === "asc"
+            ? "desc"
+            : "asc"
+          : "desc",
+    }));
+  };
+
   const createOrderMutation = useMutation({
     mutationFn: createOrder,
     onSuccess: () => {
@@ -99,6 +114,7 @@ export const useOrders = () => {
     createOrderMutation,
     filterBySupplier,
     filterByKeyword,
+    orderBy,
     changePage,
     changeLimit,
     currentPage: filters.page,

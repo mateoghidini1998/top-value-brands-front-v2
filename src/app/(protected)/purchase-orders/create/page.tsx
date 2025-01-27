@@ -44,6 +44,7 @@ export default function Page() {
     trackedProductsQuery,
     filterBySupplier,
     filterByKeyword,
+    orderBy,
     changePage,
     changeLimit,
     currentPage,
@@ -124,6 +125,10 @@ export default function Page() {
 
   const handleFilterBySupplier = (supplier_id: number | null) => {
     filterBySupplier(supplier_id);
+  };
+
+  const handleOrderBy = (orderByCol: string) => {
+    orderBy(orderByCol);
   };
 
   useEffect(() => {
@@ -246,7 +251,7 @@ export default function Page() {
       >
         <DataTable
           data={trackedProductsQuery.data.data}
-          columns={getTrackedProductsColumns(setProductsAdded)}
+          columns={getTrackedProductsColumns(setProductsAdded, handleOrderBy)}
           dataLength={trackedProductsQuery.data.total}
         />
 
