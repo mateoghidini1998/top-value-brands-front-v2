@@ -67,17 +67,17 @@ export const columns: ColumnDef<Order>[] = [
   },
   {
     accessorKey: "average_roi",
-    header: "avg roi",
+    header: "ROI",
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("average_roi")).toFixed(2);
 
       const getBadgeVariant = (amount: number) => {
         if (amount >= 2) {
-          return "default";
+          return "arrived";
         }
 
         if (amount <= 0) {
-          return "destructive";
+          return "cancelled";
         }
 
         return "secondary";

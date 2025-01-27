@@ -12,7 +12,17 @@ import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
 // Solo variantes válidas para Badge
-type BadgeVariant = "destructive" | "secondary" | "default" | "outline";
+type BadgeVariant =
+  | "destructive"
+  | "secondary"
+  | "default"
+  | "outline"
+  | "arrived"
+  | "pending"
+  | "closed"
+  | "cancelled"
+  | "waiting"
+  | "intransit"
 
 const PURCHASE_ORDER_STATUSES = {
   Rejected: 1,
@@ -37,15 +47,15 @@ const getStatusConfig = (
 ): { variant: BadgeVariant; label: string } => {
   const configs: Record<StatusType, { variant: BadgeVariant; label: string }> =
     {
-      Rejected: { variant: "destructive", label: "Rejected" },
-      Pending: { variant: "secondary", label: "Pending" },
-      "Good to go": { variant: "default", label: "Good to Go" },
-      Cancelled: { variant: "destructive", label: "Cancelled" },
-      "In transit": { variant: "secondary", label: "In Transit" }, // Reemplazado
-      Arrived: { variant: "default", label: "Arrived" }, // Reemplazado
-      Closed: { variant: "outline", label: "Closed" },
+      Rejected: { variant: "cancelled", label: "Rejected" },
+      Pending: { variant: "pending", label: "Pending" },
+      "Good to go": { variant: "arrived", label: "Good to Go" },
+      Cancelled: { variant: "cancelled", label: "Cancelled" },
+      "In transit": { variant: "intransit", label: "In Transit" }, // Reemplazado
+      Arrived: { variant: "arrived", label: "Arrived" }, // Reemplazado
+      Closed: { variant: "closed", label: "Closed" },
       "Waiting for supplier approval": {
-        variant: "secondary",
+        variant: "waiting",
         label: "Waiting Approval",
       },
     };

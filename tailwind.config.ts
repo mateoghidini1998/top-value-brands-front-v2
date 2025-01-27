@@ -18,6 +18,7 @@ const config: Config = {
         "light-3": "#EFF1F3",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        table_header: "hsl(var(--table-header))",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
@@ -45,6 +46,30 @@ const config: Config = {
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
+        },
+        arrived: {
+          DEFAULT: "hsl(var(--arrived))",
+          foreground: "hsl(var(--arrived-foreground))",
+        },
+        pending: {
+          DEFAULT: "hsl(var(--pending))",
+          foreground: "hsl(var(--pending-foreground))",
+        },
+        closed: {
+          DEFAULT: "hsl(var(--closed))",
+          foreground: "hsl(var(--closed-foreground))",
+        },
+        waiting: {
+          DEFAULT: "hsl(var(--waiting))",
+          foreground: "hsl(var(--waiting-foreground))",
+        },
+        cancelled: {
+          DEFAULT: "hsl(var(--cancelled))",
+          foreground: "hsl(var(--cancelled-foreground))",
+        },
+        intransit: {
+          DEFAULT: "hsl(var(--intransit))",
+          foreground: "hsl(var(--intransit-foreground))",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

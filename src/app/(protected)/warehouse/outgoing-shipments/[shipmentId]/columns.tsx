@@ -51,7 +51,7 @@ export const columns: ColumnDef<ShipmentPalletProduct>[] = [
     id: "actions",
     header: () => <span className="w-full flex justify-end pr-6">Actions</span>,
     cell: ({ row }) => (
-      <div className="text-right pr-6">
+      <div className="text-right pr-6 ">
         <CheckPalletProducts row={row.original} />
       </div>
     ),

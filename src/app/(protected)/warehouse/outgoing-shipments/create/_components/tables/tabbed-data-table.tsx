@@ -211,8 +211,8 @@ export function TabbedDataTable({
     ];
 
   return (
-    <Tabs defaultValue="purchase_orders" className="w-full">
-      <TabsList>
+    <Tabs defaultValue="purchase_orders" className="w-full ">
+      <TabsList className="dark:bg-table_header">
         <TabsTrigger value="purchase_orders">Purchase Orders</TabsTrigger>
         <TabsTrigger value="pallets">Pallets</TabsTrigger>
         <TabsTrigger value="products">Products</TabsTrigger>
