@@ -22,27 +22,30 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
+import { usePallets } from "../hooks";
 
 interface ActionsCellProps {
   palletId: number;
 }
 
 const ActionsCell = ({ palletId }: ActionsCellProps) => {
-  const [orderToDelete, setOrderToDelete] = useState<number>(0);
+  const { deletePalletMutation } = usePallets();
+  const [palletToDelete, setPalletToDelete] = useState<number>(0);
 
   const handleDeleteOrder = async () => {
-    // if (orderToDelete) {
-    //   try {
-    //     await deleteOrderMutation.mutateAsync(orderToDelete).then(() => {
-    //       toast.success("Order deleted successfully");
-    //     });
-    //     setOrderToDelete(0);
-    //   } catch (error) {
-    //     console.error("Failed to delete order:", error);
-    //     toast.error("Failed to delete order");
-    //   }
-    // }
-    console.log(orderToDelete);
+    if (palletToDelete) {
+      try {
+        await deletePalletMutation.mutateAsync(palletToDelete).then(() => {
+          toast.success("Pallet deleted successfully");
+        });
+        setPalletToDelete(0);
+      } catch (error) {
+        console.error("Failed to delete pallet:", error);
+        toast.error("Failed to delete pallet");
+      }
+    }
+    console.log(palletToDelete);
   };
 
   return (
@@ -60,14 +63,14 @@ const ActionsCell = ({ palletId }: ActionsCellProps) => {
           <DropdownMenuItem>
             <Link href={`storage/${palletId}`}>View Details</Link>
           </DropdownMenuItem>
-          {/* <DropdownMenuItem onClick={() => setOrderToDelete(palletId)}>
-            Delete Order
-          </DropdownMenuItem> */}
+          <DropdownMenuItem onClick={() => setPalletToDelete(palletId)}>
+            Delete Pallet
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <AlertDialog
-        open={!!orderToDelete}
-        onOpenChange={(open) => !open && setOrderToDelete(0)}
+        open={!!palletToDelete}
+        onOpenChange={(open) => !open && setPalletToDelete(0)}
       >
         <AlertDialogContent>
           <AlertDialogHeader>

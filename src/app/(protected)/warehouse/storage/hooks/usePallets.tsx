@@ -1,6 +1,8 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { getPallets, GetPalletById } from "../actions";
+import { toast } from "sonner";
+import { deletePallet } from "../actions/delete-pallet.action";
 
 export const usePallets = (palletId?: string) => {
   const queryClient = useQueryClient();
@@ -81,6 +83,17 @@ export const usePallets = (palletId?: string) => {
     setFilters((prev) => ({ ...prev, limit, page: 1 }));
   };
 
+  const deletePalletMutation = useMutation({
+    mutationFn: (palletId: number) => deletePallet({ palletId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pallets"] });
+    },
+    onError(error: Error) {
+      console.error(error);
+      toast.error(error.message);
+    },
+  });
+
   return {
     palletsQuery,
     palletByIdQuery,
@@ -88,6 +101,7 @@ export const usePallets = (palletId?: string) => {
     filterByKeyword,
     changePage,
     changeLimit,
+    deletePalletMutation,
     currentPage: filters.page,
     itemsPerPage: filters.limit,
   };

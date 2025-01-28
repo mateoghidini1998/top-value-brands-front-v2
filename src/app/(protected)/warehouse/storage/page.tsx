@@ -122,7 +122,7 @@ export default function Page() {
                 handleSearch();
               }
             }}
-            placeholder="Search product"
+            placeholder="Search pallet"
             className="w-[200px]"
             value={searchTerm}
             onChange={(e) => {
