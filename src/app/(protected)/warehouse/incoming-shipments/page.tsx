@@ -92,8 +92,10 @@ export default function Page() {
   }, [currentPage, totalPages]);
 
   const handleSearch = () => {
-    filterByKeyword(searchTerm);
-  };
+    const normalizedTerm = searchTerm.trim().toLowerCase();
+    const encodedTerm = encodeURIComponent(normalizedTerm);
+    filterByKeyword(encodedTerm);
+  };  
 
   if (ordersQuery.isLoading || ordersQuery.isFetching) {
     return <LoadingSpinner />;
@@ -123,7 +125,7 @@ export default function Page() {
                 handleSearch();
               }
             }}
-            placeholder="Search shipments"
+            placeholder="Search Incoming Order"
             className="w-[200px]"
             value={searchTerm}
             onChange={(e) => {

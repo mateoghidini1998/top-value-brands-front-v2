@@ -93,7 +93,6 @@ export default function Page() {
     filterByKeyword(searchTerm);
   };
 
-  // Render condicional después de los hooks
   if (palletsQuery.isLoading || palletsQuery.isFetching) {
     return <LoadingSpinner />;
   }

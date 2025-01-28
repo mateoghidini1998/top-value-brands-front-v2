@@ -9,7 +9,7 @@ export const columns: ColumnDef<Pallet>[] = [
     accessorKey: "pallet_number",
     header: "Pallet Number",
     cell: ({ row }) => {
-      return <p># {row.original.pallet_number}</p>;
+      return <p>{row.original.pallet_number}</p>;
     },
   },
   {
