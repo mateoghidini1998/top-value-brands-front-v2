@@ -26,19 +26,19 @@ export const columns: ColumnDef<Order>[] = [
     ),
   },
 
-  {
-    accessorKey: "total_price",
-    header: "Total Price",
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("total_price"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
+  // {
+  //   accessorKey: "total_price",
+  //   header: "Total Price",
+  //   cell: ({ row }) => {
+  //     const amount = parseFloat(row.getValue("total_price"));
+  //     const formatted = new Intl.NumberFormat("en-US", {
+  //       style: "currency",
+  //       currency: "USD",
+  //     }).format(amount);
 
-      return <div className="">{formatted}</div>;
-    },
-  },
+  //     return <div className="">{formatted}</div>;
+  //   },
+  // },
   {
     accessorKey: "notes",
     header: "Notes",
