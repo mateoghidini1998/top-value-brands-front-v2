@@ -100,7 +100,7 @@ export default function Page() {
     filterByPalletNumber(searchTerm);
   };
 
-  if (palletsQuery.isLoading || palletsQuery.isFetching) {
+  if (palletsQuery.isLoading) {
     return <LoadingSpinner />;
   }
 
