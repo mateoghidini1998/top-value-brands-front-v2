@@ -21,13 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Supplier } from "@/types/supplier.type";
+import { WarehouseLocation } from "@/types";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useSuppliers } from "../../suppliers/hooks";
-import { usePallets } from "./hooks";
 import { getColumns } from "./columns";
+import { usePallets } from "./hooks";
+import { useWarehouseLocations } from "./hooks/useWarehouseLocations";
 
 type PaginationRange = number | "...";
 export interface SupplierItem {
@@ -38,7 +39,7 @@ export interface SupplierItem {
 export default function Page() {
   const {
     palletsQuery,
-    filterBySupplier,
+    filterByWarehouseLocation,
     filterByPalletNumber,
     orderBy,
     changePage,
@@ -46,11 +47,16 @@ export default function Page() {
     currentPage,
     itemsPerPage,
   } = usePallets();
+
+  const { warehouseLocationsQuery } = useWarehouseLocations(false);
+
   const { suppliersQuery } = useSuppliers();
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
+  const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
+    null
+  );
 
   // Total pages calculation
   const totalPages = useMemo(() => {
@@ -102,14 +108,16 @@ export default function Page() {
     return <div>Error</div>;
   }
 
-  const formatSuppliers = (suppliers: Supplier[]): SupplierItem[] =>
-    suppliers.map((supplier) => ({
-      name: supplier.supplier_name,
-      value: supplier.id,
+  const formatWarehouseLocations = (
+    locations: WarehouseLocation[]
+  ): SupplierItem[] =>
+    locations.map((location) => ({
+      name: location.location,
+      value: location.id,
     }));
 
-  const handleFilterBySupplier = (supplier_id: number | null) => {
-    filterBySupplier(supplier_id);
+  const handleFilterByWarehouseLocation = (location_id: number | null) => {
+    filterByWarehouseLocation(location_id);
   };
 
   const handleOrderBy = (columnId: string) => {
@@ -137,12 +145,17 @@ export default function Page() {
             {searchTerm !== "" ? "Search" : "Reset"}
           </Button>
           <FilterSearch
-            items={formatSuppliers(suppliersQuery.data.data)}
-            value={selectedSupplier}
-            onValueChange={(supplier_id) => {
-              setSelectedSupplier(supplier_id as number);
-              handleFilterBySupplier(supplier_id as number);
+            items={
+              warehouseLocationsQuery.data
+                ? formatWarehouseLocations(warehouseLocationsQuery.data.data)
+                : []
+            }
+            value={selectedLocationId}
+            onValueChange={(location_id) => {
+              setSelectedLocationId(location_id as number);
+              handleFilterByWarehouseLocation(location_id as number);
             }}
+            placeholder="Select location..."
           />
         </div>
         <Button

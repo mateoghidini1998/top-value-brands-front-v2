@@ -12,6 +12,7 @@ export const usePallets = (palletId?: string) => {
     limit: 50,
     keyword: "",
     pallet_number: "",
+    warehouse_location_id: "",
     orderBy: "",
     orderWay: "",
   });
@@ -21,6 +22,7 @@ export const usePallets = (palletId?: string) => {
     limit = 50,
     keyword = "",
     pallet_number = "",
+    warehouse_location_id = "",
     orderBy = "",
     orderWay = "",
   }: {
@@ -28,9 +30,19 @@ export const usePallets = (palletId?: string) => {
     limit?: number;
     keyword?: string;
     pallet_number?: string;
+    warehouse_location_id?: string;
     orderBy?: string;
     orderWay?: string;
-  }) => getPallets({ page, limit, keyword, pallet_number, orderBy, orderWay });
+  }) =>
+    getPallets({
+      page,
+      limit,
+      keyword,
+      pallet_number,
+      warehouse_location_id,
+      orderBy,
+      orderWay,
+    });
 
   const palletsQuery = useQuery({
     queryKey: ["pallets", filters],
@@ -42,6 +54,7 @@ export const usePallets = (palletId?: string) => {
           limit: number;
           keyword: string;
           pallet_number: string;
+          warehouse_location_id: string;
           orderBy: string;
           orderWay: string;
         }
@@ -59,10 +72,10 @@ export const usePallets = (palletId?: string) => {
     enabled: !!palletId,
   });
 
-  const filterBySupplier = (supplier_id: number | null) => {
+  const filterByWarehouseLocation = (location_id: number | null) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
-      supplier: supplier_id ? supplier_id.toString() : "",
+      warehouse_location_id: location_id ? location_id.toString() : "",
       page: 1,
       limit: 50,
     }));
@@ -112,7 +125,7 @@ export const usePallets = (palletId?: string) => {
   return {
     palletsQuery,
     palletByIdQuery,
-    filterBySupplier,
+    filterByWarehouseLocation,
     filterByPalletNumber,
     orderBy,
     changePage,
