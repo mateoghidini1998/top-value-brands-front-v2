@@ -145,6 +145,7 @@ export default function Page() {
               setSelectedStatus(status?.toString() || "");
               handleFilterByStatus(status?.toString() || "");
             }}
+            placeholder="Select status..."
           />
         </div>
         <Button
