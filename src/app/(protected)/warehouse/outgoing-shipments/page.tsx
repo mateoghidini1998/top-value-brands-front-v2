@@ -24,7 +24,7 @@ import {
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { columns } from "./columns";
+import { getColumns } from "./columns";
 import { useShipmentsQuery } from "./hooks/useShipmentsQuery";
 
 type PaginationRange = number | "...";
@@ -54,6 +54,7 @@ export default function Page() {
     shipmentsQuery,
     filterByStatus,
     filterByKeyword,
+    orderBy,
     changePage,
     changeLimit,
     currentPage,
@@ -118,6 +119,10 @@ export default function Page() {
     filterByStatus(status || "");
   };
 
+  const handleOrderBy = (orderByCol: string) => {
+    orderBy(orderByCol);
+  };
+
   return (
     <>
       <div className="w-full flex items-center justify-between">
@@ -161,7 +166,7 @@ export default function Page() {
 
       <DataTable
         data={shipmentsQuery.data.shipments}
-        columns={columns}
+        columns={getColumns(handleOrderBy)}
         dataLength={shipmentsQuery.data.total}
       />
 

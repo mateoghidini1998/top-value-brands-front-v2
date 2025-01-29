@@ -66,6 +66,21 @@ export const useShipmentsQuery = () => {
     queryClient.invalidateQueries({ queryKey: ["shipments"] });
   };
 
+  const orderBy = (orderBy: string) => {
+    // If the orderBy parameter is the same as the current orderBy, toggle the orderWay
+    if (orderBy === filters.orderBy) {
+      setFilters((prev) => ({
+        ...prev,
+        orderWay: prev.orderWay === "asc" ? "desc" : "asc",
+      }));
+    } else {
+      // If the orderBy parameter is different from the current orderBy, set the orderWay to "asc"
+      setFilters((prev) => ({ ...prev, orderWay: "desc" }));
+    }
+
+    setFilters((prev) => ({ ...prev, orderBy }));
+  };
+
   const changePage = (page: number) => {
     setFilters((prev) => ({ ...prev, page }));
   };
@@ -78,6 +93,7 @@ export const useShipmentsQuery = () => {
     shipmentsQuery,
     filterByStatus,
     filterByKeyword,
+    orderBy,
     changePage,
     changeLimit,
     currentPage: filters.page,
