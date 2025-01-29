@@ -81,7 +81,7 @@ export const useInventory = () => {
       }));
     } else {
       // If the orderBy parameter is different from the current orderBy, set the orderWay to "asc"
-      setFilters((prev) => ({ ...prev, orderWay: "asc" }));
+      setFilters((prev) => ({ ...prev, orderWay: "desc" }));
     }
 
     setFilters((prev) => ({ ...prev, orderBy }));

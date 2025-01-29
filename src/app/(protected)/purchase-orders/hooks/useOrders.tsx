@@ -76,18 +76,19 @@ export const useOrders = () => {
   };
 
   const orderBy = (orderBy: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      orderBy,
-      page: 1,
-      limit: 50,
-      orderWay:
-        prev.orderBy === orderBy
-          ? prev.orderWay === "asc"
-            ? "desc"
-            : "asc"
-          : "desc",
-    }));
+    // If the orderBy parameter is the same as the current orderBy, toggle the orderWay
+    if (orderBy === filters.orderBy) {
+      setFilters((prev) => ({
+        ...prev,
+        orderWay: prev.orderWay === "asc" ? "desc" : "asc",
+      }));
+    } else {
+      // If the orderBy parameter is different from the current orderBy, set the orderWay to "asc"
+      setFilters((prev) => ({ ...prev, orderWay: "desc" }));
+    }
+
+    setFilters((prev) => ({ ...prev, orderBy }));
+    // queryClient.invalidateQueries({ queryKey: ["inventory"] });
   };
 
   const createOrderMutation = useMutation({

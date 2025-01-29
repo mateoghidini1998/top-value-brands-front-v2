@@ -6,19 +6,37 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ActionsCell } from "./components";
 import { StatusType } from "@/components/custom/status-badge";
 import NotesCell from "@/components/custom/notes-cell";
+import { ArrowUpDown } from "lucide-react";
 
-export const columns: ColumnDef<Order>[] = [
+export const getColumns = (
+  handleOrderBy: (key: string) => void
+): ColumnDef<Order>[] => [
   {
     accessorKey: "supplier_name",
     header: "Supplier",
   },
   {
     accessorKey: "order_number",
-    header: "Order Number",
+    header: () => (
+      <div
+        className="text-right flex items-center cursor-pointer justify-center gap-2"
+        onClick={() => handleOrderBy("order_number")}
+      >
+        <ArrowUpDown className="mr-2 w-4 h-4 " /> Order Number
+      </div>
+    ),
   },
   {
     accessorKey: "updatedAt",
-    header: "Last Update",
+    header: () => (
+      <div
+        className="text-right flex items-center cursor-pointer justify-center gap-2"
+        onClick={() => handleOrderBy("updatedAt")}
+      >
+        <ArrowUpDown className="mr-2 w-4 h-4 " /> Last Update
+      </div>
+    ),
+
     cell: ({ row }) => (
       <div className="max-w-xs overflow-hidden text-ellipsis">
         {formatDate(new Date(row.getValue("updatedAt")).toString())}
@@ -28,7 +46,14 @@ export const columns: ColumnDef<Order>[] = [
 
   {
     accessorKey: "total_price",
-    header: "Total Price",
+    header: () => (
+      <div
+        className="text-right flex items-center cursor-pointer justify-center gap-2"
+        onClick={() => handleOrderBy("total_price")}
+      >
+        <ArrowUpDown className="mr-2 w-4 h-4 " /> Total Price
+      </div>
+    ),
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("total_price"));
       const formatted = new Intl.NumberFormat("en-US", {
