@@ -13,12 +13,13 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { AlertDialogHeader } from "@/components/ui/alert-dialog";
 import { CreateSupplierForm } from "./_components";
+import LoadingSpinner from "@/components/custom/loading-spinner";
 
 export default function Page() {
   const { suppliersQuery } = useSuppliers();
 
   if (suppliersQuery.isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (suppliersQuery.isError) {
