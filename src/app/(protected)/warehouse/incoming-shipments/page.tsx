@@ -97,12 +97,8 @@ export default function Page() {
     filterByKeyword(encodedTerm);
   };
 
-  if (ordersQuery.isLoading) {
+  if (ordersQuery.isLoading || suppliersQuery.isLoading) {
     return <LoadingSpinner />;
-  }
-
-  if (!ordersQuery.data || !suppliersQuery.data) {
-    return <div>Error</div>;
   }
 
   const formatSuppliers = (suppliers: Supplier[]): SupplierItem[] =>
@@ -136,7 +132,7 @@ export default function Page() {
             {searchTerm !== "" ? "Search" : "Reset"}
           </Button>
           <FilterSearch
-            items={formatSuppliers(suppliersQuery.data.data)}
+            items={formatSuppliers(suppliersQuery.data?.data || [])}
             value={selectedSupplier}
             onValueChange={(supplier_id) => {
               setSelectedSupplier(supplier_id as number);
@@ -156,9 +152,9 @@ export default function Page() {
       </div>
 
       <DataTable
-        data={ordersQuery.data.data}
+        data={ordersQuery.data?.data || []}
         columns={columns}
-        dataLength={ordersQuery.data.total}
+        dataLength={ordersQuery.data?.total || 0}
       />
 
       <div className="flex items-center justify-between mt-6">

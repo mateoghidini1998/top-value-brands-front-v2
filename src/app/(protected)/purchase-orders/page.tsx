@@ -107,7 +107,7 @@ export default function Page() {
   };
 
   // Render condicional después de los hooks
-  if (ordersQuery.isLoading) {
+  if (ordersQuery.isLoading || suppliersQuery.isLoading) {
     return <LoadingSpinner />;
   }
 

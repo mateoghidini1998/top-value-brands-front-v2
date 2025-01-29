@@ -25,7 +25,6 @@ import { WarehouseLocation } from "@/types";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { useSuppliers } from "../../suppliers/hooks";
 import { getColumns } from "./columns";
 import { usePallets } from "./hooks";
 import { useWarehouseLocations } from "./hooks/useWarehouseLocations";
@@ -49,8 +48,6 @@ export default function Page() {
   } = usePallets();
 
   const { warehouseLocationsQuery } = useWarehouseLocations(false);
-
-  const { suppliersQuery } = useSuppliers();
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -104,7 +101,7 @@ export default function Page() {
     return <LoadingSpinner />;
   }
 
-  if (!palletsQuery.data || !suppliersQuery.data) {
+  if (!palletsQuery.data) {
     return <div>Error</div>;
   }
 

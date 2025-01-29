@@ -187,7 +187,7 @@ export default function Page() {
   };
 
   // Render condicional después de los hooks
-  if (trackedProductsQuery.isLoading) {
+  if (trackedProductsQuery.isLoading || suppliersQuery.isLoading) {
     return <LoadingSpinner />;
   }
 
@@ -208,8 +208,6 @@ export default function Page() {
   if (!trackedProductsQuery.data) {
     return <div>Error</div>;
   }
-
-  console.log(productsAdded);
 
   return (
     <section className="flex flex-col gap-6 w-full">

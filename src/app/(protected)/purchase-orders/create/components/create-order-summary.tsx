@@ -29,8 +29,6 @@ export default function CreateOrderSummary({
 
   const [orderNotes, setOrderNotes] = useState<string>(notes);
 
-  console.log(orderNotes);
-
   const handleCreateOrder = async (
     productsAdded: ProductInOrder[],
     isEditing: boolean

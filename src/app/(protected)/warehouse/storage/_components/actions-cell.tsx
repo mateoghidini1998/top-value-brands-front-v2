@@ -45,7 +45,6 @@ const ActionsCell = ({ palletId }: ActionsCellProps) => {
         toast.error("Failed to delete pallet");
       }
     }
-    console.log(palletToDelete);
   };
 
   return (

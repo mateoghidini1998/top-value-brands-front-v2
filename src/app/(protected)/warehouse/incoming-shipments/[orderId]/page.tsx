@@ -306,7 +306,6 @@ export default function Page({
                     </SelectTrigger>
                     <SelectContent className="w-full">
                       {warehouseLocationsQuery.data?.data.map((location) => {
-                        console.log(location);
                         return (
                           <SelectItem
                             className="w-full"
