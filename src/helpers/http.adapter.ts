@@ -36,7 +36,7 @@ export const handleResponse = async <T>(response: Response): Promise<T> => {
 export const apiRequest = async <T>(
   url: string,
   options: RequestInit = {},
-  delay: number = 100
+  delay: number = 1
 ): Promise<T> => {
   // Obtener la cookie de sesión
   const sessionToken = cookies().get("__session")?.value;
