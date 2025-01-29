@@ -107,7 +107,7 @@ export default function Page() {
     filterByKeyword(searchTerm);
   };
 
-  if (shipmentsQuery.isLoading || shipmentsQuery.isFetching) {
+  if (shipmentsQuery.isLoading) {
     return <LoadingSpinner />;
   }
 

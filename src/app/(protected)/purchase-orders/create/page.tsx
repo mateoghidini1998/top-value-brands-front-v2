@@ -187,7 +187,7 @@ export default function Page() {
   };
 
   // Render condicional después de los hooks
-  if (trackedProductsQuery.isLoading || trackedProductsQuery.isFetching) {
+  if (trackedProductsQuery.isLoading) {
     return <LoadingSpinner />;
   }
 

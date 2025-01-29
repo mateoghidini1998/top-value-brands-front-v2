@@ -95,9 +95,9 @@ export default function Page() {
     const normalizedTerm = searchTerm.trim().toLowerCase();
     const encodedTerm = encodeURIComponent(normalizedTerm);
     filterByKeyword(encodedTerm);
-  };  
+  };
 
-  if (ordersQuery.isLoading || ordersQuery.isFetching) {
+  if (ordersQuery.isLoading) {
     return <LoadingSpinner />;
   }
 

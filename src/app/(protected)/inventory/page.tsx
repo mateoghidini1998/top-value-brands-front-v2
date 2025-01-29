@@ -100,7 +100,7 @@ export default function Page() {
   };
 
   // Render condicional después de los hooks
-  if (inventoryQuery.isLoading || inventoryQuery.isFetching) {
+  if (inventoryQuery.isLoading) {
     return <LoadingSpinner />;
   }
 
