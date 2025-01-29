@@ -27,7 +27,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useSuppliers } from "../../suppliers/hooks";
 import { usePallets } from "./hooks";
-import { columns } from "./columns";
+import { getColumns } from "./columns";
 
 type PaginationRange = number | "...";
 export interface SupplierItem {
@@ -39,7 +39,8 @@ export default function Page() {
   const {
     palletsQuery,
     filterBySupplier,
-    filterByKeyword,
+    filterByPalletNumber,
+    orderBy,
     changePage,
     changeLimit,
     currentPage,
@@ -90,7 +91,7 @@ export default function Page() {
   }, [currentPage, totalPages]);
 
   const handleSearch = () => {
-    filterByKeyword(searchTerm);
+    filterByPalletNumber(searchTerm);
   };
 
   if (palletsQuery.isLoading || palletsQuery.isFetching) {
@@ -109,6 +110,10 @@ export default function Page() {
 
   const handleFilterBySupplier = (supplier_id: number | null) => {
     filterBySupplier(supplier_id);
+  };
+
+  const handleOrderBy = (columnId: string) => {
+    orderBy(columnId);
   };
 
   return (
@@ -153,7 +158,7 @@ export default function Page() {
 
       <DataTable
         data={palletsQuery.data.data}
-        columns={columns}
+        columns={getColumns(handleOrderBy)}
         dataLength={palletsQuery.data.total}
       />
 

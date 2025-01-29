@@ -11,7 +11,7 @@ export const usePallets = (palletId?: string) => {
     page: 1,
     limit: 50,
     keyword: "",
-    supplier: "",
+    pallet_number: "",
     orderBy: "",
     orderWay: "",
   });
@@ -20,17 +20,17 @@ export const usePallets = (palletId?: string) => {
     page = 1,
     limit = 50,
     keyword = "",
-    supplier = "",
+    pallet_number = "",
     orderBy = "",
     orderWay = "",
   }: {
     page?: number;
     limit?: number;
     keyword?: string;
-    supplier?: string;
+    pallet_number?: string;
     orderBy?: string;
     orderWay?: string;
-  }) => getPallets({ page, limit, keyword, supplier, orderBy, orderWay });
+  }) => getPallets({ page, limit, keyword, pallet_number, orderBy, orderWay });
 
   const palletsQuery = useQuery({
     queryKey: ["pallets", filters],
@@ -41,7 +41,7 @@ export const usePallets = (palletId?: string) => {
           page: number;
           limit: number;
           keyword: string;
-          supplier: string;
+          pallet_number: string;
           orderBy: string;
           orderWay: string;
         }
@@ -70,9 +70,24 @@ export const usePallets = (palletId?: string) => {
     queryClient.invalidateQueries({ queryKey: ["pallets"] });
   };
 
-  const filterByKeyword = (keyword: string) => {
-    setFilters((prev) => ({ ...prev, keyword, page: 1, limit: 50 }));
+  const filterByPalletNumber = (pallet_number: string) => {
+    setFilters((prev) => ({ ...prev, pallet_number, page: 1, limit: 50 }));
     queryClient.invalidateQueries({ queryKey: ["pallets"] });
+  };
+
+  const orderBy = (orderBy: string) => {
+    // If the orderBy parameter is the same as the current orderBy, toggle the orderWay
+    if (orderBy === filters.orderBy) {
+      setFilters((prev) => ({
+        ...prev,
+        orderWay: prev.orderWay === "asc" ? "desc" : "asc",
+      }));
+    } else {
+      // If the orderBy parameter is different from the current orderBy, set the orderWay to "asc"
+      setFilters((prev) => ({ ...prev, orderWay: "asc" }));
+    }
+
+    setFilters((prev) => ({ ...prev, orderBy }));
   };
 
   const changePage = (page: number) => {
@@ -98,7 +113,8 @@ export const usePallets = (palletId?: string) => {
     palletsQuery,
     palletByIdQuery,
     filterBySupplier,
-    filterByKeyword,
+    filterByPalletNumber,
+    orderBy,
     changePage,
     changeLimit,
     deletePalletMutation,
