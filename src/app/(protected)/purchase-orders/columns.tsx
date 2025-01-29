@@ -17,14 +17,7 @@ export const getColumns = (
   },
   {
     accessorKey: "order_number",
-    header: () => (
-      <div
-        className="text-right flex items-center cursor-pointer justify-center gap-2"
-        onClick={() => handleOrderBy("order_number")}
-      >
-        <ArrowUpDown className="mr-2 w-4 h-4 " /> Order Number
-      </div>
-    ),
+    header: "Order Number",
   },
   {
     accessorKey: "updatedAt",

@@ -17,6 +17,7 @@ interface FilterProps {
   value: number | string | null;
   onValueChange: (value: number | string | null) => void;
   className?: string;
+  placeholder?: string;
 }
 
 export function FilterSearch({
@@ -24,6 +25,7 @@ export function FilterSearch({
   value,
   onValueChange,
   className = "w-[250px]",
+  placeholder = "Select supplier...",
 }: FilterProps) {
   const [open, setOpen] = useState<boolean>(false);
   if (items.length === 0) {
@@ -41,7 +43,7 @@ export function FilterSearch({
         >
           {value !== null
             ? items.find((item) => item.value === value)?.name
-            : "Select supplier..."}
+            : placeholder}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

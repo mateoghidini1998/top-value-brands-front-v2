@@ -12,6 +12,7 @@ export const useOrders = () => {
     limit: 50,
     keyword: "",
     supplier: "",
+    status: "",
     orderBy: "",
     orderWay: "",
   });
@@ -21,6 +22,7 @@ export const useOrders = () => {
     limit = 50,
     keyword = "",
     supplier = "",
+    status = "",
     orderBy = "",
     orderWay = "",
   }: {
@@ -28,9 +30,11 @@ export const useOrders = () => {
     limit?: number;
     keyword?: string;
     supplier?: string;
+    status?: string;
     orderBy?: string;
     orderWay?: string;
-  }) => getOrders({ page, limit, keyword, supplier, orderBy, orderWay });
+  }) =>
+    getOrders({ page, limit, keyword, supplier, status, orderBy, orderWay });
 
   const ordersQuery = useQuery({
     queryKey: ["orders", filters],
@@ -42,6 +46,7 @@ export const useOrders = () => {
           limit: number;
           keyword: string;
           supplier: string;
+          status: string;
           orderBy: string;
           orderWay: string;
         }
@@ -55,6 +60,16 @@ export const useOrders = () => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       supplier: supplier_id ? supplier_id.toString() : "",
+      page: 1,
+      limit: 50,
+    }));
+
+    queryClient.invalidateQueries({ queryKey: ["orders"] });
+  };
+  const filterByStatus = (status_id: number | null) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      status: status_id ? status_id.toString() : "",
       page: 1,
       limit: 50,
     }));
@@ -114,6 +129,7 @@ export const useOrders = () => {
     ordersQuery,
     createOrderMutation,
     filterBySupplier,
+    filterByStatus,
     filterByKeyword,
     orderBy,
     changePage,

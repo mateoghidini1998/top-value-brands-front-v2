@@ -51,7 +51,7 @@ export default function Page() {
   }
 
   if (!availableProducts.length) {
-    return <div>No data</div>;
+    return <div>No pallets found for active purchase orders.</div>;
   }
 
   const handleAddProduct = (

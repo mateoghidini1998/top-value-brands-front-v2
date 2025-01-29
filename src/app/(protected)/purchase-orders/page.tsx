@@ -28,6 +28,17 @@ import { useSuppliers } from "../suppliers/hooks";
 import { getColumns } from "./columns";
 import { useOrders } from "./hooks/useOrders";
 
+const PURCHASE_ORDER_STATUSES = [
+  { name: "Rejected", value: 1 },
+  { name: "Pending", value: 2 },
+  { name: "Good to go", value: 3 },
+  { name: "Cancelled", value: 4 },
+  { name: "In transit", value: 5 },
+  { name: "Arrived", value: 6 },
+  { name: "Closed", value: 7 },
+  { name: "Waiting for supplier approval", value: 8 },
+];
+
 type PaginationRange = number | "...";
 export interface SupplierItem {
   value: number;
@@ -38,6 +49,7 @@ export default function Page() {
   const {
     ordersQuery,
     filterBySupplier,
+    filterByStatus,
     orderBy,
     filterByKeyword,
     changePage,
@@ -50,6 +62,7 @@ export default function Page() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<number | null>(null);
 
   // Total pages calculation
   const totalPages = useMemo(() => {
@@ -111,6 +124,9 @@ export default function Page() {
   const handleFilterBySupplier = (supplier_id: number | null) => {
     filterBySupplier(supplier_id);
   };
+  const handleFilterByStatus = (status_id: number | null) => {
+    filterByStatus(status_id);
+  };
 
   const handleOrderBy = (orderByCol: string) => {
     orderBy(orderByCol);
@@ -142,6 +158,15 @@ export default function Page() {
             onValueChange={(supplier_id) => {
               setSelectedSupplier(supplier_id as number);
               handleFilterBySupplier(supplier_id as number);
+            }}
+          />
+          <FilterSearch
+            items={PURCHASE_ORDER_STATUSES}
+            value={selectedStatus}
+            placeholder="Select status..."
+            onValueChange={(status_id) => {
+              setSelectedStatus(status_id as number);
+              handleFilterByStatus(status_id as number);
             }}
           />
         </div>
