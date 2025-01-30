@@ -31,117 +31,136 @@ export const incomingOrderCols = (
   onQuantityReceivedChange: (rowId: string, value: number) => void,
   onReasonChange: (rowId: string, value: number) => void,
   onUpcChange: (rowId: string, value: string) => void,
-  onExpireDateChange: (rowId: string, value: Date | undefined) => void
-): ColumnDef<PurchaseOrderSummaryProducts>[] => [
-  {
-    id: "product_title",
-    header: "Product Name",
-    cell: ({ row }) => {
-      const product_image = row.original.product_image;
-      const product_name = row.original.product_name;
-      const ASIN = row.original.ASIN;
-      const in_seller_account = row.original.in_seller_account;
-      const width = 300;
-      return (
-        <ProductTitle
-          product_image={product_image}
-          product_name={product_name}
-          ASIN={ASIN}
-          in_seller_account={in_seller_account}
-          width={width}
-        />
-      );
+  onExpireDateChange: (rowId: string, value: Date | undefined) => void,
+  focusNextInput: (rowId: string, currentField: string) => void,
+  inputRefs: { current: { [key: string]: HTMLInputElement | null } }
+): ColumnDef<PurchaseOrderSummaryProducts>[] => {
+  return [
+    {
+      id: "product_title",
+      header: "Product Name",
+      cell: ({ row }) => {
+        const product_image = row.original.product_image;
+        const product_name = row.original.product_name;
+        const ASIN = row.original.ASIN;
+        const in_seller_account = row.original.in_seller_account;
+        const width = 300;
+        return (
+          <ProductTitle
+            product_image={product_image}
+            product_name={product_name}
+            ASIN={ASIN}
+            in_seller_account={in_seller_account}
+            width={width}
+          />
+        );
+      },
     },
-  },
-  {
-    accessorKey: "ASIN",
-    header: "ASIN",
-  },
-  {
-    accessorKey: "seller_sku",
-    header: "Seller SKU",
-  },
-  {
-    accessorKey: "upc",
-    header: "UPC",
-    cell: ({ row }) => {
-      return (
-        <Input
-          type="text"
-          defaultValue={row.original.upc || ""}
-          onBlur={(e) => {
-            onUpcChange(row.original.id.toString(), e.target.value);
-          }}
-          className="w-52"
-          placeholder="Enter UPC"
-        />
-      );
+    {
+      accessorKey: "ASIN",
+      header: "ASIN",
     },
-  },
-  {
-    accessorKey: "quantity_purchased",
-    header: "Quantity Purchased",
-  },
-  {
-    accessorKey: "quantity_received",
-    header: "Quantity Received",
-    cell: ({ row }) => {
-      return (
-        <Input
-          type="number"
-          min={0}
-          defaultValue={row.original.quantity_received}
-          onBlur={(e) => {
-            const value = parseInt(e.target.value) || 0;
-            onQuantityReceivedChange(row.original.id.toString(), value);
-          }}
-          className="w-24"
-        />
-      );
+    {
+      accessorKey: "seller_sku",
+      header: "Seller SKU",
     },
-  },
-  {
-    accessorKey: "quantity_missing",
-    header: "Quantity Missing",
-  },
-  {
-    accessorKey: "reason_id",
-    header: "Reason",
-    cell: ({ row }) => {
-      return (
-        <Select
-          defaultValue={row.original.reason_id?.toString()}
-          onValueChange={(value) => {
-            onReasonChange(row.original.id.toString(), parseInt(value));
-          }}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select reason" />
-          </SelectTrigger>
-          <SelectContent>
-            {reasons.map((reason) => (
-              <SelectItem key={reason.id} value={reason.id.toString()}>
-                {reason.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      );
+    {
+      accessorKey: "upc",
+      header: "UPC",
+      cell: ({ row }) => {
+        return (
+          <Input
+            type="text"
+            defaultValue={row.original.upc || ""}
+            onBlur={(e) => {
+              onUpcChange(row.original.id.toString(), e.target.value);
+            }}
+            className="w-52"
+            placeholder="Enter UPC"
+            ref={(el) => {
+              inputRefs.current[`upc_${row.original.id}`] = el;
+            }}
+          />
+        );
+      },
     },
-  },
-  {
-    accessorKey: "expire_date",
-    header: "Expire Date",
-    cell: ({ row }) => {
-      return (
-        <ExpireDateCell
-          row={row.original}
-          onExpireDateChange={onExpireDateChange}
-        />
-      );
+    {
+      accessorKey: "quantity_purchased",
+      header: "Quantity Purchased",
     },
-  },
-];
+    {
+      accessorKey: "quantity_received",
+      header: "Quantity Received",
+      cell: ({ row }) => {
+        return (
+          <Input
+            type="number"
+            min={0}
+            defaultValue={row.original.quantity_received}
+            onBlur={(e) => {
+              const value = parseInt(e.target.value) || 0;
+              onQuantityReceivedChange(row.original.id.toString(), value);
+            }}
+            className="w-24"
+            ref={(el) => {
+              inputRefs.current[`quantity_received_${row.original.id}`] = el;
+            }}
+          />
+        );
+      },
+    },
+    {
+      accessorKey: "quantity_missing",
+      header: "Quantity Missing",
+    },
+    {
+      accessorKey: "reason_id",
+      header: "Reason",
+      cell: ({ row }) => {
+        return (
+          <Select
+            defaultValue={row.original.reason_id?.toString()}
+            onValueChange={(value) => {
+              onReasonChange(row.original.id.toString(), parseInt(value));
+            }}
+          >
+            <SelectTrigger
+              className="w-[180px]"
+              // @ts-expect-error @typescript-eslint/no-unsafe-argument
+              ref={(el) =>
+                // @ts-expect-error @typescript-eslint/no-unsafe-argument
+                (inputRefs.current[`reason_id_${row.original.id}`] = el)
+              }
+            >
+              <SelectValue placeholder="Select reason" />
+            </SelectTrigger>
+            <SelectContent>
+              {reasons.map((reason) => (
+                <SelectItem key={reason.id} value={reason.id.toString()}>
+                  {reason.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+      },
+    },
+    {
+      accessorKey: "expire_date",
+      header: "Expire Date",
+      cell: ({ row }) => {
+        return (
+          <ExpireDateCell
+            // @ts-expect-error @typescript-eslint/no-unsafe-argument
+            inputRef={inputRefs.current[`expire_date_${row.original.id}`]}
+            row={row.original}
+            onExpireDateChange={onExpireDateChange}
+          />
+        );
+      },
+    },
+  ];
+};
 
 export const availableToCreate = (
   onAddProduct: (product: PurchaseOrderSummaryProducts) => void

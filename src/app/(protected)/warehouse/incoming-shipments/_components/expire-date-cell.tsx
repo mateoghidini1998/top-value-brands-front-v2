@@ -16,11 +16,13 @@ import type { PurchaseOrderSummaryProducts } from "@/types";
 
 interface ExpireDateCellProps {
   row: PurchaseOrderSummaryProducts;
+  inputRef: React.RefObject<HTMLInputElement>;
   onExpireDateChange: (rowId: string, value: Date | undefined) => void;
 }
 
 export const ExpireDateCell = ({
   row,
+  inputRef,
   onExpireDateChange,
 }: ExpireDateCellProps) => {
   const [date, setDate] = useState<Date | undefined>(
@@ -88,6 +90,7 @@ export const ExpireDateCell = ({
           onBlur={handleInputBlur}
           placeholder="MM/DD/YYYY"
           className="w-[150px]"
+          ref={inputRef}
         />
         <PopoverTrigger asChild>
           <Button

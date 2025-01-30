@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatDate } from "@/helpers/format-date";
 import { PurchaseOrderSummaryProducts } from "@/types";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useIncomingShipmentsMutations } from "../hooks/useIncomingShipmentsMutation";
 import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
 import {
@@ -62,53 +62,94 @@ export default function Page({
     }));
   }, [data?.data.purchaseOrderProducts, localChanges]);
 
-  const handleQuantityReceivedChange = (rowId: string, value: number) => {
-    setLocalChanges((prev) => {
-      const quantity_missing =
-        (data?.data.purchaseOrderProducts.find((p) => p.id === Number(rowId))
-          ?.quantity_purchased || 0) - value;
+  const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
-      return {
+  const focusNextInput = useCallback(
+    (currentId: string, currentField: string) => {
+      const fields = ["upc", "quantity_received", "reason_id", "expire_date"];
+      const currentIndex = fields.indexOf(currentField);
+      const nextField = fields[currentIndex + 1];
+
+      if (nextField) {
+        // Focus on the next field in the same row
+        inputRefs.current[`${nextField}_${currentId}`]?.focus();
+      } else {
+        // If we've reached the end of the fields for this row, move to the next row
+        const currentRowIndex = tableData.findIndex(
+          (row) => row.id.toString() === currentId
+        );
+        const nextRow = tableData[currentRowIndex + 1];
+        if (nextRow) {
+          inputRefs.current[`upc_${nextRow.id}`]?.focus();
+        }
+      }
+    },
+    [tableData]
+  );
+
+  const handleReasonChange = useCallback(
+    (rowId: string, value: number) => {
+      setLocalChanges((prev) => ({
         ...prev,
         [rowId]: {
           ...prev[rowId],
-          quantity_received: value,
-          quantity_missing: quantity_missing >= 0 ? quantity_missing : 0,
-          reason_id: quantity_missing === 0 ? 1 : prev[rowId]?.reason_id,
+          reason_id: value,
         },
-      };
-    });
-  };
+      }));
+      focusNextInput(rowId, "reason_id");
+    },
+    [focusNextInput]
+  );
 
-  const handleReasonChange = (rowId: string, value: number) => {
-    setLocalChanges((prev) => ({
-      ...prev,
-      [rowId]: {
-        ...prev[rowId],
-        reason_id: value,
-      },
-    }));
-  };
+  const handleQuantityReceivedChange = useCallback(
+    (rowId: string, value: number) => {
+      setLocalChanges((prev) => {
+        const quantity_missing =
+          (data?.data.purchaseOrderProducts.find((p) => p.id === Number(rowId))
+            ?.quantity_purchased || 0) - value;
 
-  const handleUpcChange = (rowId: string, value: string) => {
-    setLocalChanges((prev) => ({
-      ...prev,
-      [rowId]: {
-        ...prev[rowId],
-        upc: value,
-      },
-    }));
-  };
+        return {
+          ...prev,
+          [rowId]: {
+            ...prev[rowId],
+            quantity_received: value,
+            quantity_missing: quantity_missing >= 0 ? quantity_missing : 0,
+            reason_id: quantity_missing === 0 ? 1 : prev[rowId]?.reason_id,
+          },
+        };
+      });
+      focusNextInput(rowId, "quantity_received");
+    },
+    [data?.data.purchaseOrderProducts, focusNextInput]
+  );
 
-  const handleExpireDateChange = (rowId: string, value: Date | undefined) => {
-    setLocalChanges((prev) => ({
-      ...prev,
-      [rowId]: {
-        ...prev[rowId],
-        expire_date: value ? value.toISOString() : null,
-      },
-    }));
-  };
+  const handleUpcChange = useCallback(
+    (rowId: string, value: string) => {
+      setLocalChanges((prev) => ({
+        ...prev,
+        [rowId]: {
+          ...prev[rowId],
+          upc: value,
+        },
+      }));
+      focusNextInput(rowId, "upc");
+    },
+    [focusNextInput]
+  );
+
+  const handleExpireDateChange = useCallback(
+    (rowId: string, value: Date | undefined) => {
+      setLocalChanges((prev) => ({
+        ...prev,
+        [rowId]: {
+          ...prev[rowId],
+          expire_date: value ? value.toISOString() : null,
+        },
+      }));
+      focusNextInput(rowId, "expire_date");
+    },
+    [focusNextInput]
+  );
 
   const handleSaveIncomingOrder = () => {
     const updatedProducts = tableData.map((product) => ({
@@ -232,7 +273,9 @@ export default function Page({
               handleQuantityReceivedChange,
               handleReasonChange,
               handleUpcChange,
-              handleExpireDateChange
+              handleExpireDateChange,
+              focusNextInput,
+              inputRefs
             )}
             data={tableData}
             dataLength={tableData.length}
