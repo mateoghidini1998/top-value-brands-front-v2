@@ -116,7 +116,7 @@ export default function PurchaseOrderPage({
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {/* Order Number Card */}
-            <Card className="bg-background">
+            <Card>
               <CardHeader className="flex flex-row items-center space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   Order Number
@@ -169,7 +169,7 @@ export default function PurchaseOrderPage({
             </Card>
 
             {/* Total Price Card */}
-            <Card className="bg-background">
+            <Card>
               <CardHeader className="flex flex-row items-center space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   Total Amount
@@ -187,7 +187,7 @@ export default function PurchaseOrderPage({
             </Card>
 
             {/* Supplier Card */}
-            <Card className="bg-background">
+            <Card>
               <CardHeader className="flex flex-row items-center space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Supplier</CardTitle>
                 <Store className="w-4 h-4 text-muted-foreground ml-auto" />
@@ -203,7 +203,7 @@ export default function PurchaseOrderPage({
             </Card>
 
             {/* Last Updated Card */}
-            <Card className="bg-background">
+            <Card>
               <CardHeader className="flex flex-row items-center space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   Last Updated
@@ -223,7 +223,7 @@ export default function PurchaseOrderPage({
 
           <div className="grid gap-4 grid-cols-1">
             {/* Notes Card */}
-            <Card className="bg-background">
+            <Card>
               <CardHeader className="flex flex-row items-center space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Notes</CardTitle>
                 {!isEditingNotes ? (
@@ -276,13 +276,9 @@ export default function PurchaseOrderPage({
         </div>
 
         {/* Products Table Card */}
-        <Card className="bg-background">
+        <Card>
           <CardHeader className="flex flex-row items-center">
             <div className="flex flex-col items-start gap-4 justify-center w-fit space-y-0 pb-2">
-              {/* <CardTitle>Products</CardTitle> */}
-              {/*
-               ** TODO: Style
-               */}
               <Button className="">
                 <Link href={`/purchase-orders/create?update=${params.orderId}`}>
                   Add Products
