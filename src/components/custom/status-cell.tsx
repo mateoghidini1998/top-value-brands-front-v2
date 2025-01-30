@@ -4,6 +4,7 @@ import { StatusBadge } from "./status-badge";
 
 export interface StatusCellProps {
   orderId: string;
+  isWarehouse?: boolean;
   statusDescription:
     | "Rejected"
     | "Pending"
@@ -15,12 +16,17 @@ export interface StatusCellProps {
     | "Waiting for supplier approval";
 }
 
-export function StatusCell({ orderId, statusDescription }: StatusCellProps) {
+export function StatusCell({
+  orderId,
+  statusDescription,
+  isWarehouse = false,
+}: StatusCellProps) {
   const { updateOrderStatus } = useOrderSummaryMutations(orderId);
 
   return (
     <StatusBadge
       status={statusDescription}
+      isWarehouse={isWarehouse}
       onStatusChange={async (newStatus) => {
         updateOrderStatus({ orderId, status: newStatus });
       }}

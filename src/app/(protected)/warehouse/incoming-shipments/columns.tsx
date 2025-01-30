@@ -60,6 +60,7 @@ export const columns: ColumnDef<Order>[] = [
         <StatusCell
           orderId={row.original.id.toString()}
           statusDescription={description}
+          isWarehouse={true}
         />
       );
     },

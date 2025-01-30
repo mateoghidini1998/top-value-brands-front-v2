@@ -22,7 +22,7 @@ type BadgeVariant =
   | "closed"
   | "cancelled"
   | "waiting"
-  | "intransit"
+  | "intransit";
 
 const PURCHASE_ORDER_STATUSES = {
   Rejected: 1,
@@ -35,11 +35,19 @@ const PURCHASE_ORDER_STATUSES = {
   "Waiting for supplier approval": 8,
 } as const;
 
+const INCOMING_PURCHASE_ORDER_STATUSES = {
+  "Good to go": 3,
+  "In transit": 5,
+  Arrived: 6,
+  Closed: 7,
+} as const;
+
 export type StatusType = keyof typeof PURCHASE_ORDER_STATUSES;
 
 interface StatusBadgeProps {
   status: StatusType;
   onStatusChange: (newStatus: number) => Promise<void>;
+  isWarehouse?: boolean;
 }
 
 const getStatusConfig = (
@@ -63,7 +71,11 @@ const getStatusConfig = (
   return configs[status];
 };
 
-export function StatusBadge({ status, onStatusChange }: StatusBadgeProps) {
+export function StatusBadge({
+  status,
+  onStatusChange,
+  isWarehouse = false,
+}: StatusBadgeProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const statusConfig = getStatusConfig(status);
 
@@ -95,7 +107,11 @@ export function StatusBadge({ status, onStatusChange }: StatusBadgeProps) {
           </Badge>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="z-50">
-          {Object.entries(PURCHASE_ORDER_STATUSES).map(([key, value]) => (
+          {Object.entries(
+            isWarehouse
+              ? INCOMING_PURCHASE_ORDER_STATUSES
+              : PURCHASE_ORDER_STATUSES
+          ).map(([key, value]) => (
             <DropdownMenuItem
               key={key}
               onClick={() => handleStatusChange(value)}
