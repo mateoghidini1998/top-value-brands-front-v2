@@ -1,11 +1,10 @@
-import { Badge } from "@/components/ui/badge";
+import NotesCell from "@/components/custom/notes-cell";
+import { StatusType } from "@/components/custom/status-badge";
+import { StatusCell } from "@/components/custom/status-cell";
 import { formatDate } from "@/helpers/format-date";
 import { Order } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import ActionsCell from "./_components/actions-cell";
-import { StatusCell } from "@/components/custom/status-cell";
-import { StatusType } from "@/components/custom/status-badge";
-import NotesCell from "@/components/custom/notes-cell";
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -65,34 +64,34 @@ export const columns: ColumnDef<Order>[] = [
       );
     },
   },
-  {
-    accessorKey: "average_roi",
-    header: "ROI",
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("average_roi")).toFixed(2);
+  // {
+  //   accessorKey: "average_roi",
+  //   header: "ROI",
+  //   cell: ({ row }) => {
+  //     const amount = parseFloat(row.getValue("average_roi")).toFixed(2);
 
-      const getBadgeVariant = (amount: number) => {
-        if (amount >= 2) {
-          return "arrived";
-        }
+  //     const getBadgeVariant = (amount: number) => {
+  //       if (amount >= 2) {
+  //         return "arrived";
+  //       }
 
-        if (amount <= 0) {
-          return "cancelled";
-        }
+  //       if (amount <= 0) {
+  //         return "cancelled";
+  //       }
 
-        return "secondary";
-      };
+  //       return "secondary";
+  //     };
 
-      return (
-        <Badge
-          variant={getBadgeVariant(parseFloat(amount))}
-          className={`cursor-pointer`}
-        >
-          {!isNaN(parseFloat(amount)) ? amount + "%" : "N/A"}
-        </Badge>
-      );
-    },
-  },
+  //     return (
+  //       <Badge
+  //         variant={getBadgeVariant(parseFloat(amount))}
+  //         className={`cursor-pointer`}
+  //       >
+  //         {!isNaN(parseFloat(amount)) ? amount + "%" : "N/A"}
+  //       </Badge>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "actions",
     id: "actions",
