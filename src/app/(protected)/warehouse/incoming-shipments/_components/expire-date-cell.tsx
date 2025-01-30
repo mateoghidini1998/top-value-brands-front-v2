@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
@@ -10,9 +12,7 @@ import {
 } from "@/components/ui/popover";
 import { formatDateWithoutHours } from "@/helpers/format-date";
 import { cn } from "@/lib/utils";
-import { PurchaseOrderSummaryProducts } from "@/types";
-import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
+import type { PurchaseOrderSummaryProducts } from "@/types";
 
 interface ExpireDateCellProps {
   row: PurchaseOrderSummaryProducts;
@@ -24,7 +24,7 @@ export const ExpireDateCell = ({
   onExpireDateChange,
 }: ExpireDateCellProps) => {
   const [date, setDate] = useState<Date | undefined>(
-    row.expire_date ? new Date(row.expire_date) : new Date()
+    row.expire_date ? new Date(row.expire_date) : undefined
   );
   const [inputValue, setInputValue] = useState(
     date ? formatDateWithoutHours(date.toString()) : ""
@@ -32,26 +32,39 @@ export const ExpireDateCell = ({
   const [open, setOpen] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+    let value = e.target.value.replace(/\D/g, "");
+    if (value.length > 8) value = value.slice(0, 8);
+
+    if (value.length > 4) {
+      value = `${value.slice(0, 2)}/${value.slice(2, 4)}/${value.slice(4)}`;
+    } else if (value.length > 2) {
+      value = `${value.slice(0, 2)}/${value.slice(2)}`;
+    }
+
+    // Autocomplete with current year if MM/DD is entered
+    if (value.length === 5) {
+      const currentYear = new Date().getFullYear();
+      value = `${value}/${currentYear}`;
+    }
+
+    setInputValue(value);
   };
 
   const handleInputBlur = () => {
     const parts = inputValue.split("/");
     if (parts.length === 3) {
-      const month = parseInt(parts[0], 10) - 1; // Meses son 0-indexados en JavaScript.
-      const day = parseInt(parts[1], 10);
-      const year = parseInt(parts[2], 10);
+      const month = Number.parseInt(parts[0], 10) - 1;
+      const day = Number.parseInt(parts[1], 10);
+      const year = Number.parseInt(parts[2], 10);
 
       const newDate = new Date(year, month, day);
       if (!isNaN(newDate.getTime())) {
         setDate(newDate);
         onExpireDateChange(row.id.toString(), newDate);
       } else {
-        // Restablecer el valor si la fecha no es válida.
         setInputValue(date ? formatDateWithoutHours(date.toString()) : "");
       }
     } else {
-      // Restablecer el valor si el formato es incorrecto.
       setInputValue(date ? formatDateWithoutHours(date.toString()) : "");
     }
   };
