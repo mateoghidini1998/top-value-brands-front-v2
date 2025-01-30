@@ -251,6 +251,7 @@ export default function Page() {
           data={trackedProductsQuery.data.data}
           columns={getTrackedProductsColumns(setProductsAdded, handleOrderBy)}
           dataLength={trackedProductsQuery.data.total}
+          scrolleable={true}
         />
 
         {/* Pagination */}

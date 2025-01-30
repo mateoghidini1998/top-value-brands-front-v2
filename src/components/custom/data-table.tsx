@@ -44,6 +44,7 @@ interface DataTableProps<TData, TValue> {
   onSort?: (sorting: SortingState) => unknown;
   showHideColumns?: boolean;
   searchInput?: string;
+  scrolleable?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -54,6 +55,7 @@ export function DataTable<TData, TValue>({
   onSort,
   showHideColumns = false,
   searchInput = "",
+  scrolleable = false,
 }: // setTableData,
 DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -142,12 +144,18 @@ DataTableProps<TData, TValue>) {
           </DropdownMenu>
         )}
       </div>
-      <ScrollArea className="w-fit rounded-md border">
+      <ScrollArea
+        className={
+          scrolleable ? "w-fit rounded-md border" : "w-full rounded-md border"
+        }
+      >
         <div
           data-state={state}
-          className="shrink-0 items-center gap-2 transition-[width,height] ease-linear
-        data-[state=expanded]:w-[calc(96.5vw_-_var(--sidebar-width))]
-        data-[state=collapsed]:w-[calc(96.5vw_-_var(--sidebar-width-icon))]"
+          className={
+            !scrolleable
+              ? "w-full"
+              : "shrink-0 items-center gap-2 transition-[width,height] ease-linear data-[state=expanded]:w-[calc(96.5vw_-_var(--sidebar-width))] data-[state=collapsed]:w-[calc(96.5vw_-_var(--sidebar-width-icon))]"
+          }
         >
           <Table>
             <TableHeader>

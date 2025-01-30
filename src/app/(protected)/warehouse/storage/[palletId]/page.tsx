@@ -3,8 +3,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { usePallets } from "../hooks";
 import { PalletInfo } from "./_components/pallet-info";
-import { DataTable } from "@/components/custom/data-table";
 import { columns } from "./columns";
+import { DataTable } from "../../outgoing-shipments/create/_components/tables/data-table";
 
 export default function PalletDetailsPage({
   params,
@@ -42,7 +42,7 @@ export default function PalletDetailsPage({
         <DataTable
           columns={columns}
           data={pallet.PalletProducts || []}
-          dataLength={1000}
+          pagination
         />
       </div>
     </div>

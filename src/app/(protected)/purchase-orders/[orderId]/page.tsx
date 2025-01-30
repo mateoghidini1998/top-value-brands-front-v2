@@ -1,6 +1,4 @@
 "use client";
-
-import { DataTable } from "@/components/custom/data-table";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -23,6 +21,7 @@ import { columns } from "./columns";
 import SaveOrder from "./components/save-order-button";
 import { useOrderSummaryMutations, useOrderSummaryQuery } from "./hooks";
 import Link from "next/link";
+import { DataTable } from "../../warehouse/outgoing-shipments/create/_components/tables/data-table";
 
 export default function PurchaseOrderPage({
   params,
@@ -293,7 +292,11 @@ export default function PurchaseOrderPage({
             <Truck className="w-4 h-4 text-muted-foreground ml-auto" />
           </CardHeader>
           <CardContent className="p-0">
-            <DataTable columns={columns} data={purchaseOrderProducts} />
+            <DataTable
+              columns={columns}
+              data={purchaseOrderProducts}
+              pagination
+            />
           </CardContent>
         </Card>
       </div>

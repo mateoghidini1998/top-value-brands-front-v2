@@ -219,13 +219,13 @@ export default function Page({
         defaultValue={"summary"}
         className="flex flex-col items-center justify-between gap-4 relative"
       >
-        <TabsList className="grid w-fit px-2 grid-cols-2 items-end self-end mr-4 absolute right-0 top-[7px]">
+        <TabsList className="grid w-fit px-2 grid-cols-2 items-end self-end absolute right-0 top-[7px]">
           <TabsTrigger value="summary">summary</TabsTrigger>
           <TabsTrigger value="pallets">pallets</TabsTrigger>
         </TabsList>
 
         {/* Summary */}
-        <TabsContent value="summary">
+        <TabsContent value="summary" className="w-full">
           <Button onClick={() => handleSaveIncomingOrder()}>Save Order</Button>
           <DataTable
             columns={incomingOrderCols(
@@ -239,7 +239,7 @@ export default function Page({
           />
         </TabsContent>
         {/* Pallet */}
-        <TabsContent value="pallets">
+        <TabsContent value="pallets" className="w-full">
           <Button onClick={() => handleSavePallets()}>Save Pallet</Button>
           <DataTable
             columns={availableToCreate((product) => {
