@@ -1,7 +1,6 @@
 "use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react";
-
+import { useOrders } from "@/app/(protected)/purchase-orders/hooks";
 import {
   Collapsible,
   CollapsibleContent,
@@ -17,8 +16,10 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { ChevronRight, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useCallback, useRef } from "react";
 
 export function NavMain({
   items,
@@ -35,10 +36,29 @@ export function NavMain({
   }[];
 }) {
   const path = usePathname();
+  const { createPrefetchOrders } = useOrders();
 
-  const presetData = () => {
-    console.log("prefetching data...");
-  };
+  const lastPrefetchTime = useRef(0);
+
+  const prefetchOrders = useCallback(() => {
+    const now = Date.now();
+
+    // Solo permite el prefetch si han pasado al menos 5 segundos desde el último
+    if (now - lastPrefetchTime.current > 5000) {
+      lastPrefetchTime.current = now;
+      createPrefetchOrders()();
+    }
+  }, [createPrefetchOrders]);
+
+  const presetData = useCallback(
+    (title: string) => {
+      if (title === "Purchase Orders") {
+        console.log("prefetching...");
+        prefetchOrders();
+      }
+    },
+    [prefetchOrders]
+  );
 
   return (
     <SidebarGroup>
@@ -54,7 +74,10 @@ export function NavMain({
             >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton tooltip={item.title}>
+                  <SidebarMenuButton
+                    tooltip={item.title}
+                    onMouseEnter={() => presetData(item.title)}
+                  >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
                     <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -65,7 +88,7 @@ export function NavMain({
                     {item.items?.map((subItem) => (
                       <SidebarMenuSubItem
                         key={subItem.title}
-                        onMouseEnter={presetData}
+                        onMouseEnter={() => presetData(item.title)}
                       >
                         <SidebarMenuSubButton asChild>
                           <Link href={subItem.url}>
@@ -80,7 +103,7 @@ export function NavMain({
             </Collapsible>
           ) : (
             <SidebarMenuButton
-              onMouseEnter={presetData}
+              onMouseEnter={() => presetData(item.title)}
               tooltip={item.title}
               key={index}
             >

@@ -54,7 +54,38 @@ export const useOrders = () => {
       return fetchOrders(params);
     },
     staleTime: 1000 * 60 * 10, // -> 10m
+    enabled: false,
   });
+
+  const createPrefetchOrders = () => {
+    return async () => {
+      const isFetching = queryClient.isFetching({
+        queryKey: ["orders", filters],
+      });
+
+      if (!isFetching) {
+        await queryClient.prefetchQuery({
+          queryKey: ["orders", filters],
+          queryFn: ({ queryKey }) => {
+            const [, params] = queryKey as [
+              string,
+              {
+                page: number;
+                limit: number;
+                keyword: string;
+                supplier: string;
+                status: string;
+                orderBy: string;
+                orderWay: string;
+              }
+            ];
+            return fetchOrders(params);
+          },
+          staleTime: 1000 * 60 * 10, // Cache por 10 minutos
+        });
+      }
+    };
+  };
 
   const filterBySupplier = (supplier_id: number | null) => {
     setFilters((prevFilters) => ({
@@ -138,5 +169,6 @@ export const useOrders = () => {
     itemsPerPage: filters.limit,
     deleteOrderMutation,
     downloadPDF,
+    createPrefetchOrders,
   };
 };

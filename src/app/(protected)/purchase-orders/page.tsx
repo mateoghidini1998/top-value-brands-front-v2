@@ -22,7 +22,7 @@ import {
 import { Supplier } from "@/types/supplier.type";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DataTable } from "../../../components/custom/data-table";
 import { useSuppliers } from "../suppliers/hooks";
 import { getColumns } from "./columns";
@@ -56,9 +56,14 @@ export default function Page() {
     changeLimit,
     currentPage,
     itemsPerPage,
+    createPrefetchOrders,
   } = useOrders();
   const { suppliersQuery } = useSuppliers();
   const router = useRouter();
+
+  useEffect(() => {
+    createPrefetchOrders()();
+  }, [createPrefetchOrders]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
