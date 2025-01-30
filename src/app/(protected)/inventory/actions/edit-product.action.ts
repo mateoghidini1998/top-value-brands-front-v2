@@ -7,7 +7,7 @@ export interface EditProductProps {
   seller_sku?: string | null;
   product_cost?: number | null;
   supplier_id?: number | null;
-  supplier_item_number?: number | null;
+  supplier_item_number?: string | null;
   upc?: string | null;
   pack_type?: number | null;
 }

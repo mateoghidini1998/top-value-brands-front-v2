@@ -28,7 +28,7 @@ const editProductSchema = z.object({
   seller_sku: z.string().nullable(),
   product_cost: z.number().nullable(),
   supplier_id: z.number().nullable(),
-  supplier_item_number: z.number().nullable(),
+  supplier_item_number: z.string().nullable(),
   upc: z.string().nullable(),
   pack_type: z.number().nullable(),
 });
@@ -51,9 +51,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
       seller_sku: product.seller_sku || "",
       product_cost: parseFloat(product.product_cost),
       supplier_id: product.supplier_id || null,
-      supplier_item_number: product.supplier_item_number
-        ? parseInt(product.supplier_item_number)
-        : null,
+      supplier_item_number: product.supplier_item_number || "",
       upc: product.upc || "",
       pack_type: product.pack_type ? parseInt(product.pack_type) : 1,
     },
@@ -162,10 +160,10 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
               <FormLabel>Supplier Item Number</FormLabel>
               <FormControl>
                 <Input
-                  type="number"
+                  type="text"
                   {...field}
                   value={field.value ?? ""}
-                  onChange={(e) => field.onChange(parseInt(e.target.value))}
+                  onChange={(e) => field.onChange(e.target.value)}
                 />
               </FormControl>
               <FormMessage />
