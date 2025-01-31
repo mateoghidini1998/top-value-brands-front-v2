@@ -172,6 +172,7 @@ export default function Page() {
         data={inventoryQuery.data.data}
         columns={getColumns({ handleOrderBy })}
         dataLength={inventoryQuery.data.total}
+        scrolleable
       />
 
       {/* Pagination */}

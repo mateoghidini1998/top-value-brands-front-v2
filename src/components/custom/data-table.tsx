@@ -154,7 +154,7 @@ DataTableProps<TData, TValue>) {
           className={
             !scrolleable
               ? "w-full"
-              : "shrink-0 items-center gap-2 transition-[width,height] ease-linear data-[state=expanded]:w-[calc(96.5vw_-_var(--sidebar-width))] data-[state=collapsed]:w-[calc(96.5vw_-_var(--sidebar-width-icon))]"
+              : "shrink-0 items-center gap-2 transition-[width,height] ease-linear data-[state=expanded]:w-[calc(97vw_-_var(--sidebar-width))] data-[state=collapsed]:w-[calc(97vw_-_var(--sidebar-width-icon))]"
           }
         >
           <Table>
