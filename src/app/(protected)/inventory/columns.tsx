@@ -125,11 +125,17 @@ export const getColumns = ({
         </div>
       ),
     },
-    // {
-    //   accessorKey: "is_active",
-    //   header: "Active",
-    //   cell: ({ row }) => <span>{row.original.is_active ? "Yes " : "No"}</span>,
-    // },
+    {
+      accessorKey: "warehouse_stock",
+      header: () => (
+        <div
+          className="text-right flex items-center cursor-pointer justify-center gap-2"
+          onClick={() => handleOrderBy("warehouse_stock")}
+        >
+          <ArrowUpDown className="mr-2 w-4 h-4 " /> Warehouse Stock
+        </div>
+      ),
+    },
     {
       accessorKey: "updatedAt",
       header: () => (
