@@ -382,6 +382,7 @@ export const getAddedProductsColumns = (
       return (
         <AddQuantity
           productQuantity={row.original.quantity}
+          packType={row.original.pack_type}
           setProductsAdded={setProductsAdded}
           productId={row.original.product_id}
         />
@@ -395,6 +396,7 @@ export const getAddedProductsColumns = (
       return (
         <AddProductCost
           productCost={row.original.product_cost}
+          packType={row.original.pack_type}
           setProductsAdded={setProductsAdded}
           productId={row.original.product_id}
         />

@@ -11,12 +11,14 @@ interface AddProductCostProps {
   productId: number;
   setProductsAdded: React.Dispatch<React.SetStateAction<ProductInOrder[]>>;
   productCost: number;
+  packType: number | null;
 }
 
 const AddProductCost = ({
   productId,
   setProductsAdded,
   productCost,
+  packType,
 }: AddProductCostProps) => {
   const [costAdded, setCostAdded] = useState<number>(productCost);
 
@@ -63,15 +65,20 @@ const AddProductCost = ({
   };
 
   return (
-    <Input
-      type="number"
-      placeholder="Cost"
-      className="w-full"
-      value={costAdded}
-      onChange={(e) => setCostAdded(Number(e.target.value))}
-      onBlur={handleBlur} // Guardar valores cuando el usuario pierde el foco
-      min={0}
-    />
+    <div className="flex justify-between items-center gap-2 relative">
+      <Input
+        type="number"
+        placeholder="Cost"
+        className="w-full"
+        value={costAdded}
+        onChange={(e) => setCostAdded(Number(e.target.value))}
+        onBlur={handleBlur} // Guardar valores cuando el usuario pierde el foco
+        min={0}
+      />
+      <span className="w-fit text-yellow-400 absolute right-10">
+        {productCost / (packType ?? 1)}
+      </span>
+    </div>
   );
 };
 

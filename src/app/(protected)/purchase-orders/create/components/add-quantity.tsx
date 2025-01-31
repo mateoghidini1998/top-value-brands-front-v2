@@ -11,12 +11,14 @@ interface AddQuantityProps {
   productId: number;
   setProductsAdded: React.Dispatch<React.SetStateAction<ProductInOrder[]>>;
   productQuantity: number;
+  packType: number | null;
 }
 
 const AddQuantity = ({
   productId,
   setProductsAdded,
   productQuantity,
+  packType,
 }: AddQuantityProps) => {
   const [quantityAdded, setQuantityAdded] = useState<number>(productQuantity);
 
@@ -63,15 +65,20 @@ const AddQuantity = ({
   };
 
   return (
-    <Input
-      type="number"
-      placeholder="Quantity"
-      className="w-full"
-      value={quantityAdded}
-      onChange={(e) => setQuantityAdded(Number(e.target.value))}
-      onBlur={handleBlur} // Guardar valores cuando el usuario pierde el foco
-      min={0}
-    />
+    <div className="flex justify-between items-center gap-2 relative">
+      <Input
+        type="number"
+        placeholder="Quantity"
+        className="flex-1"
+        value={quantityAdded}
+        onChange={(e) => setQuantityAdded(Number(e.target.value))}
+        onBlur={handleBlur} // Guardar valores cuando el usuario pierde el foco
+        min={0}
+      />
+      <span className="w-fit text-yellow-400 absolute right-10">
+        {productQuantity * (packType ?? 1)}
+      </span>
+    </div>
   );
 };
 
