@@ -42,10 +42,10 @@ export default function QuantityCell({
       />
 
       <span className="w-fit text-yellow-400 text-xs ml-1">
-        {`$ ${FormatUSD({
+        {`${FormatUSD({
           number: (quantity * (packType ?? 1)).toString(),
-          maxDigits: 2,
-          minDigits: 2,
+          maxDigits: 0,
+          minDigits: 0,
         })} - Pack (${packType ?? 1})`}
       </span>
     </div>
