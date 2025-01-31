@@ -107,7 +107,11 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
     cell: ({ row }) => {
       const product_cost = parseFloat(row.getValue("product_cost"));
       return (
-        <ProductCostCell value={product_cost} productId={row.original.id} />
+        <ProductCostCell
+          value={product_cost}
+          productId={row.original.id}
+          packType={row.original.pack_type}
+        />
       );
     },
   },
@@ -173,11 +177,15 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     id: "quantity_purchased",
-    header: "Quantity Purchased",
+    header: "Sellable Qty",
     cell: ({ row }) => {
       const quantity_purchased = row.original.quantity_purchased;
       return (
-        <QuantityCell value={quantity_purchased} productId={row.original.id} />
+        <QuantityCell
+          value={quantity_purchased}
+          productId={row.original.id}
+          packType={row.original.pack_type}
+        />
       );
     },
   },

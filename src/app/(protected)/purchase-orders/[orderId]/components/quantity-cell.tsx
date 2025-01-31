@@ -2,14 +2,20 @@
 
 import { Input } from "@/components/ui/input";
 import { usePurchaseOrderContext } from "@/contexts/orders.context";
+import { FormatUSD } from "@/helpers";
 import { useEffect, useState } from "react";
 
 interface QuantityCellProps {
   value: number;
   productId: number;
+  packType: number | null;
 }
 
-export default function QuantityCell({ value, productId }: QuantityCellProps) {
+export default function QuantityCell({
+  value,
+  productId,
+  packType,
+}: QuantityCellProps) {
   const [quantity, setQuantity] = useState(value);
   const { updateProduct } = usePurchaseOrderContext();
 
@@ -26,12 +32,22 @@ export default function QuantityCell({ value, productId }: QuantityCellProps) {
   };
 
   return (
-    <Input
-      type="number"
-      value={quantity}
-      onChange={handleChange}
-      className="w-24"
-      min="0"
-    />
+    <div className="flex flex-col justify-center items-start gap-1 max-w-[120px]">
+      <Input
+        type="number"
+        value={quantity}
+        onChange={handleChange}
+        className="w-full"
+        min="0"
+      />
+
+      <span className="w-fit text-yellow-400 text-xs ml-1">
+        {`$ ${FormatUSD({
+          number: (quantity * (packType ?? 1)).toString(),
+          maxDigits: 2,
+          minDigits: 2,
+        })} - Pack (${packType ?? 1})`}
+      </span>
+    </div>
   );
 }
