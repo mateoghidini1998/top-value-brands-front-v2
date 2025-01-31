@@ -44,7 +44,7 @@ export default function ProductCostCell({
 
       <span className="w-fit text-yellow-400 text-xs ml-1">
         {`$ ${FormatUSD({
-          number: (productCost * (packType ?? 1)).toString(),
+          number: (productCost / (packType ?? 1)).toString(),
           maxDigits: 2,
           minDigits: 2,
         })} - Pack (${packType ?? 1})`}
