@@ -7,6 +7,7 @@ import { ActionsCell } from "./components";
 import { StatusType } from "@/components/custom/status-badge";
 import NotesCell from "@/components/custom/notes-cell";
 import { ArrowUpDown } from "lucide-react";
+import { FormatUSD } from "@/helpers";
 
 export const getColumns = (
   handleOrderBy: (key: string) => void
@@ -47,15 +48,15 @@ export const getColumns = (
         <ArrowUpDown className="mr-2 w-4 h-4 " /> Total Price
       </div>
     ),
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("total_price"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="">{formatted}</div>;
-    },
+    cell: ({ row }) => (
+      <span>
+        {`$ ${FormatUSD({
+          number: row.original.total_price.toString(),
+          maxDigits: 2,
+          minDigits: 2,
+        })}`}
+      </span>
+    ),
   },
   {
     accessorKey: "notes",

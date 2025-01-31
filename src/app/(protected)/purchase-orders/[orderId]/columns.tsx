@@ -10,6 +10,7 @@ import {
   QuantityCell,
   TotalAmountCell,
 } from "./components";
+import { FormatUSD } from "@/helpers";
 
 export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   {
@@ -35,18 +36,62 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   {
     accessorKey: "product_velocity",
     header: "Velocity",
+    cell: ({ row }) => {
+      return (
+        <span>
+          {FormatUSD({
+            number: row.original.product_velocity.toString(),
+            maxDigits: 4,
+            minDigits: 2,
+          })}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "units_sold",
     header: "Units Sold",
+    cell: ({ row }) => {
+      return (
+        <span>
+          {FormatUSD({
+            number: row.original.units_sold.toString(),
+            maxDigits: 0,
+            minDigits: 0,
+          })}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "thirty_days_rank",
     header: "30 Days Rank",
+    cell: ({ row }) => {
+      return (
+        <span>
+          {FormatUSD({
+            number: row.original.thirty_days_rank.toString(),
+            maxDigits: 0,
+            minDigits: 0,
+          })}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "ninety_days_rank",
     header: "90 Days Rank",
+    cell: ({ row }) => {
+      return (
+        <span>
+          {FormatUSD({
+            number: row.original.ninety_days_rank.toString(),
+            maxDigits: 0,
+            minDigits: 0,
+          })}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "ASIN",
@@ -69,14 +114,47 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   {
     accessorKey: "lowest_fba_price",
     header: "Lowest FBA Price",
+    cell: ({ row }) => {
+      return (
+        <span>
+          {`$ ${FormatUSD({
+            number: row.original.lowest_fba_price.toString(),
+            maxDigits: 2,
+            minDigits: 2,
+          })}`}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "fees",
     header: "Fees",
+    cell: ({ row }) => {
+      return (
+        <span>
+          {`$ ${FormatUSD({
+            number: row.original.fees?.toString() || "0",
+            maxDigits: 2,
+            minDigits: 2,
+          })}`}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "profit",
     header: "Profit",
+    cell: ({ row }) => {
+      return (
+        <span>
+          {`$ ${FormatUSD({
+            number: row.original.profit?.toString() || "0",
+            maxDigits: 2,
+            minDigits: 2,
+          })}`}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "roi",

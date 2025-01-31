@@ -1,5 +1,5 @@
 interface FormatUSDProps {
-  number: string;
+  number: string | null | undefined;
   minDigits?: number;
   maxDigits?: number;
 }
@@ -9,7 +9,7 @@ export const FormatUSD = ({
   minDigits = 2,
   maxDigits = 2,
 }: FormatUSDProps) => {
-  return parseFloat(number).toLocaleString("en-US", {
+  return parseFloat(number || "0").toLocaleString("en-US", {
     minimumFractionDigits: minDigits,
     maximumFractionDigits: maxDigits,
   });

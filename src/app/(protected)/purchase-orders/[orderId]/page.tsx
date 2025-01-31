@@ -22,6 +22,7 @@ import SaveOrder from "./components/save-order-button";
 import { useOrderSummaryMutations, useOrderSummaryQuery } from "./hooks";
 import Link from "next/link";
 import { DataTable } from "../../warehouse/outgoing-shipments/create/_components/tables/data-table";
+import { FormatUSD } from "@/helpers";
 
 export default function PurchaseOrderPage({
   params,
@@ -178,7 +179,11 @@ export default function PurchaseOrderPage({
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  ${Number(total_price).toFixed(2)}
+                  {`$ ${FormatUSD({
+                    number: total_price.toString(),
+                    maxDigits: 2,
+                    minDigits: 2,
+                  })}`}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Total order value
