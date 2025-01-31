@@ -54,7 +54,7 @@ export const useOrders = () => {
       return fetchOrders(params);
     },
     staleTime: 1000 * 60 * 10, // -> 10m
-    enabled: false,
+    // enabled: false,
   });
 
   const createPrefetchOrders = () => {
