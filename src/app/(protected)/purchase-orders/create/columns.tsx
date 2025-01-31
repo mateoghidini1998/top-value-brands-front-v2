@@ -12,6 +12,7 @@ import AddQuantity from "./components/add-quantity";
 import AddProductCost from "./components/add-product-cost";
 import { TrackedProduct } from "@/types";
 import { ArrowUpDown } from "lucide-react";
+import { FormatUSD } from "@/helpers";
 
 export const getTrackedProductsColumns = (
   setProductsAdded: Dispatch<SetStateAction<ProductInOrder[]>>,
@@ -407,7 +408,16 @@ export const getAddedProductsColumns = (
       const product_cost = row.original.product_cost;
       const quantity = row.original.quantity;
 
-      return <span>${(product_cost * quantity).toFixed(2)}</span>;
+      return (
+        <span>
+          $
+          {FormatUSD({
+            number: (product_cost * quantity).toString(),
+            maxDigits: 2,
+            minDigits: 2,
+          })}
+        </span>
+      );
     },
   },
   {

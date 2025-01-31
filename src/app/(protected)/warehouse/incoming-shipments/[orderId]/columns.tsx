@@ -15,6 +15,7 @@ import { ExpireDateCell } from "../_components/expire-date-cell";
 import { Button } from "@/components/ui/button";
 import { PalletQuantityCell } from "../_components/pallet-quantity-cell";
 import { Trash2, SquarePlus } from "lucide-react";
+import { FormatUSD } from "@/helpers";
 
 export const reasons = [
   { id: 1, label: "ok" },
@@ -87,6 +88,17 @@ export const incomingOrderCols = (
     {
       accessorKey: "quantity_purchased",
       header: "Quantity Purchased",
+      cell: ({ row }) => {
+        return (
+          <span>
+            {FormatUSD({
+              number: row.original.quantity_purchased?.toString() || "0",
+              maxDigits: 0,
+              minDigits: 0,
+            })}
+          </span>
+        );
+      },
     },
     {
       accessorKey: "quantity_received",
@@ -112,6 +124,17 @@ export const incomingOrderCols = (
     {
       accessorKey: "quantity_missing",
       header: "Quantity Missing",
+      cell: ({ row }) => {
+        return (
+          <span>
+            {FormatUSD({
+              number: row.original.quantity_missing?.toString() || "0",
+              maxDigits: 0,
+              minDigits: 0,
+            })}
+          </span>
+        );
+      },
     },
     {
       accessorKey: "reason_id",
@@ -196,6 +219,17 @@ export const availableToCreate = (
   {
     accessorKey: "quantity_available",
     header: "Quantity Available",
+    cell: ({ row }) => {
+      return (
+        <span>
+          {FormatUSD({
+            number: row.original.quantity_available?.toString() || "0",
+            maxDigits: 0,
+            minDigits: 0,
+          })}
+        </span>
+      );
+    },
   },
   {
     id: "actions",
@@ -250,7 +284,15 @@ export const addedToCreate = (
     cell: ({ row }) => {
       const data =
         row.original.quantity_available - (row.original.pallet_quantity || 0);
-      return <span>{data}</span>;
+      return (
+        <span>
+          {FormatUSD({
+            number: data.toString() || "0",
+            maxDigits: 0,
+            minDigits: 0,
+          })}
+        </span>
+      );
     },
   },
   {

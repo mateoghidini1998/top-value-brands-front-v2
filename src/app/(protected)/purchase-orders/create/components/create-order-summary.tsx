@@ -6,6 +6,7 @@ import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useOrderSummaryMutations } from "../../[orderId]/hooks";
 import { ProductsToAdd } from "../../[orderId]/actions";
+import { FormatUSD } from "@/helpers";
 
 interface CreateOrderSummaryProps {
   productsAdded: ProductInOrder[];
@@ -117,12 +118,16 @@ export default function CreateOrderSummary({
         </div>
         <div className="flex justify-between items-center ">
           <p className="font-bold">Total:</p>
-          <p>{`$ ${productsAdded
-            .reduce(
-              (acc, product) => acc + product.product_cost * product.quantity,
-              0
-            )
-            .toFixed(3)}`}</p>
+          <p>{`$ ${FormatUSD({
+            number: productsAdded
+              .reduce(
+                (acc, product) => acc + product.product_cost * product.quantity,
+                0
+              )
+              .toString(),
+            maxDigits: 2,
+            minDigits: 2,
+          })}`}</p>
         </div>
 
         <div className="flex justify-between items-end">

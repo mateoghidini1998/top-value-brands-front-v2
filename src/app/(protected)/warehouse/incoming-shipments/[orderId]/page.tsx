@@ -9,12 +9,6 @@ import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { formatDate } from "@/helpers/format-date";
-import { PurchaseOrderSummaryProducts } from "@/types";
-import { useCallback, useMemo, useRef, useState } from "react";
-import { useIncomingShipmentsMutations } from "../hooks/useIncomingShipmentsMutation";
-import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
 import {
   Select,
   SelectContent,
@@ -22,8 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { formatDate } from "@/helpers/format-date";
+import { PurchaseOrderSummaryProducts } from "@/types";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useWarehouseLocations } from "../../storage/hooks/useWarehouseLocations";
+import { useIncomingShipmentsMutations } from "../hooks/useIncomingShipmentsMutation";
+import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
+import { FormatUSD } from "@/helpers";
 
 export default function Page({
   params,
@@ -375,10 +376,13 @@ export default function Page({
                 <div className="space-y-2">
                   <p className="text-sm text-zinc-400">Total Quantity</p>
                   <p>
-                    {productsAddedToCreatePallet.reduce(
-                      (a, b) => a + (b.pallet_quantity || 0),
-                      0
-                    )}
+                    {FormatUSD({
+                      number: productsAddedToCreatePallet
+                        .reduce((a, b) => a + (b.pallet_quantity || 0), 0)
+                        .toString(),
+                      maxDigits: 0,
+                      minDigits: 0,
+                    })}
                   </p>
                 </div>
               </div>
