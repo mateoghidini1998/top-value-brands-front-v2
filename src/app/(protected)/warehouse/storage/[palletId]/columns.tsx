@@ -1,4 +1,5 @@
 import { ProductTitle } from "@/components/custom/product-title";
+import { FormatUSD } from "@/helpers";
 import { formatDate } from "@/helpers/format-date";
 import { PalletProductByID } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
@@ -30,6 +31,15 @@ export const columns: ColumnDef<PalletProductByID>[] = [
   {
     accessorKey: "available_quantity",
     header: "Available",
+    cell: ({ row }) => (
+      <span>
+        {FormatUSD({
+          number: row.original.available_quantity?.toString() || "0",
+          maxDigits: 0,
+          minDigits: 0,
+        })}
+      </span>
+    ),
   },
   {
     accessorKey: "seller_sku",
