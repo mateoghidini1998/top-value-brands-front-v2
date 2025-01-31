@@ -123,6 +123,8 @@ export default function Page() {
     data?.data.order.supplier_id ?? null
   );
 
+  console.log(productsAdded);
+
   const handleFilterBySupplier = (supplier_id: number | null) => {
     filterBySupplier(supplier_id);
   };

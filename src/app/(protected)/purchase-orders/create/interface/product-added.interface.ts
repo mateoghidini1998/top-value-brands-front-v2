@@ -13,6 +13,7 @@ export interface ProductInOrder {
   fees: number;
   lowest_fba_price: number;
   in_seller_account: boolean;
+  pack_type: number | null;
 }
 
 export interface LocalStorageProduct {

@@ -27,5 +27,6 @@ export const formatTrackedProduct = (
     fees: product.fees ?? 0,
     lowest_fba_price: product.lowest_fba_price,
     in_seller_account: product.in_seller_account || false,
+    pack_type: product.pack_type || 1,
   };
 };

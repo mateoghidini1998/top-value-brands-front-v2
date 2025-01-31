@@ -36,4 +36,5 @@ export interface TrackedProduct {
   warehouse_stock: string;
   supplier_name: null;
   roi: number;
+  pack_type: number | null;
 }
