@@ -42,7 +42,10 @@ export const getColumns = ({
       accessorKey: "seller_sku",
       header: "Seller SKU",
     },
-
+    {
+      accessorKey: "upc",
+      header: "UPC",
+    },
     {
       accessorKey: "product_cost",
       header: () => (
@@ -88,10 +91,7 @@ export const getColumns = ({
         </span>
       ),
     },
-    // {
-    //   accessorKey: "upc",
-    //   header: "UPC",
-    // },
+
     {
       accessorKey: "FBA_available_inventory",
       header: () => (
