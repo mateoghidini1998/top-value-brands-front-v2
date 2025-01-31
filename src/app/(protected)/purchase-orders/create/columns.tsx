@@ -228,6 +228,10 @@ export const getTrackedProductsColumns = (
       return <span>{Inbound_to_FBA.toLocaleString() || "N/A"}</span>;
     },
   },
+  {
+    accessorKey: "warehouse_stock",
+    header: "Warehouse Stock",
+  },
 
   {
     accessorKey: "fees",
