@@ -5,6 +5,7 @@ import { Product } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { ActionsCell } from "./components";
 import { ArrowUpDown } from "lucide-react";
+import { FormatUSD } from "@/helpers";
 
 interface GetColumnsProps {
   handleOrderBy: (columnId: string) => void;
@@ -56,7 +57,9 @@ export const getColumns = ({
           <ArrowUpDown className="mr-2 w-4 h-4 " /> Product Cost
         </div>
       ),
-      cell: ({ row }) => <span>$ {row.original.product_cost}</span>,
+      cell: ({ row }) => (
+        <span>$ {FormatUSD({ number: row.original.product_cost })}</span>
+      ),
     },
 
     {
@@ -102,6 +105,15 @@ export const getColumns = ({
           <ArrowUpDown className="mr-2 w-4 h-4 " /> FBA Stock
         </div>
       ),
+      cell: ({ row }) => (
+        <span>
+          {FormatUSD({
+            number: row.original.FBA_available_inventory.toString(),
+            maxDigits: 0,
+            minDigits: 0,
+          })}
+        </span>
+      ),
     },
     {
       accessorKey: "reserved_quantity",
@@ -112,6 +124,15 @@ export const getColumns = ({
         >
           <ArrowUpDown className="mr-2 w-4 h-4 " /> Reserved Quantity
         </div>
+      ),
+      cell: ({ row }) => (
+        <span>
+          {FormatUSD({
+            number: row.original.reserved_quantity.toString(),
+            maxDigits: 0,
+            minDigits: 0,
+          })}
+        </span>
       ),
     },
     {
@@ -124,6 +145,15 @@ export const getColumns = ({
           <ArrowUpDown className="mr-2 w-4 h-4 " /> Inbound to FBA
         </div>
       ),
+      cell: ({ row }) => (
+        <span>
+          {FormatUSD({
+            number: row.original.Inbound_to_FBA.toString(),
+            maxDigits: 0,
+            minDigits: 0,
+          })}
+        </span>
+      ),
     },
     {
       accessorKey: "warehouse_stock",
@@ -134,6 +164,15 @@ export const getColumns = ({
         >
           <ArrowUpDown className="mr-2 w-4 h-4 " /> Warehouse Stock
         </div>
+      ),
+      cell: ({ row }) => (
+        <span>
+          {FormatUSD({
+            number: row.original.warehouse_stock,
+            maxDigits: 0,
+            minDigits: 0,
+          })}
+        </span>
       ),
     },
     {
