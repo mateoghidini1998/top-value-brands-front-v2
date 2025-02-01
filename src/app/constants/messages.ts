@@ -15,6 +15,8 @@ export const ERROR_MESSAGES = {
   CREATE_SUPPLIER: "Error creating supplier",
   DELETE_SUPPLIER: "Error deleting supplier",
   UPDATE_SUPPLIER: "Error updating supplier",
+
+  CHECK_SHIPMENT_PRODUCT: "Error checking shipment product",
 } as const;
 
 export const SUCCESS_MESSAGES = {
@@ -34,4 +36,6 @@ export const SUCCESS_MESSAGES = {
   CREATE_SUPPLIER: "Supplier created successfully",
   DELETE_SUPPLIER: "Supplier deleted successfully",
   UPDATE_SUPPLIER: "Supplier updated successfully",
+
+  CHECK_SHIPMENT_PRODUCT: "Shipment product checked successfully",
 } as const;
