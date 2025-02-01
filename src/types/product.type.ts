@@ -27,9 +27,6 @@ export interface Product {
   in_seller_account: boolean;
   createdAt: Date;
   updatedAt: Date;
-  supplier: Supplier;
-}
-
-interface Supplier {
   supplier_name: string;
 }
+

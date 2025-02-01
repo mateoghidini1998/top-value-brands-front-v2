@@ -53,7 +53,7 @@ export const useInventory = () => {
       ];
       return fetchInventory(params);
     },
-    staleTime: 1000 * 60 * 10, // -> 10m
+    staleTime: 1000 * 60 * 10,
   });
 
   const filterBySupplier = (supplier_id: number | null) => {

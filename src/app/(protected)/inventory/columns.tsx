@@ -67,7 +67,7 @@ export const getColumns = ({
       header: "Supplier",
       cell: ({ row }) => (
         <span>
-          {row.original.supplier?.supplier_name || "No supplier Listed"}
+          {row.original.supplier_name || "No supplier Listed"}
         </span>
       ),
     },
