@@ -10,7 +10,10 @@ export const useIncomingShipmentsMutations = (orderId: string) => {
     orderId: Number(orderId),
     errorMessage: ERROR_MESSAGES.UPDATE_PRODUCTS,
     successMessage: SUCCESS_MESSAGES.UPDATE_PRODUCTS,
-    invalidateKeys: [[QUERY_KEYS.ORDER_SUMMARY, orderId], [QUERY_KEYS.ORDERS]],
+    invalidateKeys: [
+      [QUERY_KEYS.ORDER_SUMMARY, orderId],
+      [QUERY_KEYS.INCOMING_SHIPMENTS],
+    ],
   });
 
   const createPalletMutation = useCreateMutation({
@@ -23,6 +26,7 @@ export const useIncomingShipmentsMutations = (orderId: string) => {
       [QUERY_KEYS.ORDERS],
       [QUERY_KEYS.PALLETS],
       [QUERY_KEYS.PALLET_PRODUCTS],
+      [QUERY_KEYS.WAREHOUSE_LOCATIONS],
     ],
   });
 

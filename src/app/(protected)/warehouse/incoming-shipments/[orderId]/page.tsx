@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  useOrderSummaryMutations,
-  useOrderSummaryQuery,
-} from "@/app/(protected)/purchase-orders/[orderId]/hooks";
+import { useOrderSummaryQuery } from "@/app/(protected)/purchase-orders/[orderId]/hooks";
 import { DataTable } from "@/components/custom/data-table";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -17,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FormatUSD } from "@/helpers";
 import { formatDate } from "@/helpers/format-date";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { useCallback, useMemo, useRef, useState } from "react";
@@ -24,7 +22,6 @@ import { toast } from "sonner";
 import { useWarehouseLocations } from "../../storage/hooks/useWarehouseLocations";
 import { useIncomingShipmentsMutations } from "../hooks/useIncomingShipmentsMutation";
 import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
-import { FormatUSD } from "@/helpers";
 
 export default function Page({
   params,
@@ -38,8 +35,6 @@ export default function Page({
   const [localChanges, setLocalChanges] = useState<
     Record<string, Partial<PurchaseOrderSummaryProducts>>
   >({});
-
-  const { updateOrderStatus } = useOrderSummaryMutations(params.orderId);
 
   const { updateIncomingOrderProducts, createPallet } =
     useIncomingShipmentsMutations(params.orderId);
@@ -153,39 +148,22 @@ export default function Page({
   );
 
   const handleSaveIncomingOrder = () => {
-    const updatedProducts = tableData.map((product) => ({
-      purchase_order_product_id: product.purchase_order_product_id,
-      product_id: product.id,
-      quantity_received: product.quantity_received,
-      quantity_missing: product.quantity_missing,
-      reason_id: product.reason_id,
-      upc: product.upc,
-      expire_date: product.expire_date,
-    }));
+    const updatedProducts = tableData.map((product) => {
+      return {
+        purchase_order_product_id: product.purchase_order_product_id,
+        product_id: product.id,
+        quantity_received: product.quantity_received,
+        quantity_missing: product.quantity_missing,
+        reason_id: product.reason_id,
+        upc: product.upc,
+        expire_date: product.expire_date,
+      };
+    });
 
     updateIncomingOrderProducts({
       orderId: Number(params.orderId),
       incomingOrderProductUpdates: updatedProducts,
     });
-
-    // verificar que si la quantity recieved de cada producto es igual a la quantity purchased => console.log(closed)
-    let shouldCloseTheOrder = false;
-
-    tableData.forEach((product) => {
-      if (product.quantity_received === product.quantity_purchased) {
-        shouldCloseTheOrder = true;
-      } else {
-        shouldCloseTheOrder = false;
-        return;
-      }
-    });
-
-    if (shouldCloseTheOrder) {
-      updateOrderStatus({
-        orderId: params.orderId,
-        status: 7,
-      });
-    }
   };
 
   const handleSavePallets = () => {
