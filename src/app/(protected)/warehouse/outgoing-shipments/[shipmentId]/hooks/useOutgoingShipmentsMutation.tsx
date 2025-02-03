@@ -9,7 +9,13 @@ export const useOutgoingShipmentsMutations = () => {
     mutationFn: checkProductShipment,
     errorMessage: ERROR_MESSAGES.CHECK_SHIPMENT_PRODUCT,
     successMessage: SUCCESS_MESSAGES.CHECK_SHIPMENT_PRODUCT,
-    invalidateKeys: [[QUERY_KEYS.SHIPMENTS], [QUERY_KEYS.WAREHOUSE_LOCATIONS]],
+    invalidateKeys: [
+      [QUERY_KEYS.SHIPMENTS],
+      [QUERY_KEYS.WAREHOUSE_LOCATIONS],
+      [QUERY_KEYS.PALLET_PRODUCTS],
+      [QUERY_KEYS.PALLETS],
+      [QUERY_KEYS.PALLET],
+    ],
   });
 
   return {
