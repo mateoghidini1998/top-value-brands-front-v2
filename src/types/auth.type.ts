@@ -62,3 +62,8 @@ export interface UpdateUserRoleResponse {
   message: string;
   data: User;
 }
+
+export interface EditUserRole {
+  role: string;
+  userId: string;
+}

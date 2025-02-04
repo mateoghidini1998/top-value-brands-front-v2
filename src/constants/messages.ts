@@ -17,6 +17,11 @@ export const ERROR_MESSAGES = {
   UPDATE_SUPPLIER: "Error updating supplier",
 
   CHECK_SHIPMENT_PRODUCT: "Error checking shipment product",
+  CREATE_PALLET: "Error creating pallet",
+  WAREHOUSE_LOCATIONS: "Error getting warehouse locations",
+
+  REGISTER_USER: "Error registering user",
+  UPDATE_USER_ROLE: "Error updating user role",
 } as const;
 
 export const SUCCESS_MESSAGES = {
@@ -38,4 +43,9 @@ export const SUCCESS_MESSAGES = {
   UPDATE_SUPPLIER: "Supplier updated successfully",
 
   CHECK_SHIPMENT_PRODUCT: "Shipment product checked successfully",
+  CREATE_PALLET: "Pallet created successfully",
+  WAREHOUSE_LOCATIONS: "Warehouse locations fetched successfully",
+
+  REGISTER_USER: "User registered successfully",
+  UPDATE_USER_ROLE: "User role updated successfully",
 } as const;

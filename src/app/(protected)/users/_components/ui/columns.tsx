@@ -2,6 +2,7 @@ import { formatDate } from "@/helpers/format-date";
 import { ColumnDef } from "@tanstack/react-table";
 // import { ActionsCell } from "./components";
 import { GetUsersData } from "@/types/auth.type";
+import ActionsCell from "./actions-cell";
 
 export const columns: ColumnDef<GetUsersData>[] = [
   {
@@ -44,6 +45,12 @@ export const columns: ColumnDef<GetUsersData>[] = [
           {formatDate(new Date(row.getValue("lastSignInAt")).toString())}
         </div>
       );
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      return <ActionsCell row={row.original} />;
     },
   },
 ];

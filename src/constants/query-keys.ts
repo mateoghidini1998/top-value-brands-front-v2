@@ -9,4 +9,5 @@ export const QUERY_KEYS = {
   PALLET: "pallet",
   SUPPLIERS: "suppliers",
   WAREHOUSE_LOCATIONS: "warehouse-locations",
+  CLERK_USERS: "clerk-users",
 } as const;
