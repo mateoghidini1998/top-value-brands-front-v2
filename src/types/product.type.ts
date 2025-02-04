@@ -4,7 +4,7 @@ export interface CreateProductRequest {
   ASIN: string;
   product_cost: number;
   supplier_id: number;
-  supplier_item_number: string;
+  supplier_item_number?: string;
 }
 export interface CreateProductResponse {
   id: number;

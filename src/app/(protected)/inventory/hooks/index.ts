@@ -1,1 +1,1 @@
-export * from "./useInventory";
+export * from "./inventory-service.hook";

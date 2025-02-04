@@ -1,24 +1,27 @@
-import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/constants";
-import { useCreateMutation } from "@/hooks/mutation-factory";
-import { inventoryService } from "@/services";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   CreateProductRequest,
   EditProductProps,
   GetInventoryProps,
   GetProductsResponse,
 } from "@/types";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { inventoryService } from "@/services";
+import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/constants";
+import { useCreateMutation } from "@/hooks/mutation-factory";
 
-export const useGetAllProducts = (params: GetInventoryProps) => {
+export const useGetAllProducts = (initialParams: GetInventoryProps) => {
   const queryClient = useQueryClient();
-  const [filters, setFilters] = useState<GetInventoryProps>(params);
+  const [filters, setFilters] = useState<GetInventoryProps>(initialParams);
 
-  const fetchProducts = useQuery<GetProductsResponse, Error>({
-    queryKey: [QUERY_KEYS.PRODUCTS],
+  const { data, isLoading, isError, error, refetch } = useQuery<
+    GetProductsResponse,
+    Error
+  >({
+    queryKey: [QUERY_KEYS.PRODUCTS, filters],
     queryFn: () => inventoryService.getInventory(filters),
-    gcTime: 1000 * 60 * 10, // 5 minutes
-    staleTime: 1000 * 60 * 10, // 5 minutes
+    gcTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   const filterBySupplier = (supplier_id: number | null) => {
@@ -28,29 +31,21 @@ export const useGetAllProducts = (params: GetInventoryProps) => {
       page: 1,
       limit: 50,
     }));
-
-    queryClient.invalidateQueries({ queryKey: ["inventory"] });
+    queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRODUCTS] });
   };
 
   const filterByKeyword = (keyword: string) => {
     setFilters((prev) => ({ ...prev, keyword, page: 1, limit: 50 }));
-    queryClient.invalidateQueries({ queryKey: ["inventory"] });
+    queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRODUCTS] });
   };
 
   const orderBy = (orderBy: string) => {
-    // If the orderBy parameter is the same as the current orderBy, toggle the orderWay
-    if (orderBy === filters.orderBy) {
-      setFilters((prev) => ({
-        ...prev,
-        orderWay: prev.orderWay === "asc" ? "desc" : "asc",
-      }));
-    } else {
-      // If the orderBy parameter is different from the current orderBy, set the orderWay to "asc"
-      setFilters((prev) => ({ ...prev, orderWay: "desc" }));
-    }
-
-    setFilters((prev) => ({ ...prev, orderBy }));
-    // queryClient.invalidateQueries({ queryKey: ["inventory"] });
+    setFilters((prev) => ({
+      ...prev,
+      orderBy,
+      orderWay:
+        prev.orderBy === orderBy && prev.orderWay === "asc" ? "desc" : "asc",
+    }));
   };
 
   const changePage = (page: number) => {
@@ -62,49 +57,69 @@ export const useGetAllProducts = (params: GetInventoryProps) => {
   };
 
   return {
-    products: fetchProducts.data?.data || [],
-    isLoading: fetchProducts.isLoading,
-    isError: fetchProducts.isError,
-    errorMessage: fetchProducts.error?.message,
-    isFetching: fetchProducts.isFetching,
-    refetch: fetchProducts.refetch,
+    productResponse: data,
+    productIsLoading: isLoading,
+    productIsError: isError,
+    productErrorMessage: error?.message,
+    productRefetch: refetch,
     filterBySupplier,
     filterByKeyword,
     orderBy,
     changePage,
     changeLimit,
-    currentPage: filters.page,
-    itemsPerPage: filters.limit,
+    currentPage: filters.page || 1,
+    itemsPerPage: filters.limit || 50,
   };
 };
 
 // Hook for creating a new product
 export const useCreateProduct = () => {
-  return useCreateMutation<CreateProductRequest>({
+  const createProduct = useCreateMutation<CreateProductRequest>({
     mutationFn: (data: CreateProductRequest) =>
       inventoryService.createProduct(data),
     successMessage: SUCCESS_MESSAGES.CREATE_PRODUCT,
     errorMessage: ERROR_MESSAGES.CREATE_PRODUCT,
     invalidateKeys: [[QUERY_KEYS.PRODUCTS]], // Invalidate user list after registration
   });
+
+  return {
+    createAsync: createProduct.mutateAsync,
+    isCreatingError: createProduct.isError,
+    isCreatingSuccess: createProduct.isSuccess,
+    isCreating: createProduct.isPending,
+  };
 };
 
 // Hook for updating a product
 export const useUpdateProduct = () => {
-  return useCreateMutation<EditProductProps>({
+  const updateProduct = useCreateMutation<EditProductProps>({
     mutationFn: (data: EditProductProps) => inventoryService.editProduct(data),
     successMessage: SUCCESS_MESSAGES.UPDATE_PRODUCTS,
     errorMessage: ERROR_MESSAGES.UPDATE_PRODUCTS,
     invalidateKeys: [[QUERY_KEYS.PRODUCTS]], // Invalidate user list after registration
   });
+
+  return {
+    updateAsync: updateProduct.mutateAsync,
+    isUpdatingError: updateProduct.isError,
+    isUpdatingSuccess: updateProduct.isSuccess,
+    isUpdating: updateProduct.isPending,
+  };
 };
 
 // Hook for deleting a product
 export const useDeleteProduct = () => {
-  return useCreateMutation<string>({
+  const deleteProduct = useCreateMutation<string>({
     mutationFn: (id: string) => inventoryService.deleteProduct(parseInt(id)),
     successMessage: SUCCESS_MESSAGES.DELETE_PRODUCT,
     errorMessage: ERROR_MESSAGES.DELETE_PRODUCT,
     invalidateKeys: [[QUERY_KEYS.PRODUCTS]], // Invalidate user list after registration
   });
+
+  return {
+    deleteAsync: deleteProduct.mutateAsync,
+    isDeletingError: deleteProduct.isError,
+    isDeletingSuccess: deleteProduct.isSuccess,
+    isDeleting: deleteProduct.isPending,
+  };
 };

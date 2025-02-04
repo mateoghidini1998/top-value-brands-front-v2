@@ -11,17 +11,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Product } from "@/types";
+import { EditProductProps, Product } from "@/types";
 import { Supplier } from "@/types/supplier.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
+import { SupplierItem } from "../../purchase-orders/page";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
-import { EditProductProps } from "../actions/edit-product.action";
-import { useInventory } from "../hooks";
-import { SupplierItem } from "../page";
+import { useUpdateProduct } from "../hooks/inventory-service.hook";
 
 const editProductSchema = z.object({
   ASIN: z.string().min(1, "ASIN is required"),
@@ -39,7 +38,7 @@ interface EditProductFormProps {
 }
 
 export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
-  const { editProductMutation } = useInventory();
+  const { updateAsync } = useUpdateProduct();
   const { suppliersQuery } = useSuppliers();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
@@ -64,7 +63,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
         id: product.id,
         ...values,
       };
-      await editProductMutation.mutateAsync(editData);
+      await updateAsync(editData);
       onSuccess();
       toast.success("Product edited successfully");
     } catch (error) {

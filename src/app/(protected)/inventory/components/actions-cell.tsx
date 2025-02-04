@@ -28,8 +28,7 @@ import {
 import { Product } from "@/types";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
-import { useInventory } from "../hooks/useInventory";
+import { useDeleteProduct } from "../hooks/inventory-service.hook";
 import { EditProductForm } from "./edit-product-form";
 
 interface ActionsCellProps {
@@ -37,9 +36,9 @@ interface ActionsCellProps {
 }
 
 const ActionsCell = ({ row }: ActionsCellProps) => {
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const { deleteProductMutation } = useInventory();
+  const { deleteAsync } = useDeleteProduct();
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const handleEditSuccess = () => {
     setIsEditDialogOpen(false);
@@ -48,13 +47,10 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
   const handleDeleteProduct = async () => {
     if (productToDelete) {
       try {
-        await deleteProductMutation.mutateAsync(productToDelete).then(() => {
-          toast.success("Product deleted successfully");
-        });
+        await deleteAsync(productToDelete.id.toString());
         setProductToDelete(null);
       } catch (error) {
         console.error("Failed to delete product:", error);
-        toast.error("Failed to delete product");
       }
     }
   };
