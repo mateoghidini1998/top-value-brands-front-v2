@@ -21,6 +21,7 @@ export const useGetAllClerkUsers = () => {
     users: fetchUsers.data?.data || [],
     isLoading: fetchUsers.isLoading,
     isError: fetchUsers.isError,
+    errorMessage: fetchUsers.error?.message,
     isFetching: fetchUsers.isFetching,
   };
 };

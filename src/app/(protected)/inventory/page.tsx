@@ -1,14 +1,8 @@
 "use client";
+import { CreateEntityButton } from "@/components/custom/create-entity-button";
 import { FilterSearch } from "@/components/custom/filter-search";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
   Pagination,
@@ -27,7 +21,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Supplier } from "@/types/supplier.type";
-import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { DataTable } from "../../../components/custom/data-table";
 import { useSuppliers } from "../suppliers/hooks/useSuppliers";
@@ -151,21 +144,11 @@ export default function Page() {
             }}
           />
         </div>
-
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="w-fit h-7 ">
-              <Plus className="mr-2 h-4 w-4" />
-              Add Product
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Create New Product</DialogTitle>
-            </DialogHeader>
-            <CreateProductForm />
-          </DialogContent>
-        </Dialog>
+        <CreateEntityButton
+          title="Create Product"
+          dialog_content={<CreateProductForm />}
+          dialog_title="Create New Product"
+        />
       </div>
 
       <DataTable
