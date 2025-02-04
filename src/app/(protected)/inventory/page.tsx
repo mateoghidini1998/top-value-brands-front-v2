@@ -154,7 +154,7 @@ export default function Page() {
       <DataTable
         data={inventoryQuery.data.data}
         columns={getColumns({ handleOrderBy })}
-        dataLength={inventoryQuery.data.total}
+        dataLength={50}
         scrolleable
       />
 
