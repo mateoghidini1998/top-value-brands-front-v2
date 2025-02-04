@@ -1,12 +1,8 @@
 import { apiRequest } from "@/helpers/http.adapter";
 import { PalletProductResponse } from "@/types";
 
-interface DeleteProductProps {
-  id: number;
-}
-
 export const deleteProduct = async (
-  data: DeleteProductProps
+  id: number
 ): Promise<PalletProductResponse> => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products/disable`;
   const options: RequestInit = {
@@ -14,7 +10,7 @@ export const deleteProduct = async (
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(id),
   };
   return apiRequest<PalletProductResponse>(url, options);
 };

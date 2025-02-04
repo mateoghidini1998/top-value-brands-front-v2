@@ -1,21 +1,5 @@
 import { apiRequest } from "@/helpers/http.adapter";
-
-interface CreateProductRequest {
-  ASIN: string;
-  product_cost: number;
-  supplier_id: number;
-  supplier_item_number: string;
-}
-interface CreateProductResponse {
-  id: number;
-  ASIN: string;
-  product_cost: string;
-  supplier_id: string;
-  supplier_item_number: string;
-  product_name: string;
-  updatedAt: Date;
-  createdAt: Date;
-}
+import { CreateProductRequest, CreateProductResponse } from "@/types";
 
 export const createProduct = async (
   data: CreateProductRequest

@@ -1,16 +1,5 @@
 import { apiRequest } from "@/helpers/http.adapter";
-import { PalletProductResponse } from "@/types";
-
-export interface EditProductProps {
-  id: number;
-  ASIN: string;
-  seller_sku?: string | null;
-  product_cost?: number | null;
-  supplier_id?: number | null;
-  supplier_item_number?: string | null;
-  upc?: string | null;
-  pack_type?: number | null;
-}
+import { EditProductProps, PalletProductResponse } from "@/types";
 
 export const editProduct = async (
   data: EditProductProps

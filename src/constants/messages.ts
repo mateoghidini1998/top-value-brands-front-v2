@@ -22,6 +22,9 @@ export const ERROR_MESSAGES = {
 
   REGISTER_USER: "Error registering user",
   UPDATE_USER_ROLE: "Error updating user role",
+
+  CREATE_PRODUCT: "Error creating product",
+  DELETE_PRODUCT: "Error deleting product",
 } as const;
 
 export const SUCCESS_MESSAGES = {
@@ -48,4 +51,7 @@ export const SUCCESS_MESSAGES = {
 
   REGISTER_USER: "User registered successfully",
   UPDATE_USER_ROLE: "User role updated successfully",
+
+  CREATE_PRODUCT: "Product created successfully",
+  DELETE_PRODUCT: "Product deleted successfully",
 } as const;
