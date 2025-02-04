@@ -8,6 +8,7 @@
 
 # testing
 /coverage
+/src/__tests__
 
 # next.js
 /.next/
@@ -30,6 +31,7 @@ yarn-error.log*
 .env.local
 .env.template
 .env.development
+.env*
 # vercel
 .vercel
 
