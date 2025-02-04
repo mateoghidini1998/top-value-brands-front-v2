@@ -89,7 +89,7 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="warehouse">Warehouse</SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>
                   {/* Add more roles as needed */}
                 </SelectContent>
