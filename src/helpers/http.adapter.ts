@@ -1,6 +1,4 @@
-"use server";
-
-import { cookies } from "next/headers";
+import { getSessionId } from "./get-session-id";
 import { sleep } from "./sleep";
 
 class HttpError extends Error {
@@ -38,9 +36,7 @@ export const apiRequest = async <T>(
   options: RequestInit = {},
   delay: number = 1
 ): Promise<T> => {
-  // Obtener la cookie de sesión
-  const sessionToken = cookies().get("__session")?.value;
-  const authHeader = `Bearer ${sessionToken}`;
+  const authHeader = `Bearer ${await getSessionId()}`;
 
   // Verificar si ya existen headers, de lo contrario inicializarlos
   options.headers = {
