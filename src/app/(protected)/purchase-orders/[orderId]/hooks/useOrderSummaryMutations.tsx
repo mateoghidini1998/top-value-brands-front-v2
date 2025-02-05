@@ -18,7 +18,6 @@ import updatePurchaseOrder from "../actions/update-purchase-order.action";
 export const useOrderSummaryMutations = (orderId: string) => {
   const updatePOProductsMutation = useCreateMutation({
     mutationFn: updateOrderProducts,
-    orderId: Number(orderId),
     errorMessage: ERROR_MESSAGES.UPDATE_PRODUCTS,
     successMessage: SUCCESS_MESSAGES.UPDATE_PRODUCTS,
     invalidateKeys: [[QUERY_KEYS.ORDER_SUMMARY, orderId], [QUERY_KEYS.ORDERS]],
@@ -26,7 +25,6 @@ export const useOrderSummaryMutations = (orderId: string) => {
 
   const updatePONotesMutation = useCreateMutation({
     mutationFn: updateOrderNotes,
-    orderId,
     errorMessage: ERROR_MESSAGES.UPDATE_NOTES,
     successMessage: SUCCESS_MESSAGES.UPDATE_NOTES,
     invalidateKeys: [[QUERY_KEYS.ORDER_SUMMARY, orderId], [QUERY_KEYS.ORDERS]],
@@ -34,7 +32,6 @@ export const useOrderSummaryMutations = (orderId: string) => {
 
   const updatePONumberMutation = useCreateMutation({
     mutationFn: updateOrderNumber,
-    orderId,
     errorMessage: ERROR_MESSAGES.UPDATE_NUMBER,
     successMessage: SUCCESS_MESSAGES.UPDATE_NUMBER,
     invalidateKeys: [[QUERY_KEYS.ORDER_SUMMARY, orderId], [QUERY_KEYS.ORDERS]],
@@ -42,7 +39,6 @@ export const useOrderSummaryMutations = (orderId: string) => {
 
   const updatePOStatusMutation = useCreateMutation({
     mutationFn: updateOrderStatus,
-    orderId,
     errorMessage: ERROR_MESSAGES.UPDATE_STATUS,
     successMessage: SUCCESS_MESSAGES.UPDATE_STATUS,
     // Invalida ORDER_SUMMARY y un filtro de estado de ordenes
@@ -51,7 +47,6 @@ export const useOrderSummaryMutations = (orderId: string) => {
 
   const addProductsToOrderMutation = useCreateMutation({
     mutationFn: addProductsToOrder,
-    orderId,
     errorMessage: ERROR_MESSAGES.ADD_PRODUCT_TO_ORDER,
     successMessage: SUCCESS_MESSAGES.ADD_PRODUCT_TO_ORDER,
     // Invalida ORDER_SUMMARY y un filtro de estado de ordenes
@@ -60,7 +55,6 @@ export const useOrderSummaryMutations = (orderId: string) => {
 
   const updatePurchaseOrderMutation = useCreateMutation({
     mutationFn: updatePurchaseOrder,
-    orderId,
     errorMessage: ERROR_MESSAGES.UPDATE_ORDER,
     successMessage: SUCCESS_MESSAGES.UPDATE_ORDER,
     invalidateKeys: [[QUERY_KEYS.ORDER_SUMMARY], [QUERY_KEYS.ORDERS]],
