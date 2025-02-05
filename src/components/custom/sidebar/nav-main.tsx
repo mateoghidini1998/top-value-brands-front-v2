@@ -108,7 +108,9 @@ export function NavMain({
               key={index}
             >
               {item.icon && <item.icon />}
-              <Link href={item.url}>{item.title}</Link>
+              <Link className="w-full" href={item.url}>
+                {item.title}
+              </Link>
             </SidebarMenuButton>
           )
         )}

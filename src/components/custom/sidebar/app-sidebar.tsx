@@ -20,7 +20,7 @@ import { filterRoutesByRole, Role, Route } from "@/lib/filter-routes";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useUser();
 
-  const userRole = user?.publicMetadata?.role || "user";
+  const userRole = user?.publicMetadata?.role || "warehouse";
 
   const filteredNavMain = filterRoutesByRole(
     userRole as Role,
