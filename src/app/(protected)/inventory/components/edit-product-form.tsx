@@ -20,6 +20,7 @@ import * as z from "zod";
 import { SupplierItem } from "../../purchase-orders/page";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
 import { useUpdateProduct } from "../hooks/inventory-service.hook";
+import { RefreshCw } from "lucide-react";
 
 const editProductSchema = z.object({
   ASIN: z.string().min(1, "ASIN is required"),
@@ -35,6 +36,16 @@ interface EditProductFormProps {
   product: Product;
   onSuccess: () => void;
 }
+
+const generateRandomSKU = (): string => {
+  const randomNumbers = () =>
+    `${Math.floor(100 + Math.random() * 900)}-${Math.floor(
+      100 + Math.random() * 900
+    )}`;
+
+  return `TVB-${randomNumbers()}`;
+  // return "TVB-352-952";
+};
 
 export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
   const { updateAsync } = useUpdateProduct();
@@ -102,13 +113,21 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
           control={form.control}
           name="seller_sku"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Seller SKU</FormLabel>
-              <FormControl>
-                <Input {...field} value={field.value ?? ""} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <div className="relative">
+              <FormItem>
+                <FormLabel>Seller SKU</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value ?? ""} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+              <span className="absolute left-[70px] top-[1px] bg-transparent cursor-pointer">
+                <RefreshCw
+                  className="h-4 w-4 stroke-yellow-500"
+                  onClick={() => field.onChange(generateRandomSKU())}
+                />
+              </span>
+            </div>
           )}
         />
         <FormField
