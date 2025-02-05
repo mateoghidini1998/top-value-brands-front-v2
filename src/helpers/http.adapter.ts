@@ -1,29 +1,24 @@
-"use server";
-
-import { cookies } from "next/headers";
+import { getSessionId } from "./get-session-id";
 import { sleep } from "./sleep";
 
 class HttpError extends Error {
   status: number;
+  backendMessage?: string;
 
-  constructor(message: string, status: number) {
+  constructor(message: string, status: number, backendMessage?: string) {
     super(message);
     this.name = "HttpError";
     this.status = status;
+    this.backendMessage = backendMessage;
   }
 }
 
 export const handleResponse = async <T>(response: Response): Promise<T> => {
   if (!response.ok) {
-    try {
-      const errorData = await response.json();
-      const errorMessage = errorData.msg || "An unexpected error occurred";
-      throw new HttpError(errorMessage, response.status);
-    } catch {
-      throw new HttpError(response.statusText, response.status);
-    }
+    const errorData = await response.json();
+    const backendMessage = errorData.msg || "An unexpected error occurred";
+    return Promise.reject(new HttpError(backendMessage, response.status));
   }
-
   // Determinar si la respuesta es JSON o un Blob (ej., PDF)
   const contentType = response.headers.get("Content-Type") || "";
   if (contentType.includes("application/json")) {
@@ -38,9 +33,7 @@ export const apiRequest = async <T>(
   options: RequestInit = {},
   delay: number = 1
 ): Promise<T> => {
-  // Obtener la cookie de sesión
-  const sessionToken = cookies().get("__session")?.value;
-  const authHeader = `Bearer ${sessionToken}`;
+  const authHeader = `Bearer ${await getSessionId()}`;
 
   // Verificar si ya existen headers, de lo contrario inicializarlos
   options.headers = {
@@ -54,10 +47,8 @@ export const apiRequest = async <T>(
     return handleResponse<T>(response);
   } catch (error) {
     if (error instanceof HttpError) {
-      console.error(`HTTP Error (${error.status}): ${error.message}`);
-    } else {
-      console.error("Unexpected error:", error);
+      return Promise.reject(error);
     }
-    throw error; // Relanzar el error si es necesario para manejarlo en el llamado
+    throw error;
   }
 };

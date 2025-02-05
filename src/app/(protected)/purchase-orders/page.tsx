@@ -189,7 +189,7 @@ export default function Page() {
       <DataTable
         data={ordersQuery.data.data}
         columns={getColumns(handleOrderBy)}
-        dataLength={ordersQuery.data.total}
+        dataLength={50}
       />
 
       {/* Pagination */}

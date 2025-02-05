@@ -24,12 +24,10 @@ export function useCreateMutation<T>(config: BaseMutationConfig<T>) {
         toast.success(config.successMessage);
       }
     },
-    onError: (error) => {
-      // Log the error and show an error toast if a message is provided
-      console.error(`${config.errorMessage || "Mutation failed"}:`, error);
-      if (config.errorMessage) {
-        toast.error(config.errorMessage);
-      }
+    onError: (error: Error) => {
+      toast.error(
+        error.message || config.errorMessage || "An unexpected error occurred"
+      );
     },
   });
 }
