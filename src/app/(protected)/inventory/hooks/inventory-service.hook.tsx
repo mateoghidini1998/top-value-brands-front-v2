@@ -13,6 +13,7 @@ import { useCreateMutation } from "@/hooks/mutation-factory";
 export const useGetAllProducts = (initialParams: GetInventoryProps) => {
   const queryClient = useQueryClient();
   const [filters, setFilters] = useState<GetInventoryProps>(initialParams);
+  console.log(filters);
 
   const { data, isLoading, isError, error, refetch } = useQuery<
     GetProductsResponse,
@@ -40,12 +41,17 @@ export const useGetAllProducts = (initialParams: GetInventoryProps) => {
   };
 
   const orderBy = (orderBy: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      orderBy,
-      orderWay:
-        prev.orderBy === orderBy && prev.orderWay === "asc" ? "desc" : "asc",
-    }));
+    setFilters((prev) => {
+      // Determine the new orderWay
+      const newOrderWay =
+        orderBy === prev.orderBy
+          ? prev.orderWay === "ASC"
+            ? "DESC"
+            : "ASC"
+          : "DESC";
+
+      return { ...prev, orderBy, orderWay: newOrderWay };
+    });
   };
 
   const changePage = (page: number) => {
