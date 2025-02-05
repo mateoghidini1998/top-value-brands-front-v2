@@ -311,11 +311,6 @@ export default function Page() {
         <>
           {/* 3. Added products table */}
           <div className="max-h-[400px] overflow-y-auto">
-            {/* <DataTable
-              data={productsAdded}
-              columns={getAddedProductsColumns(setProductsAdded)}
-              dataLength={10}
-            /> */}
             <TrackedProductsTable
               data={productsAdded}
               columns={getAddedProductsColumns(setProductsAdded)}
