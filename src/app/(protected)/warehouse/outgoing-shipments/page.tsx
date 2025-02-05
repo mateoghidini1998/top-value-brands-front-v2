@@ -167,7 +167,7 @@ export default function Page() {
       <DataTable
         data={shipmentsQuery.data.shipments}
         columns={getColumns(handleOrderBy)}
-        dataLength={shipmentsQuery.data.total}
+        dataLength={50}
       />
 
       <div className="flex items-center justify-between mt-6">
