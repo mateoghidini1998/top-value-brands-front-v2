@@ -2,6 +2,7 @@
 
 export interface CreateProductRequest {
   ASIN: string;
+  seller_sku: string;
   product_cost: number;
   supplier_id: number;
   supplier_item_number?: string;
