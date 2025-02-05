@@ -1,36 +1,35 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-// Make MutationConfig more flexible by not constraining the generic type
 interface BaseMutationConfig<T> {
-  mutationFn: (variables: T) => Promise<unknown>;
-  successMessage: string;
-  errorMessage: string;
-  invalidateKeys?: (string | number)[][];
+  mutationFn: (variables: T) => Promise<unknown>; // The mutation function
+  successMessage?: string; // Optional success message
+  errorMessage?: string; // Optional error message
+  invalidateKeys?: (string | number)[][]; // Query keys to invalidate on success
 }
 
-interface MutationConfigOrders<T> extends BaseMutationConfig<T> {
-  orderId: number | string;
-}
-
-type MutationConfig<T> = BaseMutationConfig<T> | MutationConfigOrders<T>;
-
-export function useCreateMutation<T>(config: MutationConfig<T>) {
+export function useCreateMutation<T>(config: BaseMutationConfig<T>) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: config.mutationFn,
     onSuccess: () => {
-      // Invalidar claves relacionadas tras eliminar
+      // Invalidate related queries if specified
       config.invalidateKeys?.forEach((key) => {
         queryClient.invalidateQueries({ queryKey: key });
       });
 
-      toast.success(config.successMessage);
+      // Show success toast if a message is provided
+      if (config.successMessage) {
+        toast.success(config.successMessage);
+      }
     },
     onError: (error) => {
-      console.error(`${config.errorMessage}:`, error);
-      toast.error(config.errorMessage);
+      // Log the error and show an error toast if a message is provided
+      console.error(`${config.errorMessage || "Mutation failed"}:`, error);
+      if (config.errorMessage) {
+        toast.error(config.errorMessage);
+      }
     },
   });
 }

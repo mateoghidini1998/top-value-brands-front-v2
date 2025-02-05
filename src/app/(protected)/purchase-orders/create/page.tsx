@@ -1,6 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/custom/data-table";
+import { DataTable as TrackedProductsTable } from "../../warehouse/outgoing-shipments/create/_components/tables/data-table";
 import { FilterSearch } from "@/components/custom/filter-search";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Button } from "@/components/ui/button";
@@ -122,8 +123,6 @@ export default function Page() {
   const [selectedSupplier, setSelectedSupplier] = useState<number | null>(
     data?.data.order.supplier_id ?? null
   );
-
-  console.log(productsAdded);
 
   const handleFilterBySupplier = (supplier_id: number | null) => {
     filterBySupplier(supplier_id);
@@ -252,7 +251,7 @@ export default function Page() {
         <DataTable
           data={trackedProductsQuery.data.data}
           columns={getTrackedProductsColumns(setProductsAdded, handleOrderBy)}
-          dataLength={trackedProductsQuery.data.total}
+          dataLength={50}
           scrolleable={true}
         />
 
@@ -312,10 +311,9 @@ export default function Page() {
         <>
           {/* 3. Added products table */}
           <div className="max-h-[400px] overflow-y-auto">
-            <DataTable
+            <TrackedProductsTable
               data={productsAdded}
               columns={getAddedProductsColumns(setProductsAdded)}
-              dataLength={10}
             />
           </div>
 

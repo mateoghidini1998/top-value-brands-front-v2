@@ -2,7 +2,7 @@
 
 import { useCreateMutation } from "@/hooks/mutation-factory";
 import checkProductShipment from "../../actions/check-shipment-product";
-import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/app/constants";
+import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/constants";
 
 export const useOutgoingShipmentsMutations = () => {
   const checkShipmentProductMutation = useCreateMutation({

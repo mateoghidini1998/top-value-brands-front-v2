@@ -8,7 +8,7 @@ import {
   Frame,
   PieChart,
   PersonStandingIcon,
-  // User,
+  User,
 } from "lucide-react";
 
 export const routes = {
@@ -102,29 +102,29 @@ export const routes = {
     },
     // USERS
 
-    // {
-    //   title: "Users",
-    //   url: "/users",
-    //   icon: User,
-    //   items: [
-    //     {
-    //       title: "Introduction",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Get Started",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Tutorials",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Changelog",
-    //       url: "#",
-    //     },
-    //   ],
-    // },
+    {
+      title: "Users",
+      url: "/users",
+      icon: User,
+      // items: [
+      //   {
+      //     title: "Introduction",
+      //     url: "#",
+      //   },
+      //   {
+      //     title: "Get Started",
+      //     url: "#",
+      //   },
+      //   {
+      //     title: "Tutorials",
+      //     url: "#",
+      //   },
+      //   {
+      //     title: "Changelog",
+      //     url: "#",
+      //   },
+      // ],
+    },
     {
       title: "Suppliers",
       url: "/suppliers",

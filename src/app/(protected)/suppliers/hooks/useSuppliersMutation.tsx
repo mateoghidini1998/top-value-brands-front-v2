@@ -1,6 +1,6 @@
 "use client";
 
-import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/app/constants";
+import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/constants";
 import { useCreateMutation } from "@/hooks/mutation-factory";
 import { deleteSupplier } from "../actions/delete-supplier.action";
 import { createSupplier } from "../actions/create-supplier.action";

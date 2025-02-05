@@ -31,7 +31,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Settings2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { PaginationComponent } from "./data-table-pagination";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
 import { useSidebar } from "../ui/sidebar";
@@ -40,7 +39,6 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   dataLength?: number;
-  pagination?: React.ReactElement;
   onSort?: (sorting: SortingState) => unknown;
   showHideColumns?: boolean;
   searchInput?: string;
@@ -51,7 +49,6 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   dataLength = 10,
-  pagination,
   onSort,
   showHideColumns = false,
   searchInput = "",
@@ -210,11 +207,6 @@ DataTableProps<TData, TValue>) {
           </Table>
         </div>
       </ScrollArea>
-      {pagination ? (
-        pagination
-      ) : data.length > dataLength ? (
-        <PaginationComponent table={table} />
-      ) : null}
     </div>
   );
 }

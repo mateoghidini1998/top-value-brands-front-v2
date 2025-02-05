@@ -1,91 +1,101 @@
-"use client";
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useMemo } from "react";
 
-type Props = {
-  table: {
-    getState: () => { pagination: { pageIndex: number } };
-    getPageCount: () => number;
-    getCanPreviousPage: () => boolean;
-    previousPage: () => void;
-    setPageIndex: (index: number) => void;
-    getCanNextPage: () => boolean;
-    nextPage: () => void;
-  };
-};
+interface InventoryPaginationProps {
+  currentPage: number;
+  itemsPerPage: number;
+  totalItems: number;
+  onPageChange: (page: number) => void;
+  onLimitChange: (limit: number) => void;
+}
 
-export function PaginationComponent({ table }: Props) {
-  const pageIndex = table.getState().pagination.pageIndex;
-  const pageCount = table.getPageCount();
-  const maxVisibleButtons = 5;
+export function InventoryPagination({
+  currentPage,
+  itemsPerPage,
+  totalItems,
+  onPageChange,
+  onLimitChange,
+}: InventoryPaginationProps) {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  // Calcular el rango de botones a mostrar
-  const getPageRange = () => {
-    const start = Math.max(
-      0,
-      Math.min(
-        pageIndex - Math.floor(maxVisibleButtons / 2),
-        pageCount - maxVisibleButtons
-      )
-    );
-    const end = Math.min(pageCount, start + maxVisibleButtons);
-    return Array.from({ length: end - start }, (_, i) => start + i);
-  };
-
-  const pageRange = getPageRange();
+  const paginationRange = useMemo(() => {
+    const delta = 2;
+    const range: (number | string)[] = [];
+    for (let i = 1; i <= totalPages; i++) {
+      if (
+        i === 1 ||
+        i === totalPages ||
+        (i >= currentPage - delta && i <= currentPage + delta)
+      ) {
+        range.push(i);
+      } else if (range[range.length - 1] !== "...") {
+        range.push("...");
+      }
+    }
+    return range;
+  }, [currentPage, totalPages]);
 
   return (
-    <Pagination>
-      <PaginationContent>
-        {/* Botón para ir a la página anterior */}
-        <PaginationItem>
-          <PaginationPrevious
-            onClick={() => {
-              if (table.getCanPreviousPage()) {
-                table.previousPage();
-              }
-            }}
-            href={table.getCanPreviousPage() ? "#" : undefined}
-            className={`h-9 w-9 p-0 ${
-              !table.getCanPreviousPage() ? "cursor-not-allowed opacity-50" : ""
-            }`}
-          />
-        </PaginationItem>
-
-        {/* Mostrar botones de páginas dentro del rango calculado */}
-        {pageRange.map((page) => (
-          <PaginationItem key={page}>
-            <PaginationLink
-              href="#"
-              isActive={pageIndex === page}
-              onClick={() => table.setPageIndex(page)}
-            >
-              {page + 1}
-            </PaginationLink>
+    <div className="flex items-center justify-between mt-6">
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+              isActive={currentPage > 1}
+            />
           </PaginationItem>
-        ))}
-
-        {/* Botón para ir a la página siguiente */}
-        <PaginationItem>
-          <PaginationNext
-            href={table.getCanNextPage() ? "#" : undefined}
-            onClick={() => {
-              if (table.getCanNextPage()) {
-                table.nextPage();
+          {paginationRange.map((pageNumber, index) => (
+            <PaginationItem key={index}>
+              {pageNumber === "..." ? (
+                <PaginationEllipsis />
+              ) : (
+                <PaginationLink
+                  onClick={() => onPageChange(Number(pageNumber))}
+                  isActive={currentPage === pageNumber}
+                >
+                  {pageNumber}
+                </PaginationLink>
+              )}
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <PaginationNext
+              onClick={() =>
+                onPageChange(Math.min(totalPages, currentPage + 1))
               }
-            }}
-            className={`h-9 w-9 p-0 ${
-              !table.getCanNextPage() ? "cursor-not-allowed opacity-50" : ""
-            }`}
-          />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+              isActive={currentPage < totalPages}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+
+      <Select onValueChange={(value) => onLimitChange(Number(value))}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Items per page" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="10">10 per page</SelectItem>
+          <SelectItem value="20">20 per page</SelectItem>
+          <SelectItem value="50">50 per page</SelectItem>
+          <SelectItem value="100">100 per page</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
   );
 }

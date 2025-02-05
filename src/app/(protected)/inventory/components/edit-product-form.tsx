@@ -11,17 +11,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Product } from "@/types";
+import { EditProductProps, Product } from "@/types";
 import { Supplier } from "@/types/supplier.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import * as z from "zod";
+import { SupplierItem } from "../../purchase-orders/page";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
-import { EditProductProps } from "../actions/edit-product.action";
-import { useInventory } from "../hooks";
-import { SupplierItem } from "../page";
+import { useUpdateProduct } from "../hooks/inventory-service.hook";
+import { RefreshCw } from "lucide-react";
 
 const editProductSchema = z.object({
   ASIN: z.string().min(1, "ASIN is required"),
@@ -38,11 +37,23 @@ interface EditProductFormProps {
   onSuccess: () => void;
 }
 
+const generateRandomSKU = (): string => {
+  const randomNumbers = () =>
+    `${Math.floor(100 + Math.random() * 900)}-${Math.floor(
+      100 + Math.random() * 900
+    )}`;
+
+  return `TVB-${randomNumbers()}`;
+  // return "TVB-352-952";
+};
+
 export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
-  const { editProductMutation } = useInventory();
+  const { updateAsync } = useUpdateProduct();
   const { suppliersQuery } = useSuppliers();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
+  const [selectedSupplier, setSelectedSupplier] = useState<number | null>(
+    product.supplier_id
+  );
 
   const form = useForm<z.infer<typeof editProductSchema>>({
     resolver: zodResolver(editProductSchema),
@@ -64,12 +75,10 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
         id: product.id,
         ...values,
       };
-      await editProductMutation.mutateAsync(editData);
+      await updateAsync(editData);
       onSuccess();
-      toast.success("Product edited successfully");
     } catch (error) {
       console.error("Failed to edit product:", error);
-      toast.error("Failed to edit product");
     } finally {
       setIsSubmitting(false);
     }
@@ -104,13 +113,21 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
           control={form.control}
           name="seller_sku"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Seller SKU</FormLabel>
-              <FormControl>
-                <Input {...field} value={field.value ?? ""} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <div className="relative">
+              <FormItem>
+                <FormLabel>Seller SKU</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value ?? ""} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+              <span className="absolute left-[70px] top-[1px] bg-transparent cursor-pointer">
+                <RefreshCw
+                  className="h-4 w-4 stroke-yellow-500"
+                  onClick={() => field.onChange(generateRandomSKU())}
+                />
+              </span>
+            </div>
           )}
         />
         <FormField

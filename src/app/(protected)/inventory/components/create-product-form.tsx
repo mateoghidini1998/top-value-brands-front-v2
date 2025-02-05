@@ -11,27 +11,27 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Supplier } from "@/types/supplier.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { SupplierItem } from "../../purchase-orders/page";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
-import { SupplierItem } from "../page";
-import { useInventory } from "../hooks";
-import { Supplier } from "@/types/supplier.type";
+import { useCreateProduct } from "../hooks/inventory-service.hook";
 
 const formSchema = z.object({
   ASIN: z.string().min(1, "ASIN is required"),
   product_cost: z.number().min(0, "Product cost must be greater than 0"),
   supplier_id: z.number().min(1, "Supplier ID is required"),
-  supplier_item_number: z.string().min(1, "Supplier item number is required"),
+  supplier_item_number: z.string().optional(),
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;
 
 export function CreateProductForm() {
   const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
-  const { createProductMutation } = useInventory();
+  const { createAsync, isCreating } = useCreateProduct();
   const { suppliersQuery } = useSuppliers();
 
   const form = useForm<ProductFormValues>({
@@ -55,7 +55,7 @@ export function CreateProductForm() {
     }));
 
   async function onSubmit(data: ProductFormValues) {
-    await createProductMutation.mutateAsync(data);
+    await createAsync(data);
     form.reset();
   }
 
@@ -131,12 +131,8 @@ export function CreateProductForm() {
           )}
         />
 
-        <Button
-          type="submit"
-          disabled={createProductMutation.isPending}
-          className="w-full"
-        >
-          {createProductMutation.isPending ? "Creating..." : "Create Product"}
+        <Button type="submit" disabled={isCreating} className="w-full">
+          {isCreating ? "Creating..." : "Create Product"}
         </Button>
       </form>
     </Form>

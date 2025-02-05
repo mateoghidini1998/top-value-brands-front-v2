@@ -1,6 +1,6 @@
 import { LucideIcon } from "lucide-react";
 
-export type Role = "admin" | "warehouse" | "user";
+export type Role = "admin" | "warehouse";
 
 type RouteItem = {
   title: string;
@@ -10,21 +10,20 @@ type RouteItem = {
 export type Route = {
   title: string;
   url: string;
-  icon?: LucideIcon; 
+  icon?: LucideIcon;
   items?: RouteItem[];
 };
 
 export const rolePermissions: Record<Role, string[]> = {
-  admin: ["*"], 
+  admin: ["*"],
   warehouse: ["/warehouse"],
-  user: ["/inventory"],
 };
 
 export const filterRoutesByRole = (role: Role, routes: Route[]): Route[] => {
   const allowedRoutes = rolePermissions[role] || [];
 
   if (allowedRoutes.includes("*")) {
-    return routes; 
+    return routes;
   }
 
   return routes.filter(

@@ -1,4 +1,4 @@
-import { QUERY_KEYS } from "@/app/constants";
+import { QUERY_KEYS } from "@/constants";
 import { useQuery } from "@tanstack/react-query";
 import { getWarehouseLocations } from "../actions/get-warehouse-location.action";
 

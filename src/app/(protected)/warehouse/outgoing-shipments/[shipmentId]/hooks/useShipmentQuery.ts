@@ -1,6 +1,6 @@
 "use client";
 
-import { CACHE_TIMES, QUERY_KEYS } from "@/app/constants";
+import { CACHE_TIMES, QUERY_KEYS } from "@/constants";
 import { GetShipemntByIDResponse } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { getShipmentById } from "../../actions";

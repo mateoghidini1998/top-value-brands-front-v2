@@ -4,11 +4,10 @@ import {
   ERROR_MESSAGES,
   QUERY_KEYS,
   SUCCESS_MESSAGES,
-} from "../../../../constants";
+} from "../../../../../constants";
 export const useDeleteOrderProduct = (orderProductId: string) => {
   const deleteOrderProductMutation = useCreateMutation({
-    mutationFn: deleteOrderProduct,
-    orderId: Number(orderProductId),
+    mutationFn: () => deleteOrderProduct({ orderProductId: orderProductId }),
     errorMessage: ERROR_MESSAGES.DELETE_ORDER_PRODUCT,
     successMessage: SUCCESS_MESSAGES.DELETE_ORDER_PRODUCT,
     invalidateKeys: [
