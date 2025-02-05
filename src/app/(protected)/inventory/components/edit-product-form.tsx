@@ -16,7 +16,6 @@ import { Supplier } from "@/types/supplier.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import * as z from "zod";
 import { SupplierItem } from "../../purchase-orders/page";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
@@ -41,7 +40,9 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
   const { updateAsync } = useUpdateProduct();
   const { suppliersQuery } = useSuppliers();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
+  const [selectedSupplier, setSelectedSupplier] = useState<number | null>(
+    product.supplier_id
+  );
 
   const form = useForm<z.infer<typeof editProductSchema>>({
     resolver: zodResolver(editProductSchema),
@@ -65,10 +66,8 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
       };
       await updateAsync(editData);
       onSuccess();
-      toast.success("Product edited successfully");
     } catch (error) {
       console.error("Failed to edit product:", error);
-      toast.error("Failed to edit product");
     } finally {
       setIsSubmitting(false);
     }
