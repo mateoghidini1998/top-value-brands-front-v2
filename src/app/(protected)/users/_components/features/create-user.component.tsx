@@ -30,7 +30,7 @@ const formSchema = z
     email: z.string().email("Invalid email address"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
-    role: z.enum(["user", "admin"]), // Adjust roles as needed
+    role: z.enum(["warehouse", "admin"]), // Adjust roles as needed
     username: z.string().min(3, "Username must be at least 3 characters"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -52,7 +52,7 @@ export function RegisterForm() {
       email: "",
       password: "",
       confirmPassword: "",
-      role: "user",
+      role: "warehouse",
       username: "",
     },
   });
@@ -179,7 +179,7 @@ export function RegisterForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="warehouse">Warehouse</SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>
                 </SelectContent>
               </Select>
