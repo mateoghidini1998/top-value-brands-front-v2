@@ -25,9 +25,24 @@ export function useCreateMutation<T>(config: BaseMutationConfig<T>) {
       }
     },
     onError: (error: Error) => {
-      toast.error(
-        error.message || config.errorMessage || "An unexpected error occurred"
-      );
+      try {
+        const errorData = JSON.parse(error.message);
+        if (Array.isArray(errorData)) {
+          errorData.forEach((err) => {
+            toast.error(err.msg);
+          });
+        } else {
+          toast.error(
+            error.message ||
+              config.errorMessage ||
+              "An unexpected error occurred"
+          );
+        }
+      } catch {
+        toast.error(
+          error.message || config.errorMessage || "An unexpected error occurred"
+        );
+      }
     },
   });
 }
