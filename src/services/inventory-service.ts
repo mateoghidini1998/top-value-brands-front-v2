@@ -38,7 +38,7 @@ export class InventoryService {
   public async createProduct(
     data: CreateProductRequest
   ): Promise<CreateProductResponse> {
-    const url = this.constructUrl("/add");
+    const url = this.constructUrl("/");
     const options = this.constructOptions("POST", data);
     return apiRequest<CreateProductResponse>(url, options);
   }
