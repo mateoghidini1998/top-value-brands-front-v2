@@ -14,13 +14,15 @@ import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { TeamSwitcher } from "./team-switcher";
 import { ModeToggle } from "../theme-toggle";
-import { useUser } from "@clerk/nextjs";
 import { filterRoutesByRole, Role, Route } from "@/lib/filter-routes";
+import { UserResource } from "@/types/auth.type";
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user } = useUser();
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  user?: UserResource | null | undefined;
+}
 
-  const userRole = user?.publicMetadata?.role || "warehouse";
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
+  const userRole = user?.publicMetadata.role;
 
   const filteredNavMain = filterRoutesByRole(
     userRole as Role,

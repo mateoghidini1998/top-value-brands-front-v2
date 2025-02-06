@@ -1,3 +1,5 @@
+"use client";
+
 import { DynamicBreadcrumb } from "@/components/custom/dynamic.breadcrumb";
 import ScanButton from "@/components/custom/scan-button";
 import { AppSidebar } from "@/components/custom/sidebar/app-sidebar";
@@ -7,6 +9,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { UserResource } from "@/types/auth.type";
+import { useUser } from "@clerk/nextjs";
 
 interface AuthenticatedLayoutProps {
   children: React.ReactNode;
@@ -15,9 +19,23 @@ interface AuthenticatedLayoutProps {
 export default function AuthenticatedLayout({
   children,
 }: AuthenticatedLayoutProps) {
+  const { user } = useUser();
+
+  if (!user) return;
+
+  const customUser: UserResource = {
+    publicMetadata: {
+      role: user.publicMetadata.role as string,
+    },
+    username: user.username as string | null,
+    primaryEmailAddress: {
+      emailAddress: user.primaryEmailAddress?.emailAddress as string | null,
+    },
+  };
+
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar user={customUser} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
