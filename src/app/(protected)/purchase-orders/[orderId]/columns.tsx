@@ -194,6 +194,17 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   {
     accessorKey: "warehouse_stock",
     header: "Warehouse Stock",
+    cell: ({ row }) => {
+      return (
+        <span>
+          {FormatUSD({
+            number: row.original.warehouse_stock?.toString() || "0",
+            maxDigits: 0,
+            minDigits: 0,
+          })}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "total_amount",
