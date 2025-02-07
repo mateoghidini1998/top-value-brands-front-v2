@@ -56,6 +56,7 @@ export interface PalletProductByID {
 
 export interface PurchaseOrderProduct {
   id: number;
+  expire_date: string;
   Product: GetPalletProduct;
 }
 
@@ -64,6 +65,8 @@ export interface GetPalletProduct {
   product_image: string;
   seller_sku: string;
   in_seller_account: boolean;
+  upc: string;
+  pack_type: string;
 }
 
 export interface PurchaseOrder {
