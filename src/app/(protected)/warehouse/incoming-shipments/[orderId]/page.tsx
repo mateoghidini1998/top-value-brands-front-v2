@@ -377,17 +377,24 @@ export default function Page({
                       <SelectValue placeholder="Select location" />
                     </SelectTrigger>
                     <SelectContent className="w-full">
+                      <SelectItem className="w-full" key={0} value={"11"}>
+                        <div className="w-full flex items-center justify-between">
+                          <p>{"Floor"}</p>
+                        </div>
+                      </SelectItem>
                       {warehouseLocationsQuery.data?.data.map((location) => {
                         return (
-                          <SelectItem
-                            className="w-full"
-                            key={location.id}
-                            value={location.id.toString()}
-                          >
-                            <div className="w-full flex items-center justify-between">
-                              <p>{location.location}</p>
-                            </div>
-                          </SelectItem>
+                          location.id !== 11 && (
+                            <SelectItem
+                              className="w-full"
+                              key={location.id}
+                              value={location.id.toString()}
+                            >
+                              <div className="w-full flex items-center justify-between">
+                                <p>{location.location}</p>
+                              </div>
+                            </SelectItem>
+                          )
                         );
                       })}
                     </SelectContent>
