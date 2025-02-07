@@ -168,6 +168,16 @@ export default function Page({
       };
     });
 
+    // validate that all the updates are complete, any fileds could be null or UNDEFINED or a empty string, return an error
+    const incompleteUpdates = updatedProducts.find((update) => {
+      return !update.reason_id || !update.upc || !update.expire_date;
+    });
+
+    if (incompleteUpdates) {
+      toast.error("Please complete all the fields");
+      return;
+    }
+
     updateIncomingOrderProducts({
       orderId: Number(params.orderId),
       incomingOrderProductUpdates: updatedProducts,
