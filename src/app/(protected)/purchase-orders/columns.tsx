@@ -64,7 +64,7 @@ export const getColumns = (
     cell: ({ row }) => {
       const notes = row.original.notes;
       return (
-        <div className="flex item-center justify-center">
+        <div className="flex item-center justify-center max-h-[100px]">
           <NotesCell notes={notes} width={"400px"} />
         </div>
       );
