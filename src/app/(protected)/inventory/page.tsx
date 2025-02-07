@@ -34,7 +34,7 @@ export default function InventoryPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="">
       <InventoryFilters
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}

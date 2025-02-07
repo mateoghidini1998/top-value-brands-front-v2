@@ -23,7 +23,10 @@ import {
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { DataTable } from "@/components/custom/data-table";
+import {
+  DataTable,
+  ShowHideColsumnsProps,
+} from "@/components/custom/data-table";
 import { columns } from "./columns";
 import { Supplier } from "@/types/supplier.type";
 import { useIncomingShipments } from "./hooks";
@@ -34,6 +37,11 @@ export interface SupplierItem {
   value: number;
   name: string;
 }
+
+const showColumns: ShowHideColsumnsProps = {
+  show: true,
+  styles: "absolute left-[550px] top-[-31.5px]",
+};
 
 export default function Page() {
   const {
@@ -155,6 +163,7 @@ export default function Page() {
         data={ordersQuery.data?.data || []}
         columns={columns}
         dataLength={ordersQuery.data?.total || 0}
+        showHideColumns={showColumns}
       />
 
       <div className="flex items-center justify-between mt-6">

@@ -1,6 +1,9 @@
 "use client";
 
-import { DataTable } from "@/components/custom/data-table";
+import {
+  DataTable,
+  ShowHideColsumnsProps,
+} from "@/components/custom/data-table";
 import { DataTable as TrackedProductsTable } from "../../warehouse/outgoing-shipments/create/_components/tables/data-table";
 import { FilterSearch } from "@/components/custom/filter-search";
 import LoadingSpinner from "@/components/custom/loading-spinner";
@@ -39,6 +42,11 @@ export interface SupplierItem {
   value: number;
   name: string;
 }
+
+const showColumns: ShowHideColsumnsProps = {
+  show: true,
+  styles: "absolute left-[550px] top-[-31.5px] z-[1000]",
+};
 
 export default function Page() {
   const {
@@ -211,7 +219,7 @@ export default function Page() {
   }
 
   return (
-    <section className="flex flex-col gap-6 w-full">
+    <section className="flex flex-col w-full">
       {/* 1. Search and filter */}
       <div className="w-fit flex items-center justify-between gap-4">
         <Input
@@ -253,6 +261,7 @@ export default function Page() {
           columns={getTrackedProductsColumns(setProductsAdded, handleOrderBy)}
           dataLength={50}
           scrolleable={true}
+          showHideColumns={showColumns}
         />
 
         {/* Pagination */}
@@ -308,7 +317,7 @@ export default function Page() {
       </div>
 
       {productsAdded.length > 0 && (
-        <>
+        <div className="mt-6">
           {/* 3. Added products table */}
           <div className="max-h-[400px] overflow-y-auto">
             <TrackedProductsTable
@@ -329,7 +338,7 @@ export default function Page() {
             isEditing={!!orderId}
             orderId={orderId || ""}
           />
-        </>
+        </div>
       )}
     </section>
   );

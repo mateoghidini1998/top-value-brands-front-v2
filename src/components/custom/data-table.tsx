@@ -35,12 +35,17 @@ import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
 import { useSidebar } from "../ui/sidebar";
 
+export interface ShowHideColsumnsProps {
+  show: boolean;
+  styles: string;
+}
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   dataLength?: number;
   onSort?: (sorting: SortingState) => unknown;
-  showHideColumns?: boolean;
+  showHideColumns?: ShowHideColsumnsProps;
   searchInput?: string;
   scrolleable?: boolean;
 }
@@ -50,7 +55,10 @@ export function DataTable<TData, TValue>({
   data,
   dataLength = 10,
   onSort,
-  showHideColumns = false,
+  showHideColumns = {
+    show: false,
+    styles: "",
+  },
   searchInput = "",
   scrolleable = false,
 }: // setTableData,
@@ -97,7 +105,7 @@ DataTableProps<TData, TValue>) {
   }, [sorting]);
 
   return (
-    <div className="w-full">
+    <div className="w-full relative">
       <div className="flex items-center justify-end pb-2">
         {searchInput !== "" && (
           <Input
@@ -112,33 +120,35 @@ DataTableProps<TData, TValue>) {
           />
         )}
         {showHideColumns && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                {/* <SlidersHorizontal /> */}
-                <Settings2 className="h-[16px] w-[16px]" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id.split("_").join(" ")}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className={`${showHideColumns.styles}`}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                  {/* <SlidersHorizontal /> */}
+                  <Settings2 className="h-[16px] w-[16px]" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id.split("_").join(" ")}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         )}
       </div>
       <ScrollArea

@@ -1,6 +1,9 @@
 "use client";
 
-import { DataTable } from "@/components/custom/data-table";
+import {
+  DataTable,
+  ShowHideColsumnsProps,
+} from "@/components/custom/data-table";
 import { FilterSearch } from "@/components/custom/filter-search";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Button } from "@/components/ui/button";
@@ -34,6 +37,11 @@ export interface SupplierItem {
   value: number;
   name: string;
 }
+
+const showColumns: ShowHideColsumnsProps = {
+  show: true,
+  styles: "absolute left-[550px] top-[-31.5px]",
+};
 
 export default function Page() {
   const {
@@ -170,6 +178,7 @@ export default function Page() {
         data={palletsQuery.data.data}
         columns={getColumns(handleOrderBy)}
         dataLength={palletsQuery.data.total}
+        showHideColumns={showColumns}
       />
 
       {/* Pagination */}

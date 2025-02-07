@@ -1,6 +1,9 @@
 "use client";
 
-import { DataTable } from "@/components/custom/data-table";
+import {
+  DataTable,
+  ShowHideColsumnsProps,
+} from "@/components/custom/data-table";
 import { FilterSearch } from "@/components/custom/filter-search";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Button } from "@/components/ui/button";
@@ -48,6 +51,11 @@ const shipmentStatuses: ShipmentStatus[] = [
   { value: "READY_TO_SHIP", name: "Ready to Ship" },
   { value: "CHECKED_IN", name: "Checked In" },
 ];
+
+const showColumns: ShowHideColsumnsProps = {
+  show: true,
+  styles: "absolute left-[550px] top-[-31.5px]",
+};
 
 export default function Page() {
   const {
@@ -168,6 +176,7 @@ export default function Page() {
         data={shipmentsQuery.data.shipments}
         columns={getColumns(handleOrderBy)}
         dataLength={50}
+        showHideColumns={showColumns}
       />
 
       <div className="flex items-center justify-between mt-6">

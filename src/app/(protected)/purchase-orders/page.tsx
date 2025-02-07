@@ -23,7 +23,10 @@ import { Supplier } from "@/types/supplier.type";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { DataTable } from "../../../components/custom/data-table";
+import {
+  DataTable,
+  ShowHideColsumnsProps,
+} from "../../../components/custom/data-table";
 import { useSuppliers } from "../suppliers/hooks";
 import { getColumns } from "./columns";
 import { useOrders } from "./hooks/useOrders";
@@ -120,6 +123,11 @@ export default function Page() {
     return <div>Error</div>;
   }
 
+  const showColumns: ShowHideColsumnsProps = {
+    show: true,
+    styles: "absolute left-[819px] top-[-31.5px]",
+  };
+
   const formatSuppliers = (suppliers: Supplier[]): SupplierItem[] =>
     suppliers.map((supplier) => ({
       name: supplier.supplier_name,
@@ -190,6 +198,7 @@ export default function Page() {
         data={ordersQuery.data.data}
         columns={getColumns(handleOrderBy)}
         dataLength={50}
+        showHideColumns={showColumns}
       />
 
       {/* Pagination */}
