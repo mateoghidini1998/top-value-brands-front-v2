@@ -1,7 +1,10 @@
 "use client";
 
 import { useOrderSummaryQuery } from "@/app/(protected)/purchase-orders/[orderId]/hooks";
-import { DataTable } from "@/components/custom/data-table";
+import {
+  DataTable,
+  ShowHideColsumnsProps,
+} from "@/components/custom/data-table";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -22,6 +25,11 @@ import { toast } from "sonner";
 import { useWarehouseLocations } from "../../storage/hooks/useWarehouseLocations";
 import { useIncomingShipmentsMutations } from "../hooks/useIncomingShipmentsMutation";
 import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
+
+const showColumns: ShowHideColsumnsProps = {
+  show: true,
+  styles: "absolute left-[110px] top-[-31.5px]",
+};
 
 export default function Page({
   params,
@@ -258,6 +266,7 @@ export default function Page({
             )}
             data={tableData}
             dataLength={tableData.length}
+            showHideColumns={showColumns}
           />
         </TabsContent>
         {/* Pallet */}
