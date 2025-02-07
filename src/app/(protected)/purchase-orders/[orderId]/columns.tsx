@@ -178,7 +178,9 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   {
     id: "quantity_purchased",
     header: "Sellable Qty",
+
     cell: ({ row }) => {
+      console.log(row.original);
       const quantity_purchased = row.original.quantity_purchased;
       return (
         <QuantityCell
@@ -188,6 +190,10 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
         />
       );
     },
+  },
+  {
+    accessorKey: "warehouse_stock",
+    header: "Warehouse Stock",
   },
   {
     accessorKey: "total_amount",
