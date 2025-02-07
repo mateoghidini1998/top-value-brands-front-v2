@@ -13,17 +13,20 @@ import {
 import { formatDateWithoutHours } from "@/helpers/format-date";
 import { cn } from "@/lib/utils";
 import type { PurchaseOrderSummaryProducts } from "@/types";
+import { MissingFieldsInterface } from "../[orderId]/page";
 
 interface ExpireDateCellProps {
   row: PurchaseOrderSummaryProducts;
   inputRef: React.RefObject<HTMLInputElement>;
   onExpireDateChange: (rowId: string, value: Date | undefined) => void;
+  missingFields: MissingFieldsInterface[];
 }
 
 export const ExpireDateCell = ({
   row,
   inputRef,
   onExpireDateChange,
+  missingFields,
 }: ExpireDateCellProps) => {
   const [date, setDate] = useState<Date | undefined>(
     row.expire_date ? new Date(row.expire_date) : undefined
@@ -89,7 +92,14 @@ export const ExpireDateCell = ({
           onChange={handleInputChange}
           onBlur={handleInputBlur}
           placeholder="MM/DD/YYYY"
-          className="w-[150px]"
+          className={`w-[150px] ${
+            !row.expire_date &&
+            missingFields
+              .find((f) => f.product_id === row.id)
+              ?.missingFields.includes("expire_date")
+              ? "border-red-500"
+              : ""
+          }`}
           ref={inputRef}
         />
         <PopoverTrigger asChild>

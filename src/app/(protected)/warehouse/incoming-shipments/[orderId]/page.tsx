@@ -31,6 +31,11 @@ const showColumns: ShowHideColsumnsProps = {
   styles: "absolute left-[110px] top-[-31.5px]",
 };
 
+export interface MissingFieldsInterface {
+  product_id: number | string;
+  missingFields: string[];
+}
+
 export default function Page({
   params,
 }: {
@@ -43,6 +48,10 @@ export default function Page({
   const [localChanges, setLocalChanges] = useState<
     Record<string, Partial<PurchaseOrderSummaryProducts>>
   >({});
+
+  const [missingFields, setMissingFields] = useState<MissingFieldsInterface[]>(
+    []
+  );
 
   const { updateIncomingOrderProducts, createPallet } =
     useIncomingShipmentsMutations(params.orderId);
@@ -174,6 +183,25 @@ export default function Page({
     });
 
     if (incompleteUpdates) {
+      setMissingFields((prev) => {
+        const product = prev.find(
+          (p) => p.product_id === incompleteUpdates.product_id
+        );
+        if (!product) {
+          return [
+            ...prev,
+            {
+              product_id: incompleteUpdates.product_id,
+              missingFields: ["reason_id", "upc", "expire_date"].filter(
+                // @ts-expect-error @typescript-eslint/no-unsafe-member-access
+                (field) => !incompleteUpdates[field]
+              ),
+            },
+          ];
+        }
+        return prev;
+      });
+
       toast.error("Please complete all the fields");
       return;
     }
@@ -183,6 +211,8 @@ export default function Page({
       incomingOrderProductUpdates: updatedProducts,
     });
   };
+
+  console.log(missingFields);
 
   const handleSavePallets = () => {
     if (productsAddedToCreatePallet.length === 0) {
@@ -272,7 +302,8 @@ export default function Page({
               handleUpcChange,
               handleExpireDateChange,
               focusNextInput,
-              inputRefs
+              inputRefs,
+              missingFields
             )}
             data={tableData}
             dataLength={tableData.length}
