@@ -4,9 +4,9 @@ export interface AddProductsToOrderProps {
 }
 
 export interface ProductsToAdd {
-  fees: number;
-  lowest_fba_price: number;
-  product_cost: string;
   product_id: number;
   quantity: number;
+  product_cost: string;
+  fees: number;
+  lowest_fba_price: number;
 }
