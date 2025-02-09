@@ -1,12 +1,14 @@
 import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/constants";
 import { useCreateMutation } from "@/hooks/mutation-factory";
-import { authService } from "@/services/auth-service";
+import { serviceFactory } from "@/services";
 import {
   EditUserRole,
   GetUsersResponse,
   RegisterRequest,
 } from "@/types/auth.type";
 import { useQuery } from "@tanstack/react-query";
+
+const authService = serviceFactory.getAuthService();
 
 // Hook for fetching users
 export const useGetAllClerkUsers = () => {

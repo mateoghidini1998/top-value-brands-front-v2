@@ -2,6 +2,7 @@ import type { BaseService, IApiRequest } from "./base-service";
 import { InventoryService } from "./inventory-service";
 import { apiRequest } from "@/helpers/http.adapter";
 import { PurchaseOrderService } from "./purchase-order-service";
+import { AuthService } from "./auth-service";
 
 export class ServiceFactory {
   private static instance: ServiceFactory;
@@ -31,6 +32,13 @@ export class ServiceFactory {
       );
     }
     return this.services.get("purchaseOrder") as PurchaseOrderService;
+  }
+
+  public getAuthService(): AuthService {
+    if (!this.services.has("auth")) {
+      this.services.set("auth", new AuthService(this.apiRequest));
+    }
+    return this.services.get("auth") as AuthService;
   }
 
   // Add methods for other services as needed

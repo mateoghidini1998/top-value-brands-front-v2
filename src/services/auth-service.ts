@@ -1,4 +1,4 @@
-import { apiRequest } from "@/helpers/http.adapter";
+import { BaseService, type IApiRequest } from "./base-service";
 import {
   EditUserRole,
   GetUsersResponse,
@@ -7,31 +7,13 @@ import {
   UpdateUserRoleResponse,
 } from "@/types/auth.type";
 
-interface IApiRequest {
-  <T>(url: string, options?: RequestInit): Promise<T>;
-}
-
-export class AuthService {
-  private static API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
-  constructor(private apiRequest: IApiRequest) {
-    if (!AuthService.API_BASE_URL) {
-      throw new Error("NEXT_PUBLIC_API_URL is not defined");
-    }
+export class AuthService extends BaseService {
+  constructor(apiRequest: IApiRequest) {
+    super(apiRequest);
   }
 
-  private constructUrl(endpoint: string): string {
-    return `${AuthService.API_BASE_URL}/api/v1/auth${endpoint}`;
-  }
-
-  private constructOptions(method: string, data?: unknown): RequestInit {
-    return {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: data ? JSON.stringify(data) : undefined,
-    };
+  protected getEndpoint(): string {
+    return "/auth";
   }
 
   public async getAllClerkUsers(): Promise<GetUsersResponse> {
@@ -53,6 +35,3 @@ export class AuthService {
     return this.apiRequest<UpdateUserRoleResponse>(url, options);
   }
 }
-
-// Export an instance of the service for use across the application
-export const authService = new AuthService(apiRequest);
