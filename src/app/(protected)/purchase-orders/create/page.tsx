@@ -4,40 +4,21 @@ import {
   DataTable,
   ShowHideColsumnsProps,
 } from "@/components/custom/data-table";
-import { DataTable as TrackedProductsTable } from "../../warehouse/outgoing-shipments/create/_components/tables/data-table";
-import { FilterSearch } from "@/components/custom/filter-search";
+import { InventoryPagination } from "@/components/custom/data-table-pagination";
 import LoadingSpinner from "@/components/custom/loading-spinner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { PurchaseOrderSummaryProducts } from "@/types";
-import { Supplier } from "@/types/supplier.type";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { InventoryFilters } from "../../inventory/components/feature/filters.component";
 import { useTrackedProducts } from "../../inventory/tracked-products/hooks/useTrackedProducts";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
+import { DataTable as TrackedProductsTable } from "../../warehouse/outgoing-shipments/create/_components/tables/data-table";
+import { useGetPurchaseOrderSummary } from "../hooks";
 import { getAddedProductsColumns, getTrackedProductsColumns } from "./columns";
 import CreateOrderSummary from "./components/create-order-summary";
 import { ProductInOrder } from "./interface/product-added.interface";
-import { useGetPurchaseOrderSummary } from "../hooks";
 
-type PaginationRange = number | "...";
 export interface SupplierItem {
   value: number;
   name: string;
@@ -159,48 +140,6 @@ export default function Page() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Total pages calculation
-  const totalPages = useMemo(() => {
-    if (!trackedProductsQuery.data) return 1; // Valor por defecto si no hay datos
-    return Math.ceil(trackedProductsQuery.data.total / itemsPerPage);
-  }, [trackedProductsQuery.data, itemsPerPage]);
-
-  // Pagination range
-  const paginationRange: PaginationRange[] = useMemo(() => {
-    const delta = 2; // Número de páginas a mostrar a cada lado de la página actual
-    const range: number[] = [];
-    const rangeWithDots: PaginationRange[] = [];
-    let lastNumber: number | null = null;
-
-    for (let i = 1; i <= totalPages; i++) {
-      if (
-        i === 1 || // Primera página siempre
-        i === totalPages || // Última página siempre
-        (i >= currentPage - delta && i <= currentPage + delta) // Páginas cercanas a la actual
-      ) {
-        range.push(i);
-      }
-    }
-
-    for (const page of range) {
-      if (lastNumber !== null) {
-        if (page - lastNumber === 2) {
-          rangeWithDots.push(lastNumber + 1); // Página intermedia
-        } else if (page - lastNumber > 1) {
-          rangeWithDots.push("...");
-        }
-      }
-      rangeWithDots.push(page);
-      lastNumber = page;
-    }
-
-    return rangeWithDots;
-  }, [currentPage, totalPages]);
-
-  const handleSearch = () => {
-    filterByKeyword(searchTerm);
-  };
-
   // Render condicional después de los hooks
   if (trackedProductsQuery.isLoading || suppliersQuery.isLoading) {
     return <LoadingSpinner />;
@@ -209,12 +148,6 @@ export default function Page() {
   if (!trackedProductsQuery.data || !suppliersQuery.data) {
     return <div>Error</div>;
   }
-
-  const formatSuppliers = (suppliers: Supplier[]): SupplierItem[] =>
-    suppliers.map((supplier) => ({
-      name: supplier.supplier_name,
-      value: supplier.id,
-    }));
 
   if (trackedProductsQuery.isLoading) {
     return <LoadingSpinner />;
@@ -226,33 +159,17 @@ export default function Page() {
 
   return (
     <section className="flex flex-col w-full">
-      {/* 1. Search and filter */}
-      <div className="w-fit flex items-center justify-between gap-4">
-        <Input
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSearch();
-            }
-          }}
-          placeholder="Search product"
-          className="w-[200px]"
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-          }}
-        />
-        <Button type="submit" onClick={handleSearch}>
-          {searchTerm !== "" ? "Search" : "Reset"}
-        </Button>
-        <FilterSearch
-          items={formatSuppliers(suppliersQuery.data.data)}
-          value={selectedSupplier}
-          onValueChange={(supplier_id) => {
-            setSelectedSupplier(supplier_id as number);
-            handleFilterBySupplier(supplier_id as number);
-          }}
-        />
-      </div>
+      {/* 1. Filters and search */}
+      <InventoryFilters
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedSupplier={selectedSupplier}
+        onSearch={() => filterByKeyword(searchTerm)}
+        onFilterBySupplier={(supplierId) => {
+          setSelectedSupplier(supplierId);
+          filterBySupplier(supplierId);
+        }}
+      />
 
       {/* 2. Table and pagination */}
       <div
@@ -271,55 +188,13 @@ export default function Page() {
         />
 
         {/* Pagination */}
-        <div className="flex items-center justify-between mt-6">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem className="cursor-pointer">
-                {currentPage > 1 ? (
-                  <PaginationPrevious
-                    onClick={() => changePage(Math.max(1, currentPage - 1))}
-                  />
-                ) : (
-                  <PaginationPrevious isActive={false} />
-                )}
-              </PaginationItem>
-              {paginationRange.map((pageNumber, index) => (
-                <PaginationItem key={index} className="cursor-pointer">
-                  {pageNumber === "..." ? (
-                    <PaginationEllipsis />
-                  ) : (
-                    <PaginationLink
-                      onClick={() => changePage(Number(pageNumber))}
-                      isActive={currentPage === pageNumber}
-                    >
-                      {pageNumber}
-                    </PaginationLink>
-                  )}
-                </PaginationItem>
-              ))}
-              <PaginationItem className="cursor-pointer">
-                <PaginationNext
-                  onClick={() =>
-                    changePage(Math.min(totalPages, currentPage + 1))
-                  }
-                  isActive={currentPage !== totalPages}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-
-          <Select onValueChange={(value) => changeLimit(Number(value))}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Items per page" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">10 per page</SelectItem>
-              <SelectItem value="20">20 per page</SelectItem>
-              <SelectItem value="50">50 per page</SelectItem>
-              <SelectItem value="100">100 per page</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <InventoryPagination
+          currentPage={currentPage}
+          itemsPerPage={itemsPerPage}
+          totalItems={trackedProductsQuery.data?.total || 0}
+          onPageChange={changePage}
+          onLimitChange={changeLimit}
+        />
       </div>
 
       {productsAdded.length > 0 && (
