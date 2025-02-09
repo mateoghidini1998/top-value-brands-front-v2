@@ -1,6 +1,7 @@
 import type { BaseService, IApiRequest } from "./base-service";
 import { InventoryService } from "./inventory-service";
 import { apiRequest } from "@/helpers/http.adapter";
+import { PurchaseOrderService } from "./purchase-order-service";
 
 export class ServiceFactory {
   private static instance: ServiceFactory;
@@ -20,6 +21,16 @@ export class ServiceFactory {
       this.services.set("inventory", new InventoryService(this.apiRequest));
     }
     return this.services.get("inventory") as InventoryService;
+  }
+
+  public getPurchaseOrderService(): PurchaseOrderService {
+    if (!this.services.has("purchaseOrder")) {
+      this.services.set(
+        "purchaseOrder",
+        new PurchaseOrderService(this.apiRequest)
+      );
+    }
+    return this.services.get("purchaseOrder") as PurchaseOrderService;
   }
 
   // Add methods for other services as needed

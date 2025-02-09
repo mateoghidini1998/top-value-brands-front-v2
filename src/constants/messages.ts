@@ -25,6 +25,15 @@ export const ERROR_MESSAGES = {
 
   CREATE_PRODUCT: "Error creating product",
   DELETE_PRODUCT: "Error deleting product",
+  DOWNLOAD_PDF: "Error downloading PDF",
+  UPDATE_ORDER_STATUS: "Error updating order status",
+  CREATE_ORDER: "Error creating order",
+  DELETE_ORDER: "Error deleting order",
+  ADD_PRODUCTS_TO_ORDER: "Error adding products to order",
+  UPDATE_ORDER_NOTES: "Error updating order notes",
+  UPDATE_ORDER_NUMBER: "Error updating order number",
+  UPDATE_ORDER_PRODUCTS: "Error updating order products",
+  UPDATE_PURCHASE_ORDER: "Error updating purchase order",
 } as const;
 
 export const SUCCESS_MESSAGES = {
@@ -54,4 +63,15 @@ export const SUCCESS_MESSAGES = {
 
   CREATE_PRODUCT: "Product created successfully",
   DELETE_PRODUCT: "Product deleted successfully",
+
+  DOWNLOAD_PDF: "PDF downloaded successfully",
+  UPDATE_ORDER_STATUS: "Order status updated successfully",
+
+  CREATE_ORDER: "Order created successfully",
+  DELETE_ORDER: "Order deleted successfully",
+  ADD_PRODUCTS_TO_ORDER: "Products added to order successfully",
+  UPDATE_ORDER_NOTES: "Order notes updated successfully",
+  UPDATE_ORDER_NUMBER: "Order number updated successfully",
+  UPDATE_ORDER_PRODUCTS: "Order products updated successfully",
+  UPDATE_PURCHASE_ORDER: "Purchase order updated successfully",
 } as const;

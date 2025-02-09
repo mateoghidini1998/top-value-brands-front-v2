@@ -1,10 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { getIncomingShipments } from "../actions";
-import { deleteOrder } from "@/app/(protected)/purchase-orders/actions";
 import { toast } from "sonner";
+import { serviceFactory } from "@/services";
 
 export const useIncomingShipments = () => {
+  const purchaseOrderService = serviceFactory.getPurchaseOrderService();
+
   // Obtén la instancia de QueryClient proporcionada por el contexto de React Query
   const queryClient = useQueryClient();
 
@@ -54,7 +56,8 @@ export const useIncomingShipments = () => {
   });
 
   const deleteOrderMutation = useMutation({
-    mutationFn: (orderId: number) => deleteOrder({ orderId }),
+    mutationFn: (orderId: number) =>
+      purchaseOrderService.deleteOrder({ orderId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["incoming-shipments"] });
     },

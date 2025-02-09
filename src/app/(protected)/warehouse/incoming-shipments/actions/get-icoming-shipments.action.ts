@@ -1,5 +1,5 @@
 import { apiRequest } from "@/helpers/http.adapter";
-import { GetPurchaseOrdersResponse } from "@/types";
+import { GetPurchaseOrdersResponse } from "@/types/purchase-orders";
 
 export interface GetIcomingShipmentsProps {
   page?: number;

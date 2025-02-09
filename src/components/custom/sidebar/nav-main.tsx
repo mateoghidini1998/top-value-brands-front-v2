@@ -1,6 +1,5 @@
 "use client";
-
-import { useOrders } from "@/app/(protected)/purchase-orders/hooks";
+import { useGetAllOrders } from "@/app/(protected)/purchase-orders/hooks";
 import {
   Collapsible,
   CollapsibleContent,
@@ -36,7 +35,10 @@ export function NavMain({
   }[];
 }) {
   const path = usePathname();
-  const { createPrefetchOrders } = useOrders();
+  const { createPrefetchOrders } = useGetAllOrders({
+    page: 1,
+    limit: 1,
+  });
 
   const lastPrefetchTime = useRef(0);
 

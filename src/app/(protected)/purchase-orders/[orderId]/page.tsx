@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PurchaseOrderProvider } from "@/contexts/orders.context";
+import { FormatUSD } from "@/helpers";
 import { formatDate } from "@/helpers/format-date";
 import {
   Check,
@@ -16,55 +17,56 @@ import {
   Truck,
   X,
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
+import { DataTable } from "../../warehouse/outgoing-shipments/create/_components/tables/data-table";
+import {
+  useGetPurchaseOrderSummary,
+  useUpdateOrderNotes,
+  useUpdateOrderNumber,
+} from "../hooks";
 import { columns } from "./columns";
 import SaveOrder from "./components/save-order-button";
-import { useOrderSummaryMutations, useOrderSummaryQuery } from "./hooks";
-import Link from "next/link";
-import { DataTable } from "../../warehouse/outgoing-shipments/create/_components/tables/data-table";
-import { FormatUSD } from "@/helpers";
 
 export default function PurchaseOrderPage({
   params,
 }: {
   params: { orderId: string };
 }) {
-  const { data, isLoading, error } = useOrderSummaryQuery(params.orderId);
+  const {
+    ordersSummaryResponse,
+    ordersSummaryIsLoading,
+    ordersSummaryIsError,
+    ordersSummaryError,
+  } = useGetPurchaseOrderSummary(params.orderId);
 
-  const { updateOrderNotes, updateOrderNumber } = useOrderSummaryMutations(
-    params.orderId
-  );
+  const { updateOrderNotesAsync } = useUpdateOrderNotes();
+  const { updateOrderNumberAsync } = useUpdateOrderNumber();
 
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [editedNotes, setEditedNotes] = useState("");
   const [isEditingOrderNumber, setIsEditingOrderNumber] = useState(false);
   const [editedOrderNumber, setEditedOrderNumber] = useState("");
 
-  if (isLoading) {
+  if (ordersSummaryIsLoading) {
     return <LoadingSpinner />;
   }
 
-  if (error) {
+  if (ordersSummaryIsError) {
     return (
       <Alert variant="destructive">
         <AlertDescription>
-          Error loading purchase order: {error.message}
+          Error loading purchase order: {ordersSummaryError?.message}
         </AlertDescription>
       </Alert>
     );
   }
 
-  if (!data) return null;
+  if (!ordersSummaryResponse) return null;
 
-  const {
-    order_number,
-    total_price,
-    updatedAt,
-    supplier_name,
-    // updatedStatusAt,
-    notes,
-  } = data.data.order;
-  const { purchaseOrderProducts } = data.data;
+  const { order_number, total_price, updatedAt, supplier_name, notes } =
+    ordersSummaryResponse.data.order;
+  const { purchaseOrderProducts } = ordersSummaryResponse.data;
 
   // Notes handlers
   const handleEditNotes = () => {
@@ -73,7 +75,7 @@ export default function PurchaseOrderPage({
   };
 
   const handleSaveNotes = () => {
-    updateOrderNotes({
+    updateOrderNotesAsync({
       orderId: params.orderId,
       notes: editedNotes,
     });
@@ -92,7 +94,7 @@ export default function PurchaseOrderPage({
   };
 
   const handleSaveOrderNumber = () => {
-    updateOrderNumber({
+    updateOrderNumberAsync({
       orderId: params.orderId,
       order_number: editedOrderNumber,
     });

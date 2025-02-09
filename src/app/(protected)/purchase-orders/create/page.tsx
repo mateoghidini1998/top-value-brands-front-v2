@@ -32,10 +32,10 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useTrackedProducts } from "../../inventory/tracked-products/hooks/useTrackedProducts";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
-import { useOrderSummaryQuery } from "../[orderId]/hooks";
 import { getAddedProductsColumns, getTrackedProductsColumns } from "./columns";
 import CreateOrderSummary from "./components/create-order-summary";
 import { ProductInOrder } from "./interface/product-added.interface";
+import { useGetPurchaseOrderSummary } from "../hooks";
 
 type PaginationRange = number | "...";
 export interface SupplierItem {
@@ -63,7 +63,9 @@ export default function Page() {
   const { suppliersQuery } = useSuppliers();
   const searchParams = useSearchParams();
   const orderId = searchParams.get("update");
-  const { data } = useOrderSummaryQuery(orderId as string);
+  const { ordersSummaryResponse } = useGetPurchaseOrderSummary(
+    orderId as string
+  );
 
   const transoformProducts = (data: PurchaseOrderSummaryProducts[]) => {
     return data.map((product) => ({
@@ -129,7 +131,7 @@ export default function Page() {
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState<number | null>(
-    data?.data.order.supplier_id ?? null
+    ordersSummaryResponse?.data.order.supplier_id ?? null
   );
 
   const handleFilterBySupplier = (supplier_id: number | null) => {
@@ -143,10 +145,14 @@ export default function Page() {
   useEffect(() => {
     if (orderId) {
       // add the data.data.purchaseOrderProducts to the productsAdded state
-      handleFilterBySupplier(data?.data.order.supplier_id ?? null);
+      handleFilterBySupplier(
+        ordersSummaryResponse?.data.order.supplier_id ?? null
+      );
 
       addTransformedProducts(
-        transoformProducts(data?.data.purchaseOrderProducts ?? []),
+        transoformProducts(
+          ordersSummaryResponse?.data.purchaseOrderProducts ?? []
+        ),
         setProductsAdded
       );
     }
@@ -331,10 +337,10 @@ export default function Page() {
             productsAdded={productsAdded}
             setProductsAdded={setProductsAdded}
             orderNumber={
-              data?.data.order.order_number ||
+              ordersSummaryResponse?.data.order.order_number ||
               "The order number would be automatically generated"
             }
-            notes={data?.data.order.notes || ""}
+            notes={ordersSummaryResponse?.data.order.notes || ""}
             isEditing={!!orderId}
             orderId={orderId || ""}
           />

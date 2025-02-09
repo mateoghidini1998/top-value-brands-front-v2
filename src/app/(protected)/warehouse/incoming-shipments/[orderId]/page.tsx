@@ -1,6 +1,5 @@
 "use client";
-
-import { useOrderSummaryQuery } from "@/app/(protected)/purchase-orders/[orderId]/hooks";
+import { useGetPurchaseOrderSummary } from "@/app/(protected)/purchase-orders/hooks";
 import {
   DataTable,
   ShowHideColsumnsProps,
@@ -43,7 +42,13 @@ export default function Page({
     orderId: string;
   };
 }) {
-  const { data, isLoading, error } = useOrderSummaryQuery(params.orderId);
+  const {
+    ordersSummaryResponse,
+    ordersSummaryIsLoading,
+    ordersSummaryIsError,
+    ordersSummaryError,
+  } = useGetPurchaseOrderSummary(params.orderId);
+
   const { warehouseLocationsQuery } = useWarehouseLocations();
   const [localChanges, setLocalChanges] = useState<
     Record<string, Partial<PurchaseOrderSummaryProducts>>
@@ -67,13 +72,13 @@ export default function Page({
 
   // Combinar datos originales con cambios locales
   const tableData = useMemo(() => {
-    if (!data?.data.purchaseOrderProducts) return [];
+    if (!ordersSummaryResponse?.data.purchaseOrderProducts) return [];
 
-    return data.data.purchaseOrderProducts.map((product) => ({
+    return ordersSummaryResponse.data.purchaseOrderProducts.map((product) => ({
       ...product,
       ...localChanges[product.id],
     }));
-  }, [data?.data.purchaseOrderProducts, localChanges]);
+  }, [ordersSummaryResponse?.data.purchaseOrderProducts, localChanges]);
 
   const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
@@ -118,8 +123,9 @@ export default function Page({
     (rowId: string, value: number) => {
       setLocalChanges((prev) => {
         const quantity_missing =
-          (data?.data.purchaseOrderProducts.find((p) => p.id === Number(rowId))
-            ?.quantity_purchased || 0) - value;
+          (ordersSummaryResponse?.data.purchaseOrderProducts.find(
+            (p) => p.id === Number(rowId)
+          )?.quantity_purchased || 0) - value;
 
         return {
           ...prev,
@@ -133,7 +139,7 @@ export default function Page({
       });
       focusNextInput(rowId, "quantity_received");
     },
-    [data?.data.purchaseOrderProducts, focusNextInput]
+    [ordersSummaryResponse?.data.purchaseOrderProducts, focusNextInput]
   );
 
   const handleUpcChange = useCallback(
@@ -261,26 +267,26 @@ export default function Page({
     );
   };
 
-  if (isLoading) {
+  if (ordersSummaryIsLoading) {
     return <LoadingSpinner />;
   }
 
-  if (error) {
+  if (ordersSummaryIsError) {
     return (
       <Alert variant="destructive">
         <AlertDescription>
-          Error loading purchase order: {error.message}
+          Error loading purchase order: {ordersSummaryError?.message}
         </AlertDescription>
       </Alert>
     );
   }
 
-  if (!data || !tableData.length) return null;
+  if (!ordersSummaryResponse || !tableData.length) return null;
 
   return (
     <div className="py-6 space-y-8">
       <h1 className="text-2xl font-bold">
-        Purchase order {data.data.order.order_number}
+        Purchase order {ordersSummaryResponse.data.order.order_number}
       </h1>
 
       <Tabs
@@ -402,7 +408,7 @@ export default function Page({
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-zinc-400">Purchase Order Number</p>
-                  <p>{data.data.order.order_number}</p>
+                  <p>{ordersSummaryResponse.data.order.order_number}</p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-zinc-400">Date</p>

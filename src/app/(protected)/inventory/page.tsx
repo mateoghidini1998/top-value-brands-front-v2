@@ -34,7 +34,7 @@ export default function InventoryPage() {
   }
 
   return (
-    <div className="">
+    <>
       <InventoryFilters
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -58,6 +58,6 @@ export default function InventoryPage() {
         onPageChange={changePage}
         onLimitChange={changeLimit}
       />
-    </div>
+    </>
   );
 }

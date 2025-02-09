@@ -2,9 +2,9 @@ import NotesCell from "@/components/custom/notes-cell";
 import { StatusType } from "@/components/custom/status-badge";
 import { StatusCell } from "@/components/custom/status-cell";
 import { formatDate } from "@/helpers/format-date";
-import { Order } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import ActionsCell from "./_components/actions-cell";
+import { Order } from "@/types/purchase-orders";
 
 export const columns: ColumnDef<Order>[] = [
   {

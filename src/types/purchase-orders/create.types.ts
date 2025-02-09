@@ -1,6 +1,5 @@
-import { apiRequest } from "@/helpers/http.adapter";
-
-interface CreateOrderRequest {
+// Create Purchase Order Types.
+export interface CreateOrderRequest {
   order_number: string;
   supplier_id: number;
   purchase_order_status_id: number;
@@ -8,18 +7,18 @@ interface CreateOrderRequest {
   notes: string;
 }
 
-interface CreateOrderProduct {
+export interface CreateOrderProduct {
   product_id: number;
   product_cost: number;
   quantity: number;
 }
 
-interface CreateOrderResponse {
+export interface CreateOrderResponse {
   success: boolean;
   data: Data;
 }
 
-interface Data {
+export interface Data {
   id: number;
   order_number: string;
   supplier_id: number;
@@ -33,7 +32,7 @@ interface Data {
   purchaseOrderProducts: PurchaseOrderProduct[];
 }
 
-interface PurchaseOrderProduct {
+export interface PurchaseOrderProduct {
   id: number;
   purchase_order_id: number;
   product_id: number;
@@ -52,18 +51,3 @@ interface PurchaseOrderProduct {
   createdAt: Date;
   updatedAt: Date;
 }
-
-export const createOrder = (
-  order: CreateOrderRequest
-): Promise<CreateOrderResponse> => {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/purchaseorders`;
-  const options: RequestInit = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(order),
-  };
-
-  return apiRequest<CreateOrderResponse>(url, options);
-};

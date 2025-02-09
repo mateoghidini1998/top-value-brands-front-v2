@@ -1,12 +1,11 @@
-import { toast } from "sonner";
-import { useOrders } from "../../hooks/useOrders";
-import { ProductInOrder } from "../interface/product-added.interface";
-import generateId from "../utils/generate-po-id";
+import { FormatUSD } from "@/helpers";
+import { ProductsToAdd } from "@/types/purchase-orders/add-products-to-order.types";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
-import { useOrderSummaryMutations } from "../../[orderId]/hooks";
-import { ProductsToAdd } from "../../[orderId]/actions";
-import { FormatUSD } from "@/helpers";
+import { toast } from "sonner";
+import { useCreateOrder, useUpdatePurchaseOrder } from "../../hooks";
+import { ProductInOrder } from "../interface/product-added.interface";
+import generateId from "../utils/generate-po-id";
 
 interface CreateOrderSummaryProps {
   productsAdded: ProductInOrder[];
@@ -25,8 +24,8 @@ export default function CreateOrderSummary({
   isEditing = false,
   orderId = "",
 }: CreateOrderSummaryProps) {
-  const { createOrderMutation } = useOrders();
-  const { updatePurchaseOrderAsync } = useOrderSummaryMutations(orderNumber);
+  const { createOrderAsync, isCreatingOrder } = useCreateOrder();
+  const { updatePurchaseOrderAsync } = useUpdatePurchaseOrder();
 
   const [orderNotes, setOrderNotes] = useState<string>(notes);
 
@@ -40,20 +39,19 @@ export default function CreateOrderSummary({
         return;
       }
 
-      await createOrderMutation
-        .mutateAsync({
-          products: productsAdded.map((product) => {
-            return {
-              product_id: product.product_id,
-              quantity: product.quantity,
-              product_cost: product.product_cost,
-            };
-          }),
-          order_number: generateId(productsAdded[0].supplier_name),
-          supplier_id: parseInt(productsAdded[0].supplier_id),
-          purchase_order_status_id: 1,
-          notes: orderNotes,
-        })
+      await createOrderAsync({
+        products: productsAdded.map((product) => {
+          return {
+            product_id: product.product_id,
+            quantity: product.quantity,
+            product_cost: product.product_cost,
+          };
+        }),
+        order_number: generateId(productsAdded[0].supplier_name),
+        supplier_id: parseInt(productsAdded[0].supplier_id),
+        purchase_order_status_id: 1,
+        notes: orderNotes,
+      })
         .then(() => {
           localStorage.removeItem("productsAdded");
           setOrderNotes("");
@@ -87,7 +85,7 @@ export default function CreateOrderSummary({
           setOrderNotes("");
           setProductsAdded([]);
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           console.error("Error creating order:", error);
         });
     }
@@ -141,7 +139,7 @@ export default function CreateOrderSummary({
             />
           </div>
           <div className="flex gap-2 items-center justify-between">
-            {createOrderMutation.isPending ? (
+            {isCreatingOrder ? (
               <span className="flex items-center justify-center w-[240px]">
                 <LoaderCircle className="animate-spin " />
               </span>

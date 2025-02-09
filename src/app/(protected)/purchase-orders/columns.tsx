@@ -1,13 +1,13 @@
 import { StatusCell } from "@/components/custom/status-cell";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/helpers/format-date";
-import { Order } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { ActionsCell } from "./components";
 import { StatusType } from "@/components/custom/status-badge";
 import NotesCell from "@/components/custom/notes-cell";
 import { ArrowUpDown } from "lucide-react";
 import { FormatUSD } from "@/helpers";
+import { Order } from "@/types/purchase-orders";
 
 export const getColumns = (
   handleOrderBy: (key: string) => void

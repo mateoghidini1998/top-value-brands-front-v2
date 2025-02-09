@@ -23,26 +23,24 @@ import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useOrders } from "../hooks/useOrders";
+import { useDeleteOrder } from "../hooks";
 
 interface ActionsCellProps {
   orderId: number;
 }
 
 const ActionsCell = ({ orderId }: ActionsCellProps) => {
-  const { deleteOrderMutation } = useOrders();
+  const { deleteOrderAsync } = useDeleteOrder();
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
 
   const handleDeleteOrder = async () => {
     if (orderToDelete) {
       try {
-        await deleteOrderMutation.mutateAsync(orderToDelete).then(() => {
-          toast.success("Order deleted successfully");
+        await deleteOrderAsync({ orderId: orderToDelete }).then(() => {
+          setOrderToDelete(0);
         });
-        setOrderToDelete(0);
       } catch (error) {
         console.error("Failed to delete order:", error);
-        toast.error("Failed to delete order");
       }
     }
   };
