@@ -12,7 +12,7 @@ interface OrdersTableProps {
 
 const showColumns: ShowHideColsumnsProps = {
   show: true,
-  styles: "absolute left-[550px] top-[-31.5px]",
+  styles: "absolute left-[820px] top-[-31.5px]",
 };
 
 export function OrdersTable({ orders, onOrderBy }: OrdersTableProps) {
