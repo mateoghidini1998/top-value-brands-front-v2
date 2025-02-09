@@ -3,6 +3,9 @@ import { useState } from "react";
 import { getPallets, GetPalletById } from "../actions";
 import { toast } from "sonner";
 import { deletePallet } from "../actions/delete-pallet.action";
+import updatePalletLocation, {
+  UpdatePalletLocationProps,
+} from "../actions/update-location.action";
 
 export const usePallets = (palletId?: string) => {
   const queryClient = useQueryClient();
@@ -122,6 +125,21 @@ export const usePallets = (palletId?: string) => {
     },
   });
 
+  const updatePalletLocationMutation = useMutation({
+    mutationFn: (data: UpdatePalletLocationProps) => updatePalletLocation(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pallets"] });
+      queryClient.invalidateQueries({ queryKey: ["pallet", palletId] });
+      queryClient.invalidateQueries({ queryKey: ["warehouse-locations"] });
+      // toast success the msg reponse from the api
+      toast.success("Pallet location updated");
+    },
+    onError(error: Error) {
+      console.error(error);
+      toast.error(error.message);
+    },
+  });
+
   return {
     palletsQuery,
     palletByIdQuery,
@@ -131,6 +149,7 @@ export const usePallets = (palletId?: string) => {
     changePage,
     changeLimit,
     deletePalletMutation,
+    updatePalletLocationMutation,
     currentPage: filters.page,
     itemsPerPage: filters.limit,
   };
