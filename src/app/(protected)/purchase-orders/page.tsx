@@ -1,5 +1,5 @@
 "use client";
-import { InventoryPagination } from "@/components/custom/data-table-pagination";
+import { DataTablePagination } from "@/components/custom/data-table-pagination";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { useState } from "react";
 import { OrdersFilters } from "./components/features/filters.component";
@@ -58,7 +58,7 @@ export default function Page() {
 
       <OrdersTable orders={ordersResponse?.data || []} onOrderBy={orderBy} />
 
-      <InventoryPagination
+      <DataTablePagination
         currentPage={currentPage}
         itemsPerPage={itemsPerPage}
         totalItems={ordersResponse?.total || 0}

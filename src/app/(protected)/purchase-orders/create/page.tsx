@@ -4,7 +4,7 @@ import {
   DataTable,
   ShowHideColsumnsProps,
 } from "@/components/custom/data-table";
-import { InventoryPagination } from "@/components/custom/data-table-pagination";
+import { DataTablePagination } from "@/components/custom/data-table-pagination";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { useSearchParams } from "next/navigation";
@@ -188,7 +188,7 @@ export default function Page() {
         />
 
         {/* Pagination */}
-        <InventoryPagination
+        <DataTablePagination
           currentPage={currentPage}
           itemsPerPage={itemsPerPage}
           totalItems={trackedProductsQuery.data?.total || 0}

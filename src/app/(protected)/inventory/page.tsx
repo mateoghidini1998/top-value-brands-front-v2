@@ -5,7 +5,7 @@ import { useGetAllProducts } from "./hooks/inventory-service.hook";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { InventoryFilters } from "./components/feature/filters.component";
 import { InventoryTable } from "./components/feature/products-list.component";
-import { InventoryPagination } from "@/components/custom/data-table-pagination";
+import { DataTablePagination } from "@/components/custom/data-table-pagination";
 
 export default function InventoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -51,7 +51,7 @@ export default function InventoryPage() {
         onOrderBy={orderBy}
       />
 
-      <InventoryPagination
+      <DataTablePagination
         currentPage={currentPage}
         itemsPerPage={itemsPerPage}
         totalItems={productResponse?.total || 0}
