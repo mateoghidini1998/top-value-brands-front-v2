@@ -80,7 +80,7 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
 
     prefetchTimeout.current = setTimeout(() => {
       prefetchOrderSummary(orderId.toString());
-    }, 500); // Adjust delay as needed (500ms)
+    }, 200); // Adjust delay as needed (500ms)
   };
 
   const handleCancelPrefetch = () => {
