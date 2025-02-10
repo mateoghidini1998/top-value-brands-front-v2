@@ -18,6 +18,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FormatUSD } from "@/helpers";
 import { formatDate } from "@/helpers/format-date";
+import { generateQrCode, printQrCode } from "@/lib/qr-code";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -58,7 +59,7 @@ export default function Page({
     []
   );
 
-  const { updateIncomingOrderProducts, createPallet } =
+  const { updateIncomingOrderProducts, createPalletAsync } =
     useIncomingShipmentsMutations(params.orderId);
 
   const [productsAddedToCreatePallet, setProductsAddedToCreatePallet] =
@@ -218,9 +219,8 @@ export default function Page({
     });
   };
 
-  console.log(missingFields);
-
-  const handleSavePallets = () => {
+  const handleSavePallets = async () => {
+    let palletId = null;
     if (productsAddedToCreatePallet.length === 0) {
       toast.error("No products added");
       return;
@@ -239,7 +239,7 @@ export default function Page({
       throw new Error("No valid products to create a pallet");
     }
 
-    createPallet({
+    createPalletAsync({
       warehouse_location_id: Number(warehouseLocation),
       pallet_number: Number(palletNumber),
       purchase_order_id: Number(params.orderId), // Asegúrate de incluir este campo
@@ -247,11 +247,31 @@ export default function Page({
         purchaseorderproduct_id: Number(prod.purchase_order_product_id),
         quantity: Number(prod.pallet_quantity),
       })),
+    }).then((res) => {
+      if (res) {
+        // @ts-expect-error @typescript-eslint/no-unsafe-member-access
+        palletId = res.id;
+      }
     });
 
     setProductsAddedToCreatePallet([]);
     setPalletNumber(Math.floor(Math.random() * 10000000).toString());
     setWarehouseLocation(0);
+
+    const PALLET_URL = `${process.env.NEXT_PUBLIC_FRONT_URL}/warehouse/storage/${palletId}`;
+
+    await generateQrCode(PALLET_URL).then((data) => {
+      if (data) {
+        printQrCode(
+          data,
+          palletNumber,
+          ordersSummaryResponse?.data.order.order_number ||
+            "Sorry, an error ocurred :("
+        );
+      } else {
+        toast.error("Sorry, an error ocurred while generating the QR code :(");
+      }
+    });
   };
 
   const handleUpdatePalletQuantity = (
