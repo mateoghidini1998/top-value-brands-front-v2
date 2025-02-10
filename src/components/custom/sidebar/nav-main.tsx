@@ -30,24 +30,19 @@ interface NavMainProps {
       url: string;
     }[];
   }[];
-  prefetchOrders: () => Promise<void>;
 }
 
-export function NavMain({ items, prefetchOrders }: NavMainProps) {
+export function NavMain({ items }: NavMainProps) {
   const path = usePathname();
 
-  const presetData = useCallback(
-    (item: string) => {
-      if (
-        item.toLowerCase().includes("purchase") ||
-        item.toLowerCase().includes("order")
-      ) {
-        console.log(`Prefetching ${item}...`);
-        prefetchOrders();
-      }
-    },
-    [prefetchOrders]
-  );
+  const presetData = useCallback((item: string) => {
+    if (
+      item.toLowerCase().includes("purchase") ||
+      item.toLowerCase().includes("order")
+    ) {
+      console.log(`Prefetching ${item}...`);
+    }
+  }, []);
 
   return (
     <SidebarGroup>
