@@ -1,5 +1,4 @@
 "use client";
-import { useGetAllOrders } from "@/app/(protected)/purchase-orders/hooks";
 import {
   Collapsible,
   CollapsibleContent,
@@ -18,11 +17,9 @@ import {
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 
-export function NavMain({
-  items,
-}: {
+interface NavMainProps {
   items: {
     title: string;
     url: string;
@@ -33,29 +30,19 @@ export function NavMain({
       url: string;
     }[];
   }[];
-}) {
+  prefetchOrders: () => Promise<void>;
+}
+
+export function NavMain({ items, prefetchOrders }: NavMainProps) {
   const path = usePathname();
-  const { createPrefetchOrders } = useGetAllOrders({
-    page: 1,
-    limit: 1,
-  });
-
-  const lastPrefetchTime = useRef(0);
-
-  const prefetchOrders = useCallback(() => {
-    const now = Date.now();
-
-    // Solo permite el prefetch si han pasado al menos 5 segundos desde el último
-    if (now - lastPrefetchTime.current > 5000) {
-      lastPrefetchTime.current = now;
-      createPrefetchOrders()();
-    }
-  }, [createPrefetchOrders]);
 
   const presetData = useCallback(
-    (title: string) => {
-      if (title === "Purchase Orders") {
-        console.log("prefetching...");
+    (item: string) => {
+      if (
+        item.toLowerCase().includes("purchase") ||
+        item.toLowerCase().includes("order")
+      ) {
+        console.log(`Prefetching ${item}...`);
         prefetchOrders();
       }
     },
@@ -90,7 +77,7 @@ export function NavMain({
                     {item.items?.map((subItem) => (
                       <SidebarMenuSubItem
                         key={subItem.title}
-                        onMouseEnter={() => presetData(item.title)}
+                        onMouseEnter={() => presetData(subItem.title)}
                       >
                         <SidebarMenuSubButton asChild>
                           <Link href={subItem.url}>
@@ -104,16 +91,18 @@ export function NavMain({
               </SidebarMenuItem>
             </Collapsible>
           ) : (
-            <SidebarMenuButton
-              onMouseEnter={() => presetData(item.title)}
-              tooltip={item.title}
-              key={index}
-            >
-              {item.icon && <item.icon />}
-              <Link className="w-full" href={item.url}>
-                {item.title}
-              </Link>
-            </SidebarMenuButton>
+            <SidebarMenuItem key={index}>
+              <SidebarMenuButton
+                asChild
+                tooltip={item.title}
+                onMouseEnter={() => presetData(item.title)}
+              >
+                <Link href={item.url}>
+                  {item.icon && <item.icon />}
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           )
         )}
       </SidebarMenu>

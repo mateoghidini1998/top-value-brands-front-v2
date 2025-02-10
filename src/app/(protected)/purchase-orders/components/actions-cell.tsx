@@ -1,5 +1,18 @@
 "use client";
 
+import { useRef, useState } from "react";
+import Link from "next/link";
+import { MoreHorizontal } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,20 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { toast } from "sonner";
-import { useDeleteOrder } from "../hooks";
+import { useDeleteOrder, usePrefetchOrderSummary } from "../hooks";
 
 interface ActionsCellProps {
   orderId: number;
@@ -31,6 +31,7 @@ interface ActionsCellProps {
 
 const ActionsCell = ({ orderId }: ActionsCellProps) => {
   const { deleteOrderAsync } = useDeleteOrder();
+  const { prefetchOrderSummary } = usePrefetchOrderSummary();
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
 
   const handleDeleteOrder = async () => {
@@ -70,11 +71,34 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
     }
   };
 
+  const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const handlePrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+
+    prefetchTimeout.current = setTimeout(() => {
+      prefetchOrderSummary(orderId.toString());
+    }, 500); // Adjust delay as needed (500ms)
+  };
+
+  const handleCancelPrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+  };
+
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0"
+            onMouseEnter={handlePrefetch}
+            onMouseLeave={handleCancelPrefetch}
+          >
             <span className="sr-only">Open menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>

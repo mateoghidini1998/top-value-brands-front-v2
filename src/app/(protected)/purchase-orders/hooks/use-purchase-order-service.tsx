@@ -19,13 +19,13 @@ import {
 import { AddProductsToOrderProps } from "@/types/purchase-orders/add-products-to-order.types";
 import { DeleteOrderProductProps } from "@/types/purchase-orders/delete-products-form-order.types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useCallback, useMemo } from "react";
 
 const purchaseOrderService = serviceFactory.getPurchaseOrderService();
 
 export const useGetAllOrders = (initialParams: GetOrdersProps) => {
   const queryClient = useQueryClient();
-  const [filters, setFilters] = useState<GetOrdersProps>(initialParams);
+  const filters = useMemo(() => initialParams, [initialParams]);
 
   const { data, isLoading, isError, error, refetch } = useQuery<
     GetPurchaseOrdersResponse,
@@ -37,66 +37,17 @@ export const useGetAllOrders = (initialParams: GetOrdersProps) => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  const filterBySupplier = (supplier_id: number | null) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      supplier: supplier_id ? supplier_id.toString() : "",
-      page: 1,
-      limit: 50,
-    }));
-    queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
-  };
+  const prefetchOrders = useCallback(async () => {
+    const cachedData = queryClient.getQueryData([QUERY_KEYS.ORDERS, filters]);
 
-  const filterByStatus = (status_id: number | null) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      status: status_id ? status_id.toString() : "",
-      page: 1,
-      limit: 50,
-    }));
-    queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
-  };
-
-  const filterByKeyword = (keyword: string) => {
-    setFilters((prev) => ({ ...prev, keyword, page: 1, limit: 50 }));
-    queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
-  };
-
-  const orderBy = (orderBy: string) => {
-    setFilters((prev) => {
-      const newOrderWay =
-        orderBy === prev.orderBy
-          ? prev.orderWay === "ASC"
-            ? "DESC"
-            : "ASC"
-          : "DESC";
-      return { ...prev, orderBy, orderWay: newOrderWay };
-    });
-  };
-
-  const changePage = (page: number) => {
-    setFilters((prev) => ({ ...prev, page }));
-  };
-
-  const changeLimit = (limit: number) => {
-    setFilters((prev) => ({ ...prev, limit, page: 1 }));
-  };
-
-  const createPrefetchOrders = () => {
-    return async () => {
-      const isFetching = queryClient.isFetching({
+    if (!cachedData) {
+      await queryClient.prefetchQuery({
         queryKey: [QUERY_KEYS.ORDERS, filters],
+        queryFn: () => purchaseOrderService.getOrders(filters),
+        staleTime: 1000 * 60 * 10, // Cache for 10 minutes
       });
-
-      if (!isFetching) {
-        await queryClient.prefetchQuery({
-          queryKey: [QUERY_KEYS.ORDERS, filters],
-          queryFn: () => purchaseOrderService.getOrders(filters),
-          staleTime: 1000 * 60 * 10, // Cache for 10 minutes
-        });
-      }
-    };
-  };
+    }
+  }, [queryClient, filters]);
 
   return {
     ordersResponse: data,
@@ -104,15 +55,7 @@ export const useGetAllOrders = (initialParams: GetOrdersProps) => {
     ordersIsError: isError,
     ordersErrorMessage: error?.message,
     ordersRefetch: refetch,
-    filterBySupplier,
-    filterByStatus,
-    filterByKeyword,
-    orderBy,
-    changePage,
-    changeLimit,
-    currentPage: filters.page || 1,
-    itemsPerPage: filters.limit || 50,
-    createPrefetchOrders,
+    prefetchOrders,
   };
 };
 
@@ -238,6 +181,20 @@ export const useGetPurchaseOrderSummary = (orderId: string) => {
     ordersSummaryError: error,
     ordersSummaryRefetch: refetch,
   };
+};
+
+export const usePrefetchOrderSummary = () => {
+  const queryClient = useQueryClient();
+
+  const prefetchOrderSummary = (orderId: string) => {
+    queryClient.prefetchQuery({
+      queryKey: [QUERY_KEYS.ORDER_SUMMARY, orderId],
+      queryFn: () => purchaseOrderService.getPurchaseOrderSummary({ orderId }),
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+  };
+
+  return { prefetchOrderSummary };
 };
 
 export const useUpdateOrderNotes = () => {
