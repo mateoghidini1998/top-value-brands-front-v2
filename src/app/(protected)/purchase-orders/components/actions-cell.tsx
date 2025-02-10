@@ -34,6 +34,18 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
   const { prefetchOrderSummary } = usePrefetchOrderSummary();
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
 
+  const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const handlePrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+
+    prefetchTimeout.current = setTimeout(() => {
+      prefetchOrderSummary(orderId.toString());
+    }, 200); // Adjust delay as needed (500ms)
+  };
+
   const handleDeleteOrder = async () => {
     if (orderToDelete) {
       try {
@@ -69,18 +81,6 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
       console.error("Error downloading PDF:", error);
       toast.error("Failed to download PDF");
     }
-  };
-
-  const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
-
-  const handlePrefetch = () => {
-    if (prefetchTimeout.current) {
-      clearTimeout(prefetchTimeout.current);
-    }
-
-    prefetchTimeout.current = setTimeout(() => {
-      prefetchOrderSummary(orderId.toString());
-    }, 200); // Adjust delay as needed (500ms)
   };
 
   const handleCancelPrefetch = () => {

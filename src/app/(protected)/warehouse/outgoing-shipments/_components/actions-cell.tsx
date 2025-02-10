@@ -21,9 +21,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useShipmentMutations } from "../hooks/useShipmentMutation";
 import { toast } from "sonner";
+import { usePrefetchShipmentByID } from "../[shipmentId]/hooks/useShipmentQuery";
 
 interface ActionsCellProps {
   shipmentId: number;
@@ -32,6 +33,21 @@ interface ActionsCellProps {
 const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
   const [shipmentToDelete, setShipmentToDelete] = useState<number>(0);
   const { deleteShipmentAsync } = useShipmentMutations();
+  const { prefetchShipmentByID } = usePrefetchShipmentByID(
+    shipmentId.toString()
+  );
+
+  const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const handlePrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+
+    prefetchTimeout.current = setTimeout(() => {
+      prefetchShipmentByID();
+    }, 200); // Adjust delay as needed (500ms)
+  };
 
   const handleDeleteShipment = async () => {
     if (shipmentToDelete) {
@@ -44,7 +60,6 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
     }
   };
 
-  //TODO: Add download 2d workflow
   const handleDownload2DWorkflow = async (id: number) => {
     try {
       const response = await fetch(
@@ -85,7 +100,12 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0"
+            onMouseEnter={handlePrefetch}
+            onMouseLeave={handlePrefetch}
+          >
             <span className="sr-only">Open menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>
