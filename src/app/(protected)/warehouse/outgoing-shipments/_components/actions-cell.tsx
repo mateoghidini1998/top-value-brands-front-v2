@@ -49,6 +49,12 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
     }, 200); // Adjust delay as needed (500ms)
   };
 
+  const handleCancelPrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+  };
+
   const handleDeleteShipment = async () => {
     if (shipmentToDelete) {
       try {
@@ -104,7 +110,7 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
             variant="ghost"
             className="h-8 w-8 p-0"
             onMouseEnter={handlePrefetch}
-            onMouseLeave={handlePrefetch}
+            onMouseLeave={handleCancelPrefetch}
           >
             <span className="sr-only">Open menu</span>
             <MoreHorizontal className="h-4 w-4" />

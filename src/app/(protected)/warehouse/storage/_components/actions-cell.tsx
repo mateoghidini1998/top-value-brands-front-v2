@@ -21,9 +21,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { useDeletePallet } from "../hooks/use-pallets-service";
+import {
+  useDeletePallet,
+  usePrefetchPalletByID,
+} from "../hooks/use-pallets-service";
 
 interface ActionsCellProps {
   palletId: number;
@@ -32,6 +35,25 @@ interface ActionsCellProps {
 const ActionsCell = ({ palletId }: ActionsCellProps) => {
   const { deletePalletAsync } = useDeletePallet(palletId);
   const [palletToDelete, setPalletToDelete] = useState<number>(0);
+  const { prefetchPalletByID } = usePrefetchPalletByID(palletId.toString());
+
+  const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const handlePrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+
+    prefetchTimeout.current = setTimeout(() => {
+      prefetchPalletByID();
+    }, 200);
+  };
+
+  const handleCancelPrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+  };
 
   const handleDeleteOrder = async () => {
     if (palletToDelete) {
@@ -51,7 +73,12 @@ const ActionsCell = ({ palletId }: ActionsCellProps) => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0"
+            onMouseEnter={handlePrefetch}
+            onMouseLeave={handleCancelPrefetch}
+          >
             <span className="sr-only">Open menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>

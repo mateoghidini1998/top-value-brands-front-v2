@@ -46,6 +46,12 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
     }, 200); // Adjust delay as needed (500ms)
   };
 
+  const handleCancelPrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+  };
+
   const handleDeleteOrder = async () => {
     if (orderToDelete) {
       try {
@@ -80,12 +86,6 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
     } catch (error) {
       console.error("Error downloading PDF:", error);
       toast.error("Failed to download PDF");
-    }
-  };
-
-  const handleCancelPrefetch = () => {
-    if (prefetchTimeout.current) {
-      clearTimeout(prefetchTimeout.current);
     }
   };
 
