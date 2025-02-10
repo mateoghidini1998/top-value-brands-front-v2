@@ -26,6 +26,7 @@ type QrCodeDialogProps = {
   open?: boolean;
   orderNumber: string;
   classNames?: string;
+  warehouseLocation: string;
 };
 
 export function QrCodeDialog({
@@ -34,6 +35,7 @@ export function QrCodeDialog({
   open = false,
   orderNumber,
   classNames,
+  warehouseLocation,
 }: QrCodeDialogProps) {
   const [src, setSrc] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(open ?? false);
@@ -49,7 +51,7 @@ export function QrCodeDialog({
   };
 
   const handlePrintQrCode = () => {
-    printQrCode(src, palletNumber, orderNumber);
+    printQrCode(src, palletNumber, orderNumber, warehouseLocation);
   };
 
   const handleCreatePDF = () => {

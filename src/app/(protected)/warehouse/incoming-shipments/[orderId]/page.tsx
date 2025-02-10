@@ -66,6 +66,8 @@ export default function Page({
     useState<PurchaseOrderSummaryProducts[]>([]);
 
   const [warehouseLocation, setWarehouseLocation] = useState<number>(0);
+  const [warehouseLocationName, setWarehouseLocationName] =
+    useState<string>("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [palletNumber, setPalletNumber] = useState<string>(
     Math.floor(Math.random() * 10000000).toString()
@@ -266,7 +268,8 @@ export default function Page({
           data,
           palletNumber,
           ordersSummaryResponse?.data.order.order_number ||
-            "Sorry, an error ocurred :("
+            "Sorry, an error ocurred :(",
+          warehouseLocationName
         );
       } else {
         toast.error("Sorry, an error ocurred while generating the QR code :(");
@@ -394,9 +397,14 @@ export default function Page({
                 <div className="space-y-2">
                   <p className="text-sm text-zinc-400">Warehouse Location</p>
                   <Select
-                    onValueChange={(value) =>
-                      setWarehouseLocation(Number(value))
-                    }
+                    onValueChange={(value) => {
+                      setWarehouseLocation(Number(value));
+                      setWarehouseLocationName(
+                        warehouseLocationsQuery.data?.data.find(
+                          (location) => location.id === Number(value)
+                        )?.location || ""
+                      );
+                    }}
                     value={warehouseLocation.toString()}
                   >
                     <SelectTrigger className="w-52 bg-zinc-800 border-zinc-700">
