@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --watch --coverage --detectOpenHandles"
+    "test": "jest --all --watch --coverage --detectOpenHandles"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.9.5",
