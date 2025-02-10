@@ -19,11 +19,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FormatUSD } from "@/helpers";
 import { formatDate } from "@/helpers/format-date";
 import { generateQrCode, printQrCode } from "@/lib/qr-code";
-import { PurchaseOrderSummaryProducts } from "@/types";
+import { PurchaseOrderSummaryProducts, WarehouseLocation } from "@/types";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { useWarehouseLocations } from "../../storage/hooks/useWarehouseLocations";
-import { useIncomingShipmentsMutations } from "../hooks/useIncomingShipmentsMutation";
+import { useCreatePallet } from "../../storage/hooks/use-pallets-service";
+import { useWarehouseLocations } from "../../storage/hooks/use-warehouse-locations-service";
+import { useUpdateIncomingOrderProducts } from "../hooks/use-incoming-orders-service";
 import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
 
 const showColumns: ShowHideColsumnsProps = {
@@ -50,7 +51,7 @@ export default function Page({
     ordersSummaryError,
   } = useGetPurchaseOrderSummary(params.orderId);
 
-  const { warehouseLocationsQuery } = useWarehouseLocations();
+  const { getWarehouseLocations } = useWarehouseLocations();
   const [localChanges, setLocalChanges] = useState<
     Record<string, Partial<PurchaseOrderSummaryProducts>>
   >({});
@@ -59,9 +60,8 @@ export default function Page({
     []
   );
 
-  const { updateIncomingOrderProducts, createPalletAsync } =
-    useIncomingShipmentsMutations(params.orderId);
-
+  const { updateIncomingOrderProductsAsync } = useUpdateIncomingOrderProducts();
+  const { createPalletAsync } = useCreatePallet();
   const [productsAddedToCreatePallet, setProductsAddedToCreatePallet] =
     useState<PurchaseOrderSummaryProducts[]>([]);
 
@@ -215,7 +215,7 @@ export default function Page({
       return;
     }
 
-    updateIncomingOrderProducts({
+    updateIncomingOrderProductsAsync({
       orderId: Number(params.orderId),
       incomingOrderProductUpdates: updatedProducts,
     });
@@ -400,8 +400,9 @@ export default function Page({
                     onValueChange={(value) => {
                       setWarehouseLocation(Number(value));
                       setWarehouseLocationName(
-                        warehouseLocationsQuery.data?.data.find(
-                          (location) => location.id === Number(value)
+                        getWarehouseLocations.data?.data.find(
+                          (location: WarehouseLocation) =>
+                            location.id === Number(value)
                         )?.location || ""
                       );
                     }}
@@ -416,21 +417,23 @@ export default function Page({
                           <p>{"Floor"}</p>
                         </div>
                       </SelectItem>
-                      {warehouseLocationsQuery.data?.data.map((location) => {
-                        return (
-                          location.id !== 11 && (
-                            <SelectItem
-                              className="w-full"
-                              key={location.id}
-                              value={location.id.toString()}
-                            >
-                              <div className="w-full flex items-center justify-between">
-                                <p>{location.location}</p>
-                              </div>
-                            </SelectItem>
-                          )
-                        );
-                      })}
+                      {getWarehouseLocations.data?.data.map(
+                        (location: WarehouseLocation) => {
+                          return (
+                            location.id !== 11 && (
+                              <SelectItem
+                                className="w-full"
+                                key={location.id}
+                                value={location.id.toString()}
+                              >
+                                <div className="w-full flex items-center justify-between">
+                                  <p>{location.location}</p>
+                                </div>
+                              </SelectItem>
+                            )
+                          );
+                        }
+                      )}
                     </SelectContent>
                   </Select>
                 </div>

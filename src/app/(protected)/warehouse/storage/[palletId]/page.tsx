@@ -1,20 +1,19 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { usePallets } from "../hooks";
 import { PalletInfo } from "./_components/pallet-info";
 import { columns } from "./columns";
 import { DataTable } from "../../outgoing-shipments/create/_components/tables/data-table";
+import { useGetPalletById } from "../hooks/use-pallets-service";
 
 export default function PalletDetailsPage({
   params,
 }: {
   params: { palletId: string };
 }) {
-  const { palletByIdQuery } = usePallets(params.palletId);
-  const { data: pallet, error } = palletByIdQuery;
+  const { pallet, palletIsError } = useGetPalletById(params.palletId);
 
-  if (error) {
+  if (palletIsError) {
     return (
       <div className="container mx-auto p-6">
         <Alert variant="destructive">

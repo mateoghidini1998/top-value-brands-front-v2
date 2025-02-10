@@ -23,20 +23,20 @@ import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
-import { usePallets } from "../hooks";
+import { useDeletePallet } from "../hooks/use-pallets-service";
 
 interface ActionsCellProps {
   palletId: number;
 }
 
 const ActionsCell = ({ palletId }: ActionsCellProps) => {
-  const { deletePalletMutation } = usePallets();
+  const { deletePalletAsync } = useDeletePallet(palletId);
   const [palletToDelete, setPalletToDelete] = useState<number>(0);
 
   const handleDeleteOrder = async () => {
     if (palletToDelete) {
       try {
-        await deletePalletMutation.mutateAsync(palletToDelete).then(() => {
+        await deletePalletAsync(palletToDelete.toString()).then(() => {
           toast.success("Pallet deleted successfully");
         });
         setPalletToDelete(0);

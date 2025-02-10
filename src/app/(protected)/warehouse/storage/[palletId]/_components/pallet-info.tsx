@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { formatDate } from "@/helpers/format-date";
-import { GetPalletByIDResponse } from "@/types";
+import { GetPalletByIDResponse, WarehouseLocation } from "@/types";
 import {
   Calendar,
   Check,
@@ -18,16 +18,18 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
-import { usePallets } from "../../hooks";
-import { useWarehouseLocations } from "../../hooks/useWarehouseLocations";
+import { useUpdatePalletLocation } from "../../hooks/use-pallets-service";
+import { useWarehouseLocations } from "../../hooks/use-warehouse-locations-service";
 
 interface PalletInfoProps {
   pallet: GetPalletByIDResponse;
 }
 
 export function PalletInfo({ pallet }: PalletInfoProps) {
-  const { warehouseLocationsQuery } = useWarehouseLocations();
-  const { updatePalletLocationMutation } = usePallets(pallet.id.toString());
+  const { getWarehouseLocations } = useWarehouseLocations();
+  const { updatePalletLocationAsync } = useUpdatePalletLocation(
+    pallet.id.toString()
+  );
 
   const [isEditingLocation, setIsEditingLocation] = useState(false);
 
@@ -41,7 +43,7 @@ export function PalletInfo({ pallet }: PalletInfoProps) {
   };
 
   const handleSaveLocation = () => {
-    updatePalletLocationMutation.mutate({
+    updatePalletLocationAsync({
       palletId: pallet.id,
       warehouseLocationId: location.location_id,
     });
@@ -122,21 +124,23 @@ export function PalletInfo({ pallet }: PalletInfoProps) {
                     <p>{"Floor"}</p>
                   </div>
                 </SelectItem>
-                {warehouseLocationsQuery.data?.data.map((location) => {
-                  return (
-                    location.id !== 11 && (
-                      <SelectItem
-                        className="w-full"
-                        key={location.id}
-                        value={location.id.toString()}
-                      >
-                        <div className="w-full flex items-center justify-between">
-                          <p>{location.location}</p>
-                        </div>
-                      </SelectItem>
-                    )
-                  );
-                })}
+                {getWarehouseLocations.data?.data.map(
+                  (location: WarehouseLocation) => {
+                    return (
+                      location.id !== 11 && (
+                        <SelectItem
+                          className="w-full"
+                          key={location.id}
+                          value={location.id.toString()}
+                        >
+                          <div className="w-full flex items-center justify-between">
+                            <p>{location.location}</p>
+                          </div>
+                        </SelectItem>
+                      )
+                    );
+                  }
+                )}
               </SelectContent>
             </Select>
           ) : (

@@ -4,35 +4,18 @@ import {
   DataTable,
   ShowHideColsumnsProps,
 } from "@/components/custom/data-table";
+import { DataTablePagination } from "@/components/custom/data-table-pagination";
 import { FilterSearch } from "@/components/custom/filter-search";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { WarehouseLocation } from "@/types";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { getColumns } from "./columns";
-import { usePallets } from "./hooks";
-import { useWarehouseLocations } from "./hooks/useWarehouseLocations";
-
-type PaginationRange = number | "...";
+import { useGetAllPallets } from "./hooks/use-pallets-service";
+import { useWarehouseLocations } from "./hooks/use-warehouse-locations-service";
 export interface SupplierItem {
   value: number;
   name: string;
@@ -45,71 +28,38 @@ const showColumns: ShowHideColsumnsProps = {
 
 export default function Page() {
   const {
-    palletsQuery,
-    filterByWarehouseLocation,
+    palletsResponse,
+    filterByLocation,
+    palletsIsLoading,
+    // palletsError,
+    // palletsIsError,
     filterByPalletNumber,
     orderBy,
     changePage,
     changeLimit,
     currentPage,
     itemsPerPage,
-  } = usePallets();
+  } = useGetAllPallets({
+    page: 1,
+    limit: 50,
+  });
 
-  const { warehouseLocationsQuery } = useWarehouseLocations(false);
+  const { getWarehouseLocations } = useWarehouseLocations(false);
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
     null
   );
-
-  // Total pages calculation
-  const totalPages = useMemo(() => {
-    if (!palletsQuery.data) return 1; // Valor por defecto si no hay datos
-    return Math.ceil(palletsQuery.data.total / itemsPerPage);
-  }, [palletsQuery.data, itemsPerPage]);
-
-  // Pagination range
-  const paginationRange: PaginationRange[] = useMemo(() => {
-    const delta = 2; // Número de páginas a mostrar a cada lado de la página actual
-    const range: number[] = [];
-    const rangeWithDots: PaginationRange[] = [];
-    let lastNumber: number | null = null;
-
-    for (let i = 1; i <= totalPages; i++) {
-      if (
-        i === 1 || // Primera página siempre
-        i === totalPages || // Última página siempre
-        (i >= currentPage - delta && i <= currentPage + delta) // Páginas cercanas a la actual
-      ) {
-        range.push(i);
-      }
-    }
-
-    for (const page of range) {
-      if (lastNumber !== null) {
-        if (page - lastNumber === 2) {
-          rangeWithDots.push(lastNumber + 1); // Página intermedia
-        } else if (page - lastNumber > 1) {
-          rangeWithDots.push("...");
-        }
-      }
-      rangeWithDots.push(page);
-      lastNumber = page;
-    }
-
-    return rangeWithDots;
-  }, [currentPage, totalPages]);
-
   const handleSearch = () => {
     filterByPalletNumber(searchTerm);
   };
 
-  if (palletsQuery.isLoading) {
+  if (palletsIsLoading) {
     return <LoadingSpinner />;
   }
 
-  if (!palletsQuery.data) {
+  if (!palletsResponse) {
     return <div>Error</div>;
   }
 
@@ -122,7 +72,7 @@ export default function Page() {
     }));
 
   const handleFilterByWarehouseLocation = (location_id: number | null) => {
-    filterByWarehouseLocation(location_id);
+    filterByLocation(location_id);
   };
 
   const handleOrderBy = (columnId: string) => {
@@ -151,8 +101,8 @@ export default function Page() {
           </Button>
           <FilterSearch
             items={
-              warehouseLocationsQuery.data
-                ? formatWarehouseLocations(warehouseLocationsQuery.data.data)
+              getWarehouseLocations.data
+                ? formatWarehouseLocations(getWarehouseLocations.data.data)
                 : []
             }
             value={selectedLocationId}
@@ -175,62 +125,20 @@ export default function Page() {
       </div>
 
       <DataTable
-        data={palletsQuery.data.data}
+        data={palletsResponse.data}
         columns={getColumns(handleOrderBy)}
-        dataLength={palletsQuery.data.total}
+        dataLength={palletsResponse.total}
         showHideColumns={showColumns}
       />
 
       {/* Pagination */}
-      <div className="flex items-center justify-between mt-6">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem className="cursor-pointer">
-              {currentPage > 1 ? (
-                <PaginationPrevious
-                  onClick={() => changePage(Math.max(1, currentPage - 1))}
-                />
-              ) : (
-                <PaginationPrevious isActive={false} />
-              )}
-            </PaginationItem>
-            {paginationRange.map((pageNumber, index) => (
-              <PaginationItem key={index} className="cursor-pointer">
-                {pageNumber === "..." ? (
-                  <PaginationEllipsis />
-                ) : (
-                  <PaginationLink
-                    onClick={() => changePage(Number(pageNumber))}
-                    isActive={currentPage === pageNumber}
-                  >
-                    {pageNumber}
-                  </PaginationLink>
-                )}
-              </PaginationItem>
-            ))}
-            <PaginationItem className="cursor-pointer">
-              <PaginationNext
-                onClick={() =>
-                  changePage(Math.min(totalPages, currentPage + 1))
-                }
-                isActive={currentPage !== totalPages}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-
-        <Select onValueChange={(value) => changeLimit(Number(value))}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Items per page" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="10">10 per page</SelectItem>
-            <SelectItem value="20">20 per page</SelectItem>
-            <SelectItem value="50">50 per page</SelectItem>
-            <SelectItem value="100">100 per page</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <DataTablePagination
+        currentPage={currentPage}
+        itemsPerPage={itemsPerPage}
+        totalItems={palletsResponse.total}
+        onPageChange={changePage}
+        onLimitChange={changeLimit}
+      />
     </>
   );
 }
