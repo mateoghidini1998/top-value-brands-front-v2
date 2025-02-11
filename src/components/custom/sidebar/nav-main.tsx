@@ -1,4 +1,5 @@
 "use client";
+import { usePrefetchGetTrackedProducts } from "@/app/(protected)/inventory/tracked-products/hooks";
 import { usePrefetchGetAllOrders } from "@/app/(protected)/purchase-orders/hooks";
 import {
   Collapsible,
@@ -36,6 +37,7 @@ interface NavMainProps {
 export function NavMain({ items }: NavMainProps) {
   const path = usePathname();
   const { prefetchGetAllOrders } = usePrefetchGetAllOrders();
+  const { prefetchGetTrackedProducts } = usePrefetchGetTrackedProducts();
 
   const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -48,6 +50,8 @@ export function NavMain({ items }: NavMainProps) {
         case "All POs":
           prefetchGetAllOrders();
           break;
+        case "Create PO":
+          prefetchGetTrackedProducts();
       }
     }, 100);
   };
