@@ -1,4 +1,5 @@
 "use client";
+import { usePrefetchGetAllOrders } from "@/app/(protected)/purchase-orders/hooks";
 import {
   Collapsible,
   CollapsibleContent,
@@ -17,7 +18,7 @@ import {
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback } from "react";
+import { useRef } from "react";
 
 interface NavMainProps {
   items: {
@@ -34,15 +35,28 @@ interface NavMainProps {
 
 export function NavMain({ items }: NavMainProps) {
   const path = usePathname();
+  const { prefetchGetAllOrders } = usePrefetchGetAllOrders();
 
-  const presetData = useCallback((item: string) => {
-    if (
-      item.toLowerCase().includes("purchase") ||
-      item.toLowerCase().includes("order")
-    ) {
-      console.log(`Prefetching ${item}...`);
+  const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const handlePrefetch = (title: string) => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
     }
-  }, []);
+    prefetchTimeout.current = setTimeout(() => {
+      switch (title) {
+        case "All POs":
+          prefetchGetAllOrders();
+          break;
+      }
+    }, 100);
+  };
+
+  const handleCancelPrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+  };
 
   return (
     <SidebarGroup>
@@ -60,7 +74,8 @@ export function NavMain({ items }: NavMainProps) {
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton
                     tooltip={item.title}
-                    onMouseEnter={() => presetData(item.title)}
+                    onMouseEnter={() => handlePrefetch(item.title)}
+                    onMouseLeave={handleCancelPrefetch}
                   >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
@@ -72,7 +87,8 @@ export function NavMain({ items }: NavMainProps) {
                     {item.items?.map((subItem) => (
                       <SidebarMenuSubItem
                         key={subItem.title}
-                        onMouseEnter={() => presetData(subItem.title)}
+                        onMouseEnter={() => handlePrefetch(subItem.title)}
+                        onMouseLeave={handleCancelPrefetch}
                       >
                         <SidebarMenuSubButton asChild>
                           <Link href={subItem.url}>
@@ -90,7 +106,8 @@ export function NavMain({ items }: NavMainProps) {
               <SidebarMenuButton
                 asChild
                 tooltip={item.title}
-                onMouseEnter={() => presetData(item.title)}
+                onMouseEnter={() => handlePrefetch(item.title)}
+                onMouseLeave={() => handleCancelPrefetch()}
               >
                 <Link href={item.url}>
                   {item.icon && <item.icon />}

@@ -99,6 +99,24 @@ export const useGetAllOrders = (initialParams: GetOrdersProps) => {
   };
 };
 
+export const usePrefetchGetAllOrders = () => {
+  const queryClient = useQueryClient();
+
+  const prefetchGetAllOrders = () => {
+    queryClient.prefetchQuery({
+      queryKey: [QUERY_KEYS.ORDERS],
+      queryFn: () =>
+        purchaseOrderService.getOrders({
+          page: 1,
+          limit: 50,
+        }),
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+  };
+
+  return { prefetchGetAllOrders };
+};
+
 // Hook for creating a new order
 export const useCreateOrder = () => {
   const createOrder = useCreateMutation<CreateOrderRequest>({
