@@ -115,7 +115,11 @@ export const useCreatePallet = () => {
     mutationFn: (data: CreatePalletProps) => palletsService.createPallet(data),
     successMessage: SUCCESS_MESSAGES.CREATE_PALLET,
     errorMessage: ERROR_MESSAGES.CREATE_PALLET,
-    invalidateKeys: [[QUERY_KEYS.PALLETS], [QUERY_KEYS.ORDER_SUMMARY]],
+    invalidateKeys: [
+      [QUERY_KEYS.PALLETS],
+      [QUERY_KEYS.ORDER_SUMMARY],
+      ["pallet-products"],
+    ],
   });
 
   return {
@@ -148,7 +152,7 @@ export const useDeletePallet = (palletId: number) => {
     mutationFn: () => palletsService.deletePallet(palletId),
     successMessage: SUCCESS_MESSAGES.DELETE_PRODUCT,
     errorMessage: ERROR_MESSAGES.DELETE_PRODUCT,
-    invalidateKeys: [[QUERY_KEYS.PALLETS]],
+    invalidateKeys: [[QUERY_KEYS.PALLETS], [QUERY_KEYS.ORDER_SUMMARY]],
   });
 
   return {
