@@ -22,7 +22,6 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { toast } from "sonner";
 import {
   useDeletePallet,
   usePrefetchPalletByID,
@@ -58,13 +57,10 @@ const ActionsCell = ({ palletId }: ActionsCellProps) => {
   const handleDeleteOrder = async () => {
     if (palletToDelete) {
       try {
-        await deletePalletAsync(palletToDelete.toString()).then(() => {
-          toast.success("Pallet deleted successfully");
-        });
+        await deletePalletAsync(palletToDelete.toString());
         setPalletToDelete(0);
       } catch (error) {
         console.error("Failed to delete pallet:", error);
-        toast.error("Failed to delete pallet");
       }
     }
   };

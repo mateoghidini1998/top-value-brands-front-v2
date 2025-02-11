@@ -150,8 +150,8 @@ export const useUpdatePalletLocation = (palletId: string) => {
 export const useDeletePallet = (palletId: number) => {
   const deletePallet = useCreateMutation<string>({
     mutationFn: () => palletsService.deletePallet(palletId),
-    successMessage: SUCCESS_MESSAGES.DELETE_PRODUCT,
-    errorMessage: ERROR_MESSAGES.DELETE_PRODUCT,
+    successMessage: SUCCESS_MESSAGES.DELETE_PALLET,
+    errorMessage: ERROR_MESSAGES.DELETE_PALLET,
     invalidateKeys: [[QUERY_KEYS.PALLETS], [QUERY_KEYS.ORDER_SUMMARY]],
   });
 

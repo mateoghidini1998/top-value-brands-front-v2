@@ -34,6 +34,7 @@ export const ERROR_MESSAGES = {
   UPDATE_ORDER_NUMBER: "Error updating order number",
   UPDATE_ORDER_PRODUCTS: "Error updating order products",
   UPDATE_PURCHASE_ORDER: "Error updating purchase order",
+  DELETE_PALLET: "Error deleting pallet",
 } as const;
 
 export const SUCCESS_MESSAGES = {
@@ -74,4 +75,5 @@ export const SUCCESS_MESSAGES = {
   UPDATE_ORDER_NUMBER: "Order number updated successfully",
   UPDATE_ORDER_PRODUCTS: "Order products updated successfully",
   UPDATE_PURCHASE_ORDER: "Purchase order updated successfully",
+  DELETE_PALLET: "Pallet deleted successfully",
 } as const;
