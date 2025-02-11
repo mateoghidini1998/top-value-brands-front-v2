@@ -30,6 +30,9 @@ export default function ProductCostCell({
     const newValue = Number.parseFloat(e.target.value);
     setProductCost(newValue);
     checkDecimalPlaces(newValue);
+    updateProduct(productId, {
+      product_cost: newValue.toString(),
+    });
   };
 
   const checkDecimalPlaces = (cost: number) => {

@@ -180,7 +180,6 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
     header: "Sellable Qty",
 
     cell: ({ row }) => {
-      console.log(row.original);
       const quantity_purchased = row.original.quantity_purchased;
       return (
         <QuantityCell

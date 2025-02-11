@@ -100,7 +100,10 @@ export const useUpdateIncomingOrderProducts = () => {
         incomingOrderService.updateIncomingOrderProducts(props),
       successMessage: SUCCESS_MESSAGES.UPDATE_ORDER_PRODUCTS,
       errorMessage: ERROR_MESSAGES.UPDATE_ORDER_PRODUCTS,
-      invalidateKeys: [[QUERY_KEYS.INCOMING_SHIPMENTS]],
+      invalidateKeys: [
+        [QUERY_KEYS.INCOMING_SHIPMENTS],
+        [QUERY_KEYS.ORDER_SUMMARY],
+      ],
     });
 
   return {

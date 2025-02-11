@@ -10,7 +10,7 @@ export class IncomingOrdersService extends BaseService {
     super(apiRequest);
   }
   protected getEndpoint(): string {
-    return "/purchaseorders/incoming-shipments";
+    return "/purchaseorders";
   }
 
   public async getIncomingOrders({
@@ -32,7 +32,7 @@ export class IncomingOrdersService extends BaseService {
       orderWay,
     }).toString();
 
-    const url = this.constructUrl(`?${queryParams}`);
+    const url = this.constructUrl(`/incoming-shipments?${queryParams}`);
     return this.apiRequest<GetPurchaseOrdersResponse>(url);
   }
 
@@ -40,7 +40,7 @@ export class IncomingOrdersService extends BaseService {
     orderId,
     incomingOrderProductUpdates,
   }: UpdateIncomingOrderProductsProps) {
-    const url = this.constructUrl(`/${orderId}`);
+    const url = this.constructUrl(`/update-incoming-order/${orderId}`);
     const options = this.constructOptions("PATCH", {
       incomingOrderProductUpdates,
     });
