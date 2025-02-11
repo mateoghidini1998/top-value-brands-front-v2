@@ -11,13 +11,13 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { InventoryFilters } from "../../inventory/components/feature/filters.component";
-import { useTrackedProducts } from "../../inventory/tracked-products/hooks/useTrackedProducts";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
 import { DataTable as TrackedProductsTable } from "../../warehouse/outgoing-shipments/create/_components/tables/data-table";
 import { useGetPurchaseOrderSummary } from "../hooks";
 import { getAddedProductsColumns, getTrackedProductsColumns } from "./columns";
 import CreateOrderSummary from "./components/create-order-summary";
 import { ProductInOrder } from "./interface/product-added.interface";
+import { useGetTrackedProducts } from "../../inventory/tracked-products/hooks";
 
 export interface SupplierItem {
   value: number;
@@ -31,15 +31,20 @@ const showColumns: ShowHideColsumnsProps = {
 
 export default function Page() {
   const {
-    trackedProductsQuery,
-    filterBySupplier,
-    filterByKeyword,
+    trackedProductsResponse,
+    trackedProductsIsLoading,
+    trackedProductsIsError,
     orderBy,
+    filterByKeyword,
+    filterBySupplier,
     changePage,
     changeLimit,
-    currentPage,
     itemsPerPage,
-  } = useTrackedProducts();
+    currentPage,
+  } = useGetTrackedProducts({
+    page: 1,
+    limit: 50,
+  });
 
   const { suppliersQuery } = useSuppliers();
   const searchParams = useSearchParams();
@@ -141,19 +146,19 @@ export default function Page() {
   }, []);
 
   // Render condicional después de los hooks
-  if (trackedProductsQuery.isLoading || suppliersQuery.isLoading) {
+  if (trackedProductsIsLoading || suppliersQuery.isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (!trackedProductsQuery.data || !suppliersQuery.data) {
+  if (!trackedProductsResponse || !suppliersQuery.data) {
     return <div>Error</div>;
   }
 
-  if (trackedProductsQuery.isLoading) {
-    return <LoadingSpinner />;
+  if (trackedProductsIsError || suppliersQuery.isError) {
+    return <div>Error</div>;
   }
 
-  if (!trackedProductsQuery.data) {
+  if (!trackedProductsResponse) {
     return <div>Error</div>;
   }
 
@@ -180,7 +185,7 @@ export default function Page() {
         }`}
       >
         <DataTable
-          data={trackedProductsQuery.data.data}
+          data={trackedProductsResponse?.data}
           columns={getTrackedProductsColumns(setProductsAdded, handleOrderBy)}
           dataLength={50}
           scrolleable={true}
@@ -191,7 +196,7 @@ export default function Page() {
         <DataTablePagination
           currentPage={currentPage}
           itemsPerPage={itemsPerPage}
-          totalItems={trackedProductsQuery.data?.total || 0}
+          totalItems={trackedProductsResponse.total || 0}
           onPageChange={changePage}
           onLimitChange={changeLimit}
         />

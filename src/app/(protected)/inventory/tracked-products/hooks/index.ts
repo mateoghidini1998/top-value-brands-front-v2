@@ -1,1 +1,1 @@
-export * from "./useTrackedProducts";
+export * from "./use-tracked-product-service";
