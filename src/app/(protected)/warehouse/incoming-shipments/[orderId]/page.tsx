@@ -23,7 +23,7 @@ import { PurchaseOrderSummaryProducts, WarehouseLocation } from "@/types";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useCreatePallet } from "../../storage/hooks/use-pallets-service";
-import { useWarehouseLocations } from "../../storage/hooks/use-warehouse-locations-service";
+import { useWarehouseAvailableLocations } from "../../storage/hooks/use-warehouse-locations-service";
 import { useUpdateIncomingOrderProducts } from "../hooks/use-incoming-orders-service";
 import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
 
@@ -51,7 +51,7 @@ export default function Page({
     ordersSummaryError,
   } = useGetPurchaseOrderSummary(params.orderId);
 
-  const { getWarehouseLocations } = useWarehouseLocations();
+  const { getWarehouseAvailableLocations } = useWarehouseAvailableLocations();
   const [localChanges, setLocalChanges] = useState<
     Record<string, Partial<PurchaseOrderSummaryProducts>>
   >({});
@@ -400,7 +400,7 @@ export default function Page({
                     onValueChange={(value) => {
                       setWarehouseLocation(Number(value));
                       setWarehouseLocationName(
-                        getWarehouseLocations.data?.data.find(
+                        getWarehouseAvailableLocations.data?.data.find(
                           (location: WarehouseLocation) =>
                             location.id === Number(value)
                         )?.location || ""
@@ -417,7 +417,7 @@ export default function Page({
                           <p>{"Floor"}</p>
                         </div>
                       </SelectItem>
-                      {getWarehouseLocations.data?.data.map(
+                      {getWarehouseAvailableLocations.data?.data.map(
                         (location: WarehouseLocation) => {
                           return (
                             location.id !== 11 && (

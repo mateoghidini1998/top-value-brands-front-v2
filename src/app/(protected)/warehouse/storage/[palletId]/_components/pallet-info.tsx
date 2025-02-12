@@ -19,14 +19,14 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useUpdatePalletLocation } from "../../hooks/use-pallets-service";
-import { useWarehouseLocations } from "../../hooks/use-warehouse-locations-service";
+import { useWarehouseAvailableLocations } from "../../hooks/use-warehouse-locations-service";
 
 interface PalletInfoProps {
   pallet: GetPalletByIDResponse;
 }
 
 export function PalletInfo({ pallet }: PalletInfoProps) {
-  const { getWarehouseLocations } = useWarehouseLocations();
+  const { getWarehouseAvailableLocations } = useWarehouseAvailableLocations();
   const { updatePalletLocationAsync } = useUpdatePalletLocation(
     pallet.id.toString()
   );
@@ -124,7 +124,7 @@ export function PalletInfo({ pallet }: PalletInfoProps) {
                     <p>{"Floor"}</p>
                   </div>
                 </SelectItem>
-                {getWarehouseLocations.data?.data.map(
+                {getWarehouseAvailableLocations.data?.data.map(
                   (location: WarehouseLocation) => {
                     return (
                       location.id !== 11 && (

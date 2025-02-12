@@ -118,7 +118,8 @@ export const useCreatePallet = () => {
     invalidateKeys: [
       [QUERY_KEYS.PALLETS],
       [QUERY_KEYS.ORDER_SUMMARY],
-      ["pallet-products"],
+      [QUERY_KEYS.PALLET_PRODUCTS],
+      [QUERY_KEYS.WAREHOUSE_AVAILABLE_LOCATIONS],
     ],
   });
 
@@ -136,7 +137,11 @@ export const useUpdatePalletLocation = (palletId: string) => {
       palletsService.updatePalletLocation(data),
     successMessage: SUCCESS_MESSAGES.UPDATE_PRODUCTS,
     errorMessage: ERROR_MESSAGES.UPDATE_PRODUCTS,
-    invalidateKeys: [[QUERY_KEYS.PALLET, palletId], [QUERY_KEYS.PALLETS]],
+    invalidateKeys: [
+      [QUERY_KEYS.PALLET, palletId],
+      [QUERY_KEYS.PALLETS],
+      [QUERY_KEYS.WAREHOUSE_AVAILABLE_LOCATIONS],
+    ],
   });
 
   return {
@@ -152,7 +157,11 @@ export const useDeletePallet = (palletId: number) => {
     mutationFn: () => palletsService.deletePallet(palletId),
     successMessage: SUCCESS_MESSAGES.DELETE_PALLET,
     errorMessage: ERROR_MESSAGES.DELETE_PALLET,
-    invalidateKeys: [[QUERY_KEYS.PALLETS], [QUERY_KEYS.ORDER_SUMMARY]],
+    invalidateKeys: [
+      [QUERY_KEYS.PALLETS],
+      [QUERY_KEYS.ORDER_SUMMARY],
+      [QUERY_KEYS.WAREHOUSE_AVAILABLE_LOCATIONS],
+    ],
   });
 
   return {

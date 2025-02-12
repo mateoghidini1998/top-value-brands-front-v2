@@ -11,7 +11,7 @@ export const useOutgoingShipmentsMutations = () => {
     successMessage: SUCCESS_MESSAGES.CHECK_SHIPMENT_PRODUCT,
     invalidateKeys: [
       [QUERY_KEYS.SHIPMENTS],
-      [QUERY_KEYS.WAREHOUSE_LOCATIONS],
+      [QUERY_KEYS.WAREHOUSE_AVAILABLE_LOCATIONS],
       [QUERY_KEYS.PALLET_PRODUCTS],
       [QUERY_KEYS.PALLETS],
       [QUERY_KEYS.PALLET],

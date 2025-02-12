@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { getColumns } from "./columns";
 import { useGetAllPallets } from "./hooks/use-pallets-service";
-import { useWarehouseLocations } from "./hooks/use-warehouse-locations-service";
+import { useWarehouseUnavailableLocations } from "./hooks/use-warehouse-locations-service";
 export interface SupplierItem {
   value: number;
   name: string;
@@ -31,8 +31,6 @@ export default function Page() {
     palletsResponse,
     filterByLocation,
     palletsIsLoading,
-    // palletsError,
-    // palletsIsError,
     filterByPalletNumber,
     orderBy,
     changePage,
@@ -44,7 +42,8 @@ export default function Page() {
     limit: 50,
   });
 
-  const { getWarehouseLocations } = useWarehouseLocations(false);
+  const { getWarehouseUnavailableLocations } =
+    useWarehouseUnavailableLocations();
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -101,8 +100,10 @@ export default function Page() {
           </Button>
           <FilterSearch
             items={
-              getWarehouseLocations.data
-                ? formatWarehouseLocations(getWarehouseLocations.data.data)
+              getWarehouseUnavailableLocations.data
+                ? formatWarehouseLocations(
+                    getWarehouseUnavailableLocations.data.data
+                  )
                 : []
             }
             value={selectedLocationId}
