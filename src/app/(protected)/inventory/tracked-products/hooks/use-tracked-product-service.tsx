@@ -80,14 +80,12 @@ export const useGetTrackedProducts = (
 export const usePrefetchGetTrackedProducts = () => {
   const queryClient = useQueryClient();
 
-  const prefetchGetTrackedProducts = () => {
+  const prefetchGetTrackedProducts = (
+    initialParams: GetTrackedProductsProps
+  ) => {
     queryClient.prefetchQuery({
-      queryKey: [QUERY_KEYS.TRACKED_PRODUCTS],
-      queryFn: () =>
-        trackedProductService.getTrackedProducts({
-          page: 1,
-          limit: 50,
-        }),
+      queryKey: [QUERY_KEYS.TRACKED_PRODUCTS, initialParams],
+      queryFn: () => trackedProductService.getTrackedProducts(initialParams),
       staleTime: 1000 * 60 * 5, // 5 minutes
     });
   };

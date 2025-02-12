@@ -54,7 +54,10 @@ export function NavMain({ items }: NavMainProps) {
           });
           break;
         case "Create PO":
-          prefetchGetTrackedProducts();
+          prefetchGetTrackedProducts({
+            page: 1,
+            limit: 50,
+          });
       }
     }, 100);
   };
