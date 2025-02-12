@@ -2,6 +2,7 @@ import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/constants";
 import { useCreateMutation } from "@/hooks/mutation-factory";
 import { serviceFactory } from "@/services";
 import {
+  ChangeUserPasswordProps,
   EditUserRole,
   GetUsersResponse,
   RegisterRequest,
@@ -45,4 +46,21 @@ export const useUpdateUserRole = () => {
     errorMessage: ERROR_MESSAGES.UPDATE_USER_ROLE,
     invalidateKeys: [[QUERY_KEYS.CLERK_USERS]], // Invalidate user list after role update
   });
+};
+
+export const useChangeUserPassword = () => {
+  const changePassword = useCreateMutation<ChangeUserPasswordProps>({
+    mutationFn: (data: ChangeUserPasswordProps) =>
+      authService.changeUserPassword(data),
+    successMessage: SUCCESS_MESSAGES.CHANGE_USER_PASSWORD,
+    errorMessage: ERROR_MESSAGES.CHANGE_USER_PASSWORD,
+    invalidateKeys: [[QUERY_KEYS.CLERK_USERS]], // Invalidate user list after password change
+  });
+
+  return {
+    changePassword,
+    isChangingPassword: changePassword.isPending,
+    passwordChangeError: changePassword.error,
+    passwordChangeSuccess: changePassword.isSuccess,
+  };
 };

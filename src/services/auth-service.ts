@@ -1,5 +1,7 @@
 import { BaseService, type IApiRequest } from "./base-service";
 import {
+  ChangeUserPasswordProps,
+  ChangeUserPasswordResponse,
   EditUserRole,
   GetUsersResponse,
   RegisterRequest,
@@ -33,5 +35,18 @@ export class AuthService extends BaseService {
     const url = this.constructUrl(`/${data.userId}`);
     const options = this.constructOptions("PATCH", { role: data.role });
     return this.apiRequest<UpdateUserRoleResponse>(url, options);
+  }
+
+  public async changeUserPassword({
+    userId,
+    currentPassword,
+    newPassword,
+  }: ChangeUserPasswordProps) {
+    const url = this.constructUrl(`/${userId}/change-password`);
+    const options = this.constructOptions("PATCH", {
+      currentPassword,
+      newPassword,
+    });
+    return this.apiRequest<ChangeUserPasswordResponse>(url, options);
   }
 }

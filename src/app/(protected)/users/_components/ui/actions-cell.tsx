@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -25,8 +27,10 @@ import {
 } from "@/components/ui/select";
 import type { GetUsersData } from "@/types/auth.type";
 import { MoreHorizontal } from "lucide-react";
-import { useState } from "react";
-import { useUpdateUserRole } from "../../hooks/auth-service.hook";
+import {
+  useChangeUserPassword,
+  useUpdateUserRole,
+} from "../../hooks/use-auth-service.hook";
 
 interface ActionsCellProps {
   row: GetUsersData;
@@ -34,8 +38,13 @@ interface ActionsCellProps {
 
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(row.role);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const updateUserRole = useUpdateUserRole();
+  const { changePassword, isChangingPassword, passwordChangeError } =
+    useChangeUserPassword();
 
   const handleRoleUpdate = async () => {
     try {
@@ -45,6 +54,22 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
       console.error("Failed to update user role:", error);
     }
   };
+
+  const handlePasswordChange = async () => {
+    try {
+      await changePassword.mutateAsync({
+        userId: row.id,
+        currentPassword,
+        newPassword,
+      });
+      setIsPasswordDialogOpen(false);
+      setCurrentPassword("");
+      setNewPassword("");
+    } catch (error) {
+      console.error("Failed to change password:", error);
+    }
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -56,20 +81,12 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          {/* <DropdownMenuItem
-            onClick={() => navigator.clipboard.writeText(row.id)}
-          >
-            Copy user ID
-          </DropdownMenuItem> */}
-          {/* <DropdownMenuSeparator /> */}
           <DropdownMenuItem onClick={() => setIsRoleDialogOpen(true)}>
             Update Role
           </DropdownMenuItem>
-          {/* <DropdownMenuItem
-            onClick={() => alert(`View details for ${row.username}`)}
-          >
-            View Details
-          </DropdownMenuItem> */}
+          <DropdownMenuItem onClick={() => setIsPasswordDialogOpen(true)}>
+            Reset Password
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -102,6 +119,57 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
               disabled={updateUserRole.isPending}
             >
               {updateUserRole.isPending ? "Updating..." : "Update Role"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={isPasswordDialogOpen}
+        onOpenChange={setIsPasswordDialogOpen}
+      >
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Reset Password</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="currentPassword" className="text-right">
+                Current Password
+              </Label>
+              <Input
+                id="currentPassword"
+                type="password"
+                className="col-span-3"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="newPassword" className="text-right">
+                New Password
+              </Label>
+              <Input
+                id="newPassword"
+                type="password"
+                className="col-span-3"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+          </div>
+          {passwordChangeError && (
+            <p className="text-red-500 text-sm">
+              {passwordChangeError.message}
+            </p>
+          )}
+          <DialogFooter>
+            <Button
+              type="submit"
+              onClick={handlePasswordChange}
+              disabled={isChangingPassword}
+            >
+              {isChangingPassword ? "Changing..." : "Change Password"}
             </Button>
           </DialogFooter>
         </DialogContent>
