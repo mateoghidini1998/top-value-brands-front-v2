@@ -64,8 +64,6 @@ export const UpdateRoleDialog = ({
   const roles = [
     { value: "warehouse", label: "Warehouse" },
     { value: "admin", label: "Admin" },
-    { value: "manager", label: "Manager" },
-    { value: "support", label: "Support" },
   ];
 
   return (
