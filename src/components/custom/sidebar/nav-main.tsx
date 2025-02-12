@@ -48,7 +48,10 @@ export function NavMain({ items }: NavMainProps) {
     prefetchTimeout.current = setTimeout(() => {
       switch (title) {
         case "All POs":
-          prefetchGetAllOrders();
+          prefetchGetAllOrders({
+            page: 1,
+            limit: 50,
+          });
           break;
         case "Create PO":
           prefetchGetTrackedProducts();

@@ -102,14 +102,10 @@ export const useGetAllOrders = (initialParams: GetOrdersProps) => {
 export const usePrefetchGetAllOrders = () => {
   const queryClient = useQueryClient();
 
-  const prefetchGetAllOrders = () => {
+  const prefetchGetAllOrders = (filters: GetOrdersProps) => {
     queryClient.prefetchQuery({
-      queryKey: [QUERY_KEYS.ORDERS],
-      queryFn: () =>
-        purchaseOrderService.getOrders({
-          page: 1,
-          limit: 50,
-        }),
+      queryKey: [QUERY_KEYS.ORDERS, filters],
+      queryFn: () => purchaseOrderService.getOrders(filters),
       staleTime: 1000 * 60 * 5, // 5 minutes
     });
   };
