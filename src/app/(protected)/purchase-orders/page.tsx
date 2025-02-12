@@ -11,6 +11,13 @@ export interface SupplierItem {
   name: string;
 }
 
+const PURCHASE_ORDER_STATUSES = [
+  { name: "Rejected", value: 1 },
+  { name: "Pending", value: 2 },
+  { name: "Good to go", value: 3 },
+  { name: "Waiting for supplier approval", value: 8 },
+];
+
 export default function Page() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
@@ -54,6 +61,7 @@ export default function Page() {
           setSelectedStatus(statusId);
           filterByStatus(statusId);
         }}
+        possibleStatuses={PURCHASE_ORDER_STATUSES}
       />
 
       <OrdersTable orders={ordersResponse?.data || []} onOrderBy={orderBy} />

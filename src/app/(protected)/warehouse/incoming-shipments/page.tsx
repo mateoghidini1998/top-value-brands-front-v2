@@ -11,6 +11,14 @@ export interface SupplierItem {
   value: number;
   name: string;
 }
+
+const INCOMING_ORDER_STATUSES = [
+  { name: "Cancelled", value: 4 },
+  { name: "In transit", value: 5 },
+  { name: "Arrived", value: 6 },
+  { name: "Closed", value: 7 },
+];
+
 export default function Page() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
@@ -58,6 +66,7 @@ export default function Page() {
           setSelectedStatus(statusId);
           filterByStatus(statusId);
         }}
+        possibleStatuses={INCOMING_ORDER_STATUSES}
       />
 
       <IncomingOrdersTable orders={incomingOrdersResponse?.data || []} />

@@ -14,18 +14,8 @@ interface OrdersFiltersProps {
   onFilterBySupplier: (supplierId: number | null) => void;
   selectedStatus: number | null;
   onFilterByStatus: (statusId: number | null) => void;
+  possibleStatuses: { name: string; value: number }[];
 }
-
-const PURCHASE_ORDER_STATUSES = [
-  { name: "Rejected", value: 1 },
-  { name: "Pending", value: 2 },
-  { name: "Good to go", value: 3 },
-  { name: "Cancelled", value: 4 },
-  { name: "In transit", value: 5 },
-  { name: "Arrived", value: 6 },
-  { name: "Closed", value: 7 },
-  { name: "Waiting for supplier approval", value: 8 },
-];
 
 export function OrdersFilters({
   searchTerm,
@@ -35,6 +25,7 @@ export function OrdersFilters({
   onFilterBySupplier,
   selectedStatus,
   onFilterByStatus,
+  possibleStatuses,
 }: OrdersFiltersProps) {
   const { suppliersQuery } = useSuppliers();
   const router = useRouter();
@@ -66,7 +57,7 @@ export function OrdersFilters({
           }
         />
         <FilterSearch
-          items={PURCHASE_ORDER_STATUSES}
+          items={possibleStatuses}
           value={selectedStatus}
           placeholder="Select status..."
           onValueChange={(status_id) => {
