@@ -1,6 +1,7 @@
 "use client";
 import { usePrefetchGetTrackedProducts } from "@/app/(protected)/inventory/tracked-products/hooks";
 import { usePrefetchGetAllOrders } from "@/app/(protected)/purchase-orders/hooks";
+import { usePrefetchGetIncomingOrders } from "@/app/(protected)/warehouse/incoming-shipments/hooks/use-incoming-orders-service";
 import {
   Collapsible,
   CollapsibleContent,
@@ -38,6 +39,7 @@ export function NavMain({ items }: NavMainProps) {
   const path = usePathname();
   const { prefetchGetAllOrders } = usePrefetchGetAllOrders();
   const { prefetchGetTrackedProducts } = usePrefetchGetTrackedProducts();
+  const { prefetchGetIncomingOrders } = usePrefetchGetIncomingOrders();
 
   const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -58,6 +60,13 @@ export function NavMain({ items }: NavMainProps) {
             page: 1,
             limit: 50,
           });
+          break;
+        case "Incoming POs":
+          prefetchGetIncomingOrders({
+            page: 1,
+            limit: 50,
+          });
+          break;
       }
     }, 100);
   };

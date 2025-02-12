@@ -93,6 +93,20 @@ export const useGetAllIncomingOrders = (initialParams: GetOrdersProps) => {
   };
 };
 
+export const usePrefetchGetIncomingOrders = () => {
+  const queryClient = useQueryClient();
+
+  const prefetchGetIncomingOrders = (initialParams: GetOrdersProps) => {
+    queryClient.prefetchQuery({
+      queryKey: [QUERY_KEYS.INCOMING_SHIPMENTS, initialParams],
+      queryFn: () => incomingOrderService.getIncomingOrders(initialParams),
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+  };
+
+  return { prefetchGetIncomingOrders };
+};
+
 export const useUpdateIncomingOrderProducts = () => {
   const updateIncomingOrderProducts =
     useCreateMutation<UpdateIncomingOrderProductsProps>({
