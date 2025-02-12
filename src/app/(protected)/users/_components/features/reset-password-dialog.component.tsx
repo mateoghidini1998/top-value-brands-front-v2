@@ -7,11 +7,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useChangeUserPassword } from "../../hooks/use-auth-service.hook";
+import { Eye, EyeOff, Lock } from "lucide-react";
 
 interface ResetPasswordDialogProps {
   isOpen: boolean;
@@ -26,6 +28,8 @@ export const ResetPasswordDialog = ({
 }: ResetPasswordDialogProps) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const { changePassword, isChangingPassword, passwordChangeError } =
     useChangeUserPassword();
 
@@ -44,46 +48,93 @@ export const ResetPasswordDialog = ({
     }
   };
 
+  const togglePasswordVisibility = (field: "current" | "new") => {
+    if (field === "current") {
+      setShowCurrentPassword(!showCurrentPassword);
+    } else {
+      setShowNewPassword(!showNewPassword);
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Reset Password</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <Lock className="h-5 w-5" />
+            Reset Password
+          </DialogTitle>
+          <DialogDescription>
+            Enter your current password and a new password to reset.
+          </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="currentPassword" className="text-right">
+        <div className="grid gap-6 py-4">
+          <div className="grid gap-2">
+            <Label htmlFor="currentPassword" className="text-left">
               Current Password
             </Label>
-            <Input
-              id="currentPassword"
-              type="password"
-              className="col-span-3"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-            />
+            <div className="relative">
+              <Input
+                id="currentPassword"
+                type={showCurrentPassword ? "text" : "password"}
+                className="pr-10"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-0 top-0 h-full px-3 py-2"
+                onClick={() => togglePasswordVisibility("current")}
+              >
+                {showCurrentPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="newPassword" className="text-right">
+          <div className="grid gap-2">
+            <Label htmlFor="newPassword" className="text-left">
               New Password
             </Label>
-            <Input
-              id="newPassword"
-              type="password"
-              className="col-span-3"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
+            <div className="relative">
+              <Input
+                id="newPassword"
+                type={showNewPassword ? "text" : "password"}
+                className="pr-10"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-0 top-0 h-full px-3 py-2"
+                onClick={() => togglePasswordVisibility("new")}
+              >
+                {showNewPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
           </div>
         </div>
         {passwordChangeError && (
-          <p className="text-red-500 text-sm">{passwordChangeError.message}</p>
+          <p className="text-destructive text-sm">
+            {passwordChangeError.message}
+          </p>
         )}
         <DialogFooter>
           <Button
             type="submit"
             onClick={handlePasswordChange}
-            disabled={isChangingPassword}
+            disabled={isChangingPassword || !currentPassword || !newPassword}
+            className="w-full sm:w-auto"
           >
             {isChangingPassword ? "Changing..." : "Change Password"}
           </Button>
