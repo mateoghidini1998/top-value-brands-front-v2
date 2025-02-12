@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useChangeUserPassword } from "../../hooks/use-auth-service.hook";
-import { Eye, EyeOff, Lock } from "lucide-react";
+import { Eye, EyeOff, Lock, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface ResetPasswordDialogProps {
   isOpen: boolean;
@@ -28,12 +29,24 @@ export const ResetPasswordDialog = ({
 }: ResetPasswordDialogProps) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [repeatNewPassword, setRepeatNewPassword] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showRepeatNewPassword, setShowRepeatNewPassword] = useState(false);
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
   const { changePassword, isChangingPassword, passwordChangeError } =
     useChangeUserPassword();
 
+  useEffect(() => {
+    setPasswordsMatch(newPassword === repeatNewPassword);
+  }, [newPassword, repeatNewPassword]);
+
   const handlePasswordChange = async () => {
+    if (newPassword !== repeatNewPassword) {
+      setPasswordsMatch(false);
+      return;
+    }
+
     try {
       await changePassword.mutateAsync({
         userId,
@@ -41,20 +54,38 @@ export const ResetPasswordDialog = ({
         newPassword,
       });
       onOpenChange(false);
-      setCurrentPassword("");
-      setNewPassword("");
+      resetForm();
     } catch (error) {
       console.error("Failed to change password:", error);
     }
   };
 
-  const togglePasswordVisibility = (field: "current" | "new") => {
-    if (field === "current") {
-      setShowCurrentPassword(!showCurrentPassword);
-    } else {
-      setShowNewPassword(!showNewPassword);
+  const togglePasswordVisibility = (field: "current" | "new" | "repeat") => {
+    switch (field) {
+      case "current":
+        setShowCurrentPassword(!showCurrentPassword);
+        break;
+      case "new":
+        setShowNewPassword(!showNewPassword);
+        break;
+      case "repeat":
+        setShowRepeatNewPassword(!showRepeatNewPassword);
+        break;
     }
   };
+
+  const resetForm = () => {
+    setCurrentPassword("");
+    setNewPassword("");
+    setRepeatNewPassword("");
+    setShowCurrentPassword(false);
+    setShowNewPassword(false);
+    setShowRepeatNewPassword(false);
+    setPasswordsMatch(true);
+  };
+
+  const isFormValid =
+    currentPassword && newPassword && repeatNewPassword && passwordsMatch;
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -69,71 +100,50 @@ export const ResetPasswordDialog = ({
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-6 py-4">
-          <div className="grid gap-2">
-            <Label htmlFor="currentPassword" className="text-left">
-              Current Password
-            </Label>
-            <div className="relative">
-              <Input
-                id="currentPassword"
-                type={showCurrentPassword ? "text" : "password"}
-                className="pr-10"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute right-0 top-0 h-full px-3 py-2"
-                onClick={() => togglePasswordVisibility("current")}
-              >
-                {showCurrentPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="newPassword" className="text-left">
-              New Password
-            </Label>
-            <div className="relative">
-              <Input
-                id="newPassword"
-                type={showNewPassword ? "text" : "password"}
-                className="pr-10"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute right-0 top-0 h-full px-3 py-2"
-                onClick={() => togglePasswordVisibility("new")}
-              >
-                {showNewPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-          </div>
+          <PasswordInput
+            id="currentPassword"
+            label="Current Password"
+            value={currentPassword}
+            onChange={setCurrentPassword}
+            showPassword={showCurrentPassword}
+            toggleVisibility={() => togglePasswordVisibility("current")}
+          />
+          <PasswordInput
+            id="newPassword"
+            label="New Password"
+            value={newPassword}
+            onChange={setNewPassword}
+            showPassword={showNewPassword}
+            toggleVisibility={() => togglePasswordVisibility("new")}
+          />
+          <PasswordInput
+            id="repeatNewPassword"
+            label="Repeat New Password"
+            value={repeatNewPassword}
+            onChange={setRepeatNewPassword}
+            showPassword={showRepeatNewPassword}
+            toggleVisibility={() => togglePasswordVisibility("repeat")}
+          />
         </div>
+        {!passwordsMatch && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              New passwords do not match. Please try again.
+            </AlertDescription>
+          </Alert>
+        )}
         {passwordChangeError && (
-          <p className="text-destructive text-sm">
-            {passwordChangeError.message}
-          </p>
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{passwordChangeError.message}</AlertDescription>
+          </Alert>
         )}
         <DialogFooter>
           <Button
             type="submit"
             onClick={handlePasswordChange}
-            disabled={isChangingPassword || !currentPassword || !newPassword}
+            disabled={isChangingPassword || !isFormValid}
             className="w-full sm:w-auto"
           >
             {isChangingPassword ? "Changing..." : "Change Password"}
@@ -143,3 +153,49 @@ export const ResetPasswordDialog = ({
     </Dialog>
   );
 };
+
+interface PasswordInputProps {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  showPassword: boolean;
+  toggleVisibility: () => void;
+}
+
+const PasswordInput = ({
+  id,
+  label,
+  value,
+  onChange,
+  showPassword,
+  toggleVisibility,
+}: PasswordInputProps) => (
+  <div className="grid gap-2">
+    <Label htmlFor={id} className="text-left">
+      {label}
+    </Label>
+    <div className="relative">
+      <Input
+        id={id}
+        type={showPassword ? "text" : "password"}
+        className="pr-10"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        className="absolute right-0 top-0 h-full px-3 py-2"
+        onClick={toggleVisibility}
+      >
+        {showPassword ? (
+          <EyeOff className="h-4 w-4" />
+        ) : (
+          <Eye className="h-4 w-4" />
+        )}
+      </Button>
+    </div>
+  </div>
+);
