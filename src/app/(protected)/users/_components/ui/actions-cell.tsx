@@ -26,6 +26,7 @@ export const ActionsCell = ({ row }: ActionsCellProps) => {
         onOpenChange={setIsRoleDialogOpen}
         userId={row.id}
         initialRole={row.role}
+        userName={row.firstName + " " + row.lastName}
       />
 
       <ResetPasswordDialog
