@@ -2,7 +2,7 @@ import { formatDate } from "@/helpers/format-date";
 import { ColumnDef } from "@tanstack/react-table";
 // import { ActionsCell } from "./components";
 import { GetUsersData } from "@/types/auth.type";
-import ActionsCell from "./actions-cell";
+import { ActionsCell } from "./actions-cell";
 
 export const columns: ColumnDef<GetUsersData>[] = [
   {
