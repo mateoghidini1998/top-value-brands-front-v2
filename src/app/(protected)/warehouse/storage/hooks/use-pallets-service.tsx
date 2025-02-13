@@ -27,7 +27,7 @@ export const useGetAllPallets = (initialParams: GetPalletsProps) => {
   const filterByLocation = (location_id: number | null) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
-      location: location_id ? location_id.toString() : "",
+      warehouse_location_id: location_id ? location_id.toString() : "",
       page: 1,
       limit: 50,
     }));
