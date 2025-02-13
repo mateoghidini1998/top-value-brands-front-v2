@@ -15,6 +15,7 @@ interface OrdersFiltersProps {
   selectedStatus: number | null;
   onFilterByStatus: (statusId: number | null) => void;
   possibleStatuses: { name: string; value: number }[];
+  hasFilterByStatus?: boolean;
 }
 
 export function OrdersFilters({
@@ -26,6 +27,7 @@ export function OrdersFilters({
   selectedStatus,
   onFilterByStatus,
   possibleStatuses,
+  hasFilterByStatus = true,
 }: OrdersFiltersProps) {
   const { suppliersQuery } = useSuppliers();
   const router = useRouter();
@@ -40,10 +42,10 @@ export function OrdersFilters({
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
         <Input
-          placeholder="Search product"
+          placeholder="Search by order number..."
           className="w-[200px]"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => setSearchTerm(e.target.value.trim())}
           onKeyDown={(e) => e.key === "Enter" && onSearch()}
         />
         <Button onClick={onSearch}>
@@ -56,14 +58,16 @@ export function OrdersFilters({
             onFilterBySupplier(supplierId as number)
           }
         />
-        <FilterSearch
-          items={possibleStatuses}
-          value={selectedStatus}
-          placeholder="Select status..."
-          onValueChange={(status_id) => {
-            onFilterByStatus(status_id as number);
-          }}
-        />
+        {hasFilterByStatus && (
+          <FilterSearch
+            items={possibleStatuses}
+            value={selectedStatus}
+            placeholder="Select status..."
+            onValueChange={(status_id) => {
+              onFilterByStatus(status_id as number);
+            }}
+          />
+        )}
       </div>
       <Button
         className="w-fit h-7 "

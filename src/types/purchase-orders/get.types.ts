@@ -6,6 +6,7 @@ export interface GetOrdersProps {
   status?: string;
   orderBy?: string;
   orderWay?: string;
+  excludeStatus?: string;
 }
 
 export interface GetPurchaseOrdersResponse {

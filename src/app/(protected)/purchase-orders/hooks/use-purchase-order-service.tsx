@@ -138,7 +138,7 @@ export const useDeleteOrder = () => {
       purchaseOrderService.deleteOrder(props),
     successMessage: SUCCESS_MESSAGES.DELETE_ORDER,
     errorMessage: ERROR_MESSAGES.DELETE_ORDER,
-    invalidateKeys: [[QUERY_KEYS.ORDERS]],
+    invalidateKeys: [[QUERY_KEYS.ORDERS], [QUERY_KEYS.INCOMING_SHIPMENTS]],
   });
 
   return {

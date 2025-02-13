@@ -21,6 +21,7 @@ export class IncomingOrdersService extends BaseService {
     status = "",
     orderBy = "",
     orderWay = "",
+    excludeStatus = "",
   }: GetOrdersProps = {}): Promise<GetPurchaseOrdersResponse> {
     const queryParams = new URLSearchParams({
       page: page.toString(),
@@ -30,6 +31,7 @@ export class IncomingOrdersService extends BaseService {
       status,
       orderBy,
       orderWay,
+      excludeStatus,
     }).toString();
 
     const url = this.constructUrl(`/incoming-shipments?${queryParams}`);

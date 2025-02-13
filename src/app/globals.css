@@ -2,9 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  /* Remove scrollbar space */
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+/* Optional: Disable scrollbar for all elements */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   font-family: var(--font-poppins), sans-serif;
+  overflow-y: auto;
+  /* Keeps scrolling functionality */
 }
+
 
 * {
   font-size: .875rem;

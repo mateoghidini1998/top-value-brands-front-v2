@@ -67,10 +67,10 @@ export const routes = {
           title: "Create PO",
           url: "/purchase-orders/create",
         },
-        // {
-        //   title: "Quantum",
-        //   url: "#",
-        // },
+        {
+          title: "Closed POs",
+          url: "/purchase-orders/closed",
+        },
       ],
     },
     {

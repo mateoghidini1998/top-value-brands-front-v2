@@ -4,8 +4,8 @@ import LoadingSpinner from "@/components/custom/loading-spinner";
 import { useState } from "react";
 import { OrdersFilters } from "../../purchase-orders/components/features/filters.component";
 import { useSuppliers } from "../../suppliers/hooks";
-import { IncomingOrdersTable } from "./_components/features/incoming-orders-list";
-import { useGetAllIncomingOrders } from "./hooks/use-incoming-orders-service";
+import { useGetAllIncomingOrders } from "../../warehouse/incoming-shipments/hooks/use-incoming-orders-service";
+import { ClosedOrdersTable } from "./_components/feature/close-orders-list";
 
 export interface SupplierItem {
   value: number;
@@ -16,6 +16,7 @@ const INCOMING_ORDER_STATUSES = [
   { name: "Cancelled", value: 4 },
   { name: "In transit", value: 5 },
   { name: "Arrived", value: 6 },
+  { name: "Closed", value: 7 },
 ];
 
 export default function Page() {
@@ -37,7 +38,7 @@ export default function Page() {
   } = useGetAllIncomingOrders({
     page: 1,
     limit: 50,
-    excludeStatus: "7",
+    status: "7",
   });
 
   const { suppliersQuery } = useSuppliers();
@@ -67,9 +68,10 @@ export default function Page() {
           filterByStatus(statusId);
         }}
         possibleStatuses={INCOMING_ORDER_STATUSES}
+        hasFilterByStatus={false}
       />
 
-      <IncomingOrdersTable orders={incomingOrdersResponse?.data || []} />
+      <ClosedOrdersTable orders={incomingOrdersResponse?.data || []} />
 
       <DataTablePagination
         currentPage={currentPage}

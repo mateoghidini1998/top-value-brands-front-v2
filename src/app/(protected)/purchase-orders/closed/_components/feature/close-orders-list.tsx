@@ -3,11 +3,9 @@ import {
   ShowHideColsumnsProps,
 } from "@/components/custom/data-table";
 import { Order } from "@/types/purchase-orders";
-import { getColumns } from "../../columns";
-
-interface OrdersTableProps {
+import { columns } from "../../columns";
+interface ClosedOrdersTableProps {
   orders: Order[];
-  onOrderBy: (orderBy: string) => void;
 }
 
 const showColumns: ShowHideColsumnsProps = {
@@ -15,11 +13,11 @@ const showColumns: ShowHideColsumnsProps = {
   styles: "absolute left-[820px] top-[-31.5px]",
 };
 
-export function OrdersTable({ orders, onOrderBy }: OrdersTableProps) {
+export function ClosedOrdersTable({ orders }: ClosedOrdersTableProps) {
   return (
     <DataTable
       data={orders}
-      columns={getColumns(onOrderBy)}
+      columns={columns}
       dataLength={50}
       showHideColumns={showColumns}
     />
