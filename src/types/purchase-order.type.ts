@@ -56,6 +56,7 @@ export interface Order {
   updatedStatusAt: Date | null;
   supplier_name: string;
   notes: string;
+  incoming_order_notes: string | null;
   supplier_id: number;
 }
 

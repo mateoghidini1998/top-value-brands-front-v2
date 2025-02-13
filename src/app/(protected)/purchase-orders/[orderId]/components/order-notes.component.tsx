@@ -5,25 +5,28 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Check, Pencil, X } from "lucide-react";
 import { useState } from "react";
-import { useUpdateOrderNotes } from "../../hooks";
-import { Order } from "@/types";
+// import { useUpdateOrderNotes } from "../../hooks";
 
 type OrderDetailsProps = {
-  order: Order;
+  notes: string;
   orderId: string;
+  onAction: ({ notes, orderId }: { notes: string; orderId: string }) => void;
 };
 
-export default function OrderNotes({ order, orderId }: OrderDetailsProps) {
-  const { updateOrderNotesAsync } = useUpdateOrderNotes();
+export default function OrderNotes({
+  notes,
+  orderId,
+  onAction,
+}: OrderDetailsProps) {
   const [isEditingNotes, setIsEditingNotes] = useState(false);
-  const [editedNotes, setEditedNotes] = useState(order.notes || "");
+  const [editedNotes, setEditedNotes] = useState(notes || "");
 
   const handleEditNotes = () => {
     setIsEditingNotes(true);
   };
 
   const handleSaveNotes = () => {
-    updateOrderNotesAsync({
+    onAction({
       orderId,
       notes: editedNotes,
     });
@@ -32,7 +35,7 @@ export default function OrderNotes({ order, orderId }: OrderDetailsProps) {
 
   const handleCancelEdit = () => {
     setIsEditingNotes(false);
-    setEditedNotes(order.notes || "");
+    setEditedNotes(notes || "");
   };
 
   return (
@@ -69,7 +72,7 @@ export default function OrderNotes({ order, orderId }: OrderDetailsProps) {
           />
         ) : (
           <>
-            <div className="text-lg">{order.notes || "No notes available"}</div>
+            <div className="text-lg">{notes || "No notes available"}</div>
             <p className="text-xs text-muted-foreground">Order notes</p>
           </>
         )}

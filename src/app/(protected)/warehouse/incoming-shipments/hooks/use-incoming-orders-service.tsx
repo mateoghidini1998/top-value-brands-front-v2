@@ -5,6 +5,7 @@ import { UpdateIncomingOrderProductsProps } from "@/types/incoming-orders/update
 import {
   GetOrdersProps,
   GetPurchaseOrdersResponse,
+  UpdateOrderNotesProps,
 } from "@/types/purchase-orders";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -126,5 +127,24 @@ export const useUpdateIncomingOrderProducts = () => {
     isUpdatingIncomingOrderProductsSuccess:
       updateIncomingOrderProducts.isSuccess,
     isUpdatingIncomingOrderProducts: updateIncomingOrderProducts.isPending,
+  };
+};
+export const useUpdateIncomingOrderNotes = () => {
+  const updateIncomingOrderNotes = useCreateMutation<UpdateOrderNotesProps>({
+    mutationFn: (props: UpdateOrderNotesProps) =>
+      incomingOrderService.updateIncomingOrderNotes(props),
+    successMessage: SUCCESS_MESSAGES.UPDATE_ORDER_NOTES,
+    errorMessage: ERROR_MESSAGES.UPDATE_ORDER_NOTES,
+    invalidateKeys: [
+      [QUERY_KEYS.INCOMING_SHIPMENTS],
+      [QUERY_KEYS.ORDER_SUMMARY],
+    ],
+  });
+
+  return {
+    updateIncomingOrderNotesAsync: updateIncomingOrderNotes.mutateAsync,
+    isUpdatingIncomingOrderNotesError: updateIncomingOrderNotes.isError,
+    isUpdatingIncomingOrderNotesSuccess: updateIncomingOrderNotes.isSuccess,
+    isUpdatingIncomingOrderNotes: updateIncomingOrderNotes.isPending,
   };
 };

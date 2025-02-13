@@ -1,6 +1,6 @@
 "use client";
 import { PurchaseOrderProvider } from "@/contexts/orders.context";
-import { useGetPurchaseOrderSummary } from "../hooks";
+import { useGetPurchaseOrderSummary, useUpdateOrderNotes } from "../hooks";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import OrderProductsTable from "./components/order-products-list.component";
@@ -18,6 +18,7 @@ export default function PurchaseOrderPage({
     ordersSummaryIsError,
     ordersSummaryError,
   } = useGetPurchaseOrderSummary(params.orderId);
+  const { updateOrderNotesAsync } = useUpdateOrderNotes();
 
   if (ordersSummaryIsLoading) {
     return <LoadingSpinner />;
@@ -41,7 +42,11 @@ export default function PurchaseOrderPage({
     <PurchaseOrderProvider initialProducts={purchaseOrderProducts}>
       <div className="py-6 space-y-8">
         <OrderDetails order={order} orderId={params.orderId} />
-        <OrderNotes order={order} orderId={params.orderId} />
+        <OrderNotes
+          notes={order.notes}
+          orderId={params.orderId}
+          onAction={updateOrderNotesAsync}
+        />
         <OrderProductsTable
           products={purchaseOrderProducts}
           orderId={params.orderId}

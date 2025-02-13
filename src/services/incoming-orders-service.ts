@@ -1,6 +1,7 @@
 import {
   GetOrdersProps,
   GetPurchaseOrdersResponse,
+  UpdateOrderNotesProps,
 } from "@/types/purchase-orders";
 import { BaseService, IApiRequest } from "./base-service";
 import { UpdateIncomingOrderProductsProps } from "@/types/incoming-orders/update.types";
@@ -45,6 +46,17 @@ export class IncomingOrdersService extends BaseService {
     const url = this.constructUrl(`/update-incoming-order/${orderId}`);
     const options = this.constructOptions("PATCH", {
       incomingOrderProductUpdates,
+    });
+    return this.apiRequest<string>(url, options);
+  }
+
+  public async updateIncomingOrderNotes({
+    orderId,
+    notes,
+  }: UpdateOrderNotesProps) {
+    const url = this.constructUrl(`/incoming-order-notes/${orderId}`);
+    const options = this.constructOptions("PATCH", {
+      incoming_order_notes: notes,
     });
     return this.apiRequest<string>(url, options);
   }

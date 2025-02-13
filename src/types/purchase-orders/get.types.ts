@@ -31,6 +31,7 @@ export interface Order {
   purchaseOrderStatus: PurchaseOrderStatus;
   purchaseOrderProducts: PurchaseOrderProduct[];
   status: string;
+  incoming_order_notes: string | null;
   average_roi: number | null;
   supplier_name: string;
   trackedProducts: TrackedProduct[];

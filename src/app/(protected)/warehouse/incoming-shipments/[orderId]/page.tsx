@@ -1,4 +1,5 @@
 "use client";
+import OrderNotes from "@/app/(protected)/purchase-orders/[orderId]/components/order-notes.component";
 import { useGetPurchaseOrderSummary } from "@/app/(protected)/purchase-orders/hooks";
 import {
   DataTable,
@@ -24,9 +25,11 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useCreatePallet } from "../../storage/hooks/use-pallets-service";
 import { useWarehouseAvailableLocations } from "../../storage/hooks/use-warehouse-locations-service";
-import { useUpdateIncomingOrderProducts } from "../hooks/use-incoming-orders-service";
+import {
+  useUpdateIncomingOrderNotes,
+  useUpdateIncomingOrderProducts,
+} from "../hooks/use-incoming-orders-service";
 import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
-import OrderNotes from "@/app/(protected)/purchase-orders/[orderId]/components/order-notes.component";
 
 const showColumns: ShowHideColsumnsProps = {
   show: true,
@@ -62,6 +65,7 @@ export default function Page({
   );
 
   const { updateIncomingOrderProductsAsync } = useUpdateIncomingOrderProducts();
+  const { updateIncomingOrderNotesAsync } = useUpdateIncomingOrderNotes();
   const { createPalletAsync } = useCreatePallet();
   const [productsAddedToCreatePallet, setProductsAddedToCreatePallet] =
     useState<PurchaseOrderSummaryProducts[]>([]);
@@ -318,7 +322,11 @@ export default function Page({
       </h1>
 
       <OrderNotes
-        order={ordersSummaryResponse.data.order}
+        onAction={updateIncomingOrderNotesAsync}
+        notes={
+          ordersSummaryResponse.data.order.incoming_order_notes ||
+          "No notes yet"
+        }
         orderId={params.orderId}
       />
 

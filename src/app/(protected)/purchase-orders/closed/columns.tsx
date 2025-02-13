@@ -39,10 +39,10 @@ export const columns: ColumnDef<Order>[] = [
   //   },
   // },
   {
-    accessorKey: "notes",
+    accessorKey: "incoming_order_notes",
     header: "Notes",
     cell: ({ row }) => {
-      const notes = row.original.notes;
+      const notes = row.original.incoming_order_notes || "";
       return (
         <div className="flex item-center justify-center">
           <NotesCell notes={notes} width={"400px"} />
