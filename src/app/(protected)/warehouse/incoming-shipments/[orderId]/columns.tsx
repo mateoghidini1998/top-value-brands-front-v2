@@ -71,8 +71,6 @@ export const incomingOrderCols = (
       accessorKey: "upc",
       header: "UPC",
       cell: ({ row }) => {
-        console.log(missingFields);
-
         return (
           <Input
             type="text"

@@ -56,11 +56,9 @@ export default function CreateOrderSummary({
           localStorage.removeItem("productsAdded");
           setOrderNotes("");
           setProductsAdded([]);
-          return toast.success("Order created successfully");
         })
         .catch((error) => {
           console.error("Error creating order:", error);
-          return toast.error("Error creating order");
         });
     } else {
       const transformedProducts: ProductsToAdd[] = productsAdded.map(
