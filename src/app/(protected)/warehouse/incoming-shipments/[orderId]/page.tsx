@@ -26,6 +26,7 @@ import { useCreatePallet } from "../../storage/hooks/use-pallets-service";
 import { useWarehouseAvailableLocations } from "../../storage/hooks/use-warehouse-locations-service";
 import { useUpdateIncomingOrderProducts } from "../hooks/use-incoming-orders-service";
 import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
+import OrderNotes from "@/app/(protected)/purchase-orders/[orderId]/components/order-notes.component";
 
 const showColumns: ShowHideColsumnsProps = {
   show: true,
@@ -311,6 +312,11 @@ export default function Page({
       <h1 className="text-2xl font-bold">
         Purchase order {ordersSummaryResponse.data.order.order_number}
       </h1>
+
+      <OrderNotes
+        order={ordersSummaryResponse.data.order}
+        orderId={params.orderId}
+      />
 
       <Tabs
         defaultValue={"summary"}

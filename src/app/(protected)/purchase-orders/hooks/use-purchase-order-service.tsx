@@ -173,7 +173,7 @@ export const useUpdateOrderStatus = () => {
       purchaseOrderService.updateOrderStatus(props),
     successMessage: SUCCESS_MESSAGES.UPDATE_ORDER_STATUS,
     errorMessage: ERROR_MESSAGES.UPDATE_ORDER_STATUS,
-    invalidateKeys: [[QUERY_KEYS.ORDERS]],
+    invalidateKeys: [[QUERY_KEYS.ORDERS], [QUERY_KEYS.INCOMING_SHIPMENTS]],
   });
 
   return {
