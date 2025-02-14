@@ -1,5 +1,5 @@
 import { DataTable } from "@/components/custom/data-table";
-import { useGetAllClerkUsers } from "../../hooks/auth-service.hook";
+import { useGetAllClerkUsers } from "../../hooks/use-auth-service.hook";
 import { columns } from "../ui/columns";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import FetchError from "@/components/custom/fetch-error";

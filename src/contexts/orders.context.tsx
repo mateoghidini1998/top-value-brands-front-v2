@@ -1,8 +1,6 @@
 "use client";
-import {
-  PurchaseOrderProductsUpdates,
-  PurchaseOrderSummaryProducts,
-} from "@/types";
+import { PurchaseOrderSummaryProducts } from "@/types";
+import { PurchaseOrderProductsUpdates } from "@/types/purchase-orders";
 import { createContext, useContext, useState } from "react";
 
 interface PurchaseOrderContextType {

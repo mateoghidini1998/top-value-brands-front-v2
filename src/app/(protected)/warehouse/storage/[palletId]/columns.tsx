@@ -1,8 +1,9 @@
 import { ProductTitle } from "@/components/custom/product-title";
 import { FormatUSD } from "@/helpers";
-import { formatDate } from "@/helpers/format-date";
+import { formatDateWithoutHours } from "@/helpers/format-date";
 import { PalletProductByID } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 // import ActionsCell from "./components/actions-cell";
 
 export const columns: ColumnDef<PalletProductByID>[] = [
@@ -42,6 +43,24 @@ export const columns: ColumnDef<PalletProductByID>[] = [
     ),
   },
   {
+    accessorKey: "pack_type",
+    header: "Pack Type",
+    cell: ({ row }) => (
+      <p>
+        {row.original.purchaseOrderProduct.Product.pack_type
+          ? `${row.original.purchaseOrderProduct.Product.pack_type} Pack`
+          : "1 Pack"}
+      </p>
+    ),
+  },
+  {
+    accessorKey: "upc",
+    header: "UPC",
+    cell: ({ row }) => (
+      <p>{row.original.purchaseOrderProduct.Product.upc || "-"}</p>
+    ),
+  },
+  {
     accessorKey: "seller_sku",
     header: "Seller SKU",
     cell: ({ row }) => (
@@ -50,9 +69,28 @@ export const columns: ColumnDef<PalletProductByID>[] = [
   },
 
   {
+    accessorKey: "expire_date",
+    header: "Expire Date",
+    cell: ({ row }) =>
+      row.original.purchaseOrderProduct.expire_date ? (
+        <p>
+          {formatDateWithoutHours(
+            row.original.purchaseOrderProduct.expire_date?.toString()
+          )}
+        </p>
+      ) : (
+        <Link href={`/warehouse/incoming-shipments`}>
+          Please complete the incoming shipment details
+        </Link>
+      ),
+  },
+
+  {
     accessorKey: "updatedAt",
     header: "Date",
-    cell: ({ row }) => <p>{formatDate(row.original.updatedAt.toString())}</p>,
+    cell: ({ row }) => (
+      <p>{formatDateWithoutHours(row.original.updatedAt.toString())}</p>
+    ),
   },
 
   // {

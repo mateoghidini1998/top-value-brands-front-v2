@@ -1,5 +1,5 @@
 "use client";
-import { useOrderSummaryMutations } from "@/app/(protected)/purchase-orders/[orderId]/hooks";
+import { useUpdateOrderStatus } from "@/app/(protected)/purchase-orders/hooks";
 import { StatusBadge } from "./status-badge";
 
 export interface StatusCellProps {
@@ -21,14 +21,14 @@ export function StatusCell({
   statusDescription,
   isWarehouse = false,
 }: StatusCellProps) {
-  const { updateOrderStatus } = useOrderSummaryMutations(orderId);
+  const { updateOrderStatusAsync } = useUpdateOrderStatus();
 
   return (
     <StatusBadge
       status={statusDescription}
       isWarehouse={isWarehouse}
       onStatusChange={async (newStatus) => {
-        updateOrderStatus({ orderId, status: newStatus });
+        updateOrderStatusAsync({ orderId, status: newStatus });
       }}
     />
   );

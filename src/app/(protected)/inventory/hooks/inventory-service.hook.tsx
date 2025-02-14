@@ -6,14 +6,15 @@ import {
   GetInventoryProps,
   GetProductsResponse,
 } from "@/types";
-import { inventoryService } from "@/services";
 import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/constants";
 import { useCreateMutation } from "@/hooks/mutation-factory";
+import { serviceFactory } from "@/services";
+
+const inventoryService = serviceFactory.getInventoryService();
 
 export const useGetAllProducts = (initialParams: GetInventoryProps) => {
   const queryClient = useQueryClient();
   const [filters, setFilters] = useState<GetInventoryProps>(initialParams);
-  console.log(filters);
 
   const { data, isLoading, isError, error, refetch } = useQuery<
     GetProductsResponse,

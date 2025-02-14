@@ -21,22 +21,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
-import { useDeleteOrderProduct } from "../hooks";
+import { useDeleteOrderProduct } from "../../hooks";
 
 interface ActionsCellProps {
   orderProductId: number;
 }
 
 const ActionsCell = ({ orderProductId }: ActionsCellProps) => {
-  const { deleteOrderProductMutation } = useDeleteOrderProduct(
-    orderProductId.toString()
-  );
+  const { deleteOrderProductAsync } = useDeleteOrderProduct();
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
 
   const handleDeleteOrder = async () => {
     if (orderToDelete) {
       try {
-        await deleteOrderProductMutation.mutateAsync({
+        await deleteOrderProductAsync({
           orderProductId: orderToDelete.toString(),
         });
         setOrderToDelete(0);

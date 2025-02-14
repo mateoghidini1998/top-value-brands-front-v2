@@ -21,28 +21,46 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { toast } from "sonner";
-import { usePallets } from "../hooks";
+import { useRef, useState } from "react";
+import {
+  useDeletePallet,
+  usePrefetchPalletByID,
+} from "../hooks/use-pallets-service";
 
 interface ActionsCellProps {
   palletId: number;
 }
 
 const ActionsCell = ({ palletId }: ActionsCellProps) => {
-  const { deletePalletMutation } = usePallets();
+  const { deletePalletAsync } = useDeletePallet(palletId);
   const [palletToDelete, setPalletToDelete] = useState<number>(0);
+  const { prefetchPalletByID } = usePrefetchPalletByID(palletId.toString());
+
+  const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const handlePrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+
+    prefetchTimeout.current = setTimeout(() => {
+      prefetchPalletByID();
+    }, 200);
+  };
+
+  const handleCancelPrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+  };
 
   const handleDeleteOrder = async () => {
     if (palletToDelete) {
       try {
-        await deletePalletMutation.mutateAsync(palletToDelete).then(() => {
-          toast.success("Pallet deleted successfully");
-        });
+        await deletePalletAsync(palletToDelete.toString());
         setPalletToDelete(0);
       } catch (error) {
         console.error("Failed to delete pallet:", error);
-        toast.error("Failed to delete pallet");
       }
     }
   };
@@ -51,7 +69,12 @@ const ActionsCell = ({ palletId }: ActionsCellProps) => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0"
+            onMouseEnter={handlePrefetch}
+            onMouseLeave={handleCancelPrefetch}
+          >
             <span className="sr-only">Open menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>

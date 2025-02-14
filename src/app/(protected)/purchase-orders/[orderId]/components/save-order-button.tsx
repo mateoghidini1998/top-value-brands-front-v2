@@ -1,28 +1,27 @@
 "use client";
 
+import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { usePurchaseOrderContext } from "@/contexts/orders.context";
-import React from "react";
-import LoadingSpinner from "@/components/custom/loading-spinner";
-import { useOrderSummaryMutations, useOrderSummaryQuery } from "../hooks";
+import { useUpdateOrderProducts } from "../../hooks";
 
 interface Props {
   orderId: string;
 }
 
 const SaveOrder = ({ orderId }: Props) => {
-  const { isLoading } = useOrderSummaryQuery(orderId);
-  const { updateOrderProducts } = useOrderSummaryMutations(orderId);
+  const { updateOrderProductsAsync, isUpdatingOrderProducts } =
+    useUpdateOrderProducts();
   const { updatedPOProducts } = usePurchaseOrderContext();
 
   const handleUpdate = () => {
-    updateOrderProducts({
+    updateOrderProductsAsync({
       orderId: parseInt(orderId),
       purchaseOrderProductsUpdates: updatedPOProducts,
     });
   };
 
-  if (isLoading) {
+  if (isUpdatingOrderProducts) {
     return <LoadingSpinner />;
   }
 

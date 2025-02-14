@@ -1,5 +1,5 @@
-import { apiRequest } from "@/helpers/http.adapter";
-import {
+import { BaseService, type IApiRequest } from "./base-service";
+import type {
   CreateProductRequest,
   CreateProductResponse,
   EditProductProps,
@@ -8,31 +8,13 @@ import {
   PalletProductResponse,
 } from "@/types";
 
-interface IApiRequest {
-  <T>(url: string, options?: RequestInit): Promise<T>;
-}
-
-export class InventoryService {
-  private static API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
-  constructor(private apiRequest: IApiRequest) {
-    if (!InventoryService.API_BASE_URL) {
-      throw new Error("NEXT_PUBLIC_API_URL is not defined");
-    }
+export class InventoryService extends BaseService {
+  constructor(apiRequest: IApiRequest) {
+    super(apiRequest);
   }
 
-  private constructUrl(endpoint: string): string {
-    return `${InventoryService.API_BASE_URL}/api/v1/products${endpoint}`;
-  }
-
-  private constructOptions(method: string, data?: unknown): RequestInit {
-    return {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: data ? JSON.stringify(data) : undefined,
-    };
+  protected getEndpoint(): string {
+    return "/products";
   }
 
   public async createProduct(
@@ -40,7 +22,7 @@ export class InventoryService {
   ): Promise<CreateProductResponse> {
     const url = this.constructUrl("/");
     const options = this.constructOptions("POST", data);
-    return apiRequest<CreateProductResponse>(url, options);
+    return this.apiRequest<CreateProductResponse>(url, options);
   }
 
   public async editProduct(
@@ -48,13 +30,13 @@ export class InventoryService {
   ): Promise<PalletProductResponse> {
     const url = this.constructUrl("/addExtraInfoToProduct");
     const options = this.constructOptions("PATCH", data);
-    return apiRequest<PalletProductResponse>(url, options);
+    return this.apiRequest<PalletProductResponse>(url, options);
   }
 
   public async deleteProduct(id: number): Promise<PalletProductResponse> {
     const url = this.constructUrl("/disable");
     const options = this.constructOptions("PATCH", { id });
-    return apiRequest<PalletProductResponse>(url, options);
+    return this.apiRequest<PalletProductResponse>(url, options);
   }
 
   public async getInventory({
@@ -75,9 +57,6 @@ export class InventoryService {
     }).toString();
 
     const url = this.constructUrl(`?${queryParams}`);
-    return apiRequest<GetProductsResponse>(url);
+    return this.apiRequest<GetProductsResponse>(url);
   }
 }
-
-// Export an instance of the service for use across the application
-export const inventoryService = new InventoryService(apiRequest);

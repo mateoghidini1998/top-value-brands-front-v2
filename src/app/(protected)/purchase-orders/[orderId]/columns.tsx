@@ -178,6 +178,7 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   {
     id: "quantity_purchased",
     header: "Sellable Qty",
+
     cell: ({ row }) => {
       const quantity_purchased = row.original.quantity_purchased;
       return (
@@ -186,6 +187,21 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
           productId={row.original.id}
           packType={row.original.pack_type}
         />
+      );
+    },
+  },
+  {
+    accessorKey: "warehouse_stock",
+    header: "Warehouse Stock",
+    cell: ({ row }) => {
+      return (
+        <span>
+          {FormatUSD({
+            number: row.original.warehouse_stock?.toString() || "0",
+            maxDigits: 0,
+            minDigits: 0,
+          })}
+        </span>
       );
     },
   },

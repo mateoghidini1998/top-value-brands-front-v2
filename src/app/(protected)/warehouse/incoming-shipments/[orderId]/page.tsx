@@ -1,7 +1,10 @@
 "use client";
-
-import { useOrderSummaryQuery } from "@/app/(protected)/purchase-orders/[orderId]/hooks";
-import { DataTable } from "@/components/custom/data-table";
+import OrderNotes from "@/app/(protected)/purchase-orders/[orderId]/components/order-notes.component";
+import { useGetPurchaseOrderSummary } from "@/app/(protected)/purchase-orders/hooks";
+import {
+  DataTable,
+  ShowHideColsumnsProps,
+} from "@/components/custom/data-table";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -16,12 +19,27 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FormatUSD } from "@/helpers";
 import { formatDate } from "@/helpers/format-date";
-import { PurchaseOrderSummaryProducts } from "@/types";
+import { generateQrCode, printQrCode } from "@/lib/qr-code";
+import { PurchaseOrderSummaryProducts, WarehouseLocation } from "@/types";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { useWarehouseLocations } from "../../storage/hooks/useWarehouseLocations";
-import { useIncomingShipmentsMutations } from "../hooks/useIncomingShipmentsMutation";
+import { useCreatePallet } from "../../storage/hooks/use-pallets-service";
+import { useWarehouseAvailableLocations } from "../../storage/hooks/use-warehouse-locations-service";
+import {
+  useUpdateIncomingOrderNotes,
+  useUpdateIncomingOrderProducts,
+} from "../hooks/use-incoming-orders-service";
 import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
+
+const showColumns: ShowHideColsumnsProps = {
+  show: true,
+  styles: "absolute left-[110px] top-[-31.5px]",
+};
+
+export interface MissingFieldsInterface {
+  product_id: number | string;
+  missingFields: string[];
+}
 
 export default function Page({
   params,
@@ -30,19 +48,31 @@ export default function Page({
     orderId: string;
   };
 }) {
-  const { data, isLoading, error } = useOrderSummaryQuery(params.orderId);
-  const { warehouseLocationsQuery } = useWarehouseLocations();
+  const {
+    ordersSummaryResponse,
+    ordersSummaryIsLoading,
+    ordersSummaryIsError,
+    ordersSummaryError,
+  } = useGetPurchaseOrderSummary(params.orderId);
+
+  const { getWarehouseAvailableLocations } = useWarehouseAvailableLocations();
   const [localChanges, setLocalChanges] = useState<
     Record<string, Partial<PurchaseOrderSummaryProducts>>
   >({});
 
-  const { updateIncomingOrderProducts, createPallet } =
-    useIncomingShipmentsMutations(params.orderId);
+  const [missingFields, setMissingFields] = useState<MissingFieldsInterface[]>(
+    []
+  );
 
+  const { updateIncomingOrderProductsAsync } = useUpdateIncomingOrderProducts();
+  const { updateIncomingOrderNotesAsync } = useUpdateIncomingOrderNotes();
+  const { createPalletAsync } = useCreatePallet();
   const [productsAddedToCreatePallet, setProductsAddedToCreatePallet] =
     useState<PurchaseOrderSummaryProducts[]>([]);
 
   const [warehouseLocation, setWarehouseLocation] = useState<number>(0);
+  const [warehouseLocationName, setWarehouseLocationName] =
+    useState<string>("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [palletNumber, setPalletNumber] = useState<string>(
     Math.floor(Math.random() * 10000000).toString()
@@ -50,13 +80,13 @@ export default function Page({
 
   // Combinar datos originales con cambios locales
   const tableData = useMemo(() => {
-    if (!data?.data.purchaseOrderProducts) return [];
+    if (!ordersSummaryResponse?.data.purchaseOrderProducts) return [];
 
-    return data.data.purchaseOrderProducts.map((product) => ({
+    return ordersSummaryResponse.data.purchaseOrderProducts.map((product) => ({
       ...product,
       ...localChanges[product.id],
     }));
-  }, [data?.data.purchaseOrderProducts, localChanges]);
+  }, [ordersSummaryResponse?.data.purchaseOrderProducts, localChanges]);
 
   const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
@@ -101,8 +131,9 @@ export default function Page({
     (rowId: string, value: number) => {
       setLocalChanges((prev) => {
         const quantity_missing =
-          (data?.data.purchaseOrderProducts.find((p) => p.id === Number(rowId))
-            ?.quantity_purchased || 0) - value;
+          (ordersSummaryResponse?.data.purchaseOrderProducts.find(
+            (p) => p.id === Number(rowId)
+          )?.quantity_purchased || 0) - value;
 
         return {
           ...prev,
@@ -116,7 +147,7 @@ export default function Page({
       });
       focusNextInput(rowId, "quantity_received");
     },
-    [data?.data.purchaseOrderProducts, focusNextInput]
+    [ordersSummaryResponse?.data.purchaseOrderProducts, focusNextInput]
   );
 
   const handleUpcChange = useCallback(
@@ -160,13 +191,47 @@ export default function Page({
       };
     });
 
-    updateIncomingOrderProducts({
+    // validate that all the updates are complete, any fileds could be null or UNDEFINED or a empty string, return an error
+    const incompleteUpdates = updatedProducts.find((update) => {
+      console.log(update);
+      return (
+        update.quantity_received > 0 &&
+        (!update.reason_id || !update.upc || !update.expire_date)
+      );
+    });
+
+    if (incompleteUpdates) {
+      setMissingFields((prev) => {
+        const product = prev.find(
+          (p) => p.product_id === incompleteUpdates.product_id
+        );
+        if (!product) {
+          return [
+            ...prev,
+            {
+              product_id: incompleteUpdates.product_id,
+              missingFields: ["reason_id", "upc", "expire_date"].filter(
+                // @ts-expect-error @typescript-eslint/no-unsafe-member-access
+                (field) => !incompleteUpdates[field]
+              ),
+            },
+          ];
+        }
+        return prev;
+      });
+
+      toast.error("Please complete all the fields");
+      return;
+    }
+
+    updateIncomingOrderProductsAsync({
       orderId: Number(params.orderId),
       incomingOrderProductUpdates: updatedProducts,
     });
   };
 
-  const handleSavePallets = () => {
+  const handleSavePallets = async () => {
+    let palletId = null;
     if (productsAddedToCreatePallet.length === 0) {
       toast.error("No products added");
       return;
@@ -185,7 +250,7 @@ export default function Page({
       throw new Error("No valid products to create a pallet");
     }
 
-    createPallet({
+    createPalletAsync({
       warehouse_location_id: Number(warehouseLocation),
       pallet_number: Number(palletNumber),
       purchase_order_id: Number(params.orderId), // Asegúrate de incluir este campo
@@ -193,11 +258,32 @@ export default function Page({
         purchaseorderproduct_id: Number(prod.purchase_order_product_id),
         quantity: Number(prod.pallet_quantity),
       })),
+    }).then((res) => {
+      if (res) {
+        // @ts-expect-error @typescript-eslint/no-unsafe-member-access
+        palletId = res.id;
+      }
     });
 
     setProductsAddedToCreatePallet([]);
     setPalletNumber(Math.floor(Math.random() * 10000000).toString());
     setWarehouseLocation(0);
+
+    const PALLET_URL = `${process.env.NEXT_PUBLIC_FRONT_URL}/warehouse/storage/${palletId}`;
+
+    await generateQrCode(PALLET_URL).then((data) => {
+      if (data) {
+        printQrCode(
+          data,
+          palletNumber,
+          ordersSummaryResponse?.data.order.order_number ||
+            "Sorry, an error ocurred :(",
+          warehouseLocationName
+        );
+      } else {
+        toast.error("Sorry, an error ocurred while generating the QR code :(");
+      }
+    });
   };
 
   const handleUpdatePalletQuantity = (
@@ -213,27 +299,36 @@ export default function Page({
     );
   };
 
-  if (isLoading) {
+  if (ordersSummaryIsLoading) {
     return <LoadingSpinner />;
   }
 
-  if (error) {
+  if (ordersSummaryIsError) {
     return (
       <Alert variant="destructive">
         <AlertDescription>
-          Error loading purchase order: {error.message}
+          Error loading purchase order: {ordersSummaryError?.message}
         </AlertDescription>
       </Alert>
     );
   }
 
-  if (!data || !tableData.length) return null;
+  if (!ordersSummaryResponse || !tableData.length) return null;
 
   return (
     <div className="py-6 space-y-8">
       <h1 className="text-2xl font-bold">
-        Purchase order {data.data.order.order_number}
+        Purchase order {ordersSummaryResponse.data.order.order_number}
       </h1>
+
+      <OrderNotes
+        onAction={updateIncomingOrderNotesAsync}
+        notes={
+          ordersSummaryResponse.data.order.incoming_order_notes ||
+          "No notes yet"
+        }
+        orderId={params.orderId}
+      />
 
       <Tabs
         defaultValue={"summary"}
@@ -254,10 +349,12 @@ export default function Page({
               handleUpcChange,
               handleExpireDateChange,
               focusNextInput,
-              inputRefs
+              inputRefs,
+              missingFields
             )}
             data={tableData}
             dataLength={tableData.length}
+            showHideColumns={showColumns}
           />
         </TabsContent>
         {/* Pallet */}
@@ -318,34 +415,49 @@ export default function Page({
                 <div className="space-y-2">
                   <p className="text-sm text-zinc-400">Warehouse Location</p>
                   <Select
-                    onValueChange={(value) =>
-                      setWarehouseLocation(Number(value))
-                    }
+                    onValueChange={(value) => {
+                      setWarehouseLocation(Number(value));
+                      setWarehouseLocationName(
+                        getWarehouseAvailableLocations.data?.data.find(
+                          (location: WarehouseLocation) =>
+                            location.id === Number(value)
+                        )?.location || ""
+                      );
+                    }}
                     value={warehouseLocation.toString()}
                   >
                     <SelectTrigger className="w-52 bg-zinc-800 border-zinc-700">
                       <SelectValue placeholder="Select location" />
                     </SelectTrigger>
                     <SelectContent className="w-full">
-                      {warehouseLocationsQuery.data?.data.map((location) => {
-                        return (
-                          <SelectItem
-                            className="w-full"
-                            key={location.id}
-                            value={location.id.toString()}
-                          >
-                            <div className="w-full flex items-center justify-between">
-                              <p>{location.location}</p>
-                            </div>
-                          </SelectItem>
-                        );
-                      })}
+                      <SelectItem className="w-full" key={0} value={"11"}>
+                        <div className="w-full flex items-center justify-between">
+                          <p>{"Floor"}</p>
+                        </div>
+                      </SelectItem>
+                      {getWarehouseAvailableLocations.data?.data.map(
+                        (location: WarehouseLocation) => {
+                          return (
+                            location.id !== 11 && (
+                              <SelectItem
+                                className="w-full"
+                                key={location.id}
+                                value={location.id.toString()}
+                              >
+                                <div className="w-full flex items-center justify-between">
+                                  <p>{location.location}</p>
+                                </div>
+                              </SelectItem>
+                            )
+                          );
+                        }
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-zinc-400">Purchase Order Number</p>
-                  <p>{data.data.order.order_number}</p>
+                  <p>{ordersSummaryResponse.data.order.order_number}</p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-zinc-400">Date</p>

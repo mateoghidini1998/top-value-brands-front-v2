@@ -1,6 +1,7 @@
 "use client";
-
-import { useOrders } from "@/app/(protected)/purchase-orders/hooks";
+import { usePrefetchGetTrackedProducts } from "@/app/(protected)/inventory/tracked-products/hooks";
+import { usePrefetchGetAllOrders } from "@/app/(protected)/purchase-orders/hooks";
+import { usePrefetchGetIncomingOrders } from "@/app/(protected)/warehouse/incoming-shipments/hooks/use-incoming-orders-service";
 import {
   Collapsible,
   CollapsibleContent,
@@ -19,11 +20,9 @@ import {
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useRef } from "react";
+import { useRef } from "react";
 
-export function NavMain({
-  items,
-}: {
+interface NavMainProps {
   items: {
     title: string;
     url: string;
@@ -34,31 +33,49 @@ export function NavMain({
       url: string;
     }[];
   }[];
-}) {
+}
+
+export function NavMain({ items }: NavMainProps) {
   const path = usePathname();
-  const { createPrefetchOrders } = useOrders();
+  const { prefetchGetAllOrders } = usePrefetchGetAllOrders();
+  const { prefetchGetTrackedProducts } = usePrefetchGetTrackedProducts();
+  const { prefetchGetIncomingOrders } = usePrefetchGetIncomingOrders();
 
-  const lastPrefetchTime = useRef(0);
+  const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const prefetchOrders = useCallback(() => {
-    const now = Date.now();
-
-    // Solo permite el prefetch si han pasado al menos 5 segundos desde el último
-    if (now - lastPrefetchTime.current > 5000) {
-      lastPrefetchTime.current = now;
-      createPrefetchOrders()();
+  const handlePrefetch = (title: string) => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
     }
-  }, [createPrefetchOrders]);
-
-  const presetData = useCallback(
-    (title: string) => {
-      if (title === "Purchase Orders") {
-        console.log("prefetching...");
-        prefetchOrders();
+    prefetchTimeout.current = setTimeout(() => {
+      switch (title) {
+        case "All POs":
+          prefetchGetAllOrders({
+            page: 1,
+            limit: 50,
+          });
+          break;
+        case "Create PO":
+          prefetchGetTrackedProducts({
+            page: 1,
+            limit: 50,
+          });
+          break;
+        case "Incoming POs":
+          prefetchGetIncomingOrders({
+            page: 1,
+            limit: 50,
+          });
+          break;
       }
-    },
-    [prefetchOrders]
-  );
+    }, 100);
+  };
+
+  const handleCancelPrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+  };
 
   return (
     <SidebarGroup>
@@ -76,7 +93,8 @@ export function NavMain({
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton
                     tooltip={item.title}
-                    onMouseEnter={() => presetData(item.title)}
+                    onMouseEnter={() => handlePrefetch(item.title)}
+                    onMouseLeave={handleCancelPrefetch}
                   >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
@@ -88,7 +106,8 @@ export function NavMain({
                     {item.items?.map((subItem) => (
                       <SidebarMenuSubItem
                         key={subItem.title}
-                        onMouseEnter={() => presetData(item.title)}
+                        onMouseEnter={() => handlePrefetch(subItem.title)}
+                        onMouseLeave={handleCancelPrefetch}
                       >
                         <SidebarMenuSubButton asChild>
                           <Link href={subItem.url}>
@@ -102,16 +121,19 @@ export function NavMain({
               </SidebarMenuItem>
             </Collapsible>
           ) : (
-            <SidebarMenuButton
-              onMouseEnter={() => presetData(item.title)}
-              tooltip={item.title}
-              key={index}
-            >
-              {item.icon && <item.icon />}
-              <Link className="w-full" href={item.url}>
-                {item.title}
-              </Link>
-            </SidebarMenuButton>
+            <SidebarMenuItem key={index}>
+              <SidebarMenuButton
+                asChild
+                tooltip={item.title}
+                onMouseEnter={() => handlePrefetch(item.title)}
+                onMouseLeave={() => handleCancelPrefetch()}
+              >
+                <Link href={item.url}>
+                  {item.icon && <item.icon />}
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           )
         )}
       </SidebarMenu>

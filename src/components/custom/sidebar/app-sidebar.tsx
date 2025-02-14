@@ -1,7 +1,5 @@
 "use client";
 
-import * as React from "react";
-
 import {
   Sidebar,
   SidebarContent,
@@ -9,13 +7,14 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { filterRoutesByRole, Role, Route } from "@/lib/filter-routes";
 import { routes } from "@/routes/routes";
+import { UserResource } from "@/types/auth.type";
+import * as React from "react";
+import { ModeToggle } from "../theme-toggle";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { TeamSwitcher } from "./team-switcher";
-import { ModeToggle } from "../theme-toggle";
-import { filterRoutesByRole, Role, Route } from "@/lib/filter-routes";
-import { UserResource } from "@/types/auth.type";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user?: UserResource | null | undefined;
@@ -36,7 +35,6 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={filteredNavMain} />
-        {/* <NavProjects projects={routes.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
         <ModeToggle />

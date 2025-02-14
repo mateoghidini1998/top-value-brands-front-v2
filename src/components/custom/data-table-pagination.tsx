@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { useMemo } from "react";
 
-interface InventoryPaginationProps {
+interface DataTablePaginationProps {
   currentPage: number;
   itemsPerPage: number;
   totalItems: number;
@@ -24,13 +24,13 @@ interface InventoryPaginationProps {
   onLimitChange: (limit: number) => void;
 }
 
-export function InventoryPagination({
+export function DataTablePagination({
   currentPage,
   itemsPerPage,
   totalItems,
   onPageChange,
   onLimitChange,
-}: InventoryPaginationProps) {
+}: DataTablePaginationProps) {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const paginationRange = useMemo(() => {

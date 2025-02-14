@@ -1,5 +1,9 @@
 "use client";
 import {
+  useDeleteOrder,
+  usePrefetchOrderSummary,
+} from "@/app/(protected)/purchase-orders/hooks";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -20,21 +24,41 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { useIncomingShipments } from "../hooks";
+import { useRef, useState } from "react";
 
 interface ActionsCellProps {
   orderId: number;
 }
 
 const ActionsCell = ({ orderId }: ActionsCellProps) => {
-  const { deleteOrderMutation } = useIncomingShipments();
+  const { deleteOrderAsync } = useDeleteOrder();
+  const { prefetchOrderSummary } = usePrefetchOrderSummary();
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
+
+  const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const handlePrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+
+    prefetchTimeout.current = setTimeout(() => {
+      prefetchOrderSummary(orderId.toString());
+    }, 200);
+  };
+
+  const handleCancelPrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+  };
 
   const handleDeleteOrder = async () => {
     if (orderToDelete) {
       try {
-        await deleteOrderMutation.mutateAsync(orderToDelete).then(() => {});
+        await deleteOrderAsync({
+          orderId: orderToDelete,
+        });
         setOrderToDelete(0);
       } catch (error) {
         console.error("Failed to delete order:", error);
@@ -46,7 +70,12 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0"
+            onMouseEnter={handlePrefetch}
+            onMouseLeave={handleCancelPrefetch}
+          >
             <span className="sr-only">Open menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>

@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { PalletQuantityCell } from "../_components/pallet-quantity-cell";
 import { Trash2, SquarePlus } from "lucide-react";
 import { FormatUSD } from "@/helpers";
+import { MissingFieldsInterface } from "./page";
 
 export const reasons = [
   { id: 1, label: "ok" },
@@ -34,7 +35,8 @@ export const incomingOrderCols = (
   onUpcChange: (rowId: string, value: string) => void,
   onExpireDateChange: (rowId: string, value: Date | undefined) => void,
   focusNextInput: (rowId: string, currentField: string) => void,
-  inputRefs: { current: { [key: string]: HTMLInputElement | null } }
+  inputRefs: { current: { [key: string]: HTMLInputElement | null } },
+  missingFields: MissingFieldsInterface[]
 ): ColumnDef<PurchaseOrderSummaryProducts>[] => {
   return [
     {
@@ -76,7 +78,14 @@ export const incomingOrderCols = (
             onBlur={(e) => {
               onUpcChange(row.original.id.toString(), e.target.value);
             }}
-            className="w-52"
+            className={`w-52 ${
+              !row.original.upc &&
+              missingFields
+                .find((f) => f.product_id === row.original.id)
+                ?.missingFields.includes("upc")
+                ? "border-red-500"
+                : ""
+            }`}
             placeholder="Enter UPC"
             ref={(el) => {
               inputRefs.current[`upc_${row.original.id}`] = el;
@@ -137,6 +146,21 @@ export const incomingOrderCols = (
       },
     },
     {
+      accessorKey: "warehouse_stock",
+      header: "Warehouse Stock",
+      cell: ({ row }) => {
+        return (
+          <span>
+            {FormatUSD({
+              number: row.original.warehouse_stock?.toString() || "0",
+              maxDigits: 0,
+              minDigits: 0,
+            })}
+          </span>
+        );
+      },
+    },
+    {
       accessorKey: "reason_id",
       header: "Reason",
       cell: ({ row }) => {
@@ -148,7 +172,14 @@ export const incomingOrderCols = (
             }}
           >
             <SelectTrigger
-              className="w-[180px]"
+              className={`w-[180px] ${
+                !row.original.reason_id &&
+                missingFields
+                  .find((f) => f.product_id === row.original.id)
+                  ?.missingFields.includes("reason_id")
+                  ? "border-red-500"
+                  : ""
+              }`}
               // @ts-expect-error @typescript-eslint/no-unsafe-argument
               ref={(el) =>
                 // @ts-expect-error @typescript-eslint/no-unsafe-argument
@@ -174,6 +205,8 @@ export const incomingOrderCols = (
       cell: ({ row }) => {
         return (
           <ExpireDateCell
+            className={`w-[180px] `}
+            missingFields={missingFields}
             // @ts-expect-error @typescript-eslint/no-unsafe-argument
             inputRef={inputRefs.current[`expire_date_${row.original.id}`]}
             row={row.original}

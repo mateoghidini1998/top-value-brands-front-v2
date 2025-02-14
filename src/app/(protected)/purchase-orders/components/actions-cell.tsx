@@ -1,5 +1,18 @@
 "use client";
 
+import { useRef, useState } from "react";
+import Link from "next/link";
+import { MoreHorizontal } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,39 +23,43 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { toast } from "sonner";
-import { useOrders } from "../hooks/useOrders";
+import { useDeleteOrder, usePrefetchOrderSummary } from "../hooks";
 
 interface ActionsCellProps {
   orderId: number;
 }
 
 const ActionsCell = ({ orderId }: ActionsCellProps) => {
-  const { deleteOrderMutation } = useOrders();
+  const { deleteOrderAsync } = useDeleteOrder();
+  const { prefetchOrderSummary } = usePrefetchOrderSummary();
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
+
+  const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const handlePrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+
+    prefetchTimeout.current = setTimeout(() => {
+      prefetchOrderSummary(orderId.toString());
+    }, 200); // Adjust delay as needed (500ms)
+  };
+
+  const handleCancelPrefetch = () => {
+    if (prefetchTimeout.current) {
+      clearTimeout(prefetchTimeout.current);
+    }
+  };
 
   const handleDeleteOrder = async () => {
     if (orderToDelete) {
       try {
-        await deleteOrderMutation.mutateAsync(orderToDelete).then(() => {
-          toast.success("Order deleted successfully");
+        await deleteOrderAsync({ orderId: orderToDelete }).then(() => {
+          setOrderToDelete(0);
         });
-        setOrderToDelete(0);
       } catch (error) {
         console.error("Failed to delete order:", error);
-        toast.error("Failed to delete order");
       }
     }
   };
@@ -76,7 +93,12 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0"
+            onMouseEnter={handlePrefetch}
+            onMouseLeave={handleCancelPrefetch}
+          >
             <span className="sr-only">Open menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>

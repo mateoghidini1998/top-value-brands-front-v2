@@ -1,6 +1,7 @@
 "use client";
 
 import { DynamicBreadcrumb } from "@/components/custom/dynamic.breadcrumb";
+import { Notifications } from "@/components/custom/notifications";
 import ScanButton from "@/components/custom/scan-button";
 import { AppSidebar } from "@/components/custom/sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
@@ -45,6 +46,7 @@ export default function AuthenticatedLayout({
           </div>
         </header>
         <main className="px-[20px] py-4">
+          <Notifications />
           {children}
           <ScanButton />
         </main>
