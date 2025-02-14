@@ -124,7 +124,6 @@ DataTableProps<TData, TValue>) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="ml-auto">
-                  {/* <SlidersHorizontal /> */}
                   <Settings2 className="h-[16px] w-[16px]" />
                 </Button>
               </DropdownMenuTrigger>
@@ -138,6 +137,7 @@ DataTableProps<TData, TValue>) {
                         key={column.id}
                         className="capitalize"
                         checked={column.getIsVisible()}
+                        onSelect={(event) => event.preventDefault()} // Evita que se cierre el menú
                         onCheckedChange={(value) =>
                           column.toggleVisibility(!!value)
                         }
