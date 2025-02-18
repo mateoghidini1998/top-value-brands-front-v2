@@ -50,7 +50,7 @@ export default function Page({ params }: PageProps) {
 
   return (
     <div className="">
-      <h1 className="text-3xl font-bold mb-6">Order: {order.order_number}</h1>
+      <h1 className="text-3xl font-bold mb-6">Order - {order.order_number}</h1>
 
       <OrderSummaryCard order={order} />
 
