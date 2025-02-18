@@ -63,8 +63,12 @@ export default function Page({ params }: PageProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>Product Name</TableHead>
+                <TableHead>UPC</TableHead>
+                <TableHead>Seller SKU</TableHead>
+                <TableHead>ASIN</TableHead>
                 <TableHead>Quantity Purchased</TableHead>
                 <TableHead>Quantity Received</TableHead>
+                <TableHead>Reason</TableHead>
                 <TableHead>Status</TableHead>
               </TableRow>
             </TableHeader>
@@ -72,8 +76,12 @@ export default function Page({ params }: PageProps) {
               {purchaseOrderProducts.map((product) => (
                 <TableRow key={product.id}>
                   <TableCell>{product.product_name}</TableCell>
+                  <TableCell>{product.upc}</TableCell>
+                  <TableCell>{product.seller_sku}</TableCell>
+                  <TableCell>{product.ASIN}</TableCell>
                   <TableCell>{product.quantity_purchased}</TableCell>
                   <TableCell>{product.quantity_received}</TableCell>
+                  <TableCell>{product.reason}</TableCell>
                   <TableCell>
                     <ProductStatus
                       quantityPurchased={product.quantity_purchased}

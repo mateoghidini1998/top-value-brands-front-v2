@@ -41,6 +41,7 @@ export interface PurchaseOrderSummaryProducts {
   quantity_missing: number;
   quantity_received: number;
   reason_id: number | null;
+  reason: string;
   upc: string | null;
   expire_date: string | null;
   warehouse_stock: string;
