@@ -65,7 +65,14 @@ export default function Page() {
         possibleStatuses={PURCHASE_ORDER_STATUSES}
       />
 
-      <OrdersTable orders={ordersResponse?.data || []} onOrderBy={orderBy} />
+      <OrdersTable
+        setSelectedSupplier={setSelectedSupplier}
+        orders={ordersResponse?.data || []}
+        onOrderBy={orderBy}
+        filterBySupplier={filterBySupplier}
+        ordersIsLoading={ordersIsLoading}
+        supplierId={selectedSupplier || null}
+      />
 
       <DataTablePagination
         currentPage={currentPage}

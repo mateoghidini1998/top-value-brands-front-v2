@@ -9,14 +9,19 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { ActionsCell } from "./components";
 import CheckDataTableRow from "./components/features/check-data-table-row.component";
+import { Dispatch, SetStateAction } from "react";
 
 export const getColumns = (
-  handleOrderBy: (key: string) => void
+  handleOrderBy: (key: string) => void,
+  filterBySupplier: (supplierId: number) => void,
+  ordersIsLoading: boolean,
+  supplierId: number | null,
+  setSelectedSupplier: Dispatch<SetStateAction<number | null>>
 ): ColumnDef<Order>[] => [
   {
     id: "select",
     cell: ({ row }) => {
-      return <CheckDataTableRow row={row} />;
+      return <CheckDataTableRow row={row} supplierId={supplierId} />;
     },
     enableSorting: false,
     enableHiding: false,
@@ -126,10 +131,15 @@ export const getColumns = (
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
-      const orderId: number = row.original.id;
+      const order: Order = row.original;
       return (
         <div className="text-right">
-          <ActionsCell orderId={orderId} />
+          <ActionsCell
+            setSelectedSupplier={setSelectedSupplier}
+            order={order}
+            filterBySupplier={filterBySupplier}
+            ordersIsLoading={ordersIsLoading}
+          />
         </div>
       );
     },

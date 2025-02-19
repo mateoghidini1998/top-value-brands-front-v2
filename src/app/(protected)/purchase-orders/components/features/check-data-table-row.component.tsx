@@ -6,19 +6,20 @@ import React from "react";
 
 interface CheckDataTableRowProps {
   row: Row<Order>;
+  supplierId: number | null;
 }
 
 const CheckDataTableRow = ({
   row,
+  supplierId,
 }: // setSelectedOrders,
 CheckDataTableRowProps) => {
   const { isMerging } = useMergeOrdersContext();
-
   const { isTheRowChecked, setOrders } = useMergeOrdersContext();
 
   return (
     <Checkbox
-      className={`${isMerging ? "cursor-pointer" : "hidden"}`}
+      className={`${isMerging || supplierId ? "cursor-pointer" : "hidden"}`}
       checked={isTheRowChecked(row.original.id)}
       onCheckedChange={(value) => {
         row.toggleSelected(!!value);
