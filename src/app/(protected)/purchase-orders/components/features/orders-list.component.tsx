@@ -4,7 +4,6 @@ import {
 } from "@/components/custom/data-table";
 import { Order } from "@/types/purchase-orders";
 import { getColumns } from "../../columns";
-import { useState } from "react";
 
 interface OrdersTableProps {
   orders: Order[];
@@ -17,14 +16,10 @@ const showColumns: ShowHideColsumnsProps = {
 };
 
 export function OrdersTable({ orders, onOrderBy }: OrdersTableProps) {
-  const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
-
-  console.log(selectedOrders);
-
   return (
     <DataTable
       data={orders}
-      columns={getColumns(onOrderBy, setSelectedOrders)}
+      columns={getColumns(onOrderBy)}
       dataLength={50}
       showHideColumns={showColumns}
     />

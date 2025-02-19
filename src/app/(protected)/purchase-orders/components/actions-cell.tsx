@@ -1,18 +1,5 @@
 "use client";
 
-import { useRef, useState } from "react";
-import Link from "next/link";
-import { MoreHorizontal } from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,6 +10,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useMergeOrdersContext } from "@/contexts/merge-orders.context";
+import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
 import { useDeleteOrder, usePrefetchOrderSummary } from "../hooks";
 
 interface ActionsCellProps {
@@ -33,7 +34,7 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
   const { deleteOrderAsync } = useDeleteOrder();
   const { prefetchOrderSummary } = usePrefetchOrderSummary();
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
-
+  const { setIsMerging } = useMergeOrdersContext();
   const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handlePrefetch = () => {
@@ -89,6 +90,11 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
     }
   };
 
+  const handleMergePO = async () => {
+    setIsMerging(true);
+    console.log("filtering by supplier");
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -115,6 +121,7 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
           <DropdownMenuItem onClick={handleDownloadPDF}>
             Download PDF
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleMergePO}>Merge PO</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <AlertDialog

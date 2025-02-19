@@ -1,37 +1,22 @@
+import NotesCell from "@/components/custom/notes-cell";
+import { StatusType } from "@/components/custom/status-badge";
 import { StatusCell } from "@/components/custom/status-cell";
 import { Badge } from "@/components/ui/badge";
-import { formatDate } from "@/helpers/format-date";
-import { ColumnDef } from "@tanstack/react-table";
-import { ActionsCell } from "./components";
-import { StatusType } from "@/components/custom/status-badge";
-import NotesCell from "@/components/custom/notes-cell";
-import { ArrowUpDown } from "lucide-react";
 import { FormatUSD } from "@/helpers";
+import { formatDate } from "@/helpers/format-date";
 import { Order } from "@/types/purchase-orders";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Dispatch, SetStateAction } from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
+import { ActionsCell } from "./components";
+import CheckDataTableRow from "./components/features/check-data-table-row.component";
 
 export const getColumns = (
-  handleOrderBy: (key: string) => void,
-  setSelectedOrders: Dispatch<SetStateAction<number[]>>
+  handleOrderBy: (key: string) => void
 ): ColumnDef<Order>[] => [
   {
     id: "select",
     cell: ({ row }) => {
-      return (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => {
-            row.toggleSelected(!!value);
-            setSelectedOrders((prev) =>
-              prev.includes(row.original.id)
-                ? prev.filter((id) => id !== row.original.id)
-                : [...prev, row.original.id]
-            );
-          }}
-          aria-label="Select row"
-        />
-      );
+      return <CheckDataTableRow row={row} />;
     },
     enableSorting: false,
     enableHiding: false,

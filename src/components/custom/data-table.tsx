@@ -68,8 +68,6 @@ DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  console.log(rowSelection);
-
   const { state } = useSidebar();
 
   const table = useReactTable({

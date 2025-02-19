@@ -2,9 +2,11 @@ import { useSuppliers } from "@/app/(protected)/suppliers/hooks";
 import { FilterSearch } from "@/components/custom/filter-search";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useMergeOrdersContext } from "@/contexts/merge-orders.context";
 import type { Supplier } from "@/types/supplier.type";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface OrdersFiltersProps {
   searchTerm: string;
@@ -31,12 +33,18 @@ export function OrdersFilters({
 }: OrdersFiltersProps) {
   const { suppliersQuery } = useSuppliers();
   const router = useRouter();
+  const { isMerging, setIsMerging, orders, setOrders } =
+    useMergeOrdersContext();
 
   const formatSuppliers = (suppliers: Supplier[] = []) =>
     suppliers.map((supplier) => ({
       name: supplier.supplier_name,
       value: supplier.id,
     }));
+
+  const handleMergePOs = () => {
+    toast.success("Orders merged successfully");
+  };
 
   return (
     <div className="flex items-center justify-between">
@@ -67,6 +75,27 @@ export function OrdersFilters({
               onFilterByStatus(status_id as number);
             }}
           />
+        )}
+
+        {isMerging && (
+          <Button
+            className="w-fit ml-[60px]"
+            onClick={() => {
+              setIsMerging(false);
+              setOrders([]);
+            }}
+            variant={"destructive"}
+          >
+            Cancel
+          </Button>
+        )}
+
+        {isMerging && orders.length > 0 && (
+          <>
+            <Button onClick={handleMergePOs}>
+              Merge POs ({orders.length})
+            </Button>
+          </>
         )}
       </div>
       <Button
