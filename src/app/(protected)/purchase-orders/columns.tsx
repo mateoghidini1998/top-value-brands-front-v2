@@ -8,10 +8,34 @@ import NotesCell from "@/components/custom/notes-cell";
 import { ArrowUpDown } from "lucide-react";
 import { FormatUSD } from "@/helpers";
 import { Order } from "@/types/purchase-orders";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Dispatch, SetStateAction } from "react";
 
 export const getColumns = (
-  handleOrderBy: (key: string) => void
+  handleOrderBy: (key: string) => void,
+  setSelectedOrders: Dispatch<SetStateAction<number[]>>
 ): ColumnDef<Order>[] => [
+  {
+    id: "select",
+    cell: ({ row }) => {
+      return (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => {
+            row.toggleSelected(!!value);
+            setSelectedOrders((prev) =>
+              prev.includes(row.original.id)
+                ? prev.filter((id) => id !== row.original.id)
+                : [...prev, row.original.id]
+            );
+          }}
+          aria-label="Select row"
+        />
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "supplier_name",
     header: "Supplier",

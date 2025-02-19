@@ -66,6 +66,9 @@ DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+
+  console.log(rowSelection);
 
   const { state } = useSidebar();
 
@@ -80,6 +83,7 @@ DataTableProps<TData, TValue>) {
     getFilteredRowModel: getFilteredRowModel(),
     rowCount: data.length,
     onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
     initialState: {
       pagination: {
         pageIndex: 0,
@@ -90,6 +94,7 @@ DataTableProps<TData, TValue>) {
       sorting,
       columnFilters,
       columnVisibility,
+      rowSelection,
     },
     manualSorting: onSort ? true : false,
   });
