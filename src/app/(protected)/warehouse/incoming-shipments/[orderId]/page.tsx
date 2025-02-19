@@ -30,6 +30,16 @@ import {
   useUpdateIncomingOrderProducts,
 } from "../hooks/use-incoming-orders-service";
 import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const showColumns: ShowHideColsumnsProps = {
   show: true,
@@ -54,6 +64,8 @@ export default function Page({
     ordersSummaryIsError,
     ordersSummaryError,
   } = useGetPurchaseOrderSummary(params.orderId);
+
+  const [isSavingOrder, setIsSavingOrder] = useState(false);
 
   const { getWarehouseAvailableLocations } = useWarehouseAvailableLocations();
   const [localChanges, setLocalChanges] = useState<
@@ -341,7 +353,28 @@ export default function Page({
 
         {/* Summary */}
         <TabsContent value="summary" className="w-full">
-          <Button onClick={() => handleSaveIncomingOrder()}>Save Order</Button>
+          <Button onClick={() => setIsSavingOrder(true)}>Save Order</Button>
+          <AlertDialog
+            open={!!isSavingOrder}
+            onOpenChange={(open) => !open && setIsSavingOrder(false)}
+          >
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Are you sure everything has been counted?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleSaveIncomingOrder}>
+                  Save
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <DataTable
             columns={incomingOrderCols(
               handleQuantityReceivedChange,
