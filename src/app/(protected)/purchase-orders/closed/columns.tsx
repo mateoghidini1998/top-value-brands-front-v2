@@ -98,6 +98,7 @@ export const columns: ColumnDef<Order>[] = [
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
+      console.log(row.original);
       let missingProducts = false;
       // check if a order.quantity_purchased > order.quantity_received
       if (
