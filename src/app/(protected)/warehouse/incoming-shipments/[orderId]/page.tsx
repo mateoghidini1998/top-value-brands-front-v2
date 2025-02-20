@@ -262,7 +262,7 @@ export default function Page({
       throw new Error("No valid products to create a pallet");
     }
 
-    createPalletAsync({
+    await createPalletAsync({
       warehouse_location_id: Number(warehouseLocation),
       pallet_number: Number(palletNumber),
       purchase_order_id: Number(params.orderId), // Asegúrate de incluir este campo
@@ -271,9 +271,11 @@ export default function Page({
         quantity: Number(prod.pallet_quantity),
       })),
     }).then((res) => {
+      console.log(res);
+
       if (res) {
         // @ts-expect-error @typescript-eslint/no-unsafe-member-access
-        palletId = res.id;
+        palletId = res.pallet.id;
       }
     });
 
@@ -282,6 +284,7 @@ export default function Page({
     setWarehouseLocation(0);
 
     const PALLET_URL = `${process.env.NEXT_PUBLIC_FRONT_URL}/warehouse/storage/${palletId}`;
+    console.log(PALLET_URL);
 
     await generateQrCode(PALLET_URL).then((data) => {
       if (data) {
