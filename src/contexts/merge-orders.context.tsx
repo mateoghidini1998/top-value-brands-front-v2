@@ -27,6 +27,7 @@ export function MergeOrdersProvider({
     return orders.some((order) => order.orderId === orderId);
   };
 
+  console.log(isMerging);
   console.log(orders);
 
   return (

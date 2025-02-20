@@ -6,7 +6,6 @@ import { useMergeOrdersContext } from "@/contexts/merge-orders.context";
 import type { Supplier } from "@/types/supplier.type";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 interface OrdersFiltersProps {
   searchTerm: string;
@@ -43,7 +42,10 @@ export function OrdersFilters({
     }));
 
   const handleMergePOs = () => {
-    toast.success("Orders merged successfully");
+    console.log("Merging POs", orders);
+    setIsMerging(false);
+    setOrders([]);
+    onFilterBySupplier(null);
   };
 
   return (

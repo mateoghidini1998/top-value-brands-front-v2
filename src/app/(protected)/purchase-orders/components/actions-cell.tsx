@@ -20,12 +20,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useMergeOrdersContext } from "@/contexts/merge-orders.context";
+import { Order } from "@/types/purchase-orders";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useDeleteOrder, usePrefetchOrderSummary } from "../hooks";
-import { Order } from "@/types/purchase-orders";
 
 interface ActionsCellProps {
   order: Order;
@@ -37,13 +37,12 @@ interface ActionsCellProps {
 const ActionsCell = ({
   order,
   filterBySupplier,
-  ordersIsLoading,
   setSelectedSupplier,
 }: ActionsCellProps) => {
   const { deleteOrderAsync } = useDeleteOrder();
   const { prefetchOrderSummary } = usePrefetchOrderSummary();
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
-  const { setIsMerging } = useMergeOrdersContext();
+  const { setOrders, setIsMerging } = useMergeOrdersContext();
   const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handlePrefetch = () => {
@@ -102,11 +101,10 @@ const ActionsCell = ({
   const handleMergePO = async (supplierId: number) => {
     setSelectedSupplier(supplierId);
     filterBySupplier(supplierId);
-    if (!ordersIsLoading) {
-      setIsMerging(true);
-      console.log("start merging POs");
-    }
-    console.log("end merging POs");
+    setIsMerging(true);
+    console.log("start merging POs");
+
+    setOrders([{ index: -1, orderId: order.id }]);
   };
 
   return (
