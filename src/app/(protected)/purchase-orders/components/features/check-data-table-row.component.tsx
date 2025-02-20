@@ -17,9 +17,15 @@ CheckDataTableRowProps) => {
   const { isMerging } = useMergeOrdersContext();
   const { isTheRowChecked, setOrders } = useMergeOrdersContext();
 
+  const validateIfCanBeChecked = (): boolean => {
+    if (supplierId && isMerging) return true;
+    if (isMerging) return true;
+    return false;
+  };
+
   return (
     <Checkbox
-      className={`${isMerging || supplierId ? "cursor-pointer" : "hidden"}`}
+      className={`${validateIfCanBeChecked() ? "cursor-pointer" : "hidden"}`}
       checked={isTheRowChecked(row.original.id)}
       onCheckedChange={(value) => {
         row.toggleSelected(!!value);
