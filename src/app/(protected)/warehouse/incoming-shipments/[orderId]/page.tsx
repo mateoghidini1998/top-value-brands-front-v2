@@ -271,8 +271,6 @@ export default function Page({
         quantity: Number(prod.pallet_quantity),
       })),
     }).then((res) => {
-      console.log(res);
-
       if (res) {
         // @ts-expect-error @typescript-eslint/no-unsafe-member-access
         palletId = res.pallet.id;
