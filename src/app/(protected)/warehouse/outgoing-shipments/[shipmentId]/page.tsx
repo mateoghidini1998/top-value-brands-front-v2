@@ -140,7 +140,10 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
             </Button>
           </div>
         ) : (
-          <Button onClick={() => setIsEditing(true)}>
+          <Button
+            className={`${data.status !== "WORKING" && "hidden"}`}
+            onClick={() => setIsEditing(true)}
+          >
             <Pencil className="h-4 w-4 mr-2" />
             Edit Shipment
           </Button>
