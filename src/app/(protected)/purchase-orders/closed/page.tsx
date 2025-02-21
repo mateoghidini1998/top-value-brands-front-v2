@@ -6,6 +6,7 @@ import { OrdersFilters } from "../../purchase-orders/components/features/filters
 import { useSuppliers } from "../../suppliers/hooks";
 import { useGetAllIncomingOrders } from "../../warehouse/incoming-shipments/hooks/use-incoming-orders-service";
 import { ClosedOrdersTable } from "./_components/feature/close-orders-list";
+import { MergeOrdersProvider } from "@/contexts/merge-orders.context";
 
 export interface SupplierItem {
   value: number;
@@ -52,7 +53,7 @@ export default function Page() {
   }
 
   return (
-    <>
+    <MergeOrdersProvider>
       <OrdersFilters
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -80,6 +81,6 @@ export default function Page() {
         onPageChange={changePage}
         onLimitChange={changeLimit}
       />
-    </>
+    </MergeOrdersProvider>
   );
 }
