@@ -1,21 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { usePalletProductsQuery } from "../hooks/usePalletProductsQuery";
-import { TabbedDataTable } from "./_components/tables/tabbed-data-table";
-import { SelectedProductsTable } from "./_components/tables/selected-products-table";
-import { QuantityInputDialog } from "./_components/quantity-input-dialog";
 import type {
   GetAllPalletProductsResponse,
   GetAllPalletProductsResponsePallet,
   GetAllPalletProductsResponsePalletProduct,
 } from "@/types";
-import { toast } from "sonner";
-import { useShipmentMutations } from "../hooks/useShipmentMutation";
-import LoadingSpinner from "@/components/custom/loading-spinner";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { useGetAllPalletProducts } from "../../storage/hooks/use-pallets-service";
+import { QuantityInputDialog } from "./_components/quantity-input-dialog";
+import { SelectedProductsTable } from "./_components/tables/selected-products-table";
+import { TabbedDataTable } from "./_components/tables/tabbed-data-table";
+import { useCreateShipment } from "../hooks/use-shipments-service";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -23,9 +23,10 @@ export default function Page() {
 
   console.log(shipmentId);
 
-  const { palletProductsQuery } = usePalletProductsQuery();
-  const { createShipmentAsync, isLoadingCreateShipment } =
-    useShipmentMutations();
+  const { palletProducts, palletProductsIsLoading, palletProductsIsError } =
+    useGetAllPalletProducts();
+  const { createShipmentAsync, isCreatingShipment } = useCreateShipment();
+
   const [availableProducts, setAvailableProducts] = useState<
     GetAllPalletProductsResponse[]
   >([]);
@@ -39,20 +40,20 @@ export default function Page() {
   }>({ isOpen: false, product: null, action: "add" });
 
   useEffect(() => {
-    if (palletProductsQuery.data) {
-      setAvailableProducts(palletProductsQuery.data);
+    if (palletProducts) {
+      setAvailableProducts(palletProducts || []);
     }
-  }, [palletProductsQuery.data]);
+  }, [palletProducts]);
 
-  if (isLoadingCreateShipment) {
+  if (isCreatingShipment) {
     return <LoadingSpinner />;
   }
 
-  if (palletProductsQuery.isLoading) {
+  if (palletProductsIsLoading) {
     return <LoadingSpinner />;
   }
 
-  if (palletProductsQuery.isError) {
+  if (palletProductsIsError) {
     return <div>Error</div>;
   }
 
@@ -127,7 +128,7 @@ export default function Page() {
 
   const handleCancel = () => {
     setSelectedProducts([]);
-    setAvailableProducts(palletProductsQuery.data || []);
+    setAvailableProducts(palletProducts || []);
   };
 
   const updateAvailableProducts = (

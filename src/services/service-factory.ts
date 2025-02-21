@@ -5,8 +5,9 @@ import { IncomingOrdersService } from "./incoming-orders-service";
 import { InventoryService } from "./inventory-service";
 import { PalletsService } from "./pallets-service";
 import { PurchaseOrderService } from "./purchase-order-service";
-import { WarehouseLocationService } from "./warehouse-location-service";
+import { ShipmentsService } from "./shipments-service";
 import { TrackedProductService } from "./tracked-products-service";
+import { WarehouseLocationService } from "./warehouse-location-service";
 
 export class ServiceFactory {
   private static instance: ServiceFactory;
@@ -80,6 +81,13 @@ export class ServiceFactory {
       );
     }
     return this.services.get("trackedProducts") as TrackedProductService;
+  }
+
+  public getShipmentsService(): ShipmentsService {
+    if (!this.services.has("shipments")) {
+      this.services.set("shipments", new ShipmentsService(this.apiRequest));
+    }
+    return this.services.get("shipments") as ShipmentsService;
   }
 
   // Add methods for other services as needed

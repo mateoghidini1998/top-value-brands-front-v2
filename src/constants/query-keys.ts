@@ -4,6 +4,7 @@ export const QUERY_KEYS = {
   PRODUCTS: "products",
   INCOMING_SHIPMENTS: "incoming-shipments",
   SHIPMENTS: "shipments",
+  SHIPMENT: "shipment",
   PALLETS: "pallets",
   PALLET_PRODUCTS: "pallet-products",
   PALLET: "pallet",

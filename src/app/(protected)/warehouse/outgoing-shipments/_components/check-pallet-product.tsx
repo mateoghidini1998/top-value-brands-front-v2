@@ -1,20 +1,20 @@
 "use client";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { ShipmentPalletProduct } from "@/types";
-import { useOutgoingShipmentsMutations } from "../[shipmentId]/hooks/useOutgoingShipmentsMutation";
+import { ShipmentPalletProduct } from "@/types/shipments/get.types";
+import { useCheckShipmentProducts } from "../hooks/use-shipments-service";
 
 interface CheckPalletProductsProps {
   row: ShipmentPalletProduct;
 }
 
 const CheckPalletProducts = ({ row }: CheckPalletProductsProps) => {
-  const { checkShipmentProduct } = useOutgoingShipmentsMutations();
+  const { checkShipmentProductAsync } = useCheckShipmentProducts(
+    row.OutgoingShipmentProduct.id
+  );
 
   const handleCheckProduct = () => {
-    checkShipmentProduct({
-      outgoingShipmentProductId: row.OutgoingShipmentProduct.id,
-    });
+    checkShipmentProductAsync(row.OutgoingShipmentProduct.id);
   };
 
   return (

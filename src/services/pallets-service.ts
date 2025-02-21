@@ -1,4 +1,8 @@
-import { GetPalletByIDResponse, GetPalletsResponse } from "@/types";
+import {
+  GetAllPalletProductsResponse,
+  GetPalletByIDResponse,
+  GetPalletsResponse,
+} from "@/types";
 import { CreatePalletProps } from "@/types/pallets/create.types";
 import { DeletePalletResponse } from "@/types/pallets/delete.types";
 import { GetPalletsProps } from "@/types/pallets/get.types";
@@ -55,5 +59,10 @@ export class PalletsService extends BaseService {
     const url = this.constructUrl(`/${palletId}`);
     const options = this.constructOptions("DELETE");
     return this.apiRequest<DeletePalletResponse>(url, options);
+  }
+
+  public async getAllPalletProducts(): Promise<GetAllPalletProductsResponse[]> {
+    const url = this.constructUrl("/products/all");
+    return this.apiRequest<GetAllPalletProductsResponse[]>(url);
   }
 }

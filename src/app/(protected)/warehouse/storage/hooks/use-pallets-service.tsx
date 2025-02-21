@@ -1,7 +1,11 @@
 import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/constants";
 import { useCreateMutation } from "@/hooks/mutation-factory";
 import { serviceFactory } from "@/services";
-import { GetPalletByIDResponse, GetPalletsResponse } from "@/types";
+import {
+  GetAllPalletProductsResponse,
+  GetPalletByIDResponse,
+  GetPalletsResponse,
+} from "@/types";
 import { CreatePalletProps } from "@/types/pallets/create.types";
 import { GetPalletsProps } from "@/types/pallets/get.types";
 import { UpdatePalletLocationProps } from "@/types/pallets/update.types";
@@ -169,5 +173,25 @@ export const useDeletePallet = (palletId: number) => {
     isDeletingPalletError: deletePallet.isError,
     isDeletingPalletSuccess: deletePallet.isSuccess,
     isDeletingPallet: deletePallet.isPending,
+  };
+};
+
+export const useGetAllPalletProducts = () => {
+  const { data, isLoading, isError, error, refetch } = useQuery<
+    GetAllPalletProductsResponse[],
+    Error
+  >({
+    queryKey: [QUERY_KEYS.PALLET_PRODUCTS],
+    queryFn: () => palletsService.getAllPalletProducts(),
+    gcTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
+  return {
+    palletProducts: data,
+    palletProductsIsLoading: isLoading,
+    palletProductsIsError: isError,
+    palletProductsError: error,
+    palletProductsRefetch: refetch,
   };
 };

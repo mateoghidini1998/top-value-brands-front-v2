@@ -17,8 +17,8 @@ import {
 import { useEffect, useState } from "react";
 import { DataTable } from "../create/_components/tables/data-table";
 import { createColumns, palletCols } from "./columns";
-import { useShipmentQuery } from "./hooks/useShipmentQuery";
 import Link from "next/link";
+import { useGetShipmentById } from "../hooks/use-shipments-service";
 
 export interface ManifestPalletTable {
   pallet_id: number;
@@ -27,15 +27,15 @@ export interface ManifestPalletTable {
 }
 
 export default function Page({ params }: { params: { shipmentId: string } }) {
-  const { data, error } = useShipmentQuery(params.shipmentId);
+  const { shipment, shipmentIsError } = useGetShipmentById(params.shipmentId);
   const [isEditing, setIsEditing] = useState(false);
   const [pallets, setPallets] = useState<ManifestPalletTable[]>([]);
 
   useEffect(() => {
-    if (data?.PalletProducts) {
+    if (shipment?.PalletProducts) {
       const uniquePallets: ManifestPalletTable[] = [];
 
-      data.PalletProducts.forEach((item) => {
+      shipment.PalletProducts.forEach((item) => {
         if (!uniquePallets.some((p) => p.pallet_id === item.pallet_id)) {
           uniquePallets.push({
             pallet_id: item.pallet_id,
@@ -47,9 +47,9 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
 
       setPallets(uniquePallets);
     }
-  }, [data]);
+  }, [shipment]);
 
-  if (error) {
+  if (shipmentIsError) {
     return (
       <div className="container mx-auto p-6">
         <Alert variant="destructive">
@@ -64,7 +64,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
     );
   }
 
-  if (!data) return null;
+  if (!shipment) return null;
 
   return (
     <div>
@@ -78,7 +78,9 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
             <PlaneIcon className="w-4 h-4 text-muted-foreground ml-auto" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">#{data.shipment_number}</div>
+            <div className="text-2xl font-bold">
+              #{shipment.shipment_number}
+            </div>
             <p className="text-xs text-muted-foreground">Shipment number</p>
           </CardContent>
         </Card>
@@ -93,7 +95,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold truncate">
-              {formatDate(data.createdAt.toString())}
+              {formatDate(shipment.createdAt.toString())}
             </div>
             <p className="text-xs text-muted-foreground">Date</p>
           </CardContent>
@@ -106,7 +108,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
             <StoreIcon className="w-4 h-4 text-muted-foreground ml-auto" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.status}</div>
+            <div className="text-2xl font-bold">{shipment.status}</div>
             <p className="text-xs text-muted-foreground">Shipment status</p>
           </CardContent>
         </Card>
@@ -121,7 +123,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {data.fba_shipment_id || "-"}
+              {shipment.fba_shipment_id || "-"}
             </div>
             <p className="text-xs text-muted-foreground">FBA shipment ID</p>
           </CardContent>
@@ -144,16 +146,16 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
         ) : (
           <div className="w-fit flex items-center justify-between gap-4">
             <Button
-              className={`${data.status !== "WORKING" && "hidden"}`}
+              className={`${shipment.status !== "WORKING" && "hidden"}`}
               onClick={() => setIsEditing(true)}
             >
               <Pencil className="h-4 w-4 mr-2" />
               Edit Shipment
             </Button>
-            <Button className={`${data.status !== "WORKING" && "hidden"}`}>
+            <Button className={`${shipment.status !== "WORKING" && "hidden"}`}>
               <Plus className="h-4 w-4 mr-2" />
               <Link
-                href={`/warehouse/outgoing-shipments/create?update=${data.id}`}
+                href={`/warehouse/outgoing-shipments/create?update=${shipment.id}`}
               >
                 Add Products
               </Link>
@@ -166,7 +168,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
       <DataTable
         pagination
         columns={createColumns(isEditing)}
-        data={data?.PalletProducts}
+        data={shipment?.PalletProducts}
       />
     </div>
   );

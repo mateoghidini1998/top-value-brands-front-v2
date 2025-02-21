@@ -28,7 +28,7 @@ import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { getColumns } from "./columns";
-import { useShipmentsQuery } from "./hooks/useShipmentsQuery";
+import { useGetAllShipments } from "./hooks/use-shipments-service";
 
 type PaginationRange = number | "...";
 export interface SupplierItem {
@@ -59,15 +59,20 @@ const showColumns: ShowHideColsumnsProps = {
 
 export default function Page() {
   const {
-    shipmentsQuery,
+    shipmentsResponse,
     filterByStatus,
-    filterByKeyword,
+    filterByShipmentNumber,
+    shipmentsIsLoading,
+    shipmentsIsError,
     orderBy,
     changePage,
     changeLimit,
     currentPage,
     itemsPerPage,
-  } = useShipmentsQuery();
+  } = useGetAllShipments({
+    page: 1,
+    limit: 50,
+  });
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -75,9 +80,9 @@ export default function Page() {
 
   // Total pages calculation
   const totalPages = useMemo(() => {
-    if (!shipmentsQuery.data) return 1;
-    return Math.ceil(shipmentsQuery.data.total / itemsPerPage);
-  }, [shipmentsQuery.data, itemsPerPage]);
+    if (!shipmentsResponse) return 1;
+    return Math.ceil(shipmentsResponse.total / itemsPerPage);
+  }, [shipmentsResponse, itemsPerPage]);
 
   // Pagination range
   const paginationRange: PaginationRange[] = useMemo(() => {
@@ -112,14 +117,14 @@ export default function Page() {
   }, [currentPage, totalPages]);
 
   const handleSearch = () => {
-    filterByKeyword(searchTerm);
+    filterByShipmentNumber(searchTerm);
   };
 
-  if (shipmentsQuery.isLoading) {
+  if (shipmentsIsLoading) {
     return <LoadingSpinner />;
   }
 
-  if (!shipmentsQuery.data) {
+  if (shipmentsIsError) {
     return <div>Error</div>;
   }
 
@@ -173,7 +178,7 @@ export default function Page() {
       </div>
 
       <DataTable
-        data={shipmentsQuery.data.shipments}
+        data={shipmentsResponse?.shipments || []}
         columns={getColumns(handleOrderBy)}
         dataLength={50}
         showHideColumns={showColumns}

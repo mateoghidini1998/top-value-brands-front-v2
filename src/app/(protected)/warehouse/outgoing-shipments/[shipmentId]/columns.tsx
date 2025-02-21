@@ -1,11 +1,11 @@
 import { ProductTitle } from "@/components/custom/product-title";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { ShipmentPalletProduct } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Trash2 } from "lucide-react";
 import type { ManifestPalletTable } from "./page";
 import CheckPalletProducts from "../_components/check-pallet-product";
+import { ShipmentPalletProduct } from "@/types/shipments/get.types";
 
 export const createColumns = (
   isEditing: boolean
