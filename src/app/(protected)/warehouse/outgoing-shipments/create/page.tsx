@@ -15,8 +15,14 @@ import type {
 import { toast } from "sonner";
 import { useShipmentMutations } from "../hooks/useShipmentMutation";
 import LoadingSpinner from "@/components/custom/loading-spinner";
+import { useSearchParams } from "next/navigation";
 
 export default function Page() {
+  const searchParams = useSearchParams();
+  const shipmentId = searchParams.get("update");
+
+  console.log(shipmentId);
+
   const { palletProductsQuery } = usePalletProductsQuery();
   const { createShipmentAsync, isLoadingCreateShipment } =
     useShipmentMutations();

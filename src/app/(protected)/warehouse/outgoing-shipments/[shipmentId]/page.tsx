@@ -1,12 +1,15 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatDate } from "@/helpers";
 import {
   AlertCircle,
   ClockIcon,
   IdCardIcon,
   Pencil,
   PlaneIcon,
+  Plus,
   Save,
   StoreIcon,
   X,
@@ -15,8 +18,7 @@ import { useEffect, useState } from "react";
 import { DataTable } from "../create/_components/tables/data-table";
 import { createColumns, palletCols } from "./columns";
 import { useShipmentQuery } from "./hooks/useShipmentQuery";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDate } from "@/helpers";
+import Link from "next/link";
 
 export interface ManifestPalletTable {
   pallet_id: number;
@@ -140,13 +142,23 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
             </Button>
           </div>
         ) : (
-          <Button
-            className={`${data.status !== "WORKING" && "hidden"}`}
-            onClick={() => setIsEditing(true)}
-          >
-            <Pencil className="h-4 w-4 mr-2" />
-            Edit Shipment
-          </Button>
+          <div className="w-fit flex items-center justify-between gap-4">
+            <Button
+              className={`${data.status !== "WORKING" && "hidden"}`}
+              onClick={() => setIsEditing(true)}
+            >
+              <Pencil className="h-4 w-4 mr-2" />
+              Edit Shipment
+            </Button>
+            <Button className={`${data.status !== "WORKING" && "hidden"}`}>
+              <Plus className="h-4 w-4 mr-2" />
+              <Link
+                href={`/warehouse/outgoing-shipments/create?update=${data.id}`}
+              >
+                Add Products
+              </Link>
+            </Button>
+          </div>
         )}
       </div>
 
