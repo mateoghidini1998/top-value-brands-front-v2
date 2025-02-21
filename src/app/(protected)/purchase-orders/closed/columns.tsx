@@ -24,20 +24,6 @@ export const columns: ColumnDef<Order>[] = [
       </div>
     ),
   },
-
-  // {
-  //   accessorKey: "total_price",
-  //   header: "Total Price",
-  //   cell: ({ row }) => {
-  //     const amount = parseFloat(row.getValue("total_price"));
-  //     const formatted = new Intl.NumberFormat("en-US", {
-  //       style: "currency",
-  //       currency: "USD",
-  //     }).format(amount);
-
-  //     return <div className="">{formatted}</div>;
-  //   },
-  // },
   {
     accessorKey: "incoming_order_notes",
     header: "Notes",
@@ -65,50 +51,20 @@ export const columns: ColumnDef<Order>[] = [
       );
     },
   },
-  // {
-  //   accessorKey: "average_roi",
-  //   header: "ROI",
-  //   cell: ({ row }) => {
-  //     const amount = parseFloat(row.getValue("average_roi")).toFixed(2);
-
-  //     const getBadgeVariant = (amount: number) => {
-  //       if (amount >= 2) {
-  //         return "arrived";
-  //       }
-
-  //       if (amount <= 0) {
-  //         return "cancelled";
-  //       }
-
-  //       return "secondary";
-  //     };
-
-  //     return (
-  //       <Badge
-  //         variant={getBadgeVariant(parseFloat(amount))}
-  //         className={`cursor-pointer`}
-  //       >
-  //         {!isNaN(parseFloat(amount)) ? amount + "%" : "N/A"}
-  //       </Badge>
-  //     );
-  //   },
-  // },
   {
     accessorKey: "actions",
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
-      console.log(row.original);
-      let missingProducts = false;
-      // check if a order.quantity_purchased > order.quantity_received
-      if (
-        row.original.purchaseOrderProducts.some(
-          (product) =>
-            product.quantity_purchased > (product.quantity_received || 0)
-        )
-      ) {
-        missingProducts = true;
-      }
+      const activeProducts = row.original.purchaseOrderProducts.filter(
+        (product) => product.is_active
+      );
+
+      const missingProducts: boolean = activeProducts.some(
+        (product) =>
+          product.quantity_purchased > (product.quantity_received || 0) ||
+          (product.quantity_received || 0) > product.quantity_purchased
+      );
 
       return (
         <div className="text-right">
