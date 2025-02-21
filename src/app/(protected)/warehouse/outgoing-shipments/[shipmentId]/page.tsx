@@ -1,18 +1,22 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDate } from "@/helpers/format-date";
+import { Button } from "@/components/ui/button";
 import {
   AlertCircle,
   ClockIcon,
   IdCardIcon,
+  Pencil,
   PlaneIcon,
+  Save,
   StoreIcon,
+  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DataTable } from "../create/_components/tables/data-table";
-import { columns, palletCols } from "./columns";
+import { createColumns, palletCols } from "./columns";
 import { useShipmentQuery } from "./hooks/useShipmentQuery";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatDate } from "@/helpers";
 
 export interface ManifestPalletTable {
   pallet_id: number;
@@ -22,7 +26,7 @@ export interface ManifestPalletTable {
 
 export default function Page({ params }: { params: { shipmentId: string } }) {
   const { data, error } = useShipmentQuery(params.shipmentId);
-
+  const [isEditing, setIsEditing] = useState(false);
   const [pallets, setPallets] = useState<ManifestPalletTable[]>([]);
 
   useEffect(() => {
@@ -122,8 +126,33 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
         </Card>
       </div>
 
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">Products</h2>
+        {isEditing ? (
+          <div className="space-x-2">
+            <Button variant="outline" onClick={() => setIsEditing(false)}>
+              <X className="h-4 w-4 mr-2" />
+              Cancel
+            </Button>
+            <Button onClick={() => setIsEditing(false)}>
+              <Save className="h-4 w-4 mr-2" />
+              Save Changes
+            </Button>
+          </div>
+        ) : (
+          <Button onClick={() => setIsEditing(true)}>
+            <Pencil className="h-4 w-4 mr-2" />
+            Edit Shipment
+          </Button>
+        )}
+      </div>
+
       <DataTable pagination columns={palletCols} data={pallets} />
-      <DataTable pagination columns={columns} data={data?.PalletProducts} />
+      <DataTable
+        pagination
+        columns={createColumns(isEditing)}
+        data={data?.PalletProducts}
+      />
     </div>
   );
 }
