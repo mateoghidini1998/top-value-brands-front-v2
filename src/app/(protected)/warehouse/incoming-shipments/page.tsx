@@ -2,8 +2,8 @@
 import { DataTablePagination } from "@/components/custom/data-table-pagination";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { useState } from "react";
-import { OrdersFilters } from "../../purchase-orders/components/features/filters.component";
 import { useSuppliers } from "../../suppliers/hooks";
+import { IncomingOrdersFilters } from "./_components/features/filters.component";
 import { IncomingOrdersTable } from "./_components/features/incoming-orders-list";
 import { useGetAllIncomingOrders } from "./hooks/use-incoming-orders-service";
 
@@ -52,7 +52,7 @@ export default function Page() {
 
   return (
     <>
-      <OrdersFilters
+      <IncomingOrdersFilters
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         selectedSupplier={selectedSupplier}
