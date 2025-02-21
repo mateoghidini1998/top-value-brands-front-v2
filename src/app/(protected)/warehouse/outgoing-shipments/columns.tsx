@@ -3,7 +3,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import ActionsCell from "./_components/actions-cell";
 import { ArrowUpDown } from "lucide-react";
 import { Shipment } from "@/types/shipments/get.types";
-// import ActionsCell from "./components/actions-cell";
 
 export const getColumns = (
   handleOrderBy: (col: string) => void
