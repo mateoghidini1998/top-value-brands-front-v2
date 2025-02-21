@@ -5,6 +5,7 @@ import { useState } from "react";
 import { OrdersFilters } from "./components/features/filters.component";
 import { OrdersTable } from "./components/features/orders-list.component";
 import { useGetAllOrders } from "./hooks/use-purchase-order-service";
+import { MergeOrdersProvider } from "@/contexts/merge-orders.context";
 
 export interface SupplierItem {
   value: number;
@@ -46,7 +47,7 @@ export default function Page() {
     return <p>{ordersErrorMessage || "An error occurred"}</p>;
   }
   return (
-    <>
+    <MergeOrdersProvider>
       <OrdersFilters
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -64,7 +65,14 @@ export default function Page() {
         possibleStatuses={PURCHASE_ORDER_STATUSES}
       />
 
-      <OrdersTable orders={ordersResponse?.data || []} onOrderBy={orderBy} />
+      <OrdersTable
+        setSelectedSupplier={setSelectedSupplier}
+        orders={ordersResponse?.data || []}
+        onOrderBy={orderBy}
+        filterBySupplier={filterBySupplier}
+        ordersIsLoading={ordersIsLoading}
+        supplierId={selectedSupplier || null}
+      />
 
       <DataTablePagination
         currentPage={currentPage}
@@ -73,6 +81,6 @@ export default function Page() {
         onPageChange={changePage}
         onLimitChange={changeLimit}
       />
-    </>
+    </MergeOrdersProvider>
   );
 }

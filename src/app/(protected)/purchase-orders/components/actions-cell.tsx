@@ -1,18 +1,5 @@
 "use client";
 
-import { useRef, useState } from "react";
-import Link from "next/link";
-import { MoreHorizontal } from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,17 +10,39 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useMergeOrdersContext } from "@/contexts/merge-orders.context";
+import { Order } from "@/types/purchase-orders";
+import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { toast } from "sonner";
 import { useDeleteOrder, usePrefetchOrderSummary } from "../hooks";
 
 interface ActionsCellProps {
-  orderId: number;
+  order: Order;
+  filterBySupplier: (supplierId: number) => void;
+  ordersIsLoading: boolean;
+  setSelectedSupplier: Dispatch<SetStateAction<number | null>>;
 }
 
-const ActionsCell = ({ orderId }: ActionsCellProps) => {
+const ActionsCell = ({
+  order,
+  filterBySupplier,
+  setSelectedSupplier,
+}: ActionsCellProps) => {
   const { deleteOrderAsync } = useDeleteOrder();
   const { prefetchOrderSummary } = usePrefetchOrderSummary();
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
-
+  const { setOrders, setIsMerging } = useMergeOrdersContext();
   const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handlePrefetch = () => {
@@ -42,7 +51,7 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
     }
 
     prefetchTimeout.current = setTimeout(() => {
-      prefetchOrderSummary(orderId.toString());
+      prefetchOrderSummary(order.id.toString());
     }, 200); // Adjust delay as needed (500ms)
   };
 
@@ -67,7 +76,7 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
   const handleDownloadPDF = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/purchaseorders/download/${orderId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/purchaseorders/download/${order.id}`
       );
 
       if (!response.ok) {
@@ -78,7 +87,7 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `purchase-order-${orderId}.pdf`;
+      a.download = `purchase-order-${order.id}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -87,6 +96,15 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
       console.error("Error downloading PDF:", error);
       toast.error("Failed to download PDF");
     }
+  };
+
+  const handleMergePO = async (supplierId: number) => {
+    setSelectedSupplier(supplierId);
+    filterBySupplier(supplierId);
+    setIsMerging(true);
+    console.log("start merging POs");
+
+    setOrders([{ index: -1, orderId: order.id }]);
   };
 
   return (
@@ -107,13 +125,16 @@ const ActionsCell = ({ orderId }: ActionsCellProps) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <Link href={`/purchase-orders/${orderId}`}>View Details</Link>
+            <Link href={`/purchase-orders/${order.id}`}>View Details</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOrderToDelete(orderId)}>
+          <DropdownMenuItem onClick={() => setOrderToDelete(order.id)}>
             Delete Order
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleDownloadPDF}>
             Download PDF
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleMergePO(order.supplier_id)}>
+            Merge PO
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
