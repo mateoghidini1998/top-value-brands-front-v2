@@ -32,13 +32,10 @@ interface ActionsCellProps {
   filterBySupplier: (supplierId: number) => void;
   ordersIsLoading: boolean;
   setSelectedSupplier: Dispatch<SetStateAction<number | null>>;
+  selectedSupplier: number | null;
 }
 
-const ActionsCell = ({
-  order,
-  filterBySupplier,
-  setSelectedSupplier,
-}: ActionsCellProps) => {
+const ActionsCell = ({ order, selectedSupplier }: ActionsCellProps) => {
   const { deleteOrderAsync } = useDeleteOrder();
   const { prefetchOrderSummary } = usePrefetchOrderSummary();
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
@@ -99,10 +96,12 @@ const ActionsCell = ({
   };
 
   const handleMergePO = async (supplierId: number) => {
-    setSelectedSupplier(supplierId);
-    filterBySupplier(supplierId);
+    console.log("start merging POs with supplier", supplierId);
+    if (!selectedSupplier)
+      return toast.error("Please select a supplier to merge POs");
+    // setSelectedSupplier(supplierId);
+    // filterBySupplier(supplierId);
     setIsMerging(true);
-    console.log("start merging POs");
 
     setOrders([{ index: -1, orderId: order.id }]);
   };

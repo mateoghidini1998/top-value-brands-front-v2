@@ -136,6 +136,7 @@ export const getColumns = (
         <div className="text-right">
           <ActionsCell
             setSelectedSupplier={setSelectedSupplier}
+            selectedSupplier={supplierId}
             order={order}
             filterBySupplier={filterBySupplier}
             ordersIsLoading={ordersIsLoading}
