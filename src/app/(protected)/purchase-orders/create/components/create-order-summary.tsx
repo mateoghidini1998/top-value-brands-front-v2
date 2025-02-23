@@ -45,6 +45,9 @@ export default function CreateOrderSummary({
             product_id: product.product_id,
             quantity: product.quantity,
             product_cost: product.product_cost,
+            // Needed to calculate the profit in the backend
+            fees: product.fees,
+            lowest_fba_price: product.lowest_fba_price,
           };
         }),
         order_number: generateId(productsAdded[0].supplier_name),
