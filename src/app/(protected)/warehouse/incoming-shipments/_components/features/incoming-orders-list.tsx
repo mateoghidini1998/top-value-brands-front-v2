@@ -16,6 +16,7 @@ const showColumns: ShowHideColsumnsProps = {
 export function IncomingOrdersTable({ orders }: IncomingOrdersTableProps) {
   return (
     <DataTable
+      goToPath={"incoming-shipments"}
       data={orders}
       columns={columns}
       dataLength={50}

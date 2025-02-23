@@ -126,6 +126,7 @@ export default function Page() {
       </div>
 
       <DataTable
+        goToPath={"storage"}
         data={palletsResponse.data}
         columns={getColumns(handleOrderBy)}
         dataLength={palletsResponse.total}

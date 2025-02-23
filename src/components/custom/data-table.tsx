@@ -34,6 +34,7 @@ import React, { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
 import { useSidebar } from "../ui/sidebar";
+import { useRouter } from "next/navigation";
 
 export interface ShowHideColsumnsProps {
   show: boolean;
@@ -48,6 +49,7 @@ interface DataTableProps<TData, TValue> {
   showHideColumns?: ShowHideColsumnsProps;
   searchInput?: string;
   scrolleable?: boolean;
+  goToPath?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -61,8 +63,10 @@ export function DataTable<TData, TValue>({
   },
   searchInput = "",
   scrolleable = false,
+  goToPath,
 }: // setTableData,
 DataTableProps<TData, TValue>) {
+  const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -195,6 +199,12 @@ DataTableProps<TData, TValue>) {
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
+                    onClick={
+                      goToPath
+                        ? // @ts-expect-error Property 'id' does not exist on type 'TData'.ts(2339)
+                          () => router.push(`${goToPath}/${row.original.id}`)
+                        : () => {}
+                    }
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell

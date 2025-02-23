@@ -30,6 +30,7 @@ export function OrdersTable({
 }: OrdersTableProps) {
   return (
     <DataTable
+      goToPath={"purchase-orders"}
       data={orders}
       columns={getColumns(
         onOrderBy,

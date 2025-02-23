@@ -16,6 +16,7 @@ const showColumns: ShowHideColsumnsProps = {
 export function ClosedOrdersTable({ orders }: ClosedOrdersTableProps) {
   return (
     <DataTable
+      goToPath={"closed"}
       data={orders}
       columns={columns}
       dataLength={50}

@@ -178,6 +178,7 @@ export default function Page() {
       </div>
 
       <DataTable
+        goToPath={"outgoing-shipments"}
         data={shipmentsResponse?.shipments || []}
         columns={getColumns(handleOrderBy)}
         dataLength={50}
