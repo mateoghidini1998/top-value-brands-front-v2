@@ -36,6 +36,8 @@ export const ERROR_MESSAGES = {
   UPDATE_PURCHASE_ORDER: "Error updating purchase order",
   DELETE_PALLET: "Error deleting pallet",
   CHANGE_USER_PASSWORD: "Error changing user password",
+  MERGE_PURCHASE_ORDERS: "Error merging purchase orders",
+  CREATE_PURCHASE_ORDER: "Error creating purchase order",
 } as const;
 
 export const SUCCESS_MESSAGES = {
@@ -78,4 +80,6 @@ export const SUCCESS_MESSAGES = {
   UPDATE_PURCHASE_ORDER: "Purchase order updated successfully",
   DELETE_PALLET: "Pallet deleted successfully",
   CHANGE_USER_PASSWORD: "User password changed successfully",
+  MERGE_PURCHASE_ORDERS: "Purchase orders merged successfully",
+  CREATE_PURCHASE_ORDER: "Purchase order created successfully",
 } as const;

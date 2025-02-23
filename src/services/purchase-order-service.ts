@@ -13,6 +13,7 @@ import {
   GetPurchaseOrdersResponse,
 } from "@/types/purchase-orders/get.types";
 import {
+  MergePurchaseOrdersProps,
   UpdateOrderNotesProps,
   UpdateOrderNumberProps,
   UpdateOrderProductsProps,
@@ -144,7 +145,7 @@ export class PurchaseOrderService extends BaseService {
     return this.apiRequest<string>(url, options);
   }
 
-  public updatePurchaseOrder({
+  public async updatePurchaseOrder({
     orderId,
     notes,
     purchase_order_status_id,
@@ -156,6 +157,15 @@ export class PurchaseOrderService extends BaseService {
       ...(purchase_order_status_id && { purchase_order_status_id }),
       ...(products && { products }),
     });
+    return this.apiRequest<string>(url, options);
+  }
+
+  public async mergePurchseOrders({
+    orderId,
+    purchaseOrderIds,
+  }: MergePurchaseOrdersProps): Promise<string> {
+    const url = this.constructUrl(`/merge/${orderId}`);
+    const options = this.constructOptions("PUT", { purchaseOrderIds });
     return this.apiRequest<string>(url, options);
   }
 }

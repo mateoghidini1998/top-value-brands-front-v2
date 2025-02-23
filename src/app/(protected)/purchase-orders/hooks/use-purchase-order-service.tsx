@@ -10,6 +10,7 @@ import {
   DownloadPDFProps,
   GetOrdersProps,
   GetPurchaseOrdersResponse,
+  MergePurchaseOrdersProps,
   UpdateOrderNotesProps,
   UpdateOrderNumberProps,
   UpdateOrderProductsProps,
@@ -317,5 +318,22 @@ export const useUpdatePurchaseOrder = () => {
     isUpdatingPurchaseOrderError: updatePurchaseOrder.isError,
     isUpdatingPurchaseOrderSuccess: updatePurchaseOrder.isSuccess,
     isUpdatingPurchaseOrder: updatePurchaseOrder.isPending,
+  };
+};
+
+export const useMergePurchaseOrders = () => {
+  const mergePurchaseOrders = useCreateMutation<MergePurchaseOrdersProps>({
+    mutationFn: (props: MergePurchaseOrdersProps) =>
+      purchaseOrderService.mergePurchseOrders(props),
+    successMessage: SUCCESS_MESSAGES.MERGE_PURCHASE_ORDERS,
+    errorMessage: ERROR_MESSAGES.MERGE_PURCHASE_ORDERS,
+    invalidateKeys: [[QUERY_KEYS.ORDERS], [QUERY_KEYS.ORDER_SUMMARY]],
+  });
+
+  return {
+    mergePurchaseOrdersAsync: mergePurchaseOrders.mutateAsync,
+    isMergingPurchaseOrdersError: mergePurchaseOrders.isError,
+    isMergingPurchaseOrdersSuccess: mergePurchaseOrders.isSuccess,
+    isMergingPurchaseOrders: mergePurchaseOrders.isPending,
   };
 };

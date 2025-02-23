@@ -38,3 +38,8 @@ export interface UpdatePurchaseOrderProps {
     quantity: number;
   }[];
 }
+
+export interface MergePurchaseOrdersProps {
+  orderId: number;
+  purchaseOrderIds: number[];
+}
