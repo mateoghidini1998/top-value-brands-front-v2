@@ -62,8 +62,7 @@ export const columns: ColumnDef<Order>[] = [
 
       const missingProducts: boolean = activeProducts.some(
         (product) =>
-          product.quantity_purchased > (product.quantity_received || 0) ||
-          (product.quantity_received || 0) > product.quantity_purchased
+          product.quantity_purchased > (product.quantity_received || 0)
       );
 
       return (
