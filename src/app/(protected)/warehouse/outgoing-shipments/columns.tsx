@@ -1,8 +1,9 @@
 import { formatDate } from "@/helpers/format-date";
-import { ColumnDef } from "@tanstack/react-table";
-import ActionsCell from "./_components/actions-cell";
-import { ArrowUpDown } from "lucide-react";
 import { Shipment } from "@/types/shipments/get.types";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
+import ActionsCell from "./_components/actions-cell";
+import { PrintManifest } from "./_components/print-manifest";
 
 export const getColumns = (
   handleOrderBy: (col: string) => void
@@ -33,6 +34,18 @@ export const getColumns = (
     cell: ({ row }) => {
       const date: Date = row.getValue("updatedAt");
       return <div>{formatDate(date.toString())}</div>;
+    },
+  },
+  {
+    id: "Print",
+    header: () => <div className="">Print</div>,
+    cell: ({ row }) => {
+      const canBePrinted = row.original.fba_shipment_id;
+      return (
+        <div className={canBePrinted ? "" : "hidden"}>
+          <PrintManifest shipment={row.original} />
+        </div>
+      );
     },
   },
   {
