@@ -40,7 +40,10 @@ export const getColumns = (
     id: "qr_code",
     header: "QR Code",
     cell: ({ row }) => (
-      <div className="w-full overflow-hidden text-ellipsis">
+      <div
+        className="w-full overflow-hidden text-ellipsis"
+        onClick={(e) => e.stopPropagation()}
+      >
         <QrCodeCell incomingOrder={row.original} />
       </div>
     ),

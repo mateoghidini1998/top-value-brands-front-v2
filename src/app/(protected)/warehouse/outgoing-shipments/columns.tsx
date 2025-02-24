@@ -42,7 +42,10 @@ export const getColumns = (
     cell: ({ row }) => {
       const canBePrinted = row.original.fba_shipment_id;
       return (
-        <div className={canBePrinted ? "" : "hidden"}>
+        <div
+          className={canBePrinted ? "" : "hidden"}
+          onClick={(e) => e.stopPropagation()}
+        >
           <PrintManifest shipment={row.original} />
         </div>
       );
