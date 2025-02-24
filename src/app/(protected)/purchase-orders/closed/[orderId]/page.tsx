@@ -16,6 +16,7 @@ import { AlertTriangleIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useGetPurchaseOrderSummary } from "../../hooks";
 import { ProductTitle } from "@/components/custom/product-title";
+import UploadInvoiceFile from "../_components/upload-invoice";
 
 interface PageProps {
   params: {
@@ -51,9 +52,11 @@ export default function Page({ params }: PageProps) {
 
   return (
     <div className="">
-      <h1 className="text-3xl font-bold mb-6">Order - {order.order_number}</h1>
+      <h1 className="text-2xl font-bold py-4">Order - {order.order_number}</h1>
 
       <OrderSummaryCard order={order} />
+
+      <UploadInvoiceFile orderId={params.orderId} />
 
       <Card className="mt-8">
         <CardHeader>
@@ -116,7 +119,7 @@ function OrderSummaryCard({ order }: { order: Order }) {
         <CardTitle>Order Summary</CardTitle>
       </CardHeader>
       <CardContent>
-        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-6">
           <div>
             <dt className="font-medium text-gray-500">Order Number</dt>
             <dd>{order.order_number}</dd>
