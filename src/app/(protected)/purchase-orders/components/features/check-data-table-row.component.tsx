@@ -25,6 +25,7 @@ CheckDataTableRowProps) => {
 
   return (
     <Checkbox
+      onClick={(e) => e.stopPropagation()}
       className={`${validateIfCanBeChecked() ? "cursor-pointer" : "hidden"}`}
       checked={isTheRowChecked(row.original.id)}
       onCheckedChange={(value) => {
