@@ -1,11 +1,11 @@
 "use client";
-import { PurchaseOrderProvider } from "@/contexts/orders.context";
-import { useGetPurchaseOrderSummary, useUpdateOrderNotes } from "../hooks";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import OrderProductsTable from "./components/order-products-list.component";
-import OrderNotes from "./components/order-notes.component";
+import { PurchaseOrderProvider } from "@/contexts/orders.context";
+import { useGetPurchaseOrderSummary, useUpdateOrderNotes } from "../hooks";
 import OrderDetails from "./components/order-details.component";
+import OrderNotes from "./components/order-notes.component";
+import OrderProductsTable from "./components/order-products-list.component";
 
 export default function PurchaseOrderPage({
   params,
