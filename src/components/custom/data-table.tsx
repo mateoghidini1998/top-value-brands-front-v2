@@ -199,12 +199,14 @@ DataTableProps<TData, TValue>) {
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    onClick={
-                      goToPath
-                        ? // @ts-expect-error Property 'id' does not exist on type 'TData'.ts(2339)
-                          () => router.push(`${goToPath}/${row.original.id}`)
-                        : () => {}
-                    }
+                    onClick={(e) => {
+                      // Only navigate if goToPath is provided and the click target is not inside an action cell
+                      if (goToPath && !e.defaultPrevented) {
+                        // @ts-expect-error Property 'id' does not exist on type 'TData'
+                        router.push(`${goToPath}/${row.original.id}`);
+                      }
+                    }}
+                    className="cursor-pointer dark:hover:bg-dark-3/40 hover:bg-light-3/40"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell

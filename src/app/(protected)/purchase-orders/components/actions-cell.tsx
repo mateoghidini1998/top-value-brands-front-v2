@@ -106,8 +106,13 @@ const ActionsCell = ({ order, selectedSupplier }: ActionsCellProps) => {
     setOrders([{ index: -1, orderId: order.id }]);
   };
 
+  const handleActionClick = (e: React.MouseEvent) => {
+    // Stop event propagation to prevent row click
+    e.stopPropagation();
+  };
+
   return (
-    <>
+    <div onClick={handleActionClick}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -159,7 +164,7 @@ const ActionsCell = ({ order, selectedSupplier }: ActionsCellProps) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   );
 };
 
