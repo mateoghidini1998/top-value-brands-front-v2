@@ -146,13 +146,17 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
         ) : (
           <div className="w-fit flex items-center justify-between gap-4">
             <Button
-              className={`${shipment.status !== "WORKING" && "hidden"}`}
+              disabled
+              className={`${shipment.status !== "WORKING" && "hidden"} `}
               onClick={() => setIsEditing(true)}
             >
               <Pencil className="h-4 w-4 mr-2" />
               Edit Shipment
             </Button>
-            <Button className={`${shipment.status !== "WORKING" && "hidden"}`}>
+            <Button
+              disabled
+              className={`${shipment.status !== "WORKING" && "hidden"} `}
+            >
               <Plus className="h-4 w-4 mr-2" />
               <Link
                 href={`/warehouse/outgoing-shipments/create?update=${shipment.id}`}
