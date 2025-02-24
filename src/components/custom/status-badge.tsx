@@ -89,7 +89,7 @@ export function StatusBadge({
   };
 
   return (
-    <div className="relative">
+    <div className="relative" onClick={(e) => e.stopPropagation()}>
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Badge
