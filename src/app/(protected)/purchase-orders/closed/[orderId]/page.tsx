@@ -15,6 +15,7 @@ import { Order } from "@/types";
 import { AlertTriangleIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useGetPurchaseOrderSummary } from "../../hooks";
+import { ProductTitle } from "@/components/custom/product-title";
 
 interface PageProps {
   params: {
@@ -62,9 +63,10 @@ export default function Page({ params }: PageProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Product Name</TableHead>
+                <TableHead>Product</TableHead>
                 <TableHead>UPC</TableHead>
                 <TableHead>Seller SKU</TableHead>
+                <TableHead>Item No.</TableHead>
                 <TableHead>ASIN</TableHead>
                 <TableHead>Quantity Purchased</TableHead>
                 <TableHead>Quantity Received</TableHead>
@@ -75,9 +77,18 @@ export default function Page({ params }: PageProps) {
             <TableBody>
               {purchaseOrderProducts.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell>{product.product_name}</TableCell>
+                  <TableCell>
+                    <ProductTitle
+                      product_image={product.product_image}
+                      product_name={product.product_name}
+                      ASIN={product.ASIN}
+                      in_seller_account={product.in_seller_account}
+                      width={300}
+                    />
+                  </TableCell>
                   <TableCell>{product.upc}</TableCell>
                   <TableCell>{product.seller_sku}</TableCell>
+                  <TableCell>{product.supplier_item_number}</TableCell>
                   <TableCell>{product.ASIN}</TableCell>
                   <TableCell>{product.quantity_purchased}</TableCell>
                   <TableCell>{product.quantity_received}</TableCell>
