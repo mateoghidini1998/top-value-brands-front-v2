@@ -99,7 +99,7 @@ export const columns: ColumnDef<Order>[] = [
     header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
       return (
-        <div className="text-right">
+        <div className="text-right" onClick={(e) => e.stopPropagation()}>
           <ActionsCell orderId={row.original.id} />
         </div>
       );
