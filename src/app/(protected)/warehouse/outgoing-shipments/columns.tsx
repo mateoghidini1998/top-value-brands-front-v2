@@ -57,7 +57,7 @@ export const getColumns = (
     header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
       return (
-        <div className="w-full text-right">
+        <div className="w-full text-right" onClick={(e) => e.stopPropagation()}>
           <ActionsCell shipmentId={row.original.id} />
         </div>
       );

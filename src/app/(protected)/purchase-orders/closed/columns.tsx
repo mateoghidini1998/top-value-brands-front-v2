@@ -66,7 +66,7 @@ export const columns: ColumnDef<Order>[] = [
       );
 
       return (
-        <div className="text-right">
+        <div className="text-right" onClick={(e) => e.stopPropagation()}>
           <ActionsCell
             orderId={row.original.id}
             missingProducts={missingProducts}
