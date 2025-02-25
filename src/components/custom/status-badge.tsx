@@ -36,7 +36,6 @@ const PURCHASE_ORDER_STATUSES = {
 } as const;
 
 const INCOMING_PURCHASE_ORDER_STATUSES = {
-  "Good to go": 3,
   "In transit": 5,
   Arrived: 6,
   Closed: 7,
