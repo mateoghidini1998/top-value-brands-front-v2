@@ -1,6 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+export class HttpError extends Error {
+  status: number;
+  backendMessage: string;
+
+  constructor(message: string, status: number, backendMessage?: string) {
+    super(message);
+    this.name = "HttpError";
+    this.status = status;
+    this.backendMessage = backendMessage || message; // Siempre tener un mensaje
+  }
+}
+
 interface BaseMutationConfig<T> {
   mutationFn: (variables: T) => Promise<unknown>; // The mutation function
   successMessage?: string; // Optional success message
@@ -25,23 +37,12 @@ export function useCreateMutation<T>(config: BaseMutationConfig<T>) {
       }
     },
     onError: (error: Error) => {
-      try {
-        const errorData = JSON.parse(error.message);
-        if (Array.isArray(errorData)) {
-          errorData.forEach((err) => {
-            toast.error(err.msg);
-          });
-        } else {
-          toast.error(
-            error.message ||
-              config.errorMessage ||
-              "An unexpected error occurred"
-          );
-        }
-      } catch {
+      if (error instanceof HttpError) {
         toast.error(
-          error.message || config.errorMessage || "An unexpected error occurred"
+          error.backendMessage || config.errorMessage || "An error occurred"
         );
+      } else {
+        toast.error(config.errorMessage || "An unexpected error occurred");
       }
     },
   });
