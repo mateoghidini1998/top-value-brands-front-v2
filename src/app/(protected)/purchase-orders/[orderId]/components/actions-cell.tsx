@@ -22,6 +22,7 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { useDeleteOrderProduct } from "../../hooks";
+import { usePurchaseOrderContext } from "@/contexts/orders.context";
 
 interface ActionsCellProps {
   orderProductId: number;
@@ -29,6 +30,7 @@ interface ActionsCellProps {
 
 const ActionsCell = ({ orderProductId }: ActionsCellProps) => {
   const { deleteOrderProductAsync } = useDeleteOrderProduct();
+  const { removeProduct } = usePurchaseOrderContext(); // Obtén el método del contexto
   const [orderToDelete, setOrderToDelete] = useState<number>(0);
 
   const handleDeleteOrder = async () => {
@@ -37,12 +39,17 @@ const ActionsCell = ({ orderProductId }: ActionsCellProps) => {
         await deleteOrderProductAsync({
           orderProductId: orderToDelete.toString(),
         });
+
+        // Eliminar también del estado global
+        removeProduct(orderToDelete);
+
         setOrderToDelete(0);
       } catch (error) {
         console.error("Failed to delete order:", error);
       }
     }
   };
+
   return (
     <>
       <DropdownMenu>

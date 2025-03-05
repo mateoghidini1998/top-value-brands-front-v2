@@ -13,6 +13,7 @@ interface PurchaseOrderContextType {
   setUpdatedPOProducts: React.Dispatch<
     React.SetStateAction<PurchaseOrderProductsUpdates[]>
   >;
+  removeProduct: (id: number) => void;
 }
 
 const PurchaseOrderContext = createContext<
@@ -33,6 +34,27 @@ export function PurchaseOrderProvider({
     PurchaseOrderProductsUpdates[]
   >([]);
 
+  // const updateProduct = (
+  //   id: number,
+  //   updates: Partial<PurchaseOrderSummaryProducts>
+  // ) => {
+  //   setProducts((currentProducts) => {
+  //     const updatedProducts = currentProducts.map((product) => {
+  //       if (product.id === id) {
+  //         const updatedProduct = { ...product, ...updates };
+  //         // Asegurarse de que total_amount se actualiza correctamente
+  //         updatedProduct.total_amount =
+  //           parseFloat(updatedProduct.product_cost) *
+  //           updatedProduct.quantity_purchased;
+  //         return updatedProduct;
+  //       }
+  //       return product;
+  //     });
+  //     setUpdatedPOProducts(transformProductsUpdates(updatedProducts));
+  //     return updatedProducts;
+  //   });
+  // };
+
   const updateProduct = (
     id: number,
     updates: Partial<PurchaseOrderSummaryProducts>
@@ -41,7 +63,6 @@ export function PurchaseOrderProvider({
       const updatedProducts = currentProducts.map((product) => {
         if (product.id === id) {
           const updatedProduct = { ...product, ...updates };
-          // Asegurarse de que total_amount se actualiza correctamente
           updatedProduct.total_amount =
             parseFloat(updatedProduct.product_cost) *
             updatedProduct.quantity_purchased;
@@ -49,9 +70,61 @@ export function PurchaseOrderProvider({
         }
         return product;
       });
-      setUpdatedPOProducts(transformProductsUpdates(updatedProducts));
+
+      // Encontrar el producto modificado
+      const modifiedProduct = updatedProducts.find((p) => p.id === id);
+      if (!modifiedProduct) return currentProducts; // Si no hay cambios, salir
+
+      setUpdatedPOProducts((prevUpdated) => {
+        // Verificar si el producto ya fue modificado antes
+        const exists = prevUpdated.some(
+          (p) =>
+            p.purchaseOrderProductId ===
+            modifiedProduct.purchase_order_product_id
+        );
+
+        if (exists) {
+          // Si ya existe, actualizarlo en la lista
+          return prevUpdated.map((p) =>
+            p.purchaseOrderProductId ===
+            modifiedProduct.purchase_order_product_id
+              ? {
+                  product_cost: modifiedProduct.product_cost,
+                  profit: modifiedProduct.profit?.toString(),
+                  purchaseOrderProductId:
+                    modifiedProduct.purchase_order_product_id,
+                  quantityPurchased: modifiedProduct.quantity_purchased,
+                  unit_price: modifiedProduct.product_cost,
+                }
+              : p
+          );
+        } else {
+          // Si no existe, agregarlo
+          return [
+            ...prevUpdated,
+            {
+              product_cost: modifiedProduct.product_cost,
+              profit: modifiedProduct.profit?.toString(),
+              purchaseOrderProductId: modifiedProduct.purchase_order_product_id,
+              quantityPurchased: modifiedProduct.quantity_purchased,
+              unit_price: modifiedProduct.product_cost,
+            },
+          ];
+        }
+      });
+
       return updatedProducts;
     });
+  };
+
+  const removeProduct = (id: number) => {
+    setProducts((currentProducts) =>
+      currentProducts.filter((product) => product.id !== id)
+    );
+
+    setUpdatedPOProducts((prevUpdated) =>
+      prevUpdated.filter((p) => p.purchaseOrderProductId !== id)
+    );
   };
 
   // transform the products into an array of product updates
@@ -74,6 +147,7 @@ export function PurchaseOrderProvider({
       value={{
         products,
         updateProduct,
+        removeProduct,
         updatedPOProducts,
         setUpdatedPOProducts,
       }}
