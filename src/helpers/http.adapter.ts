@@ -31,28 +31,56 @@ export const handleResponse = async <T>(response: Response): Promise<T> => {
   }
 };
 
+// export const apiRequest = async <T>(
+//   url: string,
+//   options: RequestInit = {},
+//   delay: number = 1
+// ): Promise<T> => {
+//   // const authHeader = `Bearer ${await getSessionId()}`;
+//   const authHeader = cookies().get("__session")?.value;
+
+//   // Verificar si ya existen headers, de lo contrario inicializarlos
+//   options.headers = {
+//     ...options.headers, // Mantiene los headers existentes si hay
+//     // @ts-expect-error Authroization no está definido en RequestInit
+//     Authorization: options.headers?.Authorization || authHeader, // Agregar el header si no existe
+//   };
+//   try {
+//     await sleep(delay);
+//     const response = await fetch(url, options);
+//     return handleResponse<T>(response);
+//   } catch (error) {
+//     if (error instanceof HttpError) {
+//       return Promise.reject(error);
+//     }
+//     throw error;
+//   }
+// };
+
 export const apiRequest = async <T>(
   url: string,
   options: RequestInit = {},
   delay: number = 1
 ): Promise<T> => {
-  // const authHeader = `Bearer ${await getSessionId()}`;
   const authHeader = cookies().get("__session")?.value;
 
-  // Verificar si ya existen headers, de lo contrario inicializarlos
   options.headers = {
-    ...options.headers, // Mantiene los headers existentes si hay
+    ...options.headers,
+
     // @ts-expect-error Authroization no está definido en RequestInit
-    Authorization: options.headers?.Authorization || authHeader, // Agregar el header si no existe
+    Authorization: options.headers?.Authorization || authHeader,
   };
+
   try {
     await sleep(delay);
     const response = await fetch(url, options);
     return handleResponse<T>(response);
   } catch (error) {
     if (error instanceof HttpError) {
-      return Promise.reject(error);
+      // @ts-expect-error We return a JSON to be able to show it on the client side.
+      return { error: error.backendMessage }; // ⚠️ Devolver error como objeto JSON
     }
-    throw error;
+    // @ts-expect-error We return a JSON to be able to show it on the client side.
+    return { error: "Error desconocido" };
   }
 };
