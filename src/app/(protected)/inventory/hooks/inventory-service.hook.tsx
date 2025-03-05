@@ -130,3 +130,20 @@ export const useDeleteProduct = () => {
     isDeleting: deleteProduct.isPending,
   };
 };
+
+export const useDeleteProductFromSellerAccount = () => {
+  const deleteProduct = useCreateMutation<string>({
+    mutationFn: (id: string) =>
+      inventoryService.deleteProductFromSellerAccount(parseInt(id)),
+    successMessage: SUCCESS_MESSAGES.DELETE_PRODUCT,
+    errorMessage: ERROR_MESSAGES.DELETE_PRODUCT,
+    invalidateKeys: [[QUERY_KEYS.PRODUCTS]], // Invalidate user list after registration
+  });
+
+  return {
+    deleteFromSellerAccountAsync: deleteProduct.mutateAsync,
+    isDeletingFromSellerAccountError: deleteProduct.isError,
+    isDeletingFromSellerAccountSuccess: deleteProduct.isSuccess,
+    isDeletingFromSellerAccount: deleteProduct.isPending,
+  };
+};

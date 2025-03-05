@@ -28,7 +28,10 @@ import {
 import { Product } from "@/types";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
-import { useDeleteProduct } from "../hooks/inventory-service.hook";
+import {
+  useDeleteProduct,
+  useDeleteProductFromSellerAccount,
+} from "../hooks/inventory-service.hook";
 import { EditProductForm } from "./edit-product-form";
 
 interface ActionsCellProps {
@@ -37,6 +40,9 @@ interface ActionsCellProps {
 
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const { deleteAsync } = useDeleteProduct();
+  const { deleteFromSellerAccountAsync } = useDeleteProductFromSellerAccount();
+  const [isDeletingFromSellerAccount, setIsDeletingFromSellerAccount] =
+    useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
@@ -48,6 +54,17 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
     if (productToDelete) {
       try {
         await deleteAsync(productToDelete.id.toString());
+        setProductToDelete(null);
+      } catch (error) {
+        console.error("Failed to delete product:", error);
+      }
+    }
+  };
+
+  const handleDeleteProductFromSellerAccount = async () => {
+    if (productToDelete) {
+      try {
+        await deleteFromSellerAccountAsync(productToDelete.id.toString());
         setProductToDelete(null);
       } catch (error) {
         console.error("Failed to delete product:", error);
@@ -78,6 +95,14 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
           <DropdownMenuItem onClick={() => setProductToDelete(row)}>
             Delete Product
           </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              setProductToDelete(row);
+              setIsDeletingFromSellerAccount(true);
+            }}
+          >
+            Delete From Amazon
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -106,6 +131,26 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteProduct}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <AlertDialog
+        open={!!productToDelete && isDeletingFromSellerAccount}
+        onOpenChange={(open) => !open && setProductToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              The product will be deleted from your inventory and from your
+              Amazon Account. This product will not be tracked again.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteProductFromSellerAccount}>
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>

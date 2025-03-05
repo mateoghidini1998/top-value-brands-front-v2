@@ -36,7 +36,15 @@ export class InventoryService extends BaseService {
   public async deleteProduct(id: number): Promise<PalletProductResponse> {
     const url = this.constructUrl("/disable");
     const options = this.constructOptions("PATCH", { id });
-    return this.apiRequest<PalletProductResponse>(url, options);
+    return this.apiRequest(url, options);
+  }
+
+  public async deleteProductFromSellerAccount(
+    id: number
+  ): Promise<PalletProductResponse> {
+    const url = this.constructUrl(`/${id}`);
+    const options = this.constructOptions("DELETE");
+    return this.apiRequest(url, options);
   }
 
   public async getInventory({
