@@ -1,22 +1,26 @@
-"use server";
+// "use server";
 
-import { cookies } from "next/headers";
+// import { cookies } from "next/headers";
 import { sleep } from "./sleep";
 import { HttpError } from "@/hooks/mutation-factory";
+import { SerializableError } from "@/lib/api-utils";
+import { getSessionId } from "./get-session-id";
 
 export const handleResponse = async <T>(response: Response): Promise<T> => {
   if (!response.ok) {
+    console.log("we have an error");
     const errorData = await response.json();
     const backendMessage = errorData.msg || "An unexpected error occurred";
-    return Promise.reject(new HttpError(backendMessage, response.status));
+
+    // Ensure error is serializable for client-side
+    return Promise.reject({
+      name: "HttpError",
+      message: backendMessage,
+      status: response.status,
+    });
   }
-  // Determinar si la respuesta es JSON o un Blob (ej., PDF)
-  const contentType = response.headers.get("Content-Type") || "";
-  if (contentType.includes("application/json")) {
-    return response.json() as Promise<T>;
-  } else {
-    return response.blob() as unknown as T;
-  }
+
+  return response.json() as Promise<T>;
 };
 
 export const apiRequest = async <T>(
@@ -24,8 +28,8 @@ export const apiRequest = async <T>(
   options: RequestInit = {},
   delay: number = 1
 ): Promise<T> => {
-  // const authHeader = `Bearer ${await getSessionId()}`;
-  const authHeader = cookies().get("__session")?.value;
+  const authHeader = `${await getSessionId()}`;
+  // const authHeader = cookies().get("__session")?.value;
 
   // Verificar si ya existen headers, de lo contrario inicializarlos
   options.headers = {
@@ -38,8 +42,14 @@ export const apiRequest = async <T>(
     const response = await fetch(url, options);
     return handleResponse<T>(response);
   } catch (error) {
-    if (error instanceof HttpError) {
-      return Promise.reject(error);
+    // Convert serialized error to HttpError if needed
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "name" in error &&
+      error.name === "HttpError"
+    ) {
+      throw HttpError.fromSerializable(error as SerializableError);
     }
     throw error;
   }
