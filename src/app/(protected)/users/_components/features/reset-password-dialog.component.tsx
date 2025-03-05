@@ -34,8 +34,7 @@ export const ResetPasswordDialog = ({
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showRepeatNewPassword, setShowRepeatNewPassword] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
-  const { changePassword, isChangingPassword, passwordChangeError } =
-    useChangeUserPassword();
+  const { changePassword, isChangingPassword } = useChangeUserPassword();
 
   useEffect(() => {
     setPasswordsMatch(newPassword === repeatNewPassword);
@@ -133,12 +132,12 @@ export const ResetPasswordDialog = ({
             </AlertDescription>
           </Alert>
         )}
-        {passwordChangeError && (
+        {/* {passwordChangeError && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{passwordChangeError.message}</AlertDescription>
+            <AlertDescription>{passwordChangeError?.message || "An error occurred while changing the password."}</AlertDescription>
           </Alert>
-        )}
+        )} */}
         <DialogFooter>
           <Button
             type="submit"
