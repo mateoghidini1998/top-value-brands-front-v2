@@ -8,11 +8,13 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
+import { Button } from "../ui/button";
 
 export function DynamicBreadcrumb() {
   const pathname = usePathname();
+  const router = useRouter();
   const pathSegments = pathname.split("/").filter((segment) => segment !== "");
 
   const styleSegment = (segment: string) => {
@@ -41,7 +43,9 @@ export function DynamicBreadcrumb() {
                 {isLast ? (
                   <BreadcrumbPage>{styleSegment(segment)}</BreadcrumbPage>
                 ) : (
-                  <Link href={href}>{styleSegment(segment)}</Link>
+                  <Button variant="ghost" onClick={() => router.back()}>
+                    {styleSegment(segment)}
+                  </Button>
                 )}
               </BreadcrumbItem>
             </React.Fragment>
