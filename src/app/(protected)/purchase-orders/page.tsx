@@ -21,7 +21,7 @@ const PURCHASE_ORDER_STATUSES = [
   { name: "Waiting for supplier approval", value: 8 },
 ];
 
-const FILTER_STORAGE_KEY = "ordersFilters";
+const FILTER_STORAGE_KEY = "OF";
 
 export default function Page() {
   const router = useRouter();
