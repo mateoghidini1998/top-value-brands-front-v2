@@ -24,9 +24,11 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import {
+  useAddReferenceId,
   useDeleteShipment,
   usePrefetchShipmentByID,
 } from "../hooks/use-shipments-service";
+import { Input } from "@/components/ui/input";
 
 interface ActionsCellProps {
   shipmentId: number;
@@ -40,6 +42,9 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
   const { prefetchShipmentByID } = usePrefetchShipmentByID(
     shipmentId.toString()
   );
+
+  const { addReferenceIdAsync } = useAddReferenceId(shipmentId.toString());
+  const [referenceId, setReferenceId] = useState<string>("");
 
   const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -67,6 +72,14 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
       } catch (error) {
         console.error("Failed to delete shipment:", error);
       }
+    }
+  };
+
+  const handleAddReferenceId = async () => {
+    try {
+      await addReferenceIdAsync(referenceId);
+    } catch (error) {
+      console.error("Failed to add reference ID:", error);
     }
   };
 
@@ -134,8 +147,12 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
           <DropdownMenuItem onClick={() => setShipmentToDelete(shipmentId)}>
             Delete Shipment
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setShipmentToDelete(shipmentId)}>
+            Add Reference ID
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      {/* Delete Dialog */}
       <AlertDialog
         open={!!shipmentToDelete}
         onOpenChange={(open) => !open && setShipmentToDelete(0)}
@@ -154,6 +171,31 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteShipment}>
               Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Add Reference ID Dialog */}
+      <AlertDialog
+        open={!!shipmentToDelete}
+        onOpenChange={(open) => !open && setShipmentToDelete(0)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Add Reference ID to Shipment</AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogDescription>
+            <Input
+              placeholder="Reference ID"
+              value={referenceId}
+              onChange={(e) => setReferenceId(e.target.value)}
+            />
+          </AlertDialogDescription>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleAddReferenceId}>
+              Add
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

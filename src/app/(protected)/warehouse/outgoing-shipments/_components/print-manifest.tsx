@@ -31,7 +31,6 @@ export const PrintManifest = ({ shipment }: { shipment: Shipment }) => {
               padding: 20px;
               line-height: 1.6;
               text-align: center; /* Centra el contenido */
-              height: 100vh;
             }
             .container {
               max-width: 90%;
@@ -73,7 +72,7 @@ export const PrintManifest = ({ shipment }: { shipment: Shipment }) => {
 
               <div class="shipment-item">
                 <span class="label">Reference ID:</span>
-                <span>${shipment.fba_shipment_id}</span>
+                <span>${shipment.reference_id}</span>
               </div>
             </div>
           </div>
@@ -122,7 +121,7 @@ export const PrintManifest = ({ shipment }: { shipment: Shipment }) => {
           <div className="grid gap-2">
             <div className="font-medium">Reference ID</div>
             <div className="text-sm text-muted-foreground">
-              {shipment.fba_shipment_id}
+              {shipment.reference_id}
             </div>
           </div>
           <Button

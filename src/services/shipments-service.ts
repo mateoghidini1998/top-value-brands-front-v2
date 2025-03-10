@@ -60,4 +60,10 @@ export class ShipmentsService extends BaseService {
     const options = this.constructOptions("PUT");
     return this.apiRequest<string>(url, options);
   }
+
+  public async addReferenceId(shipmentId: string, referenceId: string) {
+    const url = this.constructUrl(`/reference/${shipmentId}`);
+    const options = this.constructOptions("PATCH", { referenceId });
+    return this.apiRequest<string>(url, options);
+  }
 }

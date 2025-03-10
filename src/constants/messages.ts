@@ -38,6 +38,7 @@ export const ERROR_MESSAGES = {
   CHANGE_USER_PASSWORD: "Error changing user password",
   MERGE_PURCHASE_ORDERS: "Error merging purchase orders",
   CREATE_PURCHASE_ORDER: "Error creating purchase order",
+  UPDATE_REFERENCE_ID: "Error updating reference ID",
 } as const;
 
 export const SUCCESS_MESSAGES = {
@@ -82,4 +83,5 @@ export const SUCCESS_MESSAGES = {
   CHANGE_USER_PASSWORD: "User password changed successfully",
   MERGE_PURCHASE_ORDERS: "Purchase orders merged successfully",
   CREATE_PURCHASE_ORDER: "Purchase order created successfully",
+  UPDATE_REFERENCE_ID: "Reference ID updated successfully",
 } as const;

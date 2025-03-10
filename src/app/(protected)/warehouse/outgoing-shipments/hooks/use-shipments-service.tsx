@@ -165,3 +165,20 @@ export const useCheckShipmentProducts = (outgoingShipmentProductId: number) => {
     isCheckingShipmentProduct: checkShipmentProduct.isPending,
   };
 };
+
+export const useAddReferenceId = (shipmentId: string) => {
+  const addReferenceId = useCreateMutation<string>({
+    mutationFn: (referenceId: string) =>
+      shipmentsService.addReferenceId(shipmentId, referenceId),
+    successMessage: SUCCESS_MESSAGES.UPDATE_REFERENCE_ID,
+    errorMessage: ERROR_MESSAGES.UPDATE_REFERENCE_ID,
+    invalidateKeys: [[QUERY_KEYS.SHIPMENT, shipmentId], [QUERY_KEYS.SHIPMENTS]],
+  });
+
+  return {
+    addReferenceIdAsync: addReferenceId.mutateAsync,
+    isAddingReferenceIdError: addReferenceId.isError,
+    isAddingReferenceIdSuccess: addReferenceId.isSuccess,
+    isAddingReferenceId: addReferenceId.isPending,
+  };
+};

@@ -18,6 +18,7 @@ export interface Shipment {
   fba_shipment_id: null;
   createdAt: Date;
   updatedAt: Date;
+  reference_id: string;
   PalletProducts: ShipmentPalletProduct[];
 }
 

@@ -15,6 +15,18 @@ export const getColumns = (
   {
     accessorKey: "fba_shipment_id",
     header: "FBA Shipment ID",
+    cell: ({ row }) => {
+      const fba_shipment_id: string = row.getValue("fba_shipment_id");
+      return <div>{fba_shipment_id || "--"}</div>;
+    },
+  },
+  {
+    accessorKey: "reference_id",
+    header: "Reference ID",
+    cell: ({ row }) => {
+      const reference_id: string = row.getValue("reference_id");
+      return <div>{reference_id || "--"}</div>;
+    },
   },
 
   {
