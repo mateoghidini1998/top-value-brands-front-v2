@@ -386,7 +386,15 @@ export default function Page({
               inputRefs,
               missingFields
             )}
-            data={tableData}
+            // data with dg_items == true should be added at the bottom of the table
+            data={[
+              ...tableData.filter(
+                (product) => !product.dg_item || product.dg_item === "--"
+              ), // Elementos con dg_item null o '--' (van al final)
+              ...tableData.filter(
+                (product) => product.dg_item && product.dg_item !== "--"
+              ), // Elementos con dg_item válido (van al inicio)
+            ]}
             dataLength={tableData.length}
             showHideColumns={showColumns}
           />
@@ -396,7 +404,6 @@ export default function Page({
           <Button onClick={() => handleSavePallets()}>Save Pallet</Button>
           <DataTable
             columns={availableToCreate((product) => {
-              // validate that the queantity is less than or equal to the quantity available
               setProductsAddedToCreatePallet((prev) => {
                 if (product.quantity_available <= 0) {
                   toast.error(
@@ -405,6 +412,24 @@ export default function Page({
                   return prev;
                 }
 
+                // Determinar el tipo del nuevo producto
+                const isNewDgItemValid =
+                  product.dg_item && product.dg_item !== "--";
+
+                // Si ya hay productos en la lista, verificamos si son del mismo tipo
+                if (prev.length > 0) {
+                  const isExistingDgItemValid =
+                    prev[0].dg_item && prev[0].dg_item !== "--"; // Tipo del primer producto agregado
+
+                  if (isExistingDgItemValid !== isNewDgItemValid) {
+                    toast.error(
+                      "You can't combine dangerous and standard products in one pallet"
+                    );
+                    return prev; // No se agrega el producto
+                  }
+                }
+
+                // Agregar el producto si cumple con la validación
                 return [
                   ...prev,
                   {
@@ -414,15 +439,25 @@ export default function Page({
                 ];
               });
             })}
-            data={tableData.filter((product) => {
-              // validate that the product has quantity available
-              return (
-                product.quantity_available > 0 &&
-                !productsAddedToCreatePallet.some(
-                  (addedProduct) => addedProduct.id === product.id
-                )
-              );
-            })}
+            data={[
+              ...tableData.filter(
+                (product) =>
+                  product.quantity_available > 0 &&
+                  !productsAddedToCreatePallet.some(
+                    (addedProduct) => addedProduct.id === product.id
+                  ) &&
+                  (!product.dg_item || product.dg_item === "--") // dg_item es null o '--' (van al inicio)
+              ),
+              ...tableData.filter(
+                (product) =>
+                  product.quantity_available > 0 &&
+                  !productsAddedToCreatePallet.some(
+                    (addedProduct) => addedProduct.id === product.id
+                  ) &&
+                  product.dg_item &&
+                  product.dg_item !== "--" // dg_item tiene un valor válido (van al final)
+              ),
+            ]}
             dataLength={10000}
           />
           <DataTable

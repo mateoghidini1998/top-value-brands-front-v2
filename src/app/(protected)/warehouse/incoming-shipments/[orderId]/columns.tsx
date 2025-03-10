@@ -60,6 +60,10 @@ export const incomingOrderCols = (
       },
     },
     {
+      accessorKey: "dg_item",
+      header: "DG Item",
+    },
+    {
       accessorKey: "ASIN",
       header: "ASIN",
     },
@@ -78,7 +82,7 @@ export const incomingOrderCols = (
             onBlur={(e) => {
               onUpcChange(row.original.id.toString(), e.target.value);
             }}
-            className={`w-52 ${
+            className={`w-48 ${
               !row.original.upc &&
               missingFields
                 .find((f) => f.product_id === row.original.id)
@@ -172,7 +176,7 @@ export const incomingOrderCols = (
             }}
           >
             <SelectTrigger
-              className={`w-[180px] ${
+              className={`w-[140px] ${
                 !row.original.reason_id &&
                 missingFields
                   .find((f) => f.product_id === row.original.id)
@@ -205,7 +209,7 @@ export const incomingOrderCols = (
       cell: ({ row }) => {
         return (
           <ExpireDateCell
-            className={`w-[180px] `}
+            className={`w-[140px] `}
             missingFields={missingFields}
             // @ts-expect-error @typescript-eslint/no-unsafe-argument
             inputRef={inputRefs.current[`expire_date_${row.original.id}`]}
@@ -240,6 +244,10 @@ export const availableToCreate = (
         />
       );
     },
+  },
+  {
+    accessorKey: "dg_item",
+    header: "DG Item",
   },
   {
     accessorKey: "ASIN",
@@ -286,6 +294,7 @@ export const addedToCreate = (
   {
     id: "product_title",
     header: "Product Name",
+
     cell: ({ row }) => {
       const product_image = row.original.product_image;
       const product_name = row.original.product_name;
@@ -306,6 +315,10 @@ export const addedToCreate = (
   {
     accessorKey: "ASIN",
     header: "ASIN",
+  },
+  {
+    accessorKey: "dg_item",
+    header: "DG Item",
   },
   {
     accessorKey: "seller_sku",

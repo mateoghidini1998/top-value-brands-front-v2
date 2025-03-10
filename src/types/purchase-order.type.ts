@@ -45,6 +45,7 @@ export interface PurchaseOrderSummaryProducts {
   upc: string | null;
   expire_date: string | null;
   warehouse_stock: string;
+  dg_item: string;
   pallet_quantity?: number;
 }
 
