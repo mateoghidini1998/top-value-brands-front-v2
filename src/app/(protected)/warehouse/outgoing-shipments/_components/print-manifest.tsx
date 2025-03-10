@@ -25,28 +25,31 @@ export const PrintManifest = ({ shipment }: { shipment: Shipment }) => {
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Shipment Manifest</title>
           <style>
             body {
               font-family: Arial, sans-serif;
               padding: 20px;
               line-height: 1.6;
+              text-align: center; /* Centra el contenido */
+              height: 100vh;
             }
             .container {
-              max-width: 600px;
-              margin: 0 auto;
-            }
-            .header {
-              text-align: center;
-              margin-bottom: 30px;
+              max-width: 90%;
+              margin: auto;
             }
             .shipment-details {
-              border: 1px solid #ccc;
-              padding: 20px;
-              border-radius: 4px;
+              border: 2px solid #000;
+              padding: 30px;
+              border-radius: 8px;
+              display: inline-block;
+              font-size: 36px; /* Agranda el texto */
             }
             .shipment-item {
-              margin-bottom: 15px;
+              margin-bottom: 20px;
+              display: flex;
+              flex-direction:column;
+              align-items: center;
+              gap: 10px;
             }
             .label {
               font-weight: bold;
@@ -56,16 +59,20 @@ export const PrintManifest = ({ shipment }: { shipment: Shipment }) => {
         </head>
         <body>
           <div class="container">
-            <div class="header">
-              <h1>Shipment Manifest</h1>
-            </div>
             <div class="shipment-details">
+
               <div class="shipment-item">
                 <span class="label">Shipment Number:</span>
                 <span>${shipment.shipment_number}</span>
               </div>
+
               <div class="shipment-item">
                 <span class="label">FBA Shipment ID:</span>
+                <span>${shipment.fba_shipment_id}</span>
+              </div>
+
+              <div class="shipment-item">
+                <span class="label">Reference ID:</span>
                 <span>${shipment.fba_shipment_id}</span>
               </div>
             </div>
@@ -97,7 +104,7 @@ export const PrintManifest = ({ shipment }: { shipment: Shipment }) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Print Shipment Manifest</DialogTitle>
+          <DialogTitle>Print Shipment Label</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-4">
           <div className="grid gap-2">
@@ -108,6 +115,12 @@ export const PrintManifest = ({ shipment }: { shipment: Shipment }) => {
           </div>
           <div className="grid gap-2">
             <div className="font-medium">FBA Shipment ID</div>
+            <div className="text-sm text-muted-foreground">
+              {shipment.fba_shipment_id}
+            </div>
+          </div>
+          <div className="grid gap-2">
+            <div className="font-medium">Reference ID</div>
             <div className="text-sm text-muted-foreground">
               {shipment.fba_shipment_id}
             </div>
