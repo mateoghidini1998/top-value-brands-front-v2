@@ -27,6 +27,7 @@ export const getTrackedProductsColumns = (
       const ASIN = row.original.ASIN;
       const in_seller_account = row.original.in_seller_account;
       const width = 300;
+      // const dangerous_good = row.original.dangerous_goods;
       return (
         <ProductTitle
           product_image={product_image}
@@ -37,6 +38,10 @@ export const getTrackedProductsColumns = (
         />
       );
     },
+  },
+  {
+    accessorKey: "dangerous_goods",
+    header: "DG ITEM",
   },
   {
     accessorKey: "supplier_name",

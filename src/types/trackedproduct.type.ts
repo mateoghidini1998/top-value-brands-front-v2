@@ -37,4 +37,5 @@ export interface TrackedProduct {
   supplier_name: null;
   roi: number;
   pack_type: number | null;
+  dangerous_goods: string;
 }
