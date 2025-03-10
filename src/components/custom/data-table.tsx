@@ -35,10 +35,12 @@ import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
 import { useSidebar } from "../ui/sidebar";
 import { useRouter } from "next/navigation";
+import { usePersistedColumnsVisibility } from "@/hooks/usePersistedColsVisibility";
 
 export interface ShowHideColsumnsProps {
   show: boolean;
   styles: string;
+  tableId: string;
 }
 
 interface DataTableProps<TData, TValue> {
@@ -60,6 +62,7 @@ export function DataTable<TData, TValue>({
   showHideColumns = {
     show: false,
     styles: "",
+    tableId: "",
   },
   searchInput = "",
   scrolleable = false,
@@ -100,6 +103,11 @@ DataTableProps<TData, TValue>) {
     },
     manualSorting: onSort ? true : false,
   });
+
+  const handleVisibilityChange = usePersistedColumnsVisibility(
+    table,
+    showHideColumns.tableId
+  );
 
   useEffect(() => {
     if (onSort && sorting.length > 0) {
@@ -145,9 +153,10 @@ DataTableProps<TData, TValue>) {
                         className="capitalize"
                         checked={column.getIsVisible()}
                         onSelect={(event) => event.preventDefault()} // Evita que se cierre el menú
-                        onCheckedChange={(value) =>
-                          column.toggleVisibility(!!value)
-                        }
+                        onCheckedChange={(value) => {
+                          column.toggleVisibility(!!value);
+                          handleVisibilityChange(column.id, !!value);
+                        }}
                       >
                         {column.id.split("_").join(" ")}
                       </DropdownMenuCheckboxItem>

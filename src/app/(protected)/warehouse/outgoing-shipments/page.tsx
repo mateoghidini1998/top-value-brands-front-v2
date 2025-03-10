@@ -55,6 +55,7 @@ const shipmentStatuses: ShipmentStatus[] = [
 const showColumns: ShowHideColsumnsProps = {
   show: true,
   styles: "absolute left-[550px] top-[-31.5px]",
+  tableId: "outgoing-shipments-table",
 };
 
 export default function Page() {

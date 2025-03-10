@@ -27,6 +27,7 @@ export interface SupplierItem {
 const showColumns: ShowHideColsumnsProps = {
   show: true,
   styles: "absolute left-[550px] top-[-31.5px] z-[1000]",
+  tableId: "create-po-table",
 };
 
 export default function Page() {

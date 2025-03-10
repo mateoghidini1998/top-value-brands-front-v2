@@ -44,6 +44,7 @@ import {
 const showColumns: ShowHideColsumnsProps = {
   show: true,
   styles: "absolute left-[110px] top-[-31.5px]",
+  tableId: "incoming-order-id-table",
 };
 
 export interface MissingFieldsInterface {

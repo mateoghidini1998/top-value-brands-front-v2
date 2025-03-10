@@ -13,6 +13,7 @@ interface InventoryTableProps {
 const showColumns: ShowHideColsumnsProps = {
   show: true,
   styles: "absolute left-[550px] top-[-31.5px]",
+  tableId: "inventory-table",
 };
 
 export function InventoryTable({ products, onOrderBy }: InventoryTableProps) {

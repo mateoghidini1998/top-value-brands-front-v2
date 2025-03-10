@@ -11,6 +11,7 @@ interface ClosedOrdersTableProps {
 const showColumns: ShowHideColsumnsProps = {
   show: true,
   styles: "absolute left-[550px] top-[-31.5px]",
+  tableId: "closed-po-table",
 };
 
 export function ClosedOrdersTable({ orders }: ClosedOrdersTableProps) {

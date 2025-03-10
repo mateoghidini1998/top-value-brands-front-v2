@@ -24,6 +24,7 @@ export interface SupplierItem {
 const showColumns: ShowHideColsumnsProps = {
   show: true,
   styles: "absolute left-[550px] top-[-31.5px]",
+  tableId: "pallets-table",
 };
 
 export default function Page() {

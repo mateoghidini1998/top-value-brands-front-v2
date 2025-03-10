@@ -11,6 +11,7 @@ interface IncomingOrdersTableProps {
 const showColumns: ShowHideColsumnsProps = {
   show: true,
   styles: "absolute left-[820px] top-[-31.5px]",
+  tableId: "incoming-order-id-table",
 };
 
 export function IncomingOrdersTable({ orders }: IncomingOrdersTableProps) {
