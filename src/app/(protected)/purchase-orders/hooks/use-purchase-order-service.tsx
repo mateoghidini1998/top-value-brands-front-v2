@@ -321,13 +321,13 @@ export const useUpdatePurchaseOrder = () => {
   };
 };
 
-export const useMergePurchaseOrders = () => {
+export const useMergePurchaseOrders = (orderIds: string[][]) => {
   const mergePurchaseOrders = useCreateMutation<MergePurchaseOrdersProps>({
     mutationFn: (props: MergePurchaseOrdersProps) =>
       purchaseOrderService.mergePurchseOrders(props),
     successMessage: SUCCESS_MESSAGES.MERGE_PURCHASE_ORDERS,
     errorMessage: ERROR_MESSAGES.MERGE_PURCHASE_ORDERS,
-    invalidateKeys: [[QUERY_KEYS.ORDERS], [QUERY_KEYS.ORDER_SUMMARY]],
+    invalidateKeys: [[QUERY_KEYS.ORDERS], ...orderIds],
   });
 
   return {

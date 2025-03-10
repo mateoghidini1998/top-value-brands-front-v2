@@ -7,6 +7,7 @@ import type { Supplier } from "@/types/supplier.type";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMergePurchaseOrders } from "../../hooks";
+import { useEffect, useState } from "react";
 
 interface OrdersFiltersProps {
   searchTerm: string;
@@ -35,7 +36,16 @@ export function OrdersFilters({
   const router = useRouter();
   const { isMerging, setIsMerging, orders, setOrders } =
     useMergeOrdersContext();
-  const { mergePurchaseOrdersAsync } = useMergePurchaseOrders();
+  const [orderIds, setOrderIds] = useState<string[][]>([]);
+
+  useEffect(() => {
+    if (orders.length >= 1) {
+      setOrderIds(
+        orders.map((order) => ["order-summary", order.orderId.toString()])
+      );
+    }
+  }, [orders]);
+  const { mergePurchaseOrdersAsync } = useMergePurchaseOrders(orderIds);
 
   const formatSuppliers = (suppliers: Supplier[] = []) =>
     suppliers.map((supplier) => ({
@@ -52,6 +62,8 @@ export function OrdersFilters({
     setIsMerging(false);
     setOrders([]);
     onFilterBySupplier(null);
+    // reload the page.
+    router.refresh();
   };
 
   return (

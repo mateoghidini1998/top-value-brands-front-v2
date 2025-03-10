@@ -119,6 +119,7 @@ export default function Page() {
     filterByKeyword(debouncedSearchTerm);
     filterBySupplier(debouncedSupplier);
     filterByStatus(debouncedStatus);
+    // eslint-disable-next-line
   }, [debouncedSearchTerm, debouncedSupplier, debouncedStatus]);
 
   if (ordersIsLoading) {
