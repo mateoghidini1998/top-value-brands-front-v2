@@ -36,6 +36,8 @@ interface ActionsCellProps {
 
 const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
   const [shipmentToDelete, setShipmentToDelete] = useState<number>(0);
+  const [showReferenceIdDialog, setShowReferenceIdDialog] =
+    useState<boolean>(false);
   const { deleteShipmentAsync } = useDeleteShipment(
     shipmentToDelete.toString()
   );
@@ -147,20 +149,17 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
           <DropdownMenuItem onClick={() => setShipmentToDelete(shipmentId)}>
             Delete Shipment
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setShipmentToDelete(shipmentId)}>
+          <DropdownMenuItem onClick={() => setShowReferenceIdDialog(true)}>
             Add Reference ID
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       {/* Delete Dialog */}
-      <AlertDialog
-        open={!!shipmentToDelete}
-        onOpenChange={(open) => !open && setShipmentToDelete(0)}
-      >
+      <AlertDialog open={!!shipmentToDelete} onOpenChange={(open) => !open}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Are you sure you want to delete this shipmnet?
+              Are you sure you want to delete this shipment?
             </AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. Pallets available quantity will be
@@ -178,8 +177,8 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
 
       {/* Add Reference ID Dialog */}
       <AlertDialog
-        open={!!shipmentToDelete}
-        onOpenChange={(open) => !open && setShipmentToDelete(0)}
+        open={showReferenceIdDialog}
+        onOpenChange={(open) => !open && setShowReferenceIdDialog(false)}
       >
         <AlertDialogContent>
           <AlertDialogHeader>
