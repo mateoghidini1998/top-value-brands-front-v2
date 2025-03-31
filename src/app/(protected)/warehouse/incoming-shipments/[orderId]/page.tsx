@@ -518,9 +518,10 @@ export default function Page({
                     <SelectValue placeholder="Select DG Item" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="STANDARD">STANDARD</SelectItem>
                     <SelectItem value="FLAMMABLES">FLAMMABLES</SelectItem>
                     <SelectItem value="AEROSOLS">AEROSOLS</SelectItem>
-                    <SelectItem value="STANDARD">STANDARD</SelectItem>
+                    <SelectItem value="OVERSIZED">OVERSIZED</SelectItem>
                   </SelectContent>
                 </Select>
 

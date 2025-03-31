@@ -221,7 +221,9 @@ DataTableProps<TData, TValue>) {
                         // @ts-expect-error Property 'dg_item' does not exist on type 'TData'
                         data[row.index].dg_item === "FLAMMABLES") ||
                       // @ts-expect-error Property 'dg_item' does not exist on type 'TData'
-                      data[row.index].dg_item === "AEROSOLS"
+                      data[row.index].dg_item === "AEROSOLS" ||
+                      // @ts-expect-error Property 'dg_item' does not exist on type 'TData'
+                      data[row.index].dg_item === "OVERSIZES"
                         ? "border border-solid-1 bg-red-500/10  dark:hover:text-white"
                         : "hover:bg-accent"
                     }`}
