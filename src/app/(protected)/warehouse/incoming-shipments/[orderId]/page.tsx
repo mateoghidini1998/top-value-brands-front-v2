@@ -460,6 +460,7 @@ export default function Page({
               ),
             ]}
             dataLength={10000}
+            showHideColumns={showColumns}
           />
           <DataTable
             columns={addedToCreate((productToRemove) => {
