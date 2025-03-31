@@ -67,6 +67,30 @@ export default function Page({
   } = useGetPurchaseOrderSummary(params.orderId);
 
   const [isSavingOrder, setIsSavingOrder] = useState(false);
+  const [activeTab, setActiveTab] = useState("summary");
+  const [pendingTab, setPendingTab] = useState<string | null>(null);
+
+  const handleTabChange = (newTab: string) => {
+    if (newTab === "pallets" && activeTab === "summary") {
+      setPendingTab("pallets");
+      setIsSavingOrder(true);
+    } else {
+      setActiveTab(newTab);
+    }
+  };
+
+  const handleSaveAndSwitchTab = async () => {
+    const res = await handleSaveIncomingOrder();
+    if (res) {
+      console.log(res);
+      setIsSavingOrder(false);
+      setLocalChanges({});
+      if (pendingTab) {
+        setActiveTab(pendingTab);
+        setPendingTab(null);
+      }
+    }
+  };
 
   const { getWarehouseAvailableLocations } = useWarehouseAvailableLocations();
   const [localChanges, setLocalChanges] = useState<
@@ -191,7 +215,7 @@ export default function Page({
     [focusNextInput]
   );
 
-  const handleSaveIncomingOrder = () => {
+  const handleSaveIncomingOrder = (): Promise<unknown> | null => {
     const updatedProducts = tableData.map((product) => {
       return {
         purchase_order_product_id: product.purchase_order_product_id,
@@ -234,10 +258,10 @@ export default function Page({
       });
 
       toast.error("Please complete all the fields");
-      return;
+      return null;
     }
 
-    updateIncomingOrderProductsAsync({
+    return updateIncomingOrderProductsAsync({
       orderId: Number(params.orderId),
       incomingOrderProductUpdates: updatedProducts,
     });
@@ -329,6 +353,8 @@ export default function Page({
 
   if (!ordersSummaryResponse || !tableData.length) return null;
 
+  console.log(Object.keys(localChanges));
+
   return (
     <div className="py-6 space-y-8">
       <h1 className="text-2xl font-bold">
@@ -346,18 +372,35 @@ export default function Page({
 
       <Tabs
         defaultValue={"summary"}
+        value={activeTab}
         className="flex flex-col items-center justify-between gap-4 relative"
       >
         <TabsList className="grid w-fit px-2 grid-cols-2 items-end self-end absolute right-0 top-[7px]">
-          <TabsTrigger value="summary">summary</TabsTrigger>
-          <TabsTrigger value="pallets">pallets</TabsTrigger>
+          <TabsTrigger
+            onClick={() => handleTabChange("summary")}
+            value="summary"
+          >
+            summary
+          </TabsTrigger>
+          <TabsTrigger
+            onClick={() => {
+              if (Object.keys(localChanges).length > 0) {
+                handleTabChange("pallets");
+              } else {
+                setActiveTab("pallets"); // Cambiar de tab si no hay cambios
+              }
+            }}
+            value="pallets"
+          >
+            pallets
+          </TabsTrigger>
         </TabsList>
 
         {/* Summary */}
         <TabsContent value="summary" className="w-full">
           <Button onClick={() => setIsSavingOrder(true)}>Save Order</Button>
           <AlertDialog
-            open={!!isSavingOrder}
+            open={isSavingOrder}
             onOpenChange={(open) => !open && setIsSavingOrder(false)}
           >
             <AlertDialogContent>
@@ -370,8 +413,15 @@ export default function Page({
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleSaveIncomingOrder}>
+                <AlertDialogCancel
+                  onClick={() => {
+                    setPendingTab(null);
+                    setLocalChanges({});
+                  }}
+                >
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction onClick={handleSaveAndSwitchTab}>
                   Save
                 </AlertDialogAction>
               </AlertDialogFooter>
