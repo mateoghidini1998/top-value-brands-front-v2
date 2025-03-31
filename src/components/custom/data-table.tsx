@@ -217,9 +217,11 @@ DataTableProps<TData, TValue>) {
                     }}
                     className={`cursor-pointer ${
                       // @ts-expect-error Property 'dg_item' does not exist on type 'TData'
-                      data[row.index].dg_item &&
+                      (data[row.index].dg_item &&
+                        // @ts-expect-error Property 'dg_item' does not exist on type 'TData'
+                        data[row.index].dg_item === "FLAMMABLES") ||
                       // @ts-expect-error Property 'dg_item' does not exist on type 'TData'
-                      data[row.index].dg_item !== "--"
+                      data[row.index].dg_item === "AEROSOLS"
                         ? "border border-solid-1 bg-red-500/10  dark:hover:text-white"
                         : "hover:bg-accent"
                     }`}

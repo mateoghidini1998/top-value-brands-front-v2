@@ -1,6 +1,7 @@
 import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/constants";
 import { useCreateMutation } from "@/hooks/mutation-factory";
 import { serviceFactory } from "@/services";
+import { UpdateProductDGType } from "@/types";
 import { UpdateIncomingOrderProductsProps } from "@/types/incoming-orders/update.types";
 import {
   GetOrdersProps,
@@ -11,6 +12,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 const incomingOrderService = serviceFactory.getIncomingOrderService();
+const InventoryService = serviceFactory.getInventoryService();
 
 export const useGetAllIncomingOrders = (initialParams: GetOrdersProps) => {
   const queryClient = useQueryClient();
@@ -129,6 +131,7 @@ export const useUpdateIncomingOrderProducts = () => {
     isUpdatingIncomingOrderProducts: updateIncomingOrderProducts.isPending,
   };
 };
+
 export const useUpdateIncomingOrderNotes = () => {
   const updateIncomingOrderNotes = useCreateMutation<UpdateOrderNotesProps>({
     mutationFn: (props: UpdateOrderNotesProps) =>
@@ -146,5 +149,26 @@ export const useUpdateIncomingOrderNotes = () => {
     isUpdatingIncomingOrderNotesError: updateIncomingOrderNotes.isError,
     isUpdatingIncomingOrderNotesSuccess: updateIncomingOrderNotes.isSuccess,
     isUpdatingIncomingOrderNotes: updateIncomingOrderNotes.isPending,
+  };
+};
+
+export const useUpdateProductDGType = () => {
+  const updateProductDGType = useCreateMutation<UpdateProductDGType>({
+    mutationFn: (props: UpdateProductDGType) =>
+      InventoryService.updateProductDGType(props),
+    successMessage: SUCCESS_MESSAGES.UPDATE_DG_PRODUCT,
+    errorMessage: ERROR_MESSAGES.UPDATE_DG_PRODUCT,
+    invalidateKeys: [
+      [QUERY_KEYS.INCOMING_SHIPMENTS],
+      [QUERY_KEYS.ORDER_SUMMARY],
+      [QUERY_KEYS.PRODUCTS],
+    ],
+  });
+
+  return {
+    updateProductDGTypeAsync: updateProductDGType.mutateAsync,
+    isUpdatingProductDGTypeError: updateProductDGType.isError,
+    isUpdatingProductDGTypeSuccess: updateProductDGType.isSuccess,
+    isUpdatingProductDGType: updateProductDGType.isPending,
   };
 };

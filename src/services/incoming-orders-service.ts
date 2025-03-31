@@ -1,11 +1,11 @@
+import { supabase } from "@/lib/supabase-client";
+import type { UpdateIncomingOrderProductsProps } from "@/types/incoming-orders/update.types";
 import type {
   GetOrdersProps,
   GetPurchaseOrdersResponse,
   UpdateOrderNotesProps,
 } from "@/types/purchase-orders";
 import { BaseService, type IApiRequest } from "./base-service";
-import type { UpdateIncomingOrderProductsProps } from "@/types/incoming-orders/update.types";
-import { supabase } from "@/lib/supabase-client";
 
 export class IncomingOrdersService extends BaseService {
   constructor(apiRequest: IApiRequest) {

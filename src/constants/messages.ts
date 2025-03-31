@@ -39,6 +39,7 @@ export const ERROR_MESSAGES = {
   MERGE_PURCHASE_ORDERS: "Error merging purchase orders",
   CREATE_PURCHASE_ORDER: "Error creating purchase order",
   UPDATE_REFERENCE_ID: "Error updating reference ID",
+  UPDATE_DG_PRODUCT: "Error updating Product DG Type",
 } as const;
 
 export const SUCCESS_MESSAGES = {
@@ -84,4 +85,5 @@ export const SUCCESS_MESSAGES = {
   MERGE_PURCHASE_ORDERS: "Purchase orders merged successfully",
   CREATE_PURCHASE_ORDER: "Purchase order created successfully",
   UPDATE_REFERENCE_ID: "Reference ID updated successfully",
+  UPDATE_DG_PRODUCT: "Product DG Type updated successfully",
 } as const;

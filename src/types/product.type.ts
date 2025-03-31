@@ -67,3 +67,7 @@ export interface Product {
   updatedAt: Date;
   supplier_name: string;
 }
+export interface UpdateProductDGType {
+  productId: string;
+  dgType: string;
+}

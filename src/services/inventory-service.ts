@@ -6,6 +6,7 @@ import type {
   GetInventoryProps,
   GetProductsResponse,
   PalletProductResponse,
+  UpdateProductDGType,
 } from "@/types";
 
 export class InventoryService extends BaseService {
@@ -31,6 +32,14 @@ export class InventoryService extends BaseService {
     const url = this.constructUrl("/addExtraInfoToProduct");
     const options = this.constructOptions("PATCH", data);
     return this.apiRequest<PalletProductResponse>(url, options);
+  }
+
+  public async updateProductDGType({ productId, dgType }: UpdateProductDGType) {
+    const url = this.constructUrl(`/dg-type/${productId}`);
+    const options = this.constructOptions("PATCH", {
+      dgType: dgType,
+    });
+    return this.apiRequest<string>(url, options);
   }
 
   public async deleteProduct(id: number): Promise<PalletProductResponse> {

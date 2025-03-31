@@ -21,13 +21,14 @@ import { FormatUSD } from "@/helpers";
 import { formatDate } from "@/helpers/format-date";
 import { generateQrCode, printQrCode } from "@/lib/qr-code";
 import { PurchaseOrderSummaryProducts, WarehouseLocation } from "@/types";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useCreatePallet } from "../../storage/hooks/use-pallets-service";
 import { useWarehouseAvailableLocations } from "../../storage/hooks/use-warehouse-locations-service";
 import {
   useUpdateIncomingOrderNotes,
   useUpdateIncomingOrderProducts,
+  useUpdateProductDGType,
 } from "../hooks/use-incoming-orders-service";
 import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
 import {
@@ -82,7 +83,6 @@ export default function Page({
   const handleSaveAndSwitchTab = async () => {
     const res = await handleSaveIncomingOrder();
     if (res) {
-      console.log(res);
       setIsSavingOrder(false);
       setLocalChanges({});
       if (pendingTab) {
@@ -103,6 +103,7 @@ export default function Page({
 
   const { updateIncomingOrderProductsAsync } = useUpdateIncomingOrderProducts();
   const { updateIncomingOrderNotesAsync } = useUpdateIncomingOrderNotes();
+  const { updateProductDGTypeAsync } = useUpdateProductDGType();
   const { createPalletAsync } = useCreatePallet();
   const [productsAddedToCreatePallet, setProductsAddedToCreatePallet] =
     useState<PurchaseOrderSummaryProducts[]>([]);
@@ -114,6 +115,14 @@ export default function Page({
   const [palletNumber, setPalletNumber] = useState<string>(
     Math.floor(Math.random() * 10000000).toString()
   );
+
+  const [pendingProducts, setPendingProducts] = useState<
+    PurchaseOrderSummaryProducts[]
+  >([]);
+  const [currentProduct, setCurrentProduct] =
+    useState<PurchaseOrderSummaryProducts | null>(null);
+  const [selectedDGItem, setSelectedDGItem] = useState<string>("");
+  const [isUpdating, setIsUpdating] = useState(false);
 
   // Combinar datos originales con cambios locales
   const tableData = useMemo(() => {
@@ -215,6 +224,46 @@ export default function Page({
     [focusNextInput]
   );
 
+  useEffect(() => {
+    // Filtrar productos con dg_item === '--' solo al montar el componente
+    const productsToUpdate = tableData.filter(
+      (product) => product.dg_item === "--"
+    );
+
+    if (productsToUpdate.length > 0) {
+      setPendingProducts(productsToUpdate);
+      setCurrentProduct(productsToUpdate[0]); // Mostrar el primero
+    }
+  }, [tableData]);
+
+  const handleUpdateProduct = async () => {
+    if (!currentProduct || !selectedDGItem) return;
+
+    setIsUpdating(true);
+
+    try {
+      await updateProductDGTypeAsync({
+        productId: currentProduct.id.toString(),
+        dgType: selectedDGItem,
+      });
+
+      // Remover el producto actualizado de la lista
+      setPendingProducts((prev) => prev.slice(1));
+
+      // Mostrar el siguiente producto, si hay más
+      if (pendingProducts.length > 1) {
+        setCurrentProduct(pendingProducts[1]); // Siguiente producto
+        setSelectedDGItem(""); // Resetear el dropdown
+      } else {
+        setCurrentProduct(null); // No hay más productos pendientes
+      }
+    } catch (error) {
+      console.error("Error updating product:", error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   const handleSaveIncomingOrder = (): Promise<unknown> | null => {
     const updatedProducts = tableData.map((product) => {
       return {
@@ -230,7 +279,6 @@ export default function Page({
 
     // validate that all the updates are complete, any fileds could be null or UNDEFINED or a empty string, return an error
     const incompleteUpdates = updatedProducts.find((update) => {
-      console.log(update);
       return (
         update.quantity_received > 0 &&
         (!update.reason_id || !update.upc || !update.expire_date)
@@ -353,8 +401,6 @@ export default function Page({
 
   if (!ordersSummaryResponse || !tableData.length) return null;
 
-  console.log(Object.keys(localChanges));
-
   return (
     <div className="py-6 space-y-8">
       <h1 className="text-2xl font-bold">
@@ -427,6 +473,68 @@ export default function Page({
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+
+          {currentProduct && (
+            <AlertDialog open={true}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Update DG Item</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    <div>
+                      <p className="text-md mb-6">
+                        Please select a DG Type for the product:{" "}
+                      </p>
+                      <ul className="flex flex-col items-start justify-between gap-6">
+                        <li className="text-white text-md">
+                          <span className="text-gray-400">Name: </span>{" "}
+                          {currentProduct.product_name}
+                        </li>
+                        <li className="text-white text-md">
+                          <span className="text-gray-400">ASIN: </span>{" "}
+                          {currentProduct.ASIN}
+                        </li>
+                        <li className="text-white text-md">
+                          <span className="text-gray-400">SKU: </span>{" "}
+                          {currentProduct.seller_sku}
+                        </li>
+                        <li className="text-white text-md">
+                          <span className="text-gray-400">UPC: </span>{" "}
+                          {currentProduct.upc || " --"}
+                        </li>
+                        <li className="text-white text-md">
+                          <span className="text-gray-400">Item No: </span>{" "}
+                          {currentProduct.supplier_item_number || " --"}
+                        </li>
+                      </ul>
+                    </div>
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+
+                <Select
+                  value={selectedDGItem}
+                  onValueChange={setSelectedDGItem}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select DG Item" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="FLAMMABLES">FLAMMABLES</SelectItem>
+                    <SelectItem value="AEROSOLS">AEROSOLS</SelectItem>
+                    <SelectItem value="STANDARD">STANDARD</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <AlertDialogFooter>
+                  <AlertDialogAction
+                    onClick={handleUpdateProduct}
+                    disabled={!selectedDGItem || isUpdating}
+                  >
+                    {isUpdating ? "Saving..." : "NEXT"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
           <DataTable
             columns={incomingOrderCols(
               handleQuantityReceivedChange,
@@ -440,10 +548,15 @@ export default function Page({
             // data with dg_items == true should be added at the bottom of the table
             data={[
               ...tableData.filter(
-                (product) => !product.dg_item || product.dg_item === "--"
+                (product) =>
+                  !product.dg_item ||
+                  product.dg_item === "--" ||
+                  product.dg_item === "STANDARD"
               ), // Elementos con dg_item null o '--' (van al final)
               ...tableData.filter(
-                (product) => product.dg_item && product.dg_item !== "--"
+                (product) =>
+                  (product.dg_item && product.dg_item !== "--") ||
+                  product.dg_item !== "STANDARD"
               ), // Elementos con dg_item válido (van al inicio)
             ]}
             dataLength={tableData.length}
