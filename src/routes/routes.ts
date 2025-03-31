@@ -9,6 +9,7 @@ import {
   PieChart,
   PersonStandingIcon,
   User,
+  Settings2,
 } from "lucide-react";
 
 export const routes = {
@@ -148,29 +149,29 @@ export const routes = {
       //   },
       // ],
     },
-    // {
-    //   title: "Settings",
-    //   url: "#",
-    //   icon: Settings2,
-    //   items: [
-    //     {
-    //       title: "General",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Team",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Billing",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Limits",
-    //       url: "#",
-    //     },
-    //   ],
-    // },
+    {
+      title: "Settings",
+      url: "#",
+      icon: Settings2,
+      items: [
+        {
+          title: "Features",
+          url: "settings/features",
+        },
+        // {
+        //   title: "Team",
+        //   url: "#",
+        // },
+        // {
+        //   title: "Billing",
+        //   url: "#",
+        // },
+        // {
+        //   title: "Limits",
+        //   url: "#",
+        // },
+      ],
+    },
   ],
   projects: [
     {

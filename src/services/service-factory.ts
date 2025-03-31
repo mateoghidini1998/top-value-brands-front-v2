@@ -5,6 +5,7 @@ import { IncomingOrdersService } from "./incoming-orders-service";
 import { InventoryService } from "./inventory-service";
 import { PalletsService } from "./pallets-service";
 import { PurchaseOrderService } from "./purchase-order-service";
+import { SettingsService } from "./settings-service";
 import { ShipmentsService } from "./shipments-service";
 import { TrackedProductService } from "./tracked-products-service";
 import { WarehouseLocationService } from "./warehouse-location-service";
@@ -88,6 +89,13 @@ export class ServiceFactory {
       this.services.set("shipments", new ShipmentsService(this.apiRequest));
     }
     return this.services.get("shipments") as ShipmentsService;
+  }
+
+  public getSettingsService(): SettingsService {
+    if (!this.services.has("settings")) {
+      this.services.set("settings", new SettingsService(this.apiRequest));
+    }
+    return this.services.get("settings") as SettingsService;
   }
 
   // Add methods for other services as needed
