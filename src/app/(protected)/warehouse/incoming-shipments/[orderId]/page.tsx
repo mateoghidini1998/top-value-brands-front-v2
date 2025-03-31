@@ -48,6 +48,8 @@ const showColumns: ShowHideColsumnsProps = {
   tableId: "incoming-order-id-table",
 };
 
+const ADD_DG_MANUALLY = true;
+
 export interface MissingFieldsInterface {
   product_id: number | string;
   missingFields: string[];
@@ -121,6 +123,10 @@ export default function Page({
   >([]);
   const [currentProduct, setCurrentProduct] =
     useState<PurchaseOrderSummaryProducts | null>(null);
+
+  const [isOpenUpdateDGProductModal, setIsOpenUpdateDGProductModal] =
+    useState(false);
+
   const [selectedDGItem, setSelectedDGItem] = useState<string>("");
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -225,14 +231,17 @@ export default function Page({
   );
 
   useEffect(() => {
-    // Filtrar productos con dg_item === '--' solo al montar el componente
-    const productsToUpdate = tableData.filter(
-      (product) => product.dg_item === "--"
-    );
+    if (ADD_DG_MANUALLY) {
+      // Filtrar productos con dg_item === '--' solo al montar el componente
+      const productsToUpdate = tableData.filter(
+        (product) => product.dg_item === "--"
+      );
 
-    if (productsToUpdate.length > 0) {
-      setPendingProducts(productsToUpdate);
-      setCurrentProduct(productsToUpdate[0]); // Mostrar el primero
+      if (productsToUpdate.length > 0) {
+        setPendingProducts(productsToUpdate);
+        setCurrentProduct(productsToUpdate[0]); // Mostrar el primero
+        setIsOpenUpdateDGProductModal(true);
+      }
     }
   }, [tableData]);
 
@@ -475,10 +484,12 @@ export default function Page({
           </AlertDialog>
 
           {currentProduct && (
-            <AlertDialog open={true}>
+            <AlertDialog open={isOpenUpdateDGProductModal}>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Update DG Item</AlertDialogTitle>
+                  <AlertDialogTitle>
+                    You need to update DG Item to continue
+                  </AlertDialogTitle>
                   <AlertDialogDescription>
                     <div>
                       <p className="text-md mb-6">
@@ -515,7 +526,7 @@ export default function Page({
                   onValueChange={setSelectedDGItem}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select DG Item" />
+                    <SelectValue placeholder="Select DG Type" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="STANDARD">STANDARD</SelectItem>
@@ -526,6 +537,13 @@ export default function Page({
                 </Select>
 
                 <AlertDialogFooter>
+                  <AlertDialogAction
+                    className="bg-red-500"
+                    onClick={() => setIsOpenUpdateDGProductModal(false)}
+                    disabled={isUpdating}
+                  >
+                    {"CANCEL"}
+                  </AlertDialogAction>
                   <AlertDialogAction
                     onClick={handleUpdateProduct}
                     disabled={!selectedDGItem || isUpdating}
