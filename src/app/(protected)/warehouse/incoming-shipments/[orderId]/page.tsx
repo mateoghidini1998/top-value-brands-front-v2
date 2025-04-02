@@ -48,7 +48,7 @@ const showColumns: ShowHideColsumnsProps = {
   tableId: "incoming-order-id-table",
 };
 
-const ADD_DG_MANUALLY = true;
+const ADD_DG_MANUALLY = false;
 
 export interface MissingFieldsInterface {
   product_id: number | string;
