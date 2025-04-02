@@ -68,6 +68,8 @@ export interface ShipmentPalletProduct {
   seller_sku: string;
   upc: string;
   in_seller_account: boolean | null;
+  ASIN: string;
+  pack_type: number;
 }
 
 export interface OutgoingShipmentProduct {

@@ -17,12 +17,13 @@ export const createColumns = (
       const product_image = row.original.product_image;
       const product_name = row.original.product_name;
       const in_seller_account = row.original.in_seller_account;
+      const ASIN = row.original.ASIN;
       const width = 300;
       return (
         <ProductTitle
           product_image={product_image}
           product_name={product_name}
-          ASIN=""
+          ASIN={ASIN}
           in_seller_account={in_seller_account || false}
           width={width}
         />
@@ -45,6 +46,13 @@ export const createColumns = (
   {
     accessorKey: "warehouse_location",
     header: "Warehouse Location",
+  },
+  {
+    accessorKey: "pack_type",
+    header: "PACK TYPE",
+    cell: ({ row }) => {
+      return <p>{row.original.pack_type} Pack</p>;
+    },
   },
   {
     accessorKey: "OutgoingShipmentProduct.quantity",
