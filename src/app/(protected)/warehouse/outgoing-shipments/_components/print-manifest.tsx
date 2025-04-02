@@ -98,7 +98,7 @@ export const PrintManifest = ({ shipment }: { shipment: Shipment }) => {
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <Printer className="h-4 w-4 mr-2" />
-          Print Manifest
+          Print Label
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
