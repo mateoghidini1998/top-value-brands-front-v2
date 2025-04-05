@@ -28,23 +28,21 @@ export const PrintManifest = ({ shipment }: { shipment: Shipment }) => {
           <style>
             body {
               font-family: Arial, sans-serif;
-              padding: 20px;
+              padding: 5px;
               line-height: 1.6;
               text-align: center; /* Centra el contenido */
             }
             .container {
-              max-width: 90%;
+              max-width: 100%;
               margin: auto;
             }
             .shipment-details {
-              border: 2px solid #000;
-              padding: 30px;
-              border-radius: 8px;
+              padding: 5px;
               display: inline-block;
-              font-size: 36px; /* Agranda el texto */
+              font-size: 70px; /* Agranda el texto */
             }
             .shipment-item {
-              margin-bottom: 20px;
+              margin-bottom: 5x;
               display: flex;
               flex-direction:column;
               align-items: center;
