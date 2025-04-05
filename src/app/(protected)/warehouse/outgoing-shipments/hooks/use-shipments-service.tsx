@@ -166,6 +166,34 @@ export const useCheckShipmentProducts = (outgoingShipmentProductId: number) => {
   };
 };
 
+export const useToggleCheckAllShipmentProducts = (
+  shipmentId: number,
+  palletId: number
+) => {
+  const toggleCheckAllShipmentProducts = useCreateMutation<number>({
+    mutationFn: () =>
+      shipmentsService.toggleCheckAllPalletProducts(shipmentId, palletId),
+    successMessage: SUCCESS_MESSAGES.UPDATE_PRODUCTS,
+    errorMessage: ERROR_MESSAGES.UPDATE_PRODUCTS,
+    invalidateKeys: [
+      [QUERY_KEYS.SHIPMENT],
+      [QUERY_KEYS.SHIPMENTS],
+      [QUERY_KEYS.WAREHOUSE_AVAILABLE_LOCATIONS],
+    ],
+  });
+
+  return {
+    toggleCheckAllShipmentProductsAsync:
+      toggleCheckAllShipmentProducts.mutateAsync,
+    isTogglingCheckAllShipmentProductsError:
+      toggleCheckAllShipmentProducts.isError,
+    isTogglingCheckAllShipmentProductsSuccess:
+      toggleCheckAllShipmentProducts.isSuccess,
+    isTogglingCheckAllShipmentProducts:
+      toggleCheckAllShipmentProducts.isPending,
+  };
+};
+
 export const useAddReferenceId = (shipmentId: string) => {
   const addReferenceId = useCreateMutation<string>({
     mutationFn: (referenceId: string) =>

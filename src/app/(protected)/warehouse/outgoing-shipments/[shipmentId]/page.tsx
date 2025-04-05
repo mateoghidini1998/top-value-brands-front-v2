@@ -14,11 +14,12 @@ import {
   StoreIcon,
   X,
 } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { DataTable } from "../create/_components/tables/data-table";
-import { createColumns, palletCols } from "./columns";
-import Link from "next/link";
 import { useGetShipmentById } from "../hooks/use-shipments-service";
+import { createColumns, palletCols } from "./columns";
+import { ShipmentPallet } from "@/types/shipments/get.types";
 
 export interface ManifestPalletTable {
   pallet_id: number;
@@ -29,23 +30,13 @@ export interface ManifestPalletTable {
 export default function Page({ params }: { params: { shipmentId: string } }) {
   const { shipment, shipmentIsError } = useGetShipmentById(params.shipmentId);
   const [isEditing, setIsEditing] = useState(false);
-  const [pallets, setPallets] = useState<ManifestPalletTable[]>([]);
+  const [pallets, setPallets] = useState<ShipmentPallet[]>(
+    shipment?.pallets || []
+  );
 
   useEffect(() => {
-    if (shipment?.PalletProducts) {
-      const uniquePallets: ManifestPalletTable[] = [];
-
-      shipment.PalletProducts.forEach((item) => {
-        if (!uniquePallets.some((p) => p.pallet_id === item.pallet_id)) {
-          uniquePallets.push({
-            pallet_id: item.pallet_id,
-            pallet_number: item.pallet_number,
-            warehouse_location: item.warehouse_location,
-          });
-        }
-      });
-
-      setPallets(uniquePallets);
+    if (shipment) {
+      setPallets(shipment.pallets);
     }
   }, [shipment]);
 
@@ -168,7 +159,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
         )}
       </div>
 
-      <DataTable pagination columns={palletCols} data={pallets} />
+      <DataTable pagination columns={palletCols(shipment.id)} data={pallets} />
       <DataTable
         pagination
         columns={createColumns(isEditing)}

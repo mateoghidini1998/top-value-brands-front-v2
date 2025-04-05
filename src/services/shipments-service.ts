@@ -66,4 +66,13 @@ export class ShipmentsService extends BaseService {
     const options = this.constructOptions("PATCH", { referenceId });
     return this.apiRequest<string>(url, options);
   }
+
+  public async toggleCheckAllPalletProducts(
+    shipmentId: number,
+    palletId: number
+  ) {
+    const url = this.constructUrl(`/${shipmentId}/pallets/${palletId}/check`);
+    const options = this.constructOptions("PUT");
+    return this.apiRequest<string>(url, options);
+  }
 }

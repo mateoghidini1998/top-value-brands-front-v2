@@ -1,11 +1,15 @@
 import { ProductTitle } from "@/components/custom/product-title";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import {
+  ShipmentPallet,
+  ShipmentPalletProduct,
+} from "@/types/shipments/get.types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Trash2 } from "lucide-react";
-import type { ManifestPalletTable } from "./page";
 import CheckPalletProducts from "../_components/check-pallet-product";
-import { ShipmentPalletProduct } from "@/types/shipments/get.types";
+import ToggleCheckAllShipmentProducts from "../_components/toggleCheckAllShipmentProducts";
 
 export const createColumns = (
   isEditing: boolean
@@ -98,7 +102,7 @@ export const createColumns = (
   },
 ];
 
-export const palletCols: ColumnDef<ManifestPalletTable>[] = [
+export const palletCols = (shipmentId: number): ColumnDef<ShipmentPallet>[] => [
   {
     accessorKey: "pallet_number",
     header: ({ column }) => (
@@ -116,4 +120,48 @@ export const palletCols: ColumnDef<ManifestPalletTable>[] = [
     accessorKey: "warehouse_location",
     header: "Warehouse Location",
   },
+  {
+    accessorKey: "allProductsInShipment",
+    header: "Entire Pallet",
+    cell: ({ row }) => {
+      return (
+        <Checkbox
+          checked={row.original.allProductsInShipment}
+          className="hover:cursor-none disabled:cursor-default"
+          disabled
+        />
+      );
+    },
+  },
+  {
+    id: "actions",
+    header: "Check All Products",
+    cell: ({ row }) => {
+      const palletId = row.original.pallet_id;
+      const isChecked = row.original.allProductsChecked;
+      return (
+        <ToggleCheckAllShipmentProducts
+          shipmentId={shipmentId}
+          palletId={palletId}
+          isChecked={isChecked}
+        />
+      );
+    },
+  },
 ];
+
+// const checkAllPalletProducts = (palletId: number, shipmentId: number) => () => {
+//   console.log("Pallet ID:", palletId);
+//   console.log("Shipment ID:", shipmentId);
+//   console.log("Check all products in pallet:");
+//   fetch(
+//     `${process.env.NEXT_PUBLIC_API_URL}/api/v1/shipments/${shipmentId}/pallets/${palletId}/check`,
+//     {
+//       method: "PUT",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     }
+//   );
+//   window.location.reload();
+// };

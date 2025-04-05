@@ -50,6 +50,7 @@ export interface GetShipemntByIDResponse {
   createdAt: Date;
   updatedAt: Date;
   PalletProducts: ShipmentPalletProduct[];
+  pallets: ShipmentPallet[];
 }
 
 export interface ShipmentPalletProduct {
@@ -79,4 +80,8 @@ export interface OutgoingShipmentProduct {
 export interface ShipmentPallet {
   id: number;
   pallet_number: string;
+  pallet_id: number;
+  warehouse_location: string;
+  allProductsInShipment: boolean;
+  allProductsChecked: boolean;
 }
