@@ -597,12 +597,16 @@ export default function Page({
 
                 // Determinar el tipo del nuevo producto
                 const isNewDgItemValid =
-                  product.dg_item && product.dg_item !== "--";
+                  product.dg_item &&
+                  product.dg_item !== "--" &&
+                  product.dg_item !== "STANDARD";
 
                 // Si ya hay productos en la lista, verificamos si son del mismo tipo
                 if (prev.length > 0) {
                   const isExistingDgItemValid =
-                    prev[0].dg_item && prev[0].dg_item !== "--"; // Tipo del primer producto agregado
+                    prev[0].dg_item &&
+                    prev[0].dg_item !== "--" &&
+                    prev[0].dg_item !== "STANDARD"; // Tipo del primer producto agregado
 
                   if (isExistingDgItemValid !== isNewDgItemValid) {
                     toast.error(

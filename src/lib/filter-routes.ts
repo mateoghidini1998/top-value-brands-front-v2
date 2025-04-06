@@ -16,7 +16,7 @@ export type Route = {
 
 export const rolePermissions: Record<Role, string[]> = {
   admin: ["*"],
-  warehouse: ["/warehouse"],
+  warehouse: ["/warehouse", "/inventory"],
 };
 
 export const filterRoutesByRole = (role: Role, routes: Route[]): Route[] => {

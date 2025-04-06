@@ -208,7 +208,7 @@ DataTableProps<TData, TValue>) {
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    onClick={(e) => {
+                    onDoubleClick={(e) => {
                       // Only navigate if goToPath is provided and the click target is not inside an action cell
                       if (goToPath && !e.defaultPrevented) {
                         // @ts-expect-error Property 'id' does not exist on type 'TData'
