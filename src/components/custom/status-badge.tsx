@@ -8,8 +8,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { PurchaseOrderProductFromOrder } from "@/types/purchase-orders/get.types";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 // Solo variantes válidas para Badge
 type BadgeVariant =
@@ -45,6 +47,7 @@ export type StatusType = keyof typeof PURCHASE_ORDER_STATUSES;
 
 interface StatusBadgeProps {
   status: StatusType;
+  products: PurchaseOrderProductFromOrder[]; // Puedes definir un tipo más específico si lo deseas
   onStatusChange: (newStatus: number) => Promise<void>;
   isWarehouse?: boolean;
 }
@@ -74,11 +77,26 @@ export function StatusBadge({
   status,
   onStatusChange,
   isWarehouse = false,
+  products,
 }: StatusBadgeProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const statusConfig = getStatusConfig(status);
 
+  // console.log(products);
+
+  const hasMissingDG = (products: PurchaseOrderProductFromOrder[]) => {
+    return products.some((product) => product.Product.dangerous_goods === "--");
+  };
+
   const handleStatusChange = async (newStatus: number) => {
+    const missing = hasMissingDG(products);
+
+    // Si el nuevo estado NO es (1) o *(2) y hay productos con DG, no permitir el cambio
+    if (newStatus !== 1 && newStatus !== 2 && missing) {
+      toast.error("Cannot change status when DG items are missing to define.");
+      return;
+    }
+
     setIsUpdating(true);
     try {
       await onStatusChange(newStatus);

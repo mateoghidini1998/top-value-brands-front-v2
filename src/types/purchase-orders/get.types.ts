@@ -29,7 +29,7 @@ export interface Order {
   createdAt: Date;
   updatedAt: Date;
   purchaseOrderStatus: PurchaseOrderStatus;
-  purchaseOrderProducts: PurchaseOrderProduct[];
+  purchaseOrderProducts: PurchaseOrderProductFromOrder[];
   status: string;
   incoming_order_notes: string | null;
   average_roi: number | null;
@@ -37,7 +37,7 @@ export interface Order {
   trackedProducts: TrackedProduct[];
 }
 
-interface PurchaseOrderProduct {
+export interface PurchaseOrderProductFromOrder {
   id: number;
   purchase_order_id: number;
   product_id: number;
@@ -78,6 +78,7 @@ interface Product {
   in_seller_account: boolean;
   createdAt: Date;
   updatedAt: Date;
+  dangerous_goods: string;
 }
 
 interface PurchaseOrderStatus {

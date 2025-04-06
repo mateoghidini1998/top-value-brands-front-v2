@@ -90,10 +90,12 @@ export const getColumns = (
     cell: ({ row }) => {
       const status = row.original.purchaseOrderStatus;
       const description = status.description as StatusType; // type imported from status cell
+      const products = row.original.purchaseOrderProducts;
       return (
         <StatusCell
           orderId={row.original.id.toString()}
           statusDescription={description}
+          products={products}
         />
       );
     },
