@@ -11,6 +11,7 @@ import {
   TotalAmountCell,
 } from "./components";
 import { FormatUSD } from "@/helpers";
+import { DGItemCell } from "./components/dg-item-cell";
 
 export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   {
@@ -31,6 +32,15 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
           width={width}
         />
       );
+    },
+  },
+  {
+    id: "dg_item",
+    header: "DG Item",
+    cell: ({ row }) => {
+      const productId = row.original.product_id.toString();
+      const dg_item = row.original.dg_item || "--";
+      return <DGItemCell dgItem={dg_item} productId={productId} />;
     },
   },
   {

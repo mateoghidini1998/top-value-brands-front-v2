@@ -2,7 +2,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Truck } from "lucide-react";
 import Link from "next/link";
-import { DataTable } from "../../../warehouse/outgoing-shipments/create/_components/tables/data-table";
+// import { DataTable } from "../../../warehouse/outgoing-shipments/create/_components/tables/data-table";
+import { DataTable } from "@/components/custom/data-table";
 import { columns } from "../columns";
 import { PurchaseOrderSummaryProducts } from "@/types";
 
@@ -27,8 +28,8 @@ export default function OrderProductsTable({
         </div>
         <Truck className="w-4 h-4 text-muted-foreground ml-auto" />
       </CardHeader>
-      <CardContent className="p-0">
-        <DataTable columns={columns} data={products} pagination />
+      <CardContent className="p-0 w-full">
+        <DataTable columns={columns} data={products} scrolleable />
       </CardContent>
     </Card>
   );

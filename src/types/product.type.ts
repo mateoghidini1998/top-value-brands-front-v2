@@ -37,6 +37,11 @@ export interface EditProductProps {
   pack_type?: number | null;
 }
 
+export interface UpdateProductDGType {
+  productId: string;
+  dgType: string;
+}
+
 export interface GetInventoryProps {
   page?: number;
   limit?: number;

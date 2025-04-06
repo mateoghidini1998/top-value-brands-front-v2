@@ -5,6 +5,7 @@ import {
   EditProductProps,
   GetInventoryProps,
   GetProductsResponse,
+  UpdateProductDGType,
 } from "@/types";
 import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/constants";
 import { useCreateMutation } from "@/hooks/mutation-factory";
@@ -145,5 +146,22 @@ export const useDeleteProductFromSellerAccount = () => {
     isDeletingFromSellerAccountError: deleteProduct.isError,
     isDeletingFromSellerAccountSuccess: deleteProduct.isSuccess,
     isDeletingFromSellerAccount: deleteProduct.isPending,
+  };
+};
+
+export const useUpdateProductDGType = () => {
+  const updateProductDGType = useCreateMutation<UpdateProductDGType>({
+    mutationFn: (data: UpdateProductDGType) =>
+      inventoryService.updateProductDGType(data),
+    successMessage: SUCCESS_MESSAGES.UPDATE_PRODUCTS,
+    errorMessage: ERROR_MESSAGES.UPDATE_PRODUCTS,
+    invalidateKeys: [[QUERY_KEYS.PRODUCTS]], // Invalidate user list after registration
+  });
+
+  return {
+    updateDGTypeAsync: updateProductDGType.mutateAsync,
+    isUpdatingDGTypeError: updateProductDGType.isError,
+    isUpdatingDGTypeSuccess: updateProductDGType.isSuccess,
+    isUpdatingDGType: updateProductDGType.isPending,
   };
 };
