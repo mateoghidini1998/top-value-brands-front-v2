@@ -16,6 +16,10 @@ export const getColumns = (
     },
   },
   {
+    accessorKey: "storage_type",
+    header: "Storage Type",
+  },
+  {
     accessorKey: "warehouse_location",
     header: "Warehouse Location",
   },

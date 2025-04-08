@@ -18,6 +18,7 @@ export interface Pallet {
   createdAt: Date;
   updatedAt: Date;
   products: PalletProductResponse[];
+  storage_type: string;
 }
 
 export interface PalletProductResponse {
