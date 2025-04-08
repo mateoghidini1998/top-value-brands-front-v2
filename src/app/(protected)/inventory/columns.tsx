@@ -249,20 +249,20 @@ export const getWarehouseColumns = ({
     //   ),
     // },
 
-    {
-      accessorKey: "supplier",
-      header: "Supplier",
-      cell: ({ row }) => (
-        <span>{row.original.supplier_name || "No supplier Listed"}</span>
-      ),
-    },
-    {
-      accessorKey: "supplier_item_number",
-      header: "Supplier Item No",
-      cell: ({ row }) => (
-        <span>{row.original.supplier_item_number || "-"}</span>
-      ),
-    },
+    // {
+    //   accessorKey: "supplier",
+    //   header: "Supplier",
+    //   cell: ({ row }) => (
+    //     <span>{row.original.supplier_name || "No supplier Listed"}</span>
+    //   ),
+    // },
+    // {
+    //   accessorKey: "supplier_item_number",
+    //   header: "Supplier Item No",
+    //   cell: ({ row }) => (
+    //     <span>{row.original.supplier_item_number || "-"}</span>
+    //   ),
+    // },
     {
       accessorKey: "pack_type",
       header: () => (
