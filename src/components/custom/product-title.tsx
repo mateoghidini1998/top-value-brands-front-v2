@@ -14,7 +14,7 @@ type ProductNameTableDataProps = {
   product_name: string;
   product_image: string;
   ASIN: string;
-  in_seller_account: boolean;
+  in_seller_account?: boolean;
   width: number;
 };
 
@@ -55,6 +55,7 @@ export function ProductTitle({
                     <EmptyImage />
                   </div>
                 )}
+
                 {in_seller_account !== undefined && (
                   <div
                     className={`w-[8px] h-[8px] rounded-full ${

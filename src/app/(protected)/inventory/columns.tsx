@@ -209,14 +209,14 @@ export const getWarehouseColumns = ({
         const product_image = row.original.product_image;
         const product_name = row.original.product_name;
         const ASIN = row.original.ASIN;
-        const in_seller_account = row.original.in_seller_account;
+        // const in_seller_account = row.original.in_seller_account;
         const width = 300;
         return (
           <ProductTitle
             product_image={product_image}
             product_name={product_name}
             ASIN={ASIN}
-            in_seller_account={in_seller_account}
+            // in_seller_account={in_seller_account}
             width={width}
           />
         );
