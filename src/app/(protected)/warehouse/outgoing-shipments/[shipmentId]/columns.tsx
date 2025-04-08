@@ -137,10 +137,12 @@ export const palletCols = (shipmentId: number): ColumnDef<ShipmentPallet>[] => [
     id: "actions",
     header: "Check All Products",
     cell: ({ row }) => {
+      const hide = !row.original.allProductsInShipment;
       const palletId = row.original.pallet_id;
       const isChecked = row.original.allProductsChecked;
       return (
         <ToggleCheckAllShipmentProducts
+          hide={hide}
           shipmentId={shipmentId}
           palletId={palletId}
           isChecked={isChecked}
@@ -149,19 +151,3 @@ export const palletCols = (shipmentId: number): ColumnDef<ShipmentPallet>[] => [
     },
   },
 ];
-
-// const checkAllPalletProducts = (palletId: number, shipmentId: number) => () => {
-//   console.log("Pallet ID:", palletId);
-//   console.log("Shipment ID:", shipmentId);
-//   console.log("Check all products in pallet:");
-//   fetch(
-//     `${process.env.NEXT_PUBLIC_API_URL}/api/v1/shipments/${shipmentId}/pallets/${palletId}/check`,
-//     {
-//       method: "PUT",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     }
-//   );
-//   window.location.reload();
-// };
