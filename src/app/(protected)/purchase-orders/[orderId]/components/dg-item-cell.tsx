@@ -17,8 +17,6 @@ export const DGItemCell = ({
   productId: string;
 }) => {
   const { updateProductDGTypeAsync } = useUpdateProductDGType();
-
-  console.log(dgItem);
   return (
     <Select
       defaultValue={dgItem}
