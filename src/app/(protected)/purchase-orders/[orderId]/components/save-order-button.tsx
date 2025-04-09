@@ -15,8 +15,6 @@ const SaveOrder = ({ orderId }: Props) => {
     useUpdateOrderProducts();
   const { updatedPOProducts } = usePurchaseOrderContext();
 
-  console.log(updatedPOProducts);
-
   const handleUpdate = () => {
     if (updatedPOProducts.length === 0) {
       return toast.error("No updates to save");
