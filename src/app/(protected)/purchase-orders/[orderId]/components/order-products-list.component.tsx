@@ -29,7 +29,12 @@ export default function OrderProductsTable({
         <Truck className="w-4 h-4 text-muted-foreground ml-auto" />
       </CardHeader>
       <CardContent className="p-0 w-full">
-        <DataTable columns={columns} data={products} scrolleable />
+        <DataTable
+          columns={columns}
+          data={products}
+          scrolleable
+          dataLength={1000}
+        />
       </CardContent>
     </Card>
   );
