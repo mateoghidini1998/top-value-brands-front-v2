@@ -36,7 +36,7 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     id: "dg_item",
-    header: "DG Item",
+    header: "Storage Type",
     cell: ({ row }) => {
       const productId = row.original.product_id.toString();
       const dg_item = row.original.dg_item || "--";
