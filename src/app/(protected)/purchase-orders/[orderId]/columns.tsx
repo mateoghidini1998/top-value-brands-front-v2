@@ -16,7 +16,14 @@ import { DGItemCell } from "./components/dg-item-cell";
 export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   {
     id: "product_title",
-    header: "Product Name",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Product Name
+      </span>
+    ),
     cell: ({ row }) => {
       const product_image = row.original.product_image;
       const product_name = row.original.product_name;
@@ -36,7 +43,14 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     id: "dg_item",
-    header: "Storage Type",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Storage Type
+      </span>
+    ),
     cell: ({ row }) => {
       const productId = row.original.product_id.toString();
       const dg_item = row.original.dg_item || "--";
@@ -45,7 +59,14 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     accessorKey: "product_velocity",
-    header: "Velocity",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Velocity
+      </span>
+    ),
     cell: ({ row }) => {
       return (
         <span>
@@ -60,7 +81,14 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     accessorKey: "units_sold",
-    header: "Units Sold",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Units Sold
+      </span>
+    ),
     cell: ({ row }) => {
       return (
         <span>
@@ -75,7 +103,14 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     accessorKey: "thirty_days_rank",
-    header: "30 Days Rank",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        30 Days Rank
+      </span>
+    ),
     cell: ({ row }) => {
       return (
         <span>
@@ -90,7 +125,14 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     accessorKey: "ninety_days_rank",
-    header: "90 Days Rank",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        90 Days Rank
+      </span>
+    ),
     cell: ({ row }) => {
       return (
         <span>
@@ -105,15 +147,36 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     accessorKey: "ASIN",
-    header: "ASIN",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        ASIN
+      </span>
+    ),
   },
   {
     accessorKey: "supplier_item_number",
-    header: "Item No.",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Item No.
+      </span>
+    ),
   },
   {
     accessorKey: "product_cost",
-    header: "Product Cost",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Product Cost
+      </span>
+    ),
     cell: ({ row }) => {
       const product_cost = parseFloat(row.getValue("product_cost"));
       return (
@@ -127,7 +190,14 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     accessorKey: "lowest_fba_price",
-    header: "Lowest FBA Price",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Lowest FBA Price
+      </span>
+    ),
     cell: ({ row }) => {
       return (
         <span>
@@ -142,7 +212,14 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     accessorKey: "fees",
-    header: "Fees",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Fees
+      </span>
+    ),
     cell: ({ row }) => {
       return (
         <span>
@@ -157,7 +234,14 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     accessorKey: "profit",
-    header: "Profit",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Profit
+      </span>
+    ),
     cell: ({ row }) => {
       return (
         <span>
@@ -172,11 +256,25 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     accessorKey: "roi",
-    header: "ROI",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        ROI
+      </span>
+    ),
   },
   {
     accessorKey: "updatedAt",
-    header: "Last Update",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Last Update
+      </span>
+    ),
     cell: ({ row }) => (
       <span>{formatDate(row.original.updatedAt.toString())}</span>
     ),
@@ -187,7 +285,14 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     id: "quantity_purchased",
-    header: "Sellable Qty",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Sellable Qty
+      </span>
+    ),
 
     cell: ({ row }) => {
       const quantity_purchased = row.original.quantity_purchased;
@@ -202,7 +307,14 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     accessorKey: "warehouse_stock",
-    header: "Warehouse Stock",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Warehouse Stock
+      </span>
+    ),
     cell: ({ row }) => {
       return (
         <span>
@@ -217,7 +329,14 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   },
   {
     accessorKey: "total_amount",
-    header: "Total Amount",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Total Amount
+      </span>
+    ),
     cell: ({ row }) => {
       return <TotalAmountCell productId={row.original.id} />;
     },
