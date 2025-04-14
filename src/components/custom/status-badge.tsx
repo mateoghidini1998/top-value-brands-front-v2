@@ -85,7 +85,12 @@ export function StatusBadge({
   // console.log(products);
 
   const hasMissingDG = (products: PurchaseOrderProductFromOrder[]) => {
-    return products.some((product) => product.Product.dangerous_goods === "--");
+    console.log(products);
+    if (products) {
+      return products.some(
+        (product) => product.Product.dangerous_goods === "--"
+      );
+    }
   };
 
   const handleStatusChange = async (newStatus: number) => {
