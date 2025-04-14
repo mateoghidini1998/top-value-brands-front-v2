@@ -565,19 +565,7 @@ export default function Page({
               missingFields
             )}
             // data with dg_items == true should be added at the bottom of the table
-            data={[
-              ...tableData.filter(
-                (product) =>
-                  !product.dg_item ||
-                  product.dg_item === "--" ||
-                  product.dg_item === "STANDARD"
-              ), // Elementos con dg_item null o '--' (van al final)
-              ...tableData.filter(
-                (product) =>
-                  (product.dg_item && product.dg_item !== "--") ||
-                  product.dg_item !== "STANDARD"
-              ), // Elementos con dg_item válido (van al inicio)
-            ]}
+            data={tableData}
             dataLength={tableData.length}
             showHideColumns={showColumns}
           />
