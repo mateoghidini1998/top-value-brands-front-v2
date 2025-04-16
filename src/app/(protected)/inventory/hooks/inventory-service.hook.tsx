@@ -5,6 +5,7 @@ import {
   EditProductProps,
   GetInventoryProps,
   GetProductsResponse,
+  SupressedListingsResponse,
   UpdateProductDGType,
 } from "@/types";
 import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/constants";
@@ -157,11 +158,30 @@ export const useUpdateProductDGType = () => {
     errorMessage: ERROR_MESSAGES.UPDATE_PRODUCTS,
     invalidateKeys: [[QUERY_KEYS.PRODUCTS]], // Invalidate user list after registration
   });
-
   return {
     updateDGTypeAsync: updateProductDGType.mutateAsync,
     isUpdatingDGTypeError: updateProductDGType.isError,
     isUpdatingDGTypeSuccess: updateProductDGType.isSuccess,
     isUpdatingDGType: updateProductDGType.isPending,
+  };
+};
+
+export const useGetSupressedListings = () => {
+  const { data, isLoading, isError, error, refetch } = useQuery<
+    SupressedListingsResponse,
+    Error
+  >({
+    queryKey: [QUERY_KEYS.SUPRESSED_LISTINGS],
+    queryFn: () => inventoryService.getSupressedListings(),
+    gcTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
+  return {
+    supressedListings: data,
+    supressedListingsIsLoading: isLoading,
+    supressedListingsIsError: isError,
+    supressedListingsErrorMessage: error?.message,
+    supressedListingsRefetch: refetch,
   };
 };

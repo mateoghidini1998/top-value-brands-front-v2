@@ -1,4 +1,3 @@
-import { BaseService, type IApiRequest } from "./base-service";
 import type {
   CreateProductRequest,
   CreateProductResponse,
@@ -6,8 +5,10 @@ import type {
   GetInventoryProps,
   GetProductsResponse,
   PalletProductResponse,
+  SupressedListingsResponse,
   UpdateProductDGType,
 } from "@/types";
+import { BaseService, type IApiRequest } from "./base-service";
 
 export class InventoryService extends BaseService {
   constructor(apiRequest: IApiRequest) {
@@ -54,6 +55,11 @@ export class InventoryService extends BaseService {
     const url = this.constructUrl(`/${id}`);
     const options = this.constructOptions("DELETE");
     return this.apiRequest(url, options);
+  }
+
+  public async getSupressedListings(): Promise<SupressedListingsResponse> {
+    const url = this.constructUrl("/supressed");
+    return this.apiRequest(url);
   }
 
   public async getInventory({

@@ -13,4 +13,5 @@ export const QUERY_KEYS = {
   WAREHOUSE_UNAVAILABLE_LOCATIONS: "warehouse-unavailable-locations",
   CLERK_USERS: "clerk-users",
   TRACKED_PRODUCTS: "tracked-products",
+  SUPRESSED_LISTINGS: "supressed-listings",
 } as const;

@@ -76,3 +76,18 @@ export interface UpdateProductDGType {
   productId: string;
   dgType: string;
 }
+
+export interface SupressedListing {
+  ASIN: string;
+  seller_sku: string;
+  product_name: string;
+  reason?: string;
+  condition?: number;
+  status_change_date?: string;
+  issue_description?: string;
+}
+
+export interface SupressedListingsResponse {
+  success: boolean;
+  data: SupressedListing[];
+}

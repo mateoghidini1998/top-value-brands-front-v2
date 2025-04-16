@@ -48,10 +48,10 @@ export const routes = {
         //   title: "Tracked Products",
         //   url: "/inventory/tracked-products",
         // },
-        // {
-        //   title: "Deleted Products",
-        //   url: "/inventory/manage-products",
-        // },
+        {
+          title: "Supressed Listings",
+          url: "/inventory/supressed-listings",
+        },
       ],
     },
     {
