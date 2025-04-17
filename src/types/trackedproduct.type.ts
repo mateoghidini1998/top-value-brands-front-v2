@@ -19,6 +19,7 @@ export interface TrackedProduct {
   product_velocity_2: number;
   product_velocity_7: number;
   product_velocity_15: number;
+  avg_selling_price: number;
   lowest_fba_price: number;
   fees: null;
   profit: null;

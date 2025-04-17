@@ -40,7 +40,7 @@ const ProductVelocity = ({
             </div>
           </div>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent className="relative z-[1000]">
           {/* <p>{velocities[0]}</p> */}
           <ul>
             {velocities.map((velocity, i) => (

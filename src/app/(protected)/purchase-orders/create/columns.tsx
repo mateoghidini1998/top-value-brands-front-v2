@@ -157,6 +157,31 @@ export const getTrackedProductsColumns = (
     accessorKey: "seller_sku",
     header: "Seller SKU",
   },
+
+  {
+    accessorKey: "avg_selling_price",
+    header: () => {
+      return (
+        <div
+          className="text-right flex items-center cursor-pointer justify-center gap-2"
+          onClick={() => handleOrderBy("avg_selling_price")}
+        >
+          <ArrowUpDown className="mr-2 w-4 h-4 " />
+          Avg Selling Price
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const product_cost: number = parseFloat(
+        row.getValue("avg_selling_price")
+      );
+      return (
+        <span>{`${
+          product_cost ? `$ ${product_cost.toFixed(2)}` : "N/A"
+        }`}</span>
+      );
+    },
+  },
   {
     accessorKey: "product_cost",
     header: () => {
