@@ -16,6 +16,9 @@ export interface TrackedProduct {
   ninety_days_rank: number;
   units_sold: number;
   product_velocity: number;
+  product_velocity_2: number;
+  product_velocity_7: number;
+  product_velocity_15: number;
   lowest_fba_price: number;
   fees: null;
   profit: null;

@@ -13,6 +13,7 @@ import AddProductCost from "./components/add-product-cost";
 import { TrackedProduct } from "@/types";
 import { ArrowUpDown } from "lucide-react";
 import { FormatUSD } from "@/helpers";
+import ProductVelocity from "./components/product-velocity";
 
 export const getTrackedProductsColumns = (
   setProductsAdded: Dispatch<SetStateAction<ProductInOrder[]>>,
@@ -71,8 +72,27 @@ export const getTrackedProductsColumns = (
       );
     },
     cell: ({ row }) => {
-      const product_velocity: number = row.getValue("product_velocity");
-      return <span>{product_velocity.toFixed(3) || "N/A"}</span>;
+      const product = row.original;
+      const velocities = [
+        {
+          days: 2,
+          velocity: product.product_velocity_2,
+        },
+        {
+          days: 7,
+          velocity: product.product_velocity_7,
+        },
+        {
+          days: 15,
+          velocity: product.product_velocity_15,
+        },
+        {
+          days: 30,
+          velocity: product.product_velocity,
+        },
+      ];
+      return <ProductVelocity velocities={velocities} width={"100%"} />;
+      // return <span>{product_velocity.toFixed(3) || "N/A"}</span>;
     },
   },
   {
