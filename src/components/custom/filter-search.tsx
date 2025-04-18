@@ -25,7 +25,7 @@ export function FilterSearch({
   value,
   onValueChange,
   className = "w-[250px]",
-  placeholder = "Select supplier...",
+  placeholder = "Select an option...",
 }: FilterProps) {
   const [open, setOpen] = useState<boolean>(false);
   if (items.length === 0) {

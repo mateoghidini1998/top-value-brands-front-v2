@@ -26,6 +26,7 @@ const formSchema = z.object({
   seller_sku: z.string().min(1, "Seller SKU is required"),
   product_cost: z.number().min(0, "Product cost must be greater than 0"),
   supplier_id: z.number().min(1, "Supplier ID is required"),
+  storage_type: z.string().min(1, "Storage type is required"),
   supplier_item_number: z.string().optional(),
 });
 
@@ -43,6 +44,7 @@ const generateRandomSKU = (): string => {
 
 export function CreateProductForm() {
   const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
+  const [storageType, setStorageType] = useState<string | null>(null);
   const { createAsync, isCreating } = useCreateProduct();
   const { suppliersQuery } = useSuppliers();
 
@@ -53,6 +55,7 @@ export function CreateProductForm() {
       seller_sku: "",
       product_cost: 0,
       supplier_id: 0,
+      storage_type: "--",
       supplier_item_number: "",
     },
   });
@@ -126,6 +129,34 @@ export function CreateProductForm() {
                   placeholder="Enter product cost"
                   {...field}
                   onChange={(e) => field.onChange(Number(e.target.value))}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="storage_type"
+          render={({ field }) => (
+            <FormItem className="flex flex-col items-start justify-center w-full gap-1">
+              <FormLabel>Storage Type</FormLabel>
+              <FormControl className="w-full">
+                <FilterSearch
+                  className="w-full"
+                  items={[
+                    { name: "--", value: "--" },
+                    { name: "STANDARD", value: "STANDARD" },
+                    { name: "FLAMMABLES", value: "FLAMMABLES" },
+                    { name: "AEROSOLS", value: "AEROSOLS" },
+                    { name: "OVERSIZED", value: "OVERSIZED" },
+                  ]}
+                  value={storageType}
+                  onValueChange={(storage_type) => {
+                    setStorageType(storage_type as string);
+                    field.onChange(storage_type);
+                  }}
                 />
               </FormControl>
               <FormMessage />
