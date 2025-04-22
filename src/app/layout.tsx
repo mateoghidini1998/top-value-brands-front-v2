@@ -3,7 +3,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google"; // Importa la fuente desde Google Fonts
-
+import 'devextreme/dist/css/dx.light.css';
 import "./globals.css";
 import { Toaster } from "sonner";
 
@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="es" suppressHydrationWarning>
-        <body className={` ${poppins.variable}`}>
+        <body className={` ${poppins.variable} dx-viewport`}>
           <TanstackProvider>
             <ThemeProvider
               attribute="class"
