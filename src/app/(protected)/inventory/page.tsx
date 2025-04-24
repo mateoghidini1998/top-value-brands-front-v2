@@ -10,6 +10,9 @@ import {
 // import inventoryData from "../../../constants/inventoryReport.json";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useGetAllProducts } from "./hooks";
+import { formatDate } from "@/helpers";
+import { CreateEntityButton } from "@/components/custom/create-entity-button";
+import { CreateProductForm } from "./components";
 
 // // Column definitions
 // const columns: GridColumn[] = [
@@ -190,7 +193,7 @@ const columns: GridColumn[] = [
     field: "updatedAt",
     caption: "Updated At",
     width: 180,
-    // dataType: "date",
+    customizeText: (cellInfo) => formatDate(cellInfo.value),
   },
 ];
 
@@ -264,30 +267,30 @@ const summaryConfig: SummaryConfig = {
 };
 
 // Button configuration
-const gridButtonsConfig = {
-  width: 150,
-  data: "sku",
-  buttons: [
-    {
-      id: "view",
-      icon: "fas fa-eye",
-      hint: "View Details",
-      action: (data: any) => {
-        console.log("View details for:", data.data);
-        alert(`Viewing details for ${data.data["product-name"]}`);
-      },
-    },
-    {
-      id: "edit",
-      icon: "fas fa-edit",
-      hint: "Edit Item",
-      action: (data: any) => {
-        console.log("Edit item:", data.data);
-        alert(`Editing ${data.data["product-name"]}`);
-      },
-    },
-  ],
-};
+// const gridButtonsConfig = {
+//   width: 150,
+//   data: "sku",
+//   buttons: [
+//     {
+//       id: "view",
+//       icon: "fas fa-eye",
+//       hint: "View Details",
+//       action: (data: any) => {
+//         console.log("View details for:", data.data);
+//         alert(`Viewing details for ${data.data["product-name"]}`);
+//       },
+//     },
+//     {
+//       id: "edit",
+//       icon: "fas fa-edit",
+//       hint: "Edit Item",
+//       action: (data: any) => {
+//         console.log("Edit item:", data.data);
+//         alert(`Editing ${data.data["product-name"]}`);
+//       },
+//     },
+//   ],
+// };
 
 export default function InventoryGridExample() {
   // const [selectedItem, setSelectedItem] = useState<any>(null);
@@ -316,6 +319,11 @@ export default function InventoryGridExample() {
         open ? "max-w-[calc(100vw-265px)]" : "max-w-[calc(100vw-80px)]"
       } overflow-x-auto`}
     >
+      <CreateEntityButton
+        title="Create Product"
+        dialog_content={<CreateProductForm />}
+        dialog_title="Create New Product"
+      />
       {/* <h1 className="text-2xl font-bold mb-4">Inventory Management</h1> */}
 
       {/* {selectedItem && (
@@ -334,8 +342,8 @@ export default function InventoryGridExample() {
         datatable={productResponse?.data || []}
         keyExpr="seller_sku"
         columns={columns}
-        allowedit={true}
-        allowdelete={true}
+        // allowedit={true}
+        // allowdelete={true}
         allowadd={true}
         editMode="popup"
         height={800}
@@ -344,7 +352,7 @@ export default function InventoryGridExample() {
         // onSelectionChanged={handleSelectionChanged}
         onRowUpdating={handleRowUpdating}
         summary={summaryConfig}
-        gridButtons={gridButtonsConfig}
+        // gridButtons={gridButtonsConfig}
         // masterDetail={masterDetailColumns}
         stateStoreName="inventory-grid-state"
         excelFileName="Inventory-Report"
