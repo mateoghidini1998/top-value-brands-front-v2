@@ -215,16 +215,7 @@ DataTableProps<TData, TValue>) {
                         router.push(`${goToPath}/${row.original.id}`);
                       }
                     }}
-                    className={`cursor-pointer ${
-                      // @ts-expect-error Property 'dg_item' does not exist on type 'TData'
-                      (data[row.index].dg_item &&
-                        // @ts-expect-error Property 'dg_item' does not exist on type 'TData'
-                        data[row.index].dg_item !== "STANDARD") ||
-                      // @ts-expect-error Property 'dg_item' does not exist on type 'TData'
-                      data[row.index].dg_item !== "--"
-                        ? "border border-solid-1 bg-red-500/10  dark:hover:text-white"
-                        : "hover:bg-accent"
-                    }`}
+                    className={`cursor-pointer`}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
