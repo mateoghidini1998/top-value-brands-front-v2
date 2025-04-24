@@ -1,50 +1,37 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import {
-  DataTable,
-  ShowHideColsumnsProps,
-} from "@/components/custom/data-table";
-import { DataTablePagination } from "@/components/custom/data-table-pagination";
 import LoadingSpinner from "@/components/custom/loading-spinner";
+import { useSidebar } from "@/components/ui/sidebar";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { InventoryFilters } from "../../inventory/components/feature/filters.component";
+import {
+  DataGrid,
+  GridColumn,
+} from "../../inventory/components/data-grid/data-grid";
+import { useGetTrackedProducts } from "../../inventory/tracked-products/hooks";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
 import { DataTable as TrackedProductsTable } from "../../warehouse/outgoing-shipments/create/_components/tables/data-table";
 import { useGetPurchaseOrderSummary } from "../hooks";
-import { getAddedProductsColumns, getTrackedProductsColumns } from "./columns";
+import { getAddedProductsColumns } from "./columns";
 import CreateOrderSummary from "./components/create-order-summary";
 import { ProductInOrder } from "./interface/product-added.interface";
-import { useGetTrackedProducts } from "../../inventory/tracked-products/hooks";
 
 export interface SupplierItem {
   value: number;
   name: string;
 }
 
-const showColumns: ShowHideColsumnsProps = {
-  show: true,
-  styles: "absolute left-[550px] top-[-31.5px] z-[1000]",
-  tableId: "create-po-table",
-};
-
 export default function Page() {
   const {
     trackedProductsResponse,
     trackedProductsIsLoading,
     trackedProductsIsError,
-    orderBy,
-    filterByKeyword,
-    filterBySupplier,
-    changePage,
-    changeLimit,
-    itemsPerPage,
-    currentPage,
   } = useGetTrackedProducts({
     page: 1,
-    limit: 50,
+    limit: 10000,
   });
 
   const { suppliersQuery } = useSuppliers();
@@ -54,7 +41,7 @@ export default function Page() {
     orderId as string
   );
 
-  const transoformProducts = (data: PurchaseOrderSummaryProducts[]) => {
+  const transformProducts = (data: PurchaseOrderSummaryProducts[]) => {
     return data.map((product) => ({
       id: product.id,
       product_id: product.product_id,
@@ -114,30 +101,172 @@ export default function Page() {
   };
 
   const [productsAdded, setProductsAdded] = useState<ProductInOrder[]>(
-    transoformProducts([])
-  );
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSupplier, setSelectedSupplier] = useState<number | null>(
-    ordersSummaryResponse?.data.order.supplier_id ?? null
+    transformProducts([])
   );
 
-  const handleFilterBySupplier = (supplier_id: number | null) => {
-    filterBySupplier(supplier_id);
+  const columns: GridColumn[] = [
+    { field: "seller_sku", caption: "SKU", width: 120 },
+    { field: "product_name", caption: "Product Name", width: 300 },
+    {
+      field: "product_cost",
+      caption: "Cost",
+      width: 120,
+      format: "currency",
+      alignment: "right",
+    },
+    {
+      field: "lowest_fba_price",
+      caption: "Lowest FBA Price",
+      width: 150,
+      format: "currency",
+      alignment: "right",
+    },
+    {
+      field: "roi",
+      caption: "ROI",
+      width: 100,
+      alignment: "right",
+    },
+    {
+      field: "units_sold",
+      caption: "Units Sold",
+      width: 120,
+      alignment: "right",
+    },
+    {
+      field: "current_rank",
+      caption: "Current Rank",
+      width: 140,
+      alignment: "right",
+    },
+    {
+      field: "thirty_days_rank",
+      caption: "30D Rank",
+      width: 140,
+      alignment: "right",
+    },
+    {
+      field: "ninety_days_rank",
+      caption: "90D Rank",
+      width: 140,
+      alignment: "right",
+    },
+    {
+      field: "product_velocity",
+      caption: "Velocity (1D)",
+      width: 130,
+      alignment: "right",
+    },
+    {
+      field: "product_velocity_2",
+      caption: "Velocity (2D)",
+      width: 130,
+      alignment: "right",
+    },
+    {
+      field: "product_velocity_7",
+      caption: "Velocity (7D)",
+      width: 130,
+      alignment: "right",
+    },
+    {
+      field: "product_velocity_15",
+      caption: "Velocity (15D)",
+      width: 130,
+      alignment: "right",
+    },
+    {
+      field: "product_velocity_60",
+      caption: "Velocity (60D)",
+      width: 130,
+      alignment: "right",
+    },
+    {
+      field: "FBA_available_inventory",
+      caption: "FBA Inventory",
+      width: 140,
+      alignment: "right",
+    },
+    {
+      field: "reserved_quantity",
+      caption: "Reserved",
+      width: 120,
+      alignment: "right",
+    },
+    {
+      field: "Inbound_to_FBA",
+      caption: "Inbound to FBA",
+      width: 150,
+      alignment: "right",
+    },
+    {
+      field: "warehouse_stock",
+      caption: "Warehouse Stock",
+      width: 150,
+    },
+    {
+      field: "ASIN",
+      caption: "ASIN",
+      width: 150,
+    },
+    {
+      field: "supplier_name",
+      caption: "Supplier",
+      width: 180,
+    },
+    {
+      field: "supplier_item_number",
+      caption: "Supplier Item #",
+      width: 180,
+    },
+    {
+      field: "pack_type",
+      caption: "Pack Type",
+      width: 150,
+    },
+    {
+      field: "dangerous_goods",
+      caption: "Storage Type",
+      width: 160,
+    },
+    {
+      field: "updatedAt",
+      caption: "Updated At",
+      width: 180,
+    },
+    {
+      field: "createdAt",
+      caption: "Created At",
+      width: 180,
+    },
+  ];
+
+  const gridButtonsConfig = {
+    width: 54,
+    data: "Action", // <- deja esto vacío si no hay valor a mostrar
+    buttons: [
+      {
+        id: "add",
+        icon: "fas fa-plus-circle",
+        hint: "Add to Selection",
+        action: (data: any) => {
+          // console.log("Adding product:", data);
+          setProductsAdded((prevProducts) => [...prevProducts, data]);
+        },
+      },
+    ],
   };
 
-  const handleOrderBy = (orderByCol: string) => {
-    orderBy(orderByCol);
-  };
+  // const handleRowUpdating = (e: any) => {
+  //   console.log("Row updating:", e);
+  //   // You can implement validation or data transformation here
+  //   return e;
+  // };
 
   useEffect(() => {
     if (orderId) {
-      // add the data.data.purchaseOrderProducts to the productsAdded state
-      handleFilterBySupplier(
-        ordersSummaryResponse?.data.order.supplier_id ?? null
-      );
-
       addTransformedProducts(
-        transoformProducts(
+        transformProducts(
           ordersSummaryResponse?.data.purchaseOrderProducts ?? []
         ),
         setProductsAdded
@@ -145,6 +274,8 @@ export default function Page() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const { open } = useSidebar();
 
   // Render condicional después de los hooks
   if (trackedProductsIsLoading || suppliersQuery.isLoading) {
@@ -163,43 +294,30 @@ export default function Page() {
     return <div>Error</div>;
   }
 
+  console.log(productsAdded);
+
   return (
     <section className="flex flex-col w-full">
-      {/* 1. Filters and search */}
-      <InventoryFilters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedSupplier={selectedSupplier}
-        onSearch={() => filterByKeyword(searchTerm)}
-        onFilterBySupplier={(supplierId) => {
-          setSelectedSupplier(supplierId);
-          filterBySupplier(supplierId);
-        }}
-      />
-
-      {/* 2. Table and pagination */}
       <div
         className={`${
-          productsAdded.length <= 0
-            ? ""
-            : "max-h-[400px] overflow-y-auto transition-all duration-300"
-        }`}
+          open ? "max-w-[calc(100vw-265px)]" : "max-w-[calc(100vw-80px)]"
+        } overflow-x-auto`}
       >
-        <DataTable
-          data={trackedProductsResponse?.data}
-          columns={getTrackedProductsColumns(setProductsAdded, handleOrderBy)}
-          dataLength={50}
-          scrolleable={true}
-          showHideColumns={showColumns}
-        />
-
-        {/* Pagination */}
-        <DataTablePagination
-          currentPage={currentPage}
-          itemsPerPage={itemsPerPage}
-          totalItems={trackedProductsResponse.total || 0}
-          onPageChange={changePage}
-          onLimitChange={changeLimit}
+        <DataGrid
+          datatable={trackedProductsResponse.data}
+          keyExpr="id"
+          columns={columns}
+          height={500}
+          allowSearch={true}
+          allowFilter={true}
+          allowSelect={false}
+          // Disable editing functionality
+          allowedit={false}
+          allowdelete={false}
+          allowadd={false}
+          // Add our custom button column
+          gridButtons={gridButtonsConfig}
+          stateStoreName="create-po-grid-state"
         />
       </div>
 

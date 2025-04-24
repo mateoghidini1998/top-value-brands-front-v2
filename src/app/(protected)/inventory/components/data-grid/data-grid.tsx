@@ -2,39 +2,41 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import type React from "react";
-import { useCallback, useRef, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
-  DataGrid as DevExtremeDataGrid,
   Column,
-  FilterRow,
-  HeaderFilter,
-  FilterPanel,
-  SearchPanel,
-  Selection,
-  Grouping,
-  GroupPanel,
-  Scrolling,
-  Sorting,
+  ColumnChooser,
+  ColumnFixing,
+  DataGrid as DevExtremeDataGrid,
   Editing,
   Export,
-  ColumnFixing,
-  ColumnChooser,
-  StateStoring,
-  Toolbar,
-  Popup,
-  LoadPanel,
-  MasterDetail,
-  Summary,
+  FilterPanel,
+  FilterRow,
+  Grouping,
   GroupItem,
-  TotalItem,
+  GroupPanel,
+  HeaderFilter,
+  LoadPanel,
   Lookup,
+  MasterDetail,
+  Popup,
+  Scrolling,
+  SearchPanel,
+  Selection,
+  Sorting,
+  StateStoring,
+  Summary,
+  Toolbar,
+  TotalItem,
 } from "devextreme-react/data-grid";
+import { exportDataGrid } from "devextreme/excel_exporter";
+import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
 import { Workbook } from "exceljs";
 import saveAs from "file-saver";
-import { exportDataGrid } from "devextreme/excel_exporter";
 import { jsPDF } from "jspdf";
-import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
+import { PlusIcon } from "lucide-react";
+import type React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // Types for column configuration
 export type GridColumn = {
@@ -645,6 +647,8 @@ export const DataGrid: React.FC<DataGridProps> = ({
   const renderButtonColumn = () => {
     if (!gridButtons) return null;
 
+    // console.log(gridButtons);
+
     return (
       <Column
         width={gridButtons.width}
@@ -653,22 +657,15 @@ export const DataGrid: React.FC<DataGridProps> = ({
         dataField={gridButtons.data}
         caption=" "
         cellRender={(data: any) => (
-          <div style={{ display: "flex", alignItems: "center" }}>
-            {gridButtons.buttons.map((button) => (
-              <button
-                key={button.id}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "var(--primary-color, blue)",
-                  padding: "4px",
-                }}
-                title={button.hint}
-                onClick={() => button.action(data)}
+          <div>
+            {gridButtons.buttons.map((button, i) => (
+              <Button
+                variant={"ghost"}
+                key={i}
+                onClick={() => button.action(data.data)}
               >
-                <i className={button.icon || "fas fa-paperclip"} />
-              </button>
+                <PlusIcon></PlusIcon>
+              </Button>
             ))}
             <span style={{ marginLeft: "0.5rem", fontSize: "0.9rem" }}>
               {data.value}
@@ -853,9 +850,9 @@ export const DataGrid: React.FC<DataGridProps> = ({
 
         {/* Custom columns */}
         {renderPhotoColumn()}
-        {renderButtonColumn()}
         {renderHyperlinkColumns()}
         {renderColumns()}
+        {renderButtonColumn()}
 
         {/* Master/Detail */}
         {masterDetail && (
