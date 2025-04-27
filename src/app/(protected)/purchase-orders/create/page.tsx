@@ -226,9 +226,29 @@ export default function Page() {
     },
     {
       field: "dangerous_goods",
-      caption: "Storage Type",
-      width: 160,
+      caption: "Hazmat",
+      width: 70,
+      edit: false, // No editable, opcional
+      cellRender: (cellData: any) => {
+        const isHazmat: boolean = !(
+          cellData.value === "--" || cellData.value === "STANDARD"
+        );
+
+        return (
+          <div className="flex justify-center items-center relative group">
+            {isHazmat ? <span>Yes</span> : <span>No</span>}
+            <div className="absolute opacity-0 group-hover:opacity-100 bg-gray-800 text-white text-sm p-1 rounded">
+              {cellData.value}
+            </div>
+          </div>
+        );
+      },
     },
+    // {
+    //   field: "dangerous_goods",
+    //   caption: "Storage Type",
+    //   width: 160,
+    // },
     {
       field: "updatedAt",
       caption: "Updated At",
@@ -256,12 +276,6 @@ export default function Page() {
       },
     ],
   };
-
-  // const handleRowUpdating = (e: any) => {
-  //   console.log("Row updating:", e);
-  //   // You can implement validation or data transformation here
-  //   return e;
-  // };
 
   useEffect(() => {
     if (orderId) {
@@ -294,10 +308,8 @@ export default function Page() {
     return <div>Error</div>;
   }
 
-  console.log(productsAdded);
-
   return (
-    <section className="flex flex-col w-full">
+    <section className="flex flex-col w-full h-full">
       <div
         className={`${
           open ? "max-w-[calc(100vw-265px)]" : "max-w-[calc(100vw-80px)]"
