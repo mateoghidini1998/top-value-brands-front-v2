@@ -11,7 +11,7 @@ import { filterRoutesByRole, Role, Route } from "@/lib/filter-routes";
 import { routes } from "@/routes/routes";
 import { UserResource } from "@/types/auth.type";
 import * as React from "react";
-import { ModeToggle } from "../theme-toggle";
+// import { ModeToggle } from "../theme-toggle";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { TeamSwitcher } from "./team-switcher";
@@ -37,7 +37,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         <NavMain items={filteredNavMain} />
       </SidebarContent>
       <SidebarFooter>
-        <ModeToggle />
+        {/* <ModeToggle /> */}
         <NavUser />
       </SidebarFooter>
       <SidebarRail />

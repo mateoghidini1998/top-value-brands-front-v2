@@ -1,9 +1,9 @@
 import { TanstackProvider } from "@/components/providers/tanstack-provider";
-import { ThemeProvider } from "@/components/providers/theme-provider";
+// import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google"; // Importa la fuente desde Google Fonts
-import 'devextreme/dist/css/dx.light.css';
+import "devextreme/dist/css/dx.light.css";
 import "./globals.css";
 import { Toaster } from "sonner";
 
@@ -28,15 +28,15 @@ export default function RootLayout({
       <html lang="es" suppressHydrationWarning>
         <body className={` ${poppins.variable} dx-viewport`}>
           <TanstackProvider>
-            <ThemeProvider
+            {/* <ThemeProvider
               attribute="class"
               defaultTheme="dark"
-              // enableSystem
-              // disableTransitionOnChange
-            >
-              {children}
-              <Toaster position="top-right" richColors />
-            </ThemeProvider>
+              enableSystem
+              disableTransitionOnChange
+            > */}
+            {children}
+            <Toaster position="top-right" richColors />
+            {/* </ThemeProvider> */}
           </TanstackProvider>
         </body>
       </html>
