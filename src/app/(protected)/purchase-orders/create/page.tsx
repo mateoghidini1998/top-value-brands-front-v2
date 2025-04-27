@@ -3,7 +3,9 @@
 
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { useSidebar } from "@/components/ui/sidebar";
+import { formatDate } from "@/helpers";
 import { PurchaseOrderSummaryProducts } from "@/types";
+import { ArrowDown } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -18,7 +20,6 @@ import { useGetPurchaseOrderSummary } from "../hooks";
 import { getAddedProductsColumns } from "./columns";
 import CreateOrderSummary from "./components/create-order-summary";
 import { ProductInOrder } from "./interface/product-added.interface";
-import { ArrowDown } from "lucide-react";
 
 export interface SupplierItem {
   value: number;
@@ -114,6 +115,7 @@ export default function Page() {
       width: 120,
       format: "currency",
       alignment: "right",
+      customizeText: (cellInfo) => `$${parseFloat(cellInfo.value).toFixed(2)}`,
     },
     {
       field: "lowest_fba_price",
@@ -121,89 +123,157 @@ export default function Page() {
       width: 150,
       format: "currency",
       alignment: "right",
+      customizeText: (cellInfo) => `$${parseFloat(cellInfo.value).toFixed(2)}`,
     },
     {
       field: "roi",
       caption: "ROI",
       width: 100,
       alignment: "right",
+      format: "percent",
+      cellRender: (cellInfo) => {
+        const roi = parseFloat(cellInfo.value);
+        let color = "";
+        if (roi < 0) color = "text-red-500"; // Rojo para valores menores a 0
+        else if (roi > 2)
+          color = "text-green-500"; // Verde para valores mayores a 2
+        else color = "text-yellow-500"; // Amarillo para valores entre 0 y 2
+        return (
+          <span className={`${color} w-full h-full`}>
+            {roi.toFixed(2) + "%"}
+          </span>
+        );
+      },
+    },
+    {
+      field: "profit",
+      caption: "Profit",
+      width: 100,
+      alignment: "right",
+      format: "currency",
+      cellRender: (cellInfo) => {
+        const roi = parseFloat(cellInfo.value);
+        let color = "";
+        if (roi < 0) color = "text-red-500"; // Rojo para valores menores a 0
+        else if (roi > 2)
+          color = "text-green-500"; // Verde para valores mayores a 2
+        else color = "text-yellow-500"; // Amarillo para valores entre 0 y 2
+        return (
+          <span className={`${color} w-full h-full`}>
+            {roi ? roi.toFixed(2) + "%" : "N/A"}
+          </span>
+        );
+      },
     },
     {
       field: "units_sold",
       caption: "Units Sold",
       width: 120,
       alignment: "right",
+      customizeText: (cellInfo) => {
+        const value = parseInt(cellInfo.value);
+        return new Intl.NumberFormat("en-US").format(value); // Formateo con comas
+      },
     },
     {
       field: "current_rank",
       caption: "Current Rank",
       width: 140,
       alignment: "right",
+      customizeText: (cellInfo) => {
+        const value = parseInt(cellInfo.value);
+        return new Intl.NumberFormat("en-US").format(value); // Formateo con comas
+      },
     },
     {
       field: "thirty_days_rank",
       caption: "30D Rank",
       width: 140,
       alignment: "right",
+      customizeText: (cellInfo) => {
+        const value = parseInt(cellInfo.value);
+        return new Intl.NumberFormat("en-US").format(value); // Formateo con comas
+      },
     },
     {
       field: "ninety_days_rank",
       caption: "90D Rank",
       width: 140,
       alignment: "right",
+      customizeText: (cellInfo) => {
+        const value = parseInt(cellInfo.value);
+        return new Intl.NumberFormat("en-US").format(value); // Formateo con comas
+      },
     },
     {
       field: "product_velocity",
-      caption: "Velocity (1D)",
+      caption: "Velocity (30D)",
       width: 130,
       alignment: "right",
-    },
-    {
-      field: "product_velocity_2",
-      caption: "Velocity (2D)",
-      width: 130,
-      alignment: "right",
-    },
-    {
-      field: "product_velocity_7",
-      caption: "Velocity (7D)",
-      width: 130,
-      alignment: "right",
-    },
-    {
-      field: "product_velocity_15",
-      caption: "Velocity (15D)",
-      width: 130,
-      alignment: "right",
-    },
-    {
-      field: "product_velocity_60",
-      caption: "Velocity (60D)",
-      width: 130,
-      alignment: "right",
+      cellRender: (cellData: any) => {
+        const {
+          data: {
+            product_velocity,
+            product_velocity_2,
+            product_velocity_7,
+            product_velocity_15,
+            // product_velocity_60,
+          },
+        } = cellData;
+
+        // Armo el contenido del tooltip
+        const tooltipContent = `
+        Velocities:
+          2D: ${parseFloat(product_velocity_2).toFixed(2)}
+          7D: ${parseFloat(product_velocity_7).toFixed(2)}
+          15D: ${parseFloat(product_velocity_15).toFixed(2)}
+          `;
+        // 60D: ${parseFloat(product_velocity_60).toFixed(2)}
+        return (
+          <div title={tooltipContent.trim()} className="text-right">
+            {parseFloat(product_velocity).toFixed(2)}
+          </div>
+        );
+      },
     },
     {
       field: "FBA_available_inventory",
       caption: "FBA Inventory",
       width: 140,
       alignment: "right",
+      customizeText: (cellInfo) => {
+        const value = parseInt(cellInfo.value);
+        return new Intl.NumberFormat("en-US").format(value); // Formateo con comas
+      },
     },
     {
       field: "reserved_quantity",
       caption: "Reserved",
       width: 120,
       alignment: "right",
+      customizeText: (cellInfo) => {
+        const value = parseInt(cellInfo.value);
+        return new Intl.NumberFormat("en-US").format(value); // Formateo con comas
+      },
     },
     {
       field: "Inbound_to_FBA",
       caption: "Inbound to FBA",
       width: 150,
       alignment: "right",
+      customizeText: (cellInfo) => {
+        const value = parseInt(cellInfo.value);
+        return new Intl.NumberFormat("en-US").format(value); // Formateo con comas
+      },
     },
     {
       field: "warehouse_stock",
       caption: "Warehouse Stock",
       width: 150,
+      customizeText: (cellInfo) => {
+        const value = parseInt(cellInfo.value);
+        return new Intl.NumberFormat("en-US").format(value); // Formateo con comas
+      },
     },
     {
       field: "ASIN",
@@ -245,20 +315,17 @@ export default function Page() {
         );
       },
     },
-    // {
-    //   field: "dangerous_goods",
-    //   caption: "Storage Type",
-    //   width: 160,
-    // },
     {
       field: "updatedAt",
       caption: "Updated At",
-      width: 180,
+      width: 150,
+      customizeText: (cellInfo) => formatDate(cellInfo.value),
     },
     {
       field: "createdAt",
       caption: "Created At",
-      width: 180,
+      width: 150,
+      customizeText: (cellInfo) => formatDate(cellInfo.value),
     },
   ];
 
