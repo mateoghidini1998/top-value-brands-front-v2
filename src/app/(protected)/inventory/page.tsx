@@ -11,9 +11,10 @@ import {
 import { useGetAllProducts } from "./hooks";
 // import { CreateEntityButton } from "@/components/custom/create-entity-button";
 import { useState } from "react";
-import { CreateProductForm } from "./components";
+import { CreateProductForm, EditProductForm } from "./components";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialogHeader } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 const columns: GridColumn[] = [
   { field: "seller_sku", caption: "SKU", width: 120 },
@@ -130,6 +131,8 @@ export default function InventoryGridExample() {
   const { open } = useSidebar();
 
   const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<any>(null);
 
   const handleRowUpdating = (e: any) => {
     console.log("Row updating:", e);
@@ -140,6 +143,16 @@ export default function InventoryGridExample() {
     console.log(openCreateModal);
     e.cancel = true; // 🚨 Cancelamos que el DataGrid agregue la fila automáticamente
     setOpenCreateModal(true); // 🚨 Abrimos nuestro modal custom
+  };
+
+  const handleDeleteProduct = (e: any) => {
+    console.log("Delete product:", e);
+  };
+
+  const handleEditProduct = (e: any) => {
+    e.cancel = true; // 🚨 Cancelamos el edit default de DevExtreme
+    setSelectedRow(e.data); // 🚀 Guardamos la fila seleccionada
+    setOpenEditModal(true); // 🚀 Abrimos nuestro modal de edición
   };
 
   return (
@@ -159,12 +172,33 @@ export default function InventoryGridExample() {
         </Dialog>
       )}
 
+      {openEditModal && (
+        <Dialog open onOpenChange={setOpenEditModal}>
+          <DialogContent className="sm:max-w-[425px]">
+            <AlertDialogHeader>
+              <DialogTitle>Edit Product</DialogTitle>
+            </AlertDialogHeader>
+            <EditProductForm
+              product={selectedRow}
+              onSuccess={() => {
+                setOpenEditModal(false);
+                toast.success("Product edited successfully");
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
+
       <DataGrid
         datatable={productResponse?.data || []}
         keyExpr="seller_sku"
         columns={columns}
         allowadd={true}
+        allowedit={true}
+        allowdelete={true}
         editMode="popup"
+        onEditingStart={handleEditProduct}
+        onRowRemoving={handleDeleteProduct}
         height={800}
         allowSelect={false}
         setOpenCreateModal={setOpenCreateModal}
