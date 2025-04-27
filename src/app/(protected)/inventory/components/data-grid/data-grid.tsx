@@ -170,6 +170,7 @@ export type DataGridProps = {
   onEditingCanceled?: (e: any) => any;
   onInitNewRow?: (e: any) => any;
   customizeColumns?: (columns: any[]) => void;
+  setOpenCreateModal?: (open: boolean) => void;
   summary?: SummaryConfig;
   width?: string;
   height?: number;
@@ -238,6 +239,7 @@ export const DataGrid: React.FC<DataGridProps> = ({
   onEditingStart = () => ({}),
   // onEditingCanceled = () => ({}),
   onInitNewRow = () => ({}),
+  setOpenCreateModal = () => ({}),
   customizeColumns,
   summary,
   width = "100%",
@@ -433,6 +435,21 @@ export const DataGrid: React.FC<DataGridProps> = ({
         });
       }
 
+      e.toolbarOptions.items = e.toolbarOptions.items.filter(
+        (item: any) => item.name !== "addRowButton"
+      );
+
+      // Agregar tu botón custom
+      e.toolbarOptions.items.unshift({
+        location: "after",
+        widget: "dxButton",
+        options: {
+          icon: "plus",
+          text: "Create Product",
+          onClick: () => setOpenCreateModal(true),
+        },
+      });
+
       // Add show all columns button
       e.toolbarOptions.items.unshift({
         locateInMenu: "auto",
@@ -509,6 +526,7 @@ export const DataGrid: React.FC<DataGridProps> = ({
       collapseAll,
       showAllColumns,
       defaultViewColumns,
+      setOpenCreateModal,
       showAllColButton,
       showDefColButton,
       showChooseColButton,
