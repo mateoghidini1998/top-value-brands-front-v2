@@ -8,13 +8,12 @@ import {
   GridColumn,
   SummaryConfig,
 } from "./components/data-grid/data-grid";
-import { useGetAllProducts } from "./hooks";
+import { useDeleteProduct, useGetAllProducts } from "./hooks";
 // import { CreateEntityButton } from "@/components/custom/create-entity-button";
+import { AlertDialogHeader } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
 import { CreateProductForm, EditProductForm } from "./components";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { AlertDialogHeader } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
 
 const columns: GridColumn[] = [
   { field: "seller_sku", caption: "SKU", width: 120 },
@@ -128,16 +127,12 @@ const summaryConfig: SummaryConfig = {
 
 export default function InventoryGridExample() {
   const { productResponse } = useGetAllProducts({ page: 1, limit: 10000 });
-  const { open } = useSidebar();
+  const { deleteAsync } = useDeleteProduct();
 
+  const { open } = useSidebar();
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<any>(null);
-
-  const handleRowUpdating = (e: any) => {
-    console.log("Row updating:", e);
-    return e;
-  };
 
   const handleInitNewRow = (e: any) => {
     console.log(openCreateModal);
@@ -145,8 +140,17 @@ export default function InventoryGridExample() {
     setOpenCreateModal(true); // 🚨 Abrimos nuestro modal custom
   };
 
-  const handleDeleteProduct = (e: any) => {
-    console.log("Delete product:", e);
+  // Cuando hacen click en Eliminar
+  const handleDeleteProduct = async (e: any) => {
+    e.cancel = true; // 🚨 Cancelamos el delete default de DevExtreme
+    console.log(e.data);
+    if (e.data) {
+      try {
+        await deleteAsync(e.data.id.toString());
+      } catch (error) {
+        console.error("Failed to delete product:", error);
+      }
+    }
   };
 
   const handleEditProduct = (e: any) => {
@@ -182,7 +186,7 @@ export default function InventoryGridExample() {
               product={selectedRow}
               onSuccess={() => {
                 setOpenEditModal(false);
-                toast.success("Product edited successfully");
+                setSelectedRow(null);
               }}
             />
           </DialogContent>
@@ -203,7 +207,6 @@ export default function InventoryGridExample() {
         allowSelect={false}
         setOpenCreateModal={setOpenCreateModal}
         selectionMode="multiple"
-        onRowUpdating={handleRowUpdating}
         onInitNewRow={handleInitNewRow}
         summary={summaryConfig}
         stateStoreName="inventory-grid-state"
