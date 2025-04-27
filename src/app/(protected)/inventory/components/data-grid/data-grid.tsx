@@ -69,6 +69,7 @@ export type GridColumn = {
   display?: string;
   value?: string;
   allowclear?: boolean;
+  cellRender?: (cellData: any) => React.ReactNode;
 };
 
 // Types for header groups
@@ -241,6 +242,7 @@ export const DataGrid: React.FC<DataGridProps> = ({
   onInitNewRow = () => ({}),
   setOpenCreateModal = () => ({}),
   customizeColumns,
+
   summary,
   width = "100%",
   height = 700,
@@ -627,6 +629,7 @@ export const DataGrid: React.FC<DataGridProps> = ({
         validationRules={col.validationRules}
         editorOptions={col.editorOptions}
         cssClass={col.cssClass}
+        cellRender={col.cellRender}
       >
         {col.lookup && (
           <Lookup
