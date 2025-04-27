@@ -232,7 +232,7 @@ export default function InventoryGridExample() {
         editMode="popup"
         onEditingStart={handleEditProduct}
         onRowRemoving={handleDeleteProduct}
-        height={800}
+        height={"90vh"}
         allowSelect={false}
         setOpenCreateModal={setOpenCreateModal}
         selectionMode="multiple"

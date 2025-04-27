@@ -174,7 +174,7 @@ export type DataGridProps = {
   setOpenCreateModal?: (open: boolean) => void;
   summary?: SummaryConfig;
   width?: string;
-  height?: number;
+  height?: number | string;
   stateStoreName?: string;
   excelFileName?: string;
   showDefColButton?: boolean;
@@ -245,7 +245,7 @@ export const DataGrid: React.FC<DataGridProps> = ({
 
   summary,
   width = "100%",
-  height = 700,
+  height = "70vh",
   stateStoreName,
   excelFileName = `export-${new Date().toISOString().substring(0, 10)}`,
   showDefColButton = false,

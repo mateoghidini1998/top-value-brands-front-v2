@@ -18,6 +18,7 @@ import { useGetPurchaseOrderSummary } from "../hooks";
 import { getAddedProductsColumns } from "./columns";
 import CreateOrderSummary from "./components/create-order-summary";
 import { ProductInOrder } from "./interface/product-added.interface";
+import { ArrowDown } from "lucide-react";
 
 export interface SupplierItem {
   value: number;
@@ -308,8 +309,17 @@ export default function Page() {
     return <div>Error</div>;
   }
 
+  const scrollToBottom = () => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <section className="flex flex-col w-full h-full">
+      {/* Create a float button to go to the bottom of the page. */}
+
       <div
         className={`${
           open ? "max-w-[calc(100vw-265px)]" : "max-w-[calc(100vw-80px)]"
@@ -319,7 +329,7 @@ export default function Page() {
           datatable={trackedProductsResponse.data}
           keyExpr="id"
           columns={columns}
-          height={500}
+          height={productsAdded.length > 0 ? "90vh" : "90vh"}
           allowSearch={true}
           allowFilter={true}
           allowSelect={false}
@@ -334,7 +344,14 @@ export default function Page() {
       </div>
 
       {productsAdded.length > 0 && (
-        <div className="mt-6">
+        <div className="mt-6 relative">
+          {/* <FloatButton /> */}
+          <button
+            className="w-[30px] h-[30px] bg-gray-500 absolute top-[-55px] left-1/2  mx-auto rounded-full flex items-center justify-center z-[6000px] hover:bg-gray-500/80 transition-all ease-linear"
+            onClick={scrollToBottom}
+          >
+            <ArrowDown className="w-4 h-4 text-white" />
+          </button>
           {/* 3. Added products table */}
           <div className="max-h-[400px] overflow-y-auto">
             <TrackedProductsTable
