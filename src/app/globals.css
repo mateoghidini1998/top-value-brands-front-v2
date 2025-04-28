@@ -155,5 +155,9 @@ body {
 
   body {
     @apply bg-background text-foreground;
+
+    a {
+      color: #000 !important;
+    }
   }
 }

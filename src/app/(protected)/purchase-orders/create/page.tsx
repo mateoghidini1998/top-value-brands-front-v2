@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -20,6 +21,7 @@ import { useGetPurchaseOrderSummary } from "../hooks";
 import { getAddedProductsColumns } from "./columns";
 import CreateOrderSummary from "./components/create-order-summary";
 import { ProductInOrder } from "./interface/product-added.interface";
+import Link from "next/link";
 
 export interface SupplierItem {
   value: number;
@@ -107,6 +109,33 @@ export default function Page() {
   );
 
   const columns: GridColumn[] = [
+    {
+      field: "product_image",
+      caption: "Img",
+      width: 50,
+      edit: false, // No editable, opcional
+      cellRender: (cellData: any) => {
+        const imageUrl = cellData.value;
+        const ASIN = cellData.data.ASIN;
+        return (
+          <div className="flex justify-center items-center">
+            {imageUrl ? (
+              <Link target="a_blank" href={`https://www.amazon.com/dp/${ASIN}`}>
+                <img
+                  src={imageUrl}
+                  alt="product_image"
+                  loading="lazy"
+                  className="cover rounded-xl w-7 h-7"
+                  style={{ objectFit: "cover", borderRadius: "8px" }}
+                />
+              </Link>
+            ) : (
+              <span>No Image</span>
+            )}
+          </div>
+        );
+      },
+    },
     { field: "seller_sku", caption: "SKU", width: 120 },
     { field: "product_name", caption: "Product Name", width: 300 },
     {

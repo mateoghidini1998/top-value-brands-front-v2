@@ -20,7 +20,7 @@ export default function OrderProductsTable({
     <Card>
       <CardHeader className="flex flex-row items-center">
         <div className="flex flex-col items-start gap-4 justify-center w-fit space-y-0 pb-2">
-          <Button>
+          <Button variant="outline">
             <Link href={`/purchase-orders/create?update=${orderId}`}>
               Add Products
             </Link>
