@@ -24,9 +24,11 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import {
+  useAddFbaShipmentId,
   useAddReferenceId,
   useDeleteShipment,
   usePrefetchShipmentByID,
+  useUpdateFbaShipmentStatusToShipped,
 } from "../hooks/use-shipments-service";
 import { Input } from "@/components/ui/input";
 
@@ -35,18 +37,26 @@ interface ActionsCellProps {
 }
 
 const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
-  const [shipmentToDelete, setShipmentToDelete] = useState<number>(0);
+  const [selectedShipment, setSelectedShipment] = useState<number>(0);
   const [showReferenceIdDialog, setShowReferenceIdDialog] =
     useState<boolean>(false);
+  const [showFbaShipmentIdDialog, setShowFbaShipmentIdDialog] =
+    useState<boolean>(false);
   const { deleteShipmentAsync } = useDeleteShipment(
-    shipmentToDelete.toString()
+    selectedShipment.toString()
   );
+
+  const { updateFbaShipmentStatusToShippedAsync } =
+    useUpdateFbaShipmentStatusToShipped(selectedShipment.toString());
+
   const { prefetchShipmentByID } = usePrefetchShipmentByID(
     shipmentId.toString()
   );
 
   const { addReferenceIdAsync } = useAddReferenceId(shipmentId.toString());
+  const { addFbaShipmentIdAsync } = useAddFbaShipmentId(shipmentId.toString());
   const [referenceId, setReferenceId] = useState<string>("");
+  const [fbaShipmentId, setFbaShipmentId] = useState<string>("");
 
   const prefetchTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -67,10 +77,10 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
   };
 
   const handleDeleteShipment = async () => {
-    if (shipmentToDelete) {
+    if (selectedShipment) {
       try {
-        await deleteShipmentAsync(shipmentToDelete.toString());
-        setShipmentToDelete(0);
+        await deleteShipmentAsync(selectedShipment.toString());
+        setSelectedShipment(0);
       } catch (error) {
         console.error("Failed to delete shipment:", error);
       }
@@ -82,6 +92,14 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
       await addReferenceIdAsync(referenceId);
     } catch (error) {
       console.error("Failed to add reference ID:", error);
+    }
+  };
+
+  const handleAddFbaShipmentId = async () => {
+    try {
+      await addFbaShipmentIdAsync(fbaShipmentId);
+    } catch (error) {
+      console.error("Failed to add shipment ID:", error);
     }
   };
 
@@ -146,16 +164,22 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
           >
             Download 2D Workflow
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setShipmentToDelete(shipmentId)}>
+          <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
             Delete Shipment
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setShowReferenceIdDialog(true)}>
             Add Reference ID
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setShowFbaShipmentIdDialog(true)}>
+            Add FBA Shipment ID
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
+            Set Status To Shipped
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       {/* Delete Dialog */}
-      <AlertDialog open={!!shipmentToDelete} onOpenChange={(open) => !open}>
+      <AlertDialog open={!!selectedShipment} onOpenChange={(open) => !open}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
@@ -170,6 +194,30 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteShipment}>
               Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Update Status TO Shipped Dialog */}
+      <AlertDialog open={!!selectedShipment} onOpenChange={(open) => !open}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Are you sure you want to update this shipment to shipped?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. Warehouse stock will be updated.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() =>
+                updateFbaShipmentStatusToShippedAsync(shipmentId.toString())
+              }
+            >
+              Update
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -194,6 +242,31 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleAddReferenceId}>
+              Add
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Add Shipment ID Dialog */}
+      <AlertDialog
+        open={showFbaShipmentIdDialog}
+        onOpenChange={(open) => !open && setShowFbaShipmentIdDialog(false)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Add Shipment ID to Shipment</AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogDescription>
+            <Input
+              placeholder="FBA Shipment ID"
+              value={fbaShipmentId}
+              onChange={(e) => setFbaShipmentId(e.target.value)}
+            />
+          </AlertDialogDescription>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleAddFbaShipmentId}>
               Add
             </AlertDialogAction>
           </AlertDialogFooter>

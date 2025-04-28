@@ -210,3 +210,45 @@ export const useAddReferenceId = (shipmentId: string) => {
     isAddingReferenceId: addReferenceId.isPending,
   };
 };
+
+export const useAddFbaShipmentId = (shipmentId: string) => {
+  const addFbaShipmentId = useCreateMutation<string>({
+    mutationFn: (fbaShipmentId: string) =>
+      shipmentsService.addFbaShipmentId(shipmentId, fbaShipmentId),
+    successMessage: SUCCESS_MESSAGES.UPDATE_FBA_SHIPMENT_ID,
+    errorMessage: ERROR_MESSAGES.UPDATE_FBA_SHIPMENT_ID,
+    invalidateKeys: [[QUERY_KEYS.SHIPMENT, shipmentId], [QUERY_KEYS.SHIPMENTS]],
+  });
+
+  return {
+    addFbaShipmentIdAsync: addFbaShipmentId.mutateAsync,
+    isAddingReferenceIdError: addFbaShipmentId.isError,
+    isAddingReferenceIdSuccess: addFbaShipmentId.isSuccess,
+    isAddingReferenceId: addFbaShipmentId.isPending,
+  };
+};
+
+export const useUpdateFbaShipmentStatusToShipped = (shipmentId: string) => {
+  const updateFbaShipmentStatusToShipped = useCreateMutation<string>({
+    mutationFn: () =>
+      shipmentsService.updateFbaShipmentStatusToShipped(shipmentId),
+    successMessage: SUCCESS_MESSAGES.UPDATE_FBA_SHIPMENT_STATUS,
+    errorMessage: ERROR_MESSAGES.UPDATE_FBA_SHIPMENT_STATUS,
+    invalidateKeys: [
+      [QUERY_KEYS.SHIPMENT, shipmentId],
+      [QUERY_KEYS.SHIPMENTS],
+      [QUERY_KEYS.PRODUCTS],
+    ],
+  });
+
+  return {
+    updateFbaShipmentStatusToShippedAsync:
+      updateFbaShipmentStatusToShipped.mutateAsync,
+    updateFbaShipmentStatusToShippedError:
+      updateFbaShipmentStatusToShipped.isError,
+    updateFbaShipmentStatusToShippedSuccess:
+      updateFbaShipmentStatusToShipped.isSuccess,
+    isUpdatingFbaShipmentStatusToShipped:
+      updateFbaShipmentStatusToShipped.isPending,
+  };
+};

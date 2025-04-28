@@ -40,6 +40,8 @@ export const ERROR_MESSAGES = {
   CREATE_PURCHASE_ORDER: "Error creating purchase order",
   UPDATE_REFERENCE_ID: "Error updating reference ID",
   UPDATE_DG_PRODUCT: "Error updating Product DG Type",
+  UPDATE_FBA_SHIPMENT_ID: "Error updating FBA Shipment ID",
+  UPDATE_FBA_SHIPMENT_STATUS: "Error updating FBA Shipment Status",
 } as const;
 
 export const SUCCESS_MESSAGES = {
@@ -86,4 +88,6 @@ export const SUCCESS_MESSAGES = {
   CREATE_PURCHASE_ORDER: "Purchase order created successfully",
   UPDATE_REFERENCE_ID: "Reference ID updated successfully",
   UPDATE_DG_PRODUCT: "Product DG Type updated successfully",
+  UPDATE_FBA_SHIPMENT_ID: "FBA Shipment ID updated successfully",
+  UPDATE_FBA_SHIPMENT_STATUS: "FBA Shipment Status updated successfully",
 } as const;

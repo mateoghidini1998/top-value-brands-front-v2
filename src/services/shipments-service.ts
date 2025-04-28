@@ -67,6 +67,18 @@ export class ShipmentsService extends BaseService {
     return this.apiRequest<string>(url, options);
   }
 
+  public async addFbaShipmentId(shipmentId: string, fbaShipmentId: string) {
+    const url = this.constructUrl(`/reference/fba/${shipmentId}`);
+    const options = this.constructOptions("PATCH", { fbaShipmentId });
+    return this.apiRequest<string>(url, options);
+  }
+
+  public async updateFbaShipmentStatusToShipped(shipmentId: string) {
+    const url = this.constructUrl(`/status-shipped/${shipmentId}`);
+    const options = this.constructOptions("PATCH", { shipmentId });
+    return this.apiRequest<string>(url, options);
+  }
+
   public async toggleCheckAllPalletProducts(
     shipmentId: number,
     palletId: number
