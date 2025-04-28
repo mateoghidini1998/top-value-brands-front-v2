@@ -453,7 +453,9 @@ export default function Page({
 
         {/* Summary */}
         <TabsContent value="summary" className="w-full">
-          <Button onClick={() => setIsSavingOrder(true)}>Save Order</Button>
+          <Button onClick={() => setIsSavingOrder(true)} variant={"outline"}>
+            Save Order
+          </Button>
           <AlertDialog
             open={isSavingOrder}
             onOpenChange={(open) => !open && setIsSavingOrder(false)}
@@ -572,7 +574,9 @@ export default function Page({
         </TabsContent>
         {/* Pallet */}
         <TabsContent value="pallets" className="w-full">
-          <Button onClick={() => handleSavePallets()}>Save Pallet</Button>
+          <Button onClick={() => handleSavePallets()} variant={"outline"}>
+            Save Pallet
+          </Button>
           <DataTable
             columns={availableToCreate((product) => {
               setProductsAddedToCreatePallet((prev) => {
@@ -647,18 +651,18 @@ export default function Page({
           />
 
           {/* Pallet Summary */}
-          <Card className="w-full text-zinc-100 mt-10 bg-background">
+          <Card className="w-full text-black-100 mt-10 bg-background">
             <CardHeader>
               <CardTitle>Pallet Summary</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex flex-row items-start justify-between gap-4 w-full">
                 <div className="space-y-2">
-                  <p className="text-sm text-zinc-400">Pallet Number</p>
+                  <p className="text-sm text-black-400">Pallet Number</p>
                   <p># {palletNumber}</p>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-sm text-zinc-400">Warehouse Location</p>
+                  <p className="text-sm text-black-400">Warehouse Location</p>
                   <Select
                     onValueChange={(value) => {
                       setWarehouseLocation(Number(value));
@@ -671,7 +675,7 @@ export default function Page({
                     }}
                     value={warehouseLocation.toString()}
                   >
-                    <SelectTrigger className="w-52 bg-zinc-800 border-zinc-700">
+                    <SelectTrigger className="w-52 border-black-700">
                       <SelectValue placeholder="Select location" />
                     </SelectTrigger>
                     <SelectContent className="w-full">
@@ -701,15 +705,17 @@ export default function Page({
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-sm text-zinc-400">Purchase Order Number</p>
+                  <p className="text-sm text-black-400">
+                    Purchase Order Number
+                  </p>
                   <p>{ordersSummaryResponse.data.order.order_number}</p>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-sm text-zinc-400">Date</p>
+                  <p className="text-sm text-black-400">Date</p>
                   <p>{formatDate(new Date().toString())}</p>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-sm text-zinc-400">Total Quantity</p>
+                  <p className="text-sm text-black-400">Total Quantity</p>
                   <p>
                     {FormatUSD({
                       number: productsAddedToCreatePallet

@@ -30,7 +30,11 @@ const SaveOrder = ({ orderId }: Props) => {
     return <LoadingSpinner />;
   }
 
-  return <Button onClick={handleUpdate}>Save</Button>;
+  return (
+    <Button variant={"outline"} onClick={handleUpdate}>
+      Save
+    </Button>
+  );
 };
 
 export default SaveOrder;

@@ -47,7 +47,7 @@ export function IncomingOrdersFilters({
           onChange={(e) => setSearchTerm(e.target.value.trim())}
           onKeyDown={(e) => e.key === "Enter" && onSearch()}
         />
-        <Button onClick={onSearch}>
+        <Button variant={"outline"} onClick={onSearch}>
           {searchTerm !== "" ? "Search" : "Reset"}
         </Button>
         <FilterSearch
@@ -69,6 +69,7 @@ export function IncomingOrdersFilters({
         )}
       </div>
       <Button
+        variant={"outline"}
         className="w-fit h-7 "
         onClick={() => {
           router.push("/purchase-orders/create");

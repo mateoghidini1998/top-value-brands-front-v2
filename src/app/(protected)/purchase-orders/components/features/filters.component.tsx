@@ -76,7 +76,7 @@ export function OrdersFilters({
           onChange={(e) => setSearchTerm(e.target.value.trim())}
           onKeyDown={(e) => e.key === "Enter" && onSearch()}
         />
-        <Button onClick={onSearch}>
+        <Button onClick={onSearch} variant={"outline"}>
           {searchTerm !== "" ? "Search" : "Reset"}
         </Button>
         <FilterSearch
@@ -112,13 +112,14 @@ export function OrdersFilters({
 
         {isMerging && orders.length > 0 && (
           <>
-            <Button onClick={handleMergePOs}>
+            <Button onClick={handleMergePOs} variant={"outline"}>
               Merge POs ({orders.length})
             </Button>
           </>
         )}
       </div>
       <Button
+        variant={"outline"}
         className="w-fit h-7 "
         onClick={() => {
           router.push("/purchase-orders/create");

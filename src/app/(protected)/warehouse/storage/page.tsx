@@ -96,7 +96,7 @@ export default function Page() {
               setSearchTerm(e.target.value);
             }}
           />
-          <Button type="submit" onClick={handleSearch}>
+          <Button type="submit" onClick={handleSearch} variant={"outline"}>
             {searchTerm !== "" ? "Search" : "Reset"}
           </Button>
           <FilterSearch
@@ -116,6 +116,7 @@ export default function Page() {
           />
         </div>
         <Button
+          variant={"outline"}
           className="w-fit h-7 "
           onClick={() => {
             router.push("/purchase-orders/create");

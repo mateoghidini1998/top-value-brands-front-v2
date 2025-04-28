@@ -22,7 +22,7 @@ export const CreateEntityButton = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="w-fit h-7 ">
+        <Button className="w-fit h-7 " variant={"outline"}>
           <Plus className="mr-2 h-4 w-4" />
           {title}
         </Button>
