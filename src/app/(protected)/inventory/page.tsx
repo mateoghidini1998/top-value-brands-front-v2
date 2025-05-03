@@ -10,14 +10,14 @@ import {
   SummaryConfig,
 } from "./components/data-grid/data-grid";
 import { useDeleteProduct, useGetAllProducts } from "./hooks";
-// import { CreateEntityButton } from "@/components/custom/create-entity-button";
 import { AlertDialogHeader } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
 import { CreateProductForm, EditProductForm } from "./components";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
-const columns: GridColumn[] = [
+const amzCols: GridColumn[] = [
   {
     field: "product_image",
     caption: "Img",
@@ -149,6 +149,98 @@ const summaryConfig: SummaryConfig = {
   ],
 };
 
+const walmartCols: GridColumn[] = [
+  {
+    field: "product_image",
+    caption: "Img",
+    width: 50,
+    edit: false,
+    cellRender: (cellData: any) => {
+      const imageUrl = cellData.value;
+      return (
+        <div className="flex justify-center items-center">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt="product_image"
+              loading="lazy"
+              className="cover rounded-xl w-7 h-7"
+              style={{ objectFit: "cover", borderRadius: "8px" }}
+            />
+          ) : (
+            <span>No Image</span>
+          )}
+        </div>
+      );
+    },
+  },
+  { field: "seller_sku", caption: "SKU", width: 120 },
+  { field: "product_name", caption: "Product Name", width: 300 },
+  {
+    field: "product_cost",
+    caption: "Cost",
+    width: 120,
+    format: "currency",
+    alignment: "right",
+    customizeText: (cellInfo) => {
+      const value = parseFloat(cellInfo.value);
+      return isNaN(value) ? "-" : `$${value.toFixed(2)}`;
+    },
+  },
+  {
+    field: "available_to_sell_qty",
+    caption: "Available Qty",
+    width: 140,
+    alignment: "right",
+    format: "#,##0",
+  },
+  {
+    field: "price",
+    caption: "Price",
+    width: 120,
+    format: "currency",
+    alignment: "right",
+    customizeText: (cellInfo) => {
+      const value = parseFloat(cellInfo.value);
+      return isNaN(value) ? "-" : `$${value.toFixed(2)}`;
+    },
+  },
+  { field: "marketplace", caption: "Marketplace", width: 100 },
+  {
+    field: "warehouse_stock",
+    caption: "Warehouse Stock",
+    width: 140,
+    alignment: "right",
+    format: "#,##0",
+  },
+  {
+    field: "is_active",
+    caption: "Active",
+    width: 80,
+    cellRender: ({ value }) => (
+      <span
+        className={`font-bold ${value ? "text-green-600" : "text-red-500"}`}
+      >
+        {value ? "Yes" : "No"}
+      </span>
+    ),
+  },
+  {
+    field: "in_seller_account",
+    caption: "In Seller Account",
+    width: 140,
+    cellRender: ({ value }) => (
+      <span
+        className={`font-bold ${value ? "text-green-600" : "text-red-500"}`}
+      >
+        {value ? "Yes" : "No"}
+      </span>
+    ),
+  },
+  { field: "upc", caption: "UPC", width: 120 },
+  { field: "gtin", caption: "GTIN", width: 120 },
+];
+
 export default function InventoryGridExample() {
   const { productResponse } = useGetAllProducts({ page: 1, limit: 10000 });
   const { deleteAsync } = useDeleteProduct();
@@ -157,6 +249,8 @@ export default function InventoryGridExample() {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<any>(null);
+
+  const [isWalmart, setIsWalmart] = useState(true);
 
   const handleInitNewRow = (e: any) => {
     console.log(openCreateModal);
@@ -189,6 +283,10 @@ export default function InventoryGridExample() {
         open ? "max-w-[calc(100vw-265px)]" : "max-w-[calc(100vw-80px)]"
       } overflow-x-auto`}
     >
+      <Button onClick={() => setIsWalmart(!isWalmart)}>
+        {isWalmart ? "Switch to Amazon" : "Switch to Walmart"}
+      </Button>
+
       {openCreateModal && (
         <Dialog open onOpenChange={setOpenCreateModal}>
           <DialogContent className="sm:max-w-[425px]">
@@ -218,9 +316,20 @@ export default function InventoryGridExample() {
       )}
 
       <DataGrid
-        datatable={productResponse?.data || []}
+        datatable={
+          productResponse?.data.filter(
+            (p) =>
+              p.marketplace?.trim().toLowerCase() ===
+              (isWalmart ? "walmart" : "amazon")
+          ) || []
+          // products.filter(
+          //   (p) =>
+          //     p.marketplace.trim().toLowerCase() ===
+          //     (isWalmart ? "walmart" : "amazon")
+          // ) || []
+        }
         keyExpr="seller_sku"
-        columns={columns}
+        columns={isWalmart ? walmartCols : amzCols}
         allowadd={true}
         allowedit={true}
         allowdelete={true}
