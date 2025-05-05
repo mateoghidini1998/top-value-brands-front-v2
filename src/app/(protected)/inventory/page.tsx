@@ -2,20 +2,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { AlertDialogHeader } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useSidebar } from "@/components/ui/sidebar";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatDate } from "@/helpers";
+import Link from "next/link";
+import { useState } from "react";
+import { CreateProductForm, EditProductForm } from "./components";
 import {
   DataGrid,
   GridColumn,
   SummaryConfig,
 } from "./components/data-grid/data-grid";
 import { useDeleteProduct, useGetAllProducts } from "./hooks";
-import { AlertDialogHeader } from "@/components/ui/alert-dialog";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { useState } from "react";
-import { CreateProductForm, EditProductForm } from "./components";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 const amzCols: GridColumn[] = [
   {
@@ -60,7 +60,7 @@ const amzCols: GridColumn[] = [
     customizeText: (cellInfo) => `$${parseFloat(cellInfo.value).toFixed(2)}`,
   },
   {
-    field: "FBA_available_inventory",
+    field: "fba_available_inventory",
     caption: "FBA Inventory",
     width: 140,
     alignment: "right",
@@ -76,7 +76,7 @@ const amzCols: GridColumn[] = [
     format: "###,##0",
   },
   {
-    field: "Inbound_to_FBA",
+    field: "inbound_to_fba",
     caption: "Inbound to FBA",
     width: 150,
     alignment: "right",
@@ -90,7 +90,7 @@ const amzCols: GridColumn[] = [
     format: "###,##0",
   },
   {
-    field: "ASIN",
+    field: "asin",
     caption: "ASIN",
     width: 150,
   },
@@ -256,7 +256,7 @@ export default function InventoryGridExample() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<any>(null);
 
-  const [isWalmart, setIsWalmart] = useState(true);
+  const [marketplace, setMarketplace] = useState<string>("amazon");
 
   const handleInitNewRow = (e: any) => {
     console.log(openCreateModal);
@@ -287,11 +287,27 @@ export default function InventoryGridExample() {
     <div
       className={`${
         open ? "max-w-[calc(100vw-265px)]" : "max-w-[calc(100vw-80px)]"
-      } overflow-x-auto`}
+      } overflow-x-auto relative`}
     >
-      <Button onClick={() => setIsWalmart(!isWalmart)}>
+      {/* <Button onClick={() => setIsWalmart(!isWalmart)}>
         {isWalmart ? "Switch to Amazon" : "Switch to Walmart"}
-      </Button>
+      </Button> */}
+      <Tabs
+        defaultValue="amazon"
+        className="w-[200px] absolute top-0 left-[550px] z-[500]"
+      >
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="amazon" onClick={() => setMarketplace("amazon")}>
+            Amazon
+          </TabsTrigger>
+          <TabsTrigger
+            value="walmart"
+            onClick={() => setMarketplace("walmart")}
+          >
+            Walmart
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
       {openCreateModal && (
         <Dialog open onOpenChange={setOpenCreateModal}>
@@ -326,16 +342,11 @@ export default function InventoryGridExample() {
           productResponse?.data.filter(
             (p) =>
               p.marketplace?.trim().toLowerCase() ===
-              (isWalmart ? "walmart" : "amazon")
+              (marketplace === "walmart" ? "walmart" : "amazon")
           ) || []
-          // products.filter(
-          //   (p) =>
-          //     p.marketplace.trim().toLowerCase() ===
-          //     (isWalmart ? "walmart" : "amazon")
-          // ) || []
         }
         keyExpr="seller_sku"
-        columns={isWalmart ? walmartCols : amzCols}
+        columns={marketplace === "walmart" ? walmartCols : amzCols}
         allowadd={true}
         allowedit={true}
         allowdelete={true}
