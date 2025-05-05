@@ -67,16 +67,12 @@ export class InventoryService extends BaseService {
     limit = 50,
     keyword = "",
     supplier = "",
-    orderBy = "",
-    orderWay = "",
   }: GetInventoryProps): Promise<GetProductsResponse> {
     const queryParams = new URLSearchParams({
       page: page.toString(),
       limit: limit.toString(),
       keyword,
       supplier,
-      orderBy,
-      orderWay,
     }).toString();
 
     const url = this.constructUrl(`?${queryParams}`);

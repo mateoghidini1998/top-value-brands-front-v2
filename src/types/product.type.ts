@@ -47,8 +47,8 @@ export interface GetInventoryProps {
   limit?: number;
   keyword?: string;
   supplier?: string;
-  orderBy?: string;
-  orderWay?: string;
+  // orderBy?: string;
+  // orderWay?: string;
 }
 
 export interface Product {

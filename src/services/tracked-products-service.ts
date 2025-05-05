@@ -15,11 +15,9 @@ export class TrackedProductService extends BaseService {
     limit = 50,
     keyword = "",
     supplier = "",
-    orderBy = "",
-    orderWay = "",
   }: GetTrackedProductsProps): Promise<GetTrackedProductsResponse> {
     const url = this.constructUrl(
-      `?page=${page}&limit=${limit}&keyword=${keyword}&supplier=${supplier}&orderBy=${orderBy}&orderWay=${orderWay}`
+      `?page=${page}&limit=${limit}&keyword=${keyword}&supplier=${supplier}`
     );
     return this.apiRequest<GetTrackedProductsResponse>(url);
   }

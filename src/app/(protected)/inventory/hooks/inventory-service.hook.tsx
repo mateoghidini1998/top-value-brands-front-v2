@@ -43,19 +43,19 @@ export const useGetAllProducts = (initialParams: GetInventoryProps) => {
     queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRODUCTS] });
   };
 
-  const orderBy = (orderBy: string) => {
-    setFilters((prev) => {
-      // Determine the new orderWay
-      const newOrderWay =
-        orderBy === prev.orderBy
-          ? prev.orderWay === "ASC"
-            ? "DESC"
-            : "ASC"
-          : "DESC";
+  // const orderBy = (orderBy: string) => {
+  //   setFilters((prev) => {
+  //     // Determine the new orderWay
+  //     const newOrderWay =
+  //       orderBy === prev.orderBy
+  //         ? prev.orderWay === "ASC"
+  //           ? "DESC"
+  //           : "ASC"
+  //         : "DESC";
 
-      return { ...prev, orderBy, orderWay: newOrderWay };
-    });
-  };
+  //     return { ...prev, orderBy, orderWay: newOrderWay };
+  //   });
+  // };
 
   const changePage = (page: number) => {
     setFilters((prev) => ({ ...prev, page }));
@@ -73,7 +73,7 @@ export const useGetAllProducts = (initialParams: GetInventoryProps) => {
     productRefetch: refetch,
     filterBySupplier,
     filterByKeyword,
-    orderBy,
+    // orderBy,
     changePage,
     changeLimit,
     currentPage: filters.page || 1,

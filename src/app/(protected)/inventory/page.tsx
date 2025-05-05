@@ -239,6 +239,12 @@ const walmartCols: GridColumn[] = [
   },
   { field: "upc", caption: "UPC", width: 120 },
   { field: "gtin", caption: "GTIN", width: 120 },
+  {
+    field: "updatedAt",
+    caption: "Updated At",
+    width: 180,
+    customizeText: (cellInfo) => formatDate(cellInfo.value),
+  },
 ];
 
 export default function InventoryGridExample() {
