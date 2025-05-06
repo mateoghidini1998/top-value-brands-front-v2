@@ -414,7 +414,7 @@ export const getAddedProductsColumns = (
         <ProductTitle
           product_image={product_image}
           product_name={product_name}
-          ASIN={ASIN}
+          ASIN={ASIN || ""}
           in_seller_account={in_seller_account}
           width={width}
         />
@@ -422,8 +422,13 @@ export const getAddedProductsColumns = (
     },
   },
   {
-    accessorKey: "ASIN",
-    header: "ASIN",
+    id: "asin_gtin",
+    header: "ASIN / GTIN",
+    cell: ({ row }) => {
+      const ASIN = row.original.ASIN;
+      const GTIN = row.original.gtin;
+      return <span>{ASIN || GTIN}</span>;
+    },
   },
   {
     accessorKey: "quantity",

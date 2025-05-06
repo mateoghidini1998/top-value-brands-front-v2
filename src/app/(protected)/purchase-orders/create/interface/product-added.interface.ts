@@ -4,7 +4,8 @@ export interface ProductInOrder {
   supplier_id: string;
   product_name: string;
   product_image: string;
-  ASIN: string;
+  ASIN?: string;
+  gtin?: string;
   supplier_name: string;
   quantity: number;
   product_cost: number;

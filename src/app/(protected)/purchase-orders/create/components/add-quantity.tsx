@@ -75,7 +75,7 @@ const AddQuantity = ({
         onBlur={handleBlur} // Guardar valores cuando el usuario pierde el foco
         min={0}
       />
-      <span className="w-fit text-yellow-400 absolute right-10">
+      <span className="w-fit font-semibold text-green-500 absolute right-10">
         {productQuantity * (packType ?? 1)}
       </span>
     </div>
