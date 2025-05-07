@@ -67,16 +67,17 @@ const AddProductCost = ({
   return (
     <div className="flex justify-between items-center gap-2 relative">
       <Input
+        defaultValue={1}
         type="number"
         placeholder="Cost"
         className="w-full"
         value={costAdded}
         onChange={(e) => setCostAdded(Number(e.target.value))}
         onBlur={handleBlur} // Guardar valores cuando el usuario pierde el foco
-        min={0}
+        min={1}
       />
       <span className="w-fit font-semibold text-green-500 absolute right-10">
-        {productCost / (packType ?? 1)}
+        {productCost / (packType ?? 1) || ""}
       </span>
     </div>
   );

@@ -97,8 +97,8 @@ export default function ProductCostCell({
         </div>
       )}
 
-      <span className="w-fit text-yellow-400 text-xs ml-1">
-        <span className="w-fit text-yellow-400 text-xs ml-1">
+      <span className="w-fit text-green-500 font-semibold text-xs ml-1">
+        <span className="w-fit text-green-500 font-semibold text-xs ml-1">
           {`${FormatUSD({
             number: (productCost / (packType ?? 1)).toString(),
             maxDigits: 20,

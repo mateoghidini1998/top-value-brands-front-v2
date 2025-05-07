@@ -570,6 +570,7 @@ export default function Page() {
 
     return {
       id: product.id,
+      gtin: product?.gtin || null,
       product_id: product.id,
       current_rank: null,
       thirty_days_rank: null,
@@ -637,19 +638,18 @@ export default function Page() {
         </Tabs>
 
         <DataGrid
-          // @ts-expect-error Property 'stateStoreName' does not exist on type
           datatable={
             marketplace === "amazon"
-              ? trackedProductsResponse.data.filter(
+              ? trackedProductsResponse.data?.filter(
                   (p) => p.supplier_id !== null
-                )
+                ) || []
               : productResponse?.data
-                  .filter(
+                  ?.filter(
                     (product: any) =>
                       product.marketplace === "walmart" &&
                       product.supplier_id !== null
                   )
-                  .map((product: any) => normalizeProduct(product))
+                  .map((product: any) => normalizeProduct(product)) || []
           }
           keyExpr="id"
           columns={marketplace === "amazon" ? columns : walmartCols}
