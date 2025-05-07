@@ -336,9 +336,12 @@ export default function Page() {
       width: 70,
       edit: false, // No editable, opcional
       cellRender: (cellData: any) => {
-        const isHazmat: boolean = !(
-          cellData.value === "--" || cellData.value === "STANDARD"
-        );
+        const isHazmat: boolean =
+          cellData.value !== "--" &&
+          cellData.value !== "STANDARD" &&
+          cellData.value !== "" &&
+          cellData.value !== null &&
+          cellData.value !== undefined;
 
         return (
           <div className="flex justify-center items-center relative group">
@@ -465,14 +468,17 @@ export default function Page() {
       width: 70,
       edit: false, // No editable, opcional
       cellRender: (cellData: any) => {
-        const isHazmat: boolean = !(
-          cellData.value === "--" || cellData.value === "STANDARD"
-        );
+        const isHazmat: boolean =
+          cellData.value !== "--" &&
+          cellData.value !== "STANDARD" &&
+          cellData.value !== "" &&
+          cellData.value !== null &&
+          cellData.value !== undefined;
 
         return (
           <div className="flex justify-center items-center relative group">
             {isHazmat ? <span>Yes</span> : <span>No</span>}
-            <div className="absolute opacity-0 group-hover:opacity-100 bg-gray-800 text-white text-sm p-1 rounded">
+            <div className="absolute opacity-0 group-hover:opacity-100 bg-gray-800 text-white text-sm p-1 rounded overflow-visible">
               {cellData.value}
             </div>
           </div>
