@@ -17,6 +17,26 @@ export default function UploadInvoiceFile({ orderId }: { orderId: string }) {
   const [files, setFiles] = useState<string[]>([]);
   const [isLoadingFiles, setIsLoadingFiles] = useState(false);
   const [downloadingFile, setDownloadingFile] = useState<string | null>(null);
+  const [deletingFile, setDeletingFile] = useState<string | null>(null);
+
+  const handleDelete = async (fileName: string) => {
+    const confirmed = confirm(`Are you sure you want to delete "${fileName}"?`);
+    if (!confirmed) return;
+
+    setDeletingFile(fileName);
+    try {
+      await incomingOrdersService.deleteInvoiceFile(orderId, fileName);
+      await fetchFiles(); // actualiza la lista
+    } catch (error) {
+      console.error("Delete failed:", error);
+      alert(
+        "Delete failed: " +
+          (error instanceof Error ? error.message : "Unknown error")
+      );
+    } finally {
+      setDeletingFile(null);
+    }
+  };
 
   const fetchFiles = useCallback(async () => {
     setIsLoadingFiles(true);
@@ -165,6 +185,33 @@ export default function UploadInvoiceFile({ orderId }: { orderId: string }) {
                   "transition-colors duration-200"
                 )}
               >
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleDelete(fileName)}
+                  disabled={deletingFile === fileName}
+                  className="ml-2 shrink-0 text-red-500 hover:text-red-600"
+                >
+                  {deletingFile === fileName ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  )}
+                </Button>
+
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="rounded-md bg-background p-2 border">
                     <File className="h-4 w-4 text-blue-500" />

@@ -166,4 +166,25 @@ export class IncomingOrdersService extends BaseService {
       console.error("Debug error:", error);
     }
   }
+
+  async deleteInvoiceFile(orderId: string, fileName: string): Promise<void> {
+    const filePath = `${orderId}/${fileName}`;
+    console.log("Deleting file at path:", filePath); // 👈 esto ayuda a confirmar
+
+    const { data, error } = await supabase.storage
+      .from("purchaseorders-invoice")
+      .remove([filePath]);
+
+    if (error) {
+      console.error("Delete error:", error);
+      throw new Error(error.message);
+    }
+
+    if (!data || data.length === 0) {
+      console.warn("No files deleted. File may not exist.");
+      throw new Error("File not found or already deleted.");
+    }
+
+    console.log("File deleted successfully:", data);
+  }
 }
