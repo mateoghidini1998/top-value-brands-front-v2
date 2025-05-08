@@ -462,8 +462,8 @@ export const getAddedProductsColumns = (
     accessorKey: "total_amount",
     header: "Total Amount",
     cell: ({ row }) => {
-      const product_cost = row.original.product_cost;
-      const quantity = row.original.quantity;
+      const product_cost = row.original.product_cost || 1;
+      const quantity = row.original.quantity || 1;
 
       return (
         <span>
