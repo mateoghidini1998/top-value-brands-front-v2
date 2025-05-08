@@ -93,6 +93,10 @@ export const incomingOrderCols = (
       header: "ASIN",
     },
     {
+      accessorKey: "pack_type",
+      header: "Pack Type",
+    },
+    {
       accessorKey: "seller_sku",
       header: "Seller SKU",
     },
