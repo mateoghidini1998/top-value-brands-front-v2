@@ -32,7 +32,7 @@ export default function Page() {
       <DataTable
         columns={columns}
         data={suppliersQuery.data.data}
-        dataLength={50}
+        dataLength={10000}
       />
     </div>
   );
