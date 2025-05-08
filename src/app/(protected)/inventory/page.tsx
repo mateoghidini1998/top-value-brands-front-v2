@@ -309,7 +309,7 @@ export default function InventoryGridExample() {
       </Button> */}
       <Tabs
         defaultValue="amazon"
-        className="w-[200px] absolute top-0 left-[550px] z-[500]"
+        className="w-[200px] absolute top-0 left-[550px] z-[10]"
       >
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="amazon" onClick={() => setMarketplace("amazon")}>
