@@ -1,45 +1,31 @@
-import { useUpdateProductDGType } from "@/app/(protected)/warehouse/incoming-shipments/hooks/use-incoming-orders-service";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
 export const DGItemCell = ({
   dgItem,
-  productId,
-}: {
+}: // productId,
+{
   dgItem: string;
   productId: string;
 }) => {
-  const { updateProductDGTypeAsync } = useUpdateProductDGType();
+  const checkIfHazmat = (dgItem: string) => {
+    const isHazmat: boolean =
+      dgItem !== "--" &&
+      dgItem !== "STANDARD" &&
+      dgItem !== "" &&
+      dgItem !== null &&
+      dgItem !== undefined;
+
+    return isHazmat;
+  };
+
   return (
-    <Select
-      defaultValue={dgItem}
-      onValueChange={(value) =>
-        updateProductDGTypeAsync({
-          dgType: value,
-          productId: productId,
-        })
-      }
-    >
-      <SelectTrigger className="w-[120px]">
-        <SelectValue placeholder="Select a DG Item" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel>DANGEROUS ITEMS</SelectLabel>
-          <SelectItem value="--">--</SelectItem>
-          <SelectItem value="STANDARD">STANDARD</SelectItem>
-          <SelectItem value="FLAMMABLES">FLAMMABLES</SelectItem>
-          <SelectItem value="AEROSOLS">AEROSOLS</SelectItem>
-          <SelectItem value="OVERSIZED">OVERSIZED</SelectItem>
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+    <div className="flex justify-center items-center relative group">
+      {checkIfHazmat(dgItem) ? (
+        <span className="text-red-500 font-semibold">Yes</span>
+      ) : (
+        <span>No</span>
+      )}
+      <div className="absolute opacity-0 group-hover:opacity-100 bg-gray-800 text-white text-sm p-1 rounded">
+        {dgItem}
+      </div>
+    </div>
   );
 };

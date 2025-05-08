@@ -17,7 +17,21 @@ export const getColumns = (
   },
   {
     accessorKey: "storage_type",
-    header: "Storage Type",
+    header: "Is Hazmat",
+    cell: ({ row }) => {
+      const dgItem = row.original.storage_type;
+      const checkIfHazmat = (dgItem: string) => {
+        const isHazmat: boolean =
+          dgItem !== "--" &&
+          dgItem !== "STANDARD" &&
+          dgItem !== "" &&
+          dgItem !== null &&
+          dgItem !== undefined;
+
+        return isHazmat;
+      };
+      return <p>{checkIfHazmat(dgItem) ? "Yes" : "No"}</p>;
+    },
   },
   {
     accessorKey: "warehouse_location",

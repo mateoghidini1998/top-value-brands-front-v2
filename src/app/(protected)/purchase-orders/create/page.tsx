@@ -4,9 +4,11 @@
 
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { useSidebar } from "@/components/ui/sidebar";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatDate } from "@/helpers";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { ArrowDown } from "lucide-react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -14,6 +16,7 @@ import {
   DataGrid,
   GridColumn,
 } from "../../inventory/components/data-grid/data-grid";
+import { useGetAllProducts } from "../../inventory/hooks";
 import { useGetTrackedProducts } from "../../inventory/tracked-products/hooks";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
 import { DataTable as TrackedProductsTable } from "../../warehouse/outgoing-shipments/create/_components/tables/data-table";
@@ -21,9 +24,6 @@ import { useGetPurchaseOrderSummary } from "../hooks";
 import { getAddedProductsColumns } from "./columns";
 import CreateOrderSummary from "./components/create-order-summary";
 import { ProductInOrder } from "./interface/product-added.interface";
-import Link from "next/link";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useGetAllProducts } from "../../inventory/hooks";
 
 export interface SupplierItem {
   value: number;
@@ -52,22 +52,22 @@ export default function Page() {
   );
 
   const transformProducts = (data: PurchaseOrderSummaryProducts[]) => {
-    return data.map((product) => ({
-      id: product.id,
-      product_id: product.product_id,
-      supplier_id: product.supplier_id,
-      pack_type: product.pack_type,
-      product_name: product.product_name,
-      product_image: product.product_image,
-      ASIN: product.ASIN,
-      supplier_name: product.supplier_name || "missing",
-      quantity: product.quantity_purchased,
-      product_cost: parseFloat(product.product_cost),
-      total_amount: product.total_amount,
-      units_sold: product.units_sold,
-      fees: product.fees ?? 0,
-      lowest_fba_price: product.lowest_fba_price,
-      in_seller_account: product.in_seller_account,
+    return data.map((p) => ({
+      id: p.id,
+      product_id: p.product_id,
+      supplier_id: p.supplier_id,
+      pack_type: p.pack_type,
+      product_name: p.product_name,
+      product_image: p.product_image,
+      ASIN: p.ASIN,
+      supplier_name: p.supplier_name || "missing",
+      quantity: p.quantity_purchased,
+      product_cost: parseFloat(p.product_cost),
+      total_amount: p.total_amount,
+      units_sold: p.units_sold,
+      fees: p.fees ?? 0,
+      lowest_fba_price: p.lowest_fba_price,
+      in_seller_account: p.in_seller_account,
     }));
   };
 
@@ -142,8 +142,16 @@ export default function Page() {
         );
       },
     },
-    { field: "seller_sku", caption: "SKU", width: 120 },
-    { field: "product_name", caption: "Product Name", width: 300 },
+    {
+      field: "seller_sku",
+      caption: "SKU",
+      width: 120,
+    },
+    {
+      field: "product_name",
+      caption: "Product Name",
+      width: 300,
+    },
     {
       field: "product_cost",
       caption: "Cost",
@@ -572,7 +580,15 @@ export default function Page() {
   function normalizeProduct(product: any): any {
     const isWalmart = product.marketplace === "walmart" || !product.ASIN;
 
-    if (!isWalmart) return product; // ya tiene formato Amazon
+    if (!isWalmart) {
+      // Producto Amazon ya formateado, aseguramos compatibilidad con Walmart
+      return {
+        ...product,
+        marketplace: "amazon",
+        supplier_name: product.supplier_name ?? null,
+        roi: product.roi ?? null,
+      };
+    }
 
     return {
       id: product.id,
@@ -591,25 +607,29 @@ export default function Page() {
       lowest_fba_price: null,
       fees: null,
       profit: null,
-      is_active: product.is_active === 1,
+      roi: null,
+      is_active: product.is_active === 1 || product.is_active === true,
       createdAt: null,
       updatedAt: product.updatedAt ?? null,
+
       product_name: product.product_name,
       product_cost: product.product_cost ?? "0.00",
       product_image: product.product_image,
       supplier_id: product.supplier_id,
-      in_seller_account: product.in_seller_account === 1,
+      supplier_name: product.supplier_name ?? null,
+      in_seller_account:
+        product.in_seller_account === 1 || product.in_seller_account === true,
       supplier_item_number: product.supplier_item_number,
       warehouse_stock: product.warehouse_stock ?? null,
       pack_type: product.pack_type,
+
       ASIN: null,
       seller_sku: product.seller_sku,
       FBA_available_inventory: 0,
       reserved_quantity: 0,
       Inbound_to_FBA: 0,
       dangerous_goods: null,
-      supplier_name: product.supplier_name,
-      roi: null,
+
       marketplace: "walmart",
     };
   }

@@ -19,7 +19,8 @@ export interface TrackedProduct {
   product_velocity_2: number;
   product_velocity_7: number;
   product_velocity_15: number;
-  avg_selling_price: number;
+  product_velocity_60: number;
+  avg_selling_price: null;
   lowest_fba_price: number;
   fees: null;
   profit: null;
@@ -27,19 +28,18 @@ export interface TrackedProduct {
   createdAt: Date;
   updatedAt: Date;
   product_name: string;
-  ASIN: string;
-  seller_sku: string;
   product_cost: string;
   product_image: string;
   supplier_id: null;
   in_seller_account: boolean;
+  supplier_item_number: null;
+  warehouse_stock: string;
+  pack_type: null;
+  ASIN: string;
+  seller_sku: string;
   FBA_available_inventory: number;
   reserved_quantity: number;
   Inbound_to_FBA: number;
-  supplier_item_number: null;
-  warehouse_stock: string;
-  supplier_name: null;
-  roi: number;
-  pack_type: number | null;
   dangerous_goods: string;
+  supplier_name: string;
 }

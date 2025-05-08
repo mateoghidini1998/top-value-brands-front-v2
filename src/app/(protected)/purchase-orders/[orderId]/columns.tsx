@@ -48,7 +48,7 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
         className="cursor-pointer"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Storage Type
+        Is Hazmat
       </span>
     ),
     cell: ({ row }) => {

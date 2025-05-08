@@ -16,6 +16,7 @@ import {
   SummaryConfig,
 } from "./components/data-grid/data-grid";
 import { useDeleteProduct, useGetAllProducts } from "./hooks";
+import { Product } from "@/types";
 
 const amzCols: GridColumn[] = [
   {
@@ -25,7 +26,7 @@ const amzCols: GridColumn[] = [
     edit: false, // No editable, opcional
     cellRender: (cellData: any) => {
       const imageUrl = cellData.value;
-      const ASIN = cellData.data.ASIN;
+      const ASIN = cellData.data.product_name;
       return (
         <div className="flex justify-center items-center">
           {imageUrl ? (
@@ -50,6 +51,20 @@ const amzCols: GridColumn[] = [
     field: "product_name",
     caption: "Product Name",
     width: 300,
+    cellRender: ({ data: product }: { data: Product }) => {
+      const productName = product.product_name;
+      const inSellerAccount = product.in_seller_account;
+      return (
+        <div className={`flex justify-start items-center gap-2`}>
+          <span
+            className={`w-[8px] h-[8px] rounded-full shrink-0 ${
+              inSellerAccount ? "bg-[#00952A]" : "bg-[#ef4444]"
+            }`}
+          ></span>
+          {productName}
+        </div>
+      );
+    },
   },
   {
     field: "product_cost",
