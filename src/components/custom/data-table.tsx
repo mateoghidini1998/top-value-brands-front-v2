@@ -36,6 +36,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { useSidebar } from "../ui/sidebar";
 import { useRouter } from "next/navigation";
 import { usePersistedColumnsVisibility } from "@/hooks/usePersistedColsVisibility";
+import { checkIfHazmat } from "@/lib/utils";
 
 export interface ShowHideColsumnsProps {
   show: boolean;
@@ -204,32 +205,38 @@ DataTableProps<TData, TValue>) {
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    onDoubleClick={(e) => {
-                      // Only navigate if goToPath is provided and the click target is not inside an action cell
-                      if (goToPath && !e.defaultPrevented) {
-                        // @ts-expect-error Property 'id' does not exist on type 'TData'
-                        router.push(`${goToPath}/${row.original.id}`);
-                      }
-                    }}
-                    className={`cursor-pointer`}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        className="whitespace-nowrap text-center"
-                        key={cell.id}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
+                table.getRowModel().rows.map((row) => {
+                  console.log(row);
+                  return (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      onDoubleClick={(e) => {
+                        // Only navigate if goToPath is provided and the click target is not inside an action cell
+                        if (goToPath && !e.defaultPrevented) {
+                          // @ts-expect-error Property 'id' does not exist on type 'TData'
+                          router.push(`${goToPath}/${row.original.id}`);
+                        }
+                      }}
+                      className={`cursor-pointer ${
+                        // @ts-expect-error Property 'dg_item' does not exist on type 'TData'
+                        checkIfHazmat(row.original.dg_item) ? "bg-red-100" : ""
+                      }`}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          className="whitespace-nowrap text-center"
+                          key={cell.id}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="h-24 ">
