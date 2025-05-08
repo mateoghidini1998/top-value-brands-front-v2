@@ -298,6 +298,8 @@ export default function InventoryGridExample() {
     setOpenEditModal(true); // 🚀 Abrimos nuestro modal de edición
   };
 
+  console.log(selectedRow);
+
   return (
     <div
       className={`${

@@ -23,13 +23,20 @@ import { useUpdateProduct } from "../hooks/inventory-service.hook";
 import { RefreshCw } from "lucide-react";
 
 const editProductSchema = z.object({
-  ASIN: z.string().min(1, "ASIN is required"),
-  seller_sku: z.string().nullable(),
-  product_cost: z.number().nullable(),
+  gtin: z.union([z.string(), z.null(), z.literal("")]),
+  ASIN: z.union([z.string(), z.null(), z.literal("")]),
+  seller_sku: z.union([z.string(), z.null(), z.literal("")]),
+  product_cost: z.preprocess(
+    (val) => (val === "" ? null : Number(val)),
+    z.number().nullable()
+  ),
   supplier_id: z.number().nullable(),
-  supplier_item_number: z.string().nullable(),
-  upc: z.string().nullable(),
-  pack_type: z.number().nullable(),
+  supplier_item_number: z.union([z.string(), z.null(), z.literal("")]),
+  upc: z.union([z.string(), z.null(), z.literal("")]),
+  pack_type: z.preprocess(
+    (val) => (val === "" ? null : Number(val)),
+    z.number().nullable()
+  ),
 });
 
 interface EditProductFormProps {
@@ -58,8 +65,9 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
   const form = useForm<z.infer<typeof editProductSchema>>({
     resolver: zodResolver(editProductSchema),
     defaultValues: {
-      ASIN: product.ASIN,
-      seller_sku: product.seller_sku || "",
+      gtin: product?.gtin,
+      ASIN: product?.asin,
+      seller_sku: product.seller_sku,
       product_cost: parseFloat(product.product_cost),
       supplier_id: product.supplier_id || null,
       supplier_item_number: product.supplier_item_number || "",
@@ -75,6 +83,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
         id: product.id,
         ...values,
       };
+      console.log(editData);
       await updateAsync(editData);
       onSuccess();
     } catch (error) {
@@ -95,20 +104,44 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="ASIN"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ASIN</FormLabel>
-              <FormControl>
-                <Input {...field} value={field.value ?? ""} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          // form.handleSubmit(onSubmit)(e);
+          // console.log("Form state:", form.getValues(), form.formState);
+          onSubmit(form.getValues());
+        }}
+        className="space-y-8"
+      >
+        {product.gtin ? (
+          <FormField
+            control={form.control}
+            name="gtin"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>GTIN</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value ?? ""} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ) : (
+          <FormField
+            control={form.control}
+            name="ASIN"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>ASIN</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value ?? ""} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <FormField
           control={form.control}
           name="seller_sku"
