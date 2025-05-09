@@ -5,13 +5,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const checkIfHazmat = (dgItem: string) => {
-  const isHazmat: boolean =
-    dgItem !== "--" &&
-    dgItem !== "STANDARD" &&
-    dgItem !== "" &&
-    dgItem !== null &&
-    dgItem !== undefined;
+export const checkIfHazmat = (dgItem: unknown): boolean => {
+  if (typeof dgItem !== "string") return false;
 
-  return isHazmat;
+  return !["--", "STANDARD", ""].includes(dgItem);
 };

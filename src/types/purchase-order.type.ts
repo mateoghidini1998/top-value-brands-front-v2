@@ -18,6 +18,7 @@ export interface PurchaseOrderSummaryProducts {
   product_name: string;
   in_seller_account: boolean;
   ASIN: string;
+  GTIN?: string;
   seller_sku: string;
   supplier_name: string;
   supplier_id: string;

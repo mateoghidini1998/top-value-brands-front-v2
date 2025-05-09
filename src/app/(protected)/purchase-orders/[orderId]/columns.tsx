@@ -1,7 +1,7 @@
 "use client";
 
 import { ProductTitle } from "@/components/custom/product-title";
-import { formatDate } from "@/helpers/format-date";
+import { FormatUSD } from "@/helpers";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import {
@@ -10,7 +10,6 @@ import {
   QuantityCell,
   TotalAmountCell,
 } from "./components";
-import { FormatUSD } from "@/helpers";
 import { DGItemCell } from "./components/dg-item-cell";
 
 export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
@@ -57,104 +56,109 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
       return <DGItemCell dgItem={dg_item} productId={productId} />;
     },
   },
+  // {
+  //   accessorKey: "product_velocity",
+  //   header: ({ column }) => (
+  //     <span
+  //       className="cursor-pointer"
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //     >
+  //       Velocity
+  //     </span>
+  //   ),
+  //   cell: ({ row }) => {
+  //     return (
+  //       <span>
+  //         {FormatUSD({
+  //           number: row.original.product_velocity.toString(),
+  //           maxDigits: 4,
+  //           minDigits: 2,
+  //         })}
+  //       </span>
+  //     );
+  //   },
+  // },
+  // {
+  //   accessorKey: "units_sold",
+  //   header: ({ column }) => (
+  //     <span
+  //       className="cursor-pointer"
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //     >
+  //       Units Sold
+  //     </span>
+  //   ),
+  //   cell: ({ row }) => {
+  //     return (
+  //       <span>
+  //         {FormatUSD({
+  //           number: row.original.units_sold.toString(),
+  //           maxDigits: 0,
+  //           minDigits: 0,
+  //         })}
+  //       </span>
+  //     );
+  //   },
+  // },
+  // {
+  //   accessorKey: "thirty_days_rank",
+  //   header: ({ column }) => (
+  //     <span
+  //       className="cursor-pointer"
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //     >
+  //       30 Days Rank
+  //     </span>
+  //   ),
+  //   cell: ({ row }) => {
+  //     return (
+  //       <span>
+  //         {FormatUSD({
+  //           number: row.original.thirty_days_rank.toString(),
+  //           maxDigits: 0,
+  //           minDigits: 0,
+  //         })}
+  //       </span>
+  //     );
+  //   },
+  // },
+  // {
+  //   accessorKey: "ninety_days_rank",
+  //   header: ({ column }) => (
+  //     <span
+  //       className="cursor-pointer"
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //     >
+  //       90 Days Rank
+  //     </span>
+  //   ),
+  //   cell: ({ row }) => {
+  //     return (
+  //       <span>
+  //         {FormatUSD({
+  //           number: row.original.ninety_days_rank.toString(),
+  //           maxDigits: 0,
+  //           minDigits: 0,
+  //         })}
+  //       </span>
+  //     );
+  //   },
+  // },
   {
-    accessorKey: "product_velocity",
+    id: "ASIN / GTIN",
     header: ({ column }) => (
       <span
         className="cursor-pointer"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Velocity
+        ASIN / GTIN
       </span>
     ),
     cell: ({ row }) => {
-      return (
-        <span>
-          {FormatUSD({
-            number: row.original.product_velocity.toString(),
-            maxDigits: 4,
-            minDigits: 2,
-          })}
-        </span>
-      );
+      const ASIN = row.original.ASIN || null;
+      const GTIN = row.original.GTIN || null;
+      return <span>{ASIN || GTIN}</span>;
     },
-  },
-  {
-    accessorKey: "units_sold",
-    header: ({ column }) => (
-      <span
-        className="cursor-pointer"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Units Sold
-      </span>
-    ),
-    cell: ({ row }) => {
-      return (
-        <span>
-          {FormatUSD({
-            number: row.original.units_sold.toString(),
-            maxDigits: 0,
-            minDigits: 0,
-          })}
-        </span>
-      );
-    },
-  },
-  {
-    accessorKey: "thirty_days_rank",
-    header: ({ column }) => (
-      <span
-        className="cursor-pointer"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        30 Days Rank
-      </span>
-    ),
-    cell: ({ row }) => {
-      return (
-        <span>
-          {FormatUSD({
-            number: row.original.thirty_days_rank.toString(),
-            maxDigits: 0,
-            minDigits: 0,
-          })}
-        </span>
-      );
-    },
-  },
-  {
-    accessorKey: "ninety_days_rank",
-    header: ({ column }) => (
-      <span
-        className="cursor-pointer"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        90 Days Rank
-      </span>
-    ),
-    cell: ({ row }) => {
-      return (
-        <span>
-          {FormatUSD({
-            number: row.original.ninety_days_rank.toString(),
-            maxDigits: 0,
-            minDigits: 0,
-          })}
-        </span>
-      );
-    },
-  },
-  {
-    accessorKey: "ASIN",
-    header: ({ column }) => (
-      <span
-        className="cursor-pointer"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        ASIN
-      </span>
-    ),
   },
   {
     accessorKey: "supplier_item_number",
@@ -188,28 +192,28 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
       );
     },
   },
-  {
-    accessorKey: "lowest_fba_price",
-    header: ({ column }) => (
-      <span
-        className="cursor-pointer"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Lowest FBA Price
-      </span>
-    ),
-    cell: ({ row }) => {
-      return (
-        <span>
-          {`$ ${FormatUSD({
-            number: row.original.lowest_fba_price.toString(),
-            maxDigits: 2,
-            minDigits: 2,
-          })}`}
-        </span>
-      );
-    },
-  },
+  // {
+  //   accessorKey: "lowest_fba_price",
+  //   header: ({ column }) => (
+  //     <span
+  //       className="cursor-pointer"
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //     >
+  //       Lowest FBA Price
+  //     </span>
+  //   ),
+  //   cell: ({ row }) => {
+  //     return (
+  //       <span>
+  //         {`$ ${FormatUSD({
+  //           number: row.original.lowest_fba_price.toString(),
+  //           maxDigits: 2,
+  //           minDigits: 2,
+  //         })}`}
+  //       </span>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "fees",
     header: ({ column }) => (
@@ -264,21 +268,32 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
         ROI
       </span>
     ),
+    cell: ({ row }) => {
+      return (
+        <span>
+          {`${FormatUSD({
+            number: row.original.roi?.toString() || "0",
+            maxDigits: 2,
+            minDigits: 2,
+          })} %`}
+        </span>
+      );
+    },
   },
-  {
-    accessorKey: "updatedAt",
-    header: ({ column }) => (
-      <span
-        className="cursor-pointer"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Last Update
-      </span>
-    ),
-    cell: ({ row }) => (
-      <span>{formatDate(row.original.updatedAt.toString())}</span>
-    ),
-  },
+  // {
+  //   accessorKey: "updatedAt",
+  //   header: ({ column }) => (
+  //     <span
+  //       className="cursor-pointer"
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //     >
+  //       Last Update
+  //     </span>
+  //   ),
+  //   cell: ({ row }) => (
+  //     <span>{formatDate(row.original.updatedAt.toString())}</span>
+  //   ),
+  // },
   {
     accessorKey: "seller_sku",
     header: "Seller SKU",
