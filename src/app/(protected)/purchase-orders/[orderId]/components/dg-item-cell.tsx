@@ -1,10 +1,4 @@
-export const DGItemCell = ({
-  dgItem,
-}: // productId,
-{
-  dgItem: string;
-  productId: string;
-}) => {
+export const DGItemCell = ({ dgItem }: { dgItem: string }) => {
   const checkIfHazmat = (dgItem: string) => {
     const isHazmat: boolean =
       dgItem !== "--" &&

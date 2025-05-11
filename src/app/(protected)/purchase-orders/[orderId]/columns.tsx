@@ -51,9 +51,8 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
       </span>
     ),
     cell: ({ row }) => {
-      const productId = row.original.product_id.toString();
       const dg_item = row.original.dg_item || "--";
-      return <DGItemCell dgItem={dg_item} productId={productId} />;
+      return <DGItemCell dgItem={dg_item} />;
     },
   },
   // {

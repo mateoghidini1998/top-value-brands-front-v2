@@ -10,6 +10,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Trash2 } from "lucide-react";
 import CheckPalletProducts from "../_components/check-pallet-product";
 import ToggleCheckAllShipmentProducts from "../_components/toggleCheckAllShipmentProducts";
+import { DGItemCell } from "@/app/(protected)/purchase-orders/[orderId]/components/dg-item-cell";
 
 export const createColumns = (
   isEditing: boolean
@@ -32,6 +33,21 @@ export const createColumns = (
           width={width}
         />
       );
+    },
+  },
+  {
+    id: "dg_item",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Is Hazmat
+      </span>
+    ),
+    cell: ({ row }) => {
+      const dg_item = row.original.dg_item || "--";
+      return <DGItemCell dgItem={dg_item} />;
     },
   },
   {

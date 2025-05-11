@@ -1,6 +1,8 @@
 "use client";
 
+import { DGItemCell } from "@/app/(protected)/purchase-orders/[orderId]/components/dg-item-cell";
 import { ProductTitle } from "@/components/custom/product-title";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -9,13 +11,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { FormatUSD } from "@/helpers";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
+import { SquarePlus, Trash2 } from "lucide-react";
 import { ExpireDateCell } from "../_components/expire-date-cell";
-import { Button } from "@/components/ui/button";
 import { PalletQuantityCell } from "../_components/pallet-quantity-cell";
-import { Trash2, SquarePlus } from "lucide-react";
-import { FormatUSD } from "@/helpers";
 import { MissingFieldsInterface } from "./page";
 
 export const reasons = [
@@ -60,37 +61,35 @@ export const incomingOrderCols = (
       },
     },
     {
-      accessorKey: "dg_item",
-      header: "DG Item",
+      id: "dg_item",
+      header: ({ column }) => (
+        <span
+          className="cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Is Hazmat
+        </span>
+      ),
       cell: ({ row }) => {
-        const checkIfHazmat = (dgItem: string) => {
-          const isHazmat: boolean =
-            dgItem !== "--" &&
-            dgItem !== "STANDARD" &&
-            dgItem !== "" &&
-            dgItem !== null &&
-            dgItem !== undefined;
-
-          return isHazmat;
-        };
-
-        return (
-          <div className="flex justify-center items-center relative group">
-            {checkIfHazmat(row.original.dg_item) ? (
-              <span className="text-red-500 font-semibold">Yes</span>
-            ) : (
-              <span>No</span>
-            )}
-            <div className="absolute opacity-0 group-hover:opacity-100 bg-gray-800 text-white text-sm p-1 rounded">
-              {row.original.dg_item}
-            </div>
-          </div>
-        );
+        const dg_item = row.original.dg_item || "--";
+        return <DGItemCell dgItem={dg_item} />;
       },
     },
     {
-      accessorKey: "ASIN",
-      header: "ASIN",
+      id: "ASIN / GTIN",
+      header: ({ column }) => (
+        <span
+          className="cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          ASIN / GTIN
+        </span>
+      ),
+      cell: ({ row }) => {
+        const ASIN = row.original.ASIN || null;
+        const GTIN = row.original.GTIN || null;
+        return <span>{ASIN || GTIN}</span>;
+      },
     },
     {
       accessorKey: "pack_type",
@@ -275,8 +274,19 @@ export const availableToCreate = (
     },
   },
   {
-    accessorKey: "dg_item",
-    header: "DG Item",
+    id: "dg_item",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer text-center"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Is Hazmat
+      </span>
+    ),
+    cell: ({ row }) => {
+      const dg_item = row.original.dg_item || "--";
+      return <DGItemCell dgItem={dg_item} />;
+    },
   },
   {
     accessorKey: "ASIN",

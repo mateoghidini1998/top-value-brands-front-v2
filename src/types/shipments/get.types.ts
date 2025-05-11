@@ -34,6 +34,7 @@ export interface ShipmentPalletProduct {
   warehouse_location: string;
   upc: string;
   is_checked: boolean;
+  dg_item: string | null;
 }
 
 export interface OutgoingShipmentProduct {
