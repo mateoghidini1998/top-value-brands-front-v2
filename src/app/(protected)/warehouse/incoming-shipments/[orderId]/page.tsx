@@ -225,6 +225,24 @@ export default function Page({
           expire_date: value ? value.toISOString() : null,
         },
       }));
+
+      // TODO: Si la fecha es menos de 180 dias agregar expired como la reason : reason_id = 7!
+      // expire data should be in the future of 180 days
+        const expireDate = new Date(value || "");
+        const today = new Date();
+        if (
+          expireDate.getTime() - today.getTime() <
+          1000 * 60 * 60 * 24 * 180
+        ) {
+          setLocalChanges((prev) => ({
+            ...prev,
+            [rowId]: {
+              ...prev[rowId],
+              reason_id: 7,
+            },
+          }));
+        }
+
       focusNextInput(rowId, "expire_date");
     },
     [focusNextInput]

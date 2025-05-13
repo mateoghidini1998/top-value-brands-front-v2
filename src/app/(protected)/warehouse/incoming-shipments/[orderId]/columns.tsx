@@ -27,6 +27,7 @@ export const reasons = [
   { id: 4, label: "not shipped" },
   { id: 5, label: "wrong items received" },
   { id: 6, label: "none" },
+  { id: 7, label: "expired" },
 ] as const;
 
 export type ReasonId = (typeof reasons)[number]["id"];
