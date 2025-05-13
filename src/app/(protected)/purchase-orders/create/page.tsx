@@ -183,7 +183,7 @@ export default function Page() {
         else color = "text-yellow-500"; // Amarillo para valores entre 0 y 2
         return (
           <span className={`${color} w-full h-full`}>
-            {roi.toFixed(2) + "%"}
+            {roi ? ` ${roi.toFixed(2)}%` : "N/A"}
           </span>
         );
       },
