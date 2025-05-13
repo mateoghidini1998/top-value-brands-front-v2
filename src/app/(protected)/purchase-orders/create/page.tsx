@@ -408,6 +408,11 @@ export default function Page() {
       width: 180,
     },
     {
+      field: "supplier_item_number",
+      caption: "Supplier Item #",
+      width: 180,
+    },
+    {
       field: "product_cost",
       caption: "Cost",
       width: 120,

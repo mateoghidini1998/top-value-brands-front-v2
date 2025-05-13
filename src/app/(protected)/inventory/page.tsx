@@ -212,6 +212,16 @@ const walmartCols: GridColumn[] = [
   { field: "seller_sku", caption: "SKU", width: 120 },
   { field: "product_name", caption: "Product Name", width: 300 },
   {
+    field: "supplier_name",
+    caption: "Supplier",
+    width: 180,
+  },
+  {
+    field: "supplier_item_number",
+    caption: "Supplier Item #",
+    width: 180,
+  },
+  {
     field: "product_cost",
     caption: "Cost",
     width: 120,
