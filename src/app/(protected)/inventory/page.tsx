@@ -48,6 +48,26 @@ const amzCols: GridColumn[] = [
   },
   { field: "seller_sku", caption: "SKU", width: 120 },
   {
+    field: "isActiveListing",
+    edit: false,
+    type: "text",
+    caption: "Listing Status",
+    width: 120,
+    cellRender: ({ data: product }: { data: Product }) => {
+      const isActiveListing = product.isActiveListing;
+      return (
+        <div className={`flex justify-start items-center gap-2`}>
+          <span
+            className={`w-[8px] h-[8px] rounded-full shrink-0 ${
+              isActiveListing ? "bg-[#00952A]" : "bg-[#ef4444]"
+            }`}
+          ></span>
+          {isActiveListing ? "Active" : "Inactive"}
+        </div>
+      );
+    },
+  },
+  {
     field: "product_name",
     caption: "Product Name",
     width: 300,
@@ -297,8 +317,6 @@ export default function InventoryGridExample() {
     setSelectedRow(e.data); // 🚀 Guardamos la fila seleccionada
     setOpenEditModal(true); // 🚀 Abrimos nuestro modal de edición
   };
-
-  console.log(selectedRow);
 
   return (
     <div

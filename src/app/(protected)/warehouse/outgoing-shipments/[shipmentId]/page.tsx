@@ -1,25 +1,19 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate } from "@/helpers";
+import { ShipmentPallet } from "@/types/shipments/get.types";
 import {
   AlertCircle,
   ClockIcon,
   IdCardIcon,
-  Pencil,
   PlaneIcon,
-  Plus,
-  Save,
   StoreIcon,
-  X,
 } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { DataTable } from "../create/_components/tables/data-table";
 import { useGetShipmentById } from "../hooks/use-shipments-service";
 import { createColumns, palletCols } from "./columns";
-import { ShipmentPallet } from "@/types/shipments/get.types";
 
 export interface ManifestPalletTable {
   pallet_id: number;
@@ -29,6 +23,7 @@ export interface ManifestPalletTable {
 
 export default function Page({ params }: { params: { shipmentId: string } }) {
   const { shipment, shipmentIsError } = useGetShipmentById(params.shipmentId);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isEditing, setIsEditing] = useState(false);
   const [pallets, setPallets] = useState<ShipmentPallet[]>(
     shipment?.pallets || []
@@ -123,7 +118,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
 
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">Products</h2>
-        {isEditing ? (
+        {/* {isEditing ? (
           <div className="space-x-2">
             <Button variant="outline" onClick={() => setIsEditing(false)}>
               <X className="h-4 w-4 mr-2" />
@@ -156,7 +151,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
               </Link>
             </Button>
           </div>
-        )}
+        )} */}
       </div>
 
       <DataTable pagination columns={palletCols(shipment.id)} data={pallets} />

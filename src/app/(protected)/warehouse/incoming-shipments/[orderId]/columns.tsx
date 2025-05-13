@@ -11,13 +11,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FormatUSD } from "@/helpers";
+import { formatDateWithoutHours, FormatUSD } from "@/helpers";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { SquarePlus, Trash2 } from "lucide-react";
 import { ExpireDateCell } from "../_components/expire-date-cell";
 import { PalletQuantityCell } from "../_components/pallet-quantity-cell";
 import { MissingFieldsInterface } from "./page";
+import { toast } from "sonner";
 
 export const reasons = [
   { id: 1, label: "ok" },
@@ -317,7 +318,30 @@ export const availableToCreate = (
     cell: ({ row }) => {
       return (
         <div className="text-right">
-          <Button variant="ghost" onClick={() => onAddProduct(row.original)}>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              if (row.original.expire_date) {
+                // expire data should be in the future of 180 days
+                const expireDate = new Date(row.original.expire_date);
+                const today = new Date();
+                if (
+                  expireDate.getTime() - today.getTime() <
+                  1000 * 60 * 60 * 24 * 180
+                ) {
+                  toast.error(
+                    `Expire date should be at least 180 days in the future. Minimum expire date is ${formatDateWithoutHours(
+                      new Date(
+                        today.getTime() + 1000 * 60 * 60 * 24 * 180
+                      ).toString()
+                    )}`
+                  );
+                  return;
+                }
+              }
+              return onAddProduct(row.original);
+            }}
+          >
             <SquarePlus className="h-4 w-4" />
           </Button>
         </div>
@@ -356,8 +380,19 @@ export const addedToCreate = (
     header: "ASIN",
   },
   {
-    accessorKey: "dg_item",
-    header: "DG Item",
+    id: "dg_item",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer text-center"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Is Hazmat
+      </span>
+    ),
+    cell: ({ row }) => {
+      const dg_item = row.original.dg_item || "--";
+      return <DGItemCell dgItem={dg_item} />;
+    },
   },
   {
     accessorKey: "seller_sku",

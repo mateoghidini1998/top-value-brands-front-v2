@@ -75,6 +75,7 @@ export interface Product {
   updatedAt: Date;
   supplier_name: string;
   marketplace?: string;
+  isActiveListing?: boolean;
 }
 export interface UpdateProductDGType {
   productId: string;
