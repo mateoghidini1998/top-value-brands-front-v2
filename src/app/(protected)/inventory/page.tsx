@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatDate } from "@/helpers";
+import { Product } from "@/types";
 import Link from "next/link";
 import { useState } from "react";
 import { CreateProductForm, EditProductForm } from "./components";
@@ -16,7 +17,6 @@ import {
   SummaryConfig,
 } from "./components/data-grid/data-grid";
 import { useDeleteProduct, useGetAllProducts } from "./hooks";
-import { Product } from "@/types";
 
 const amzCols: GridColumn[] = [
   {
@@ -105,10 +105,23 @@ const amzCols: GridColumn[] = [
   },
   {
     field: "reserved_quantity",
-    caption: "Reserved",
+    caption: "Reserved Qty",
     width: 120,
     alignment: "right",
     format: "###,##0",
+    cellRender: ({ data: product }: { data: Product }) => {
+      const { reserved_quantity, fc_transfer, fc_processing, customer_order } = product;
+      return (
+        <div className="relative group flex justify-start items-center gap-2 shrink-0">
+          {reserved_quantity}
+          <div className="absolute z-[20000] left-0 top-0 ml-2 bg-gray-800 text-white text-xs p-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200  flex-nowrap shrink-0">
+            <div>FC Transfer: {fc_transfer}</div>
+            <div>FC Processing: {fc_processing}</div>
+            <div>Customer Order: {customer_order}</div>
+          </div>
+        </div>
+      );
+    }
   },
   {
     field: "inbound_to_fba",
@@ -322,6 +335,7 @@ export default function InventoryGridExample() {
     }
   };
 
+
   const handleEditProduct = (e: any) => {
     e.cancel = true; // 🚨 Cancelamos el edit default de DevExtreme
     setSelectedRow(e.data); // 🚀 Guardamos la fila seleccionada
@@ -406,6 +420,13 @@ export default function InventoryGridExample() {
         summary={summaryConfig}
         stateStoreName="inventory-grid-state"
         excelFileName="Inventory-Report"
+        onCellPrepared={e => {
+          if (e.rowType === 'data' && e.column.dataField === 'reserved_quantity') {
+            e.cellElement.style.overflow = 'visible';
+            e.cellElement.style.zIndex = '1000';
+            e.cellElement.style.position = 'relative';
+          }
+        }}
       />
     </div>
   );

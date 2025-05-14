@@ -76,6 +76,9 @@ export interface Product {
   supplier_name: string;
   marketplace?: string;
   isActiveListing?: boolean;
+  fc_transfer: string;
+  fc_processing: string;
+  customer_order: string;
 }
 export interface UpdateProductDGType {
   productId: string;
