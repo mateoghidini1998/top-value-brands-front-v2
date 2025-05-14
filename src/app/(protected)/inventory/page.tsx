@@ -418,7 +418,7 @@ export default function InventoryGridExample() {
         selectionMode="multiple"
         onInitNewRow={handleInitNewRow}
         summary={summaryConfig}
-        stateStoreName="inventory-grid-state"
+        stateStoreName={marketplace === "amazon" ? "inventory-po-amazon" : "inventory-po-walmart"}
         excelFileName="Inventory-Report"
         onCellPrepared={e => {
           if (e.rowType === 'data' && e.column.dataField === 'reserved_quantity') {

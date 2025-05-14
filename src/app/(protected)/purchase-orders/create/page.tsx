@@ -694,7 +694,7 @@ export default function Page() {
           allowadd={false}
           // Add our custom button column
           gridButtons={gridButtonsConfig}
-          stateStoreName="create-po-grid-state"
+          stateStoreName={marketplace === "amazon" ? "create-po-amazon" : "create-po-walmart"}
         />
       </div>
 
