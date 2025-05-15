@@ -24,6 +24,7 @@ import { useGetPurchaseOrderSummary } from "../hooks";
 import { getAddedProductsColumns } from "./columns";
 import CreateOrderSummary from "./components/create-order-summary";
 import { ProductInOrder } from "./interface/product-added.interface";
+import { checkIfHazmat } from "@/lib/utils";
 
 export interface SupplierItem {
   value: number;
@@ -342,21 +343,16 @@ export default function Page() {
       field: "dangerous_goods",
       caption: "Hazmat",
       width: 70,
-      edit: false, // No editable, opcional
       cellRender: (cellData: any) => {
-        const isHazmat: boolean =
-          cellData.value !== "--" &&
-          cellData.value !== "STANDARD" &&
-          cellData.value !== "" &&
-          cellData.value !== null &&
-          cellData.value !== undefined;
-
+        const isHazmat = checkIfHazmat(cellData.value);
+        const tooltipContent = cellData.value;
         return (
-          <div className="flex justify-center items-center relative group">
-            {isHazmat ? <span>Yes</span> : <span>No</span>}
-            <div className="absolute opacity-0 group-hover:opacity-100 bg-gray-800 text-white text-sm p-1 rounded">
-              {cellData.value}
-            </div>
+          <div title={tooltipContent.trim()} className="text-center">
+            {isHazmat ? (
+              <span className="text-red-500 cursor-pointer">Yes</span>
+            ) : (
+              <span>No</span>
+            )}
           </div>
         );
       },
@@ -555,9 +551,6 @@ export default function Page() {
   }, []);
 
   const { open } = useSidebar();
-
-  console.log(productsAdded);
-
   // Render condicional después de los hooks
   if (trackedProductsIsLoading || suppliersQuery.isLoading) {
     return <LoadingSpinner />;
