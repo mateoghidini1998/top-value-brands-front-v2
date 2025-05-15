@@ -103,25 +103,48 @@ const amzCols: GridColumn[] = [
     // valueFormat: "###,##0",
     format: "###,##0",
   },
+  // {
+  //   field: "reserved_quantity",
+  //   caption: "Reserved Qty",
+  //   width: 120,
+  //   alignment: "right",
+  //   format: "###,##0",
+  //   cellRender: ({ data: product }: { data: Product }) => {
+  //     const { reserved_quantity, fc_transfer, fc_processing, customer_order } = product;
+  //     return (
+  //       <div className="relative group flex justify-start items-center gap-2 shrink-0">
+  //         {reserved_quantity}
+  //         <div className="absolute z-[20000] left-0 top-0 ml-2 bg-gray-800 text-white text-xs p-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200  flex-nowrap shrink-0">
+  //           <div>FC Transfer: {fc_transfer}</div>
+  //           <div>FC Processing: {fc_processing}</div>
+  //           <div>Customer Order: {customer_order}</div>
+  //         </div>
+  //       </div>
+  //     );
+  //   }
+  // },
+
   {
     field: "reserved_quantity",
     caption: "Reserved Qty",
-    width: 120,
+    width: 130,
     alignment: "right",
     format: "###,##0",
     cellRender: ({ data: product }: { data: Product }) => {
-      const { reserved_quantity, fc_transfer, fc_processing, customer_order } = product;
+      const { reserved_quantity, fc_transfer, fc_processing, customer_order } =
+        product;
+      const tooltipContent = `
+      Reserved:
+          FC Transfer: ${fc_transfer}
+          FC Processing: ${fc_processing}
+          Customer Order: ${customer_order}
+          `;
       return (
-        <div className="relative group flex justify-start items-center gap-2 shrink-0">
+        <div title={tooltipContent.trim()} className="text-left">
           {reserved_quantity}
-          <div className="absolute z-[20000] left-0 top-0 ml-2 bg-gray-800 text-white text-xs p-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200  flex-nowrap shrink-0">
-            <div>FC Transfer: {fc_transfer}</div>
-            <div>FC Processing: {fc_processing}</div>
-            <div>Customer Order: {customer_order}</div>
-          </div>
         </div>
       );
-    }
+    },
   },
   {
     field: "inbound_to_fba",
@@ -335,7 +358,6 @@ export default function InventoryGridExample() {
     }
   };
 
-
   const handleEditProduct = (e: any) => {
     e.cancel = true; // 🚨 Cancelamos el edit default de DevExtreme
     setSelectedRow(e.data); // 🚀 Guardamos la fila seleccionada
@@ -397,7 +419,7 @@ export default function InventoryGridExample() {
       )}
 
       <DataGrid
-        key={marketplace}  
+        key={marketplace}
         datatable={
           productResponse?.data.filter(
             (p) =>
@@ -419,13 +441,20 @@ export default function InventoryGridExample() {
         selectionMode="multiple"
         onInitNewRow={handleInitNewRow}
         summary={summaryConfig}
-        stateStoreName={marketplace === "amazon" ? "inventory-po-amazon" : "inventory-po-walmart"}
+        stateStoreName={
+          marketplace === "amazon"
+            ? "inventory-po-amazon"
+            : "inventory-po-walmart"
+        }
         excelFileName="Inventory-Report"
-        onCellPrepared={e => {
-          if (e.rowType === 'data' && e.column.dataField === 'reserved_quantity') {
-            e.cellElement.style.overflow = 'visible';
-            e.cellElement.style.zIndex = '1000';
-            e.cellElement.style.position = 'relative';
+        onCellPrepared={(e) => {
+          if (
+            e.rowType === "data" &&
+            e.column.dataField === "reserved_quantity"
+          ) {
+            e.cellElement.style.overflow = "visible";
+            e.cellElement.style.zIndex = "1000";
+            e.cellElement.style.position = "relative";
           }
         }}
       />
