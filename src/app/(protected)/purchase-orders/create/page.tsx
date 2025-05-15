@@ -669,6 +669,7 @@ export default function Page() {
         </Tabs>
 
         <DataGrid
+          key={marketplace}
           datatable={
             marketplace === "amazon"
               ? trackedProductsResponse.data?.filter(
@@ -694,7 +695,9 @@ export default function Page() {
           allowadd={false}
           // Add our custom button column
           gridButtons={gridButtonsConfig}
-          stateStoreName={marketplace === "amazon" ? "create-po-amazon" : "create-po-walmart"}
+          stateStoreName={
+            marketplace === "amazon" ? "create-po-amazon" : "create-po-walmart"
+          }
         />
       </div>
 

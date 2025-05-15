@@ -397,6 +397,7 @@ export default function InventoryGridExample() {
       )}
 
       <DataGrid
+        key={marketplace}  
         datatable={
           productResponse?.data.filter(
             (p) =>
