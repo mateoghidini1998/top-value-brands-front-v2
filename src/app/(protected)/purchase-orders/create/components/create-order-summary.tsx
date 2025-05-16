@@ -125,7 +125,10 @@ export default function CreateOrderSummary({
           <p>{`$ ${FormatUSD({
             number: productsAdded
               .reduce(
-                (acc, product) => acc + product.product_cost * product.quantity,
+                (acc, product) =>
+                  product.product_cost > 0 && product.quantity > 0
+                    ? acc + product.product_cost * product.quantity
+                    : acc + 0,
                 0
               )
               .toString(),
