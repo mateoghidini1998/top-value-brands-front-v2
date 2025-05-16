@@ -75,7 +75,9 @@ export default function EditableOrderNotes({
             height={200}
           />
         ) : draft ? (
-          <MarkdownViewer markdown={draft} />
+          <div className="prose">
+            <MarkdownViewer markdown={draft} />
+          </div>
         ) : (
           <p className="text-xs text-muted-foreground">No notes available</p>
         )}
