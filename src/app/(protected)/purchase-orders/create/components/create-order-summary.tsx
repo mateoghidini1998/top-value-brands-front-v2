@@ -1,11 +1,16 @@
+"use client";
+
+import type React from "react";
+
 import { FormatUSD } from "@/helpers";
-import { ProductsToAdd } from "@/types/purchase-orders/add-products-to-order.types";
+import type { ProductsToAdd } from "@/types/purchase-orders/add-products-to-order.types";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useCreateOrder, useUpdatePurchaseOrder } from "../../hooks";
-import { ProductInOrder } from "../interface/product-added.interface";
+import type { ProductInOrder } from "../interface/product-added.interface";
 import generateId from "../utils/generate-po-id";
+import MarkdownEditor from "@/components/custom/markdown-editor";
 
 interface CreateOrderSummaryProps {
   productsAdded: ProductInOrder[];
@@ -51,7 +56,7 @@ export default function CreateOrderSummary({
           };
         }),
         order_number: generateId(productsAdded[0].supplier_name),
-        supplier_id: parseInt(productsAdded[0].supplier_id),
+        supplier_id: Number.parseInt(productsAdded[0].supplier_id),
         purchase_order_status_id: 1,
         notes: orderNotes,
       })
@@ -132,11 +137,11 @@ export default function CreateOrderSummary({
         <div className="flex justify-between items-end">
           <div className="flex flex-col gap-2 min-w-[300px] w-auto">
             <p>Notes</p>
-            <textarea
+            <MarkdownEditor
               value={orderNotes}
-              onChange={(e) => setOrderNotes(e.target.value)}
-              className="dark:bg-dark w-full h-[100px] border-solid border-[1px] rounded-lg border-gray-300 p-4 dark:text-white"
-              placeholder="Order Notes"
+              onChange={setOrderNotes}
+              placeholder="Order Notes (supports markdown)"
+              height={200}
             />
           </div>
           <div className="flex gap-2 items-center justify-between">

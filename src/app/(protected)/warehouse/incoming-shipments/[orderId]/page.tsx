@@ -1,12 +1,22 @@
 "use client";
-import OrderNotes from "@/app/(protected)/purchase-orders/[orderId]/components/order-notes.component";
 import { useGetPurchaseOrderSummary } from "@/app/(protected)/purchase-orders/hooks";
 import {
   DataTable,
   ShowHideColsumnsProps,
 } from "@/components/custom/data-table";
+import EditableOrderNotes from "@/components/custom/editable-order-notes";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -31,16 +41,6 @@ import {
   useUpdateProductDGType,
 } from "../hooks/use-incoming-orders-service";
 import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 
 const showColumns: ShowHideColsumnsProps = {
   show: true,
@@ -228,20 +228,17 @@ export default function Page({
 
       // TODO: Si la fecha es menos de 180 dias agregar expired como la reason : reason_id = 7!
       // expire data should be in the future of 180 days
-        const expireDate = new Date(value || "");
-        const today = new Date();
-        if (
-          expireDate.getTime() - today.getTime() <
-          1000 * 60 * 60 * 24 * 180
-        ) {
-          setLocalChanges((prev) => ({
-            ...prev,
-            [rowId]: {
-              ...prev[rowId],
-              reason_id: 7,
-            },
-          }));
-        }
+      const expireDate = new Date(value || "");
+      const today = new Date();
+      if (expireDate.getTime() - today.getTime() < 1000 * 60 * 60 * 24 * 180) {
+        setLocalChanges((prev) => ({
+          ...prev,
+          [rowId]: {
+            ...prev[rowId],
+            reason_id: 7,
+          },
+        }));
+      }
 
       focusNextInput(rowId, "expire_date");
     },
@@ -433,8 +430,7 @@ export default function Page({
       <h1 className="text-2xl font-bold">
         Purchase order {ordersSummaryResponse.data.order.order_number}
       </h1>
-
-      <OrderNotes
+      <EditableOrderNotes
         onAction={updateIncomingOrderNotesAsync}
         notes={
           ordersSummaryResponse.data.order.incoming_order_notes ||

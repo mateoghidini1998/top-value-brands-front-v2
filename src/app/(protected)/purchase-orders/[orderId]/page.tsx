@@ -1,11 +1,11 @@
 "use client";
+import EditableOrderNotes from "@/components/custom/editable-order-notes";
 import LoadingSpinner from "@/components/custom/loading-spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { PurchaseOrderProvider } from "@/contexts/orders.context";
 import { useGetPurchaseOrderSummary, useUpdateOrderNotes } from "../hooks";
-import OrderDetails from "./components/order-details.component";
-import OrderNotes from "./components/order-notes.component";
 import OrderProductsTable from "./components/order-products-list.component";
+import OrderDetails from "./components/order-details.component";
 
 export default function PurchaseOrderPage({
   params,
@@ -42,7 +42,7 @@ export default function PurchaseOrderPage({
     <PurchaseOrderProvider initialProducts={purchaseOrderProducts}>
       <div className="py-6 space-y-8">
         <OrderDetails order={order} orderId={params.orderId} />
-        <OrderNotes
+        <EditableOrderNotes
           notes={order.notes}
           orderId={params.orderId}
           onAction={updateOrderNotesAsync}
