@@ -347,7 +347,7 @@ export default function Page() {
         const isHazmat = checkIfHazmat(cellData.value);
         const tooltipContent = cellData.value;
         return (
-          <div title={tooltipContent.trim()} className="text-center">
+          <div title={tooltipContent?.trim()} className="text-center">
             {isHazmat ? (
               <span className="text-red-500 cursor-pointer">Yes</span>
             ) : (

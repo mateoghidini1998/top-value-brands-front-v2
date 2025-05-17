@@ -48,8 +48,8 @@ export default function CreateOrderSummary({
         products: productsAdded.map((product) => {
           return {
             product_id: product.product_id,
-            quantity: product.quantity,
-            product_cost: product.product_cost,
+            quantity: product?.quantity || 0,
+            product_cost: product?.product_cost || 0,
             // Needed to calculate the profit in the backend
             fees: product.fees,
             lowest_fba_price: product.lowest_fba_price,

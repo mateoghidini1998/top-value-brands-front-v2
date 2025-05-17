@@ -67,14 +67,13 @@ const AddQuantity = ({
   return (
     <div className="flex justify-between items-center gap-2 relative">
       <Input
-        defaultValue={1}
         type="number"
         placeholder="Quantity"
         className="flex-1"
         value={quantityAdded}
         onChange={(e) => setQuantityAdded(Number(e.target.value))}
         onBlur={handleBlur} // Guardar valores cuando el usuario pierde el foco
-        min={1}
+        min={0}
       />
       <span className="w-fit font-semibold text-green-500 absolute right-10">
         {productQuantity * (packType ?? 1) || ""}
