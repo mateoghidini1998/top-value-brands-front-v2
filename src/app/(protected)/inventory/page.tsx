@@ -26,11 +26,11 @@ const amzCols: GridColumn[] = [
     edit: false,
     cellRender: (cellData: any) => {
       const imageUrl = cellData.value;
-      const ASIN = cellData.data.product_name;
+      const asin = cellData.data.asin || cellData.data.ASIN;
       return (
         <div className="flex justify-center items-center">
           {imageUrl ? (
-            <Link target="a_blank" href={`https://www.amazon.com/dp/${ASIN}`}>
+            <Link target="a_blank" href={`https://www.amazon.com/dp/${asin}`}>
               <img
                 src={imageUrl}
                 alt="product_image"
