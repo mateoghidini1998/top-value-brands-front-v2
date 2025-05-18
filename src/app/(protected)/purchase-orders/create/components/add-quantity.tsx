@@ -1,7 +1,6 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { useEffect } from "react";
 import {
   LocalStorageProduct,
   ProductInOrder,

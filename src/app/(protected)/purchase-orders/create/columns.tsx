@@ -14,10 +14,7 @@ import { TrackedProduct } from "@/types";
 import { ArrowUpDown } from "lucide-react";
 import { FormatUSD } from "@/helpers";
 import ProductVelocity from "./components/product-velocity";
-import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+
 
 export const getTrackedProductsColumns = (
   setProductsAdded: Dispatch<SetStateAction<ProductInOrder[]>>,
