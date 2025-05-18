@@ -446,6 +446,7 @@ export default function InventoryGridExample() {
             : "inventory-po-walmart"
         }
         excelFileName="Inventory-Report"
+        rowAlternation={false}
         onCellPrepared={(e) => {
           if (
             e.rowType === "data" &&
