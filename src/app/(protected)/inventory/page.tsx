@@ -51,7 +51,7 @@ const amzCols: GridColumn[] = [
     field: "isActiveListing",
     edit: false,
     type: "text",
-    caption: "Listing Status",
+    caption: "Listing Status", 
     width: 150,
     cellRender: ({ data: product }: { data: Product }) => {
       const isActiveListing = product.isActiveListing;
@@ -61,19 +61,20 @@ const amzCols: GridColumn[] = [
         if (isActiveListing === null) {
           return `- (${accountText})`;
         }
-        const active = Boolean(isActiveListing); 
-        return active ? `Active (${accountText})` : `Inactive (${accountText})`;
+        return isActiveListing ? `Active (${accountText})` : `Inactive (${accountText})`;
       };
 
+      const rowStyle = isActiveListing === false ? "bg-red-100" : "";
+
       return (
-        <div className={`flex justify-start items-center gap-2`}>
-          <span
-            className={`w-[8px] h-[8px] rounded-full shrink-0 ${
-              isActiveListing && inSellerAccount
-                ? "bg-[#00952A]"
-                : "bg-[#ef4444]"
-            }`}
-          ></span>
+        <div className={`flex justify-start items-center gap-2 ${rowStyle}`}>
+          {isActiveListing !== null && (
+            <span
+              className={`w-[8px] h-[8px] rounded-full shrink-0 ${
+                isActiveListing ? "bg-[#00952A]" : "bg-[#ef4444]"
+              }`}
+            ></span>
+          )}
           {getStatusText()}
         </div>
       );
