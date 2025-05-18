@@ -14,6 +14,10 @@ import { TrackedProduct } from "@/types";
 import { ArrowUpDown } from "lucide-react";
 import { FormatUSD } from "@/helpers";
 import ProductVelocity from "./components/product-velocity";
+import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 
 export const getTrackedProductsColumns = (
   setProductsAdded: Dispatch<SetStateAction<ProductInOrder[]>>,
@@ -399,99 +403,136 @@ export const getTrackedProductsColumns = (
 ];
 
 export const getAddedProductsColumns = (
-  setProductsAdded: Dispatch<SetStateAction<ProductInOrder[]>>
+  setProductsAdded: React.Dispatch<React.SetStateAction<ProductInOrder[]>>
 ): ColumnDef<ProductInOrder>[] => [
   {
     id: "product_title",
     header: "Product Name",
+    size: 300,
     cell: ({ row }) => {
       const product_image = row.original.product_image;
       const product_name = row.original.product_name;
       const ASIN = row.original.ASIN;
-      const in_seller_account = row.original.in_seller_account;
-      const width = 300;
       return (
-        <ProductTitle
-          product_image={product_image}
-          product_name={product_name}
-          ASIN={ASIN || ""}
-          in_seller_account={in_seller_account}
-          width={width}
-        />
+        <div className="flex items-center gap-2">
+          {product_image ? (
+            <Link target="_blank" href={`https://www.amazon.com/dp/${ASIN}`}>
+              <img
+                src={product_image}
+                alt="product_image"
+                loading="lazy"
+                className="cover rounded-xl w-7 h-7"
+                style={{ objectFit: "cover", borderRadius: "8px" }}
+              />
+            </Link>
+          ) : (
+            <span className="w-7 h-7">No Image</span>
+          )}
+          <span className="truncate">{product_name}</span>
+        </div>
       );
     },
   },
   {
+    accessorKey: "seller_sku",
+    header: "SKU",
+    size: 120,
+  },
+  {
     id: "asin_gtin",
-    header: "ASIN / GTIN",
+    header: "ASIN/GTIN",
+    size: 120,
     cell: ({ row }) => {
       const ASIN = row.original.ASIN;
       const GTIN = row.original.gtin;
-      return <span>{ASIN || GTIN}</span>;
+      return <span>{ASIN || GTIN || "N/A"}</span>;
     },
+  },
+  {
+    accessorKey: "upc",
+    header: "UPC",
+    size: 120,
   },
   {
     accessorKey: "quantity",
     header: "Quantity",
+    size: 100,
     cell: ({ row }) => {
       return (
-        <AddQuantity
-          productQuantity={row.original.quantity}
-          packType={row.original.pack_type}
-          setProductsAdded={setProductsAdded}
-          productId={row.original.product_id}
+        <Input
+          type="number"
+          min={1}
+          className="w-28 text-right"
+          value={row.original.quantity || 1}
+          onChange={(e) => {
+            const newQuantity = parseInt(e.target.value);
+            if (newQuantity < 1) return;
+            setProductsAdded((prev) =>
+              prev.map((product) =>
+                product.id === row.original.id
+                  ? { ...product, quantity: newQuantity }
+                  : product
+              )
+            );
+          }}
         />
       );
     },
   },
   {
     accessorKey: "product_cost",
-    header: "Product Cost",
+    header: "Cost",
+    size: 100,
     cell: ({ row }) => {
       return (
-        <AddProductCost
-          productCost={row.original.product_cost}
-          packType={row.original.pack_type}
-          setProductsAdded={setProductsAdded}
-          productId={row.original.product_id}
+        <Input
+          type="number"
+          min={0}
+          step={0.01}
+          className="w-32 text-right"
+          value={row.original.product_cost}
+          onChange={(e) => {
+            const newCost = parseFloat(e.target.value);
+            if (newCost < 0) return;
+            setProductsAdded((prev) =>
+              prev.map((product) =>
+                product.id === row.original.id
+                  ? { ...product, product_cost: newCost }
+                  : product
+              )
+            );
+          }}
         />
       );
     },
   },
   {
     accessorKey: "total_amount",
-    header: "Total Amount",
+    header: "Total",
+    size: 120,
     cell: ({ row }) => {
-      const product_cost = row.original.product_cost || 1;
-      const quantity = row.original.quantity || 1;
-
-      return (
-        <span>
-          $
-          {FormatUSD({
-            number: (product_cost * quantity).toString(),
-            maxDigits: 2,
-            minDigits: 2,
-          })}
-        </span>
-      );
+      const total =
+        (row.original.quantity || 1) * parseFloat(row.original.product_cost.toString());
+      return <span className="text-right block">${total.toFixed(2)}</span>;
     },
   },
   {
-    accessorKey: "units_sold",
-    header: "Units Sold",
-  },
-  {
     id: "actions",
-    header: "Actions",
+    size: 50,
     cell: ({ row }) => {
       return (
-        <span className="flex items-center justify-center">
-          <RemoveProduct
-            productInOrder={row.original}
-            setData={setProductsAdded}
-          />
-        </span>
+        <Button
+          variant="ghost"
+          className="h-8 w-8 p-0"
+          onClick={() => {
+            setProductsAdded((prev) =>
+              prev.filter((product) => product.id !== row.original.id)
+            );
+          }}
+        >
+          <span className="sr-only">Delete</span>
+          <Trash2 className="h-4 w-4" />
+        </Button>
       );
     },
   },

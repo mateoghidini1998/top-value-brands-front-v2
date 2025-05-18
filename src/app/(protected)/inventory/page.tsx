@@ -56,6 +56,16 @@ const amzCols: GridColumn[] = [
     cellRender: ({ data: product }: { data: Product }) => {
       const isActiveListing = product.isActiveListing;
       const inSellerAccount = product.in_seller_account;
+      const getStatusText = () => {
+        if (isActiveListing === null) {
+          return `- (${inSellerAccount ? "In Account" : "Not in Account"})`;
+        }
+        if (isActiveListing === false) {
+          return `Inactive (${inSellerAccount ? "In Account" : "Not in Account"})`;
+        }
+        return `Active (${inSellerAccount ? "In Account" : "Not in Account"})`;
+      };
+      
       return (
         <div className={`flex justify-start items-center gap-2`}>
           <span
@@ -63,7 +73,7 @@ const amzCols: GridColumn[] = [
               isActiveListing && inSellerAccount ? "bg-[#00952A]" : "bg-[#ef4444]"
             }`}
           ></span>
-          {isActiveListing ? "Active" : "Inactive"} {inSellerAccount ? "(In Account)" : "(Not in Account)"}
+          {getStatusText()}
         </div>
       );
     },
