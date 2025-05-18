@@ -161,3 +161,22 @@ body {
     }
   }
 }
+
+/* DevExtreme DataGrid Borders */
+.dx-datagrid-borders .dx-datagrid-headers,
+.dx-datagrid-borders .dx-datagrid-rowsview,
+.dx-datagrid-borders .dx-datagrid-total-footer {
+  border: 1px solid #ddd;
+}
+
+.dx-datagrid-borders .dx-datagrid-headers td,
+.dx-datagrid-borders .dx-datagrid-rowsview td {
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+.dx-datagrid-borders .dx-datagrid-headers th {
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  background-color: #f5f5f5;
+}

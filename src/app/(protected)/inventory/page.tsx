@@ -447,6 +447,8 @@ export default function InventoryGridExample() {
         }
         excelFileName="Inventory-Report"
         rowAlternation={false}
+        borders={true}
+        className="dx-datagrid-borders dx-widget"
         onCellPrepared={(e) => {
           if (
             e.rowType === "data" &&
@@ -460,7 +462,7 @@ export default function InventoryGridExample() {
         onRowPrepared={(e) => {
           if (e.rowType === "data" && marketplace === "amazon") {
             const data = e.data;
-            if (!data.isActiveListing) {
+            if (data.isActiveListing === false) {
               e.rowElement.style.backgroundColor = "rgba(239, 68, 68, 0.1)"; // Light red background
             }
           }
