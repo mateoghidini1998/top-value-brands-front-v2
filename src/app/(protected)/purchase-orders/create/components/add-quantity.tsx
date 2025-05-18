@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect } from "react";
 import {
   LocalStorageProduct,
   ProductInOrder,
@@ -20,9 +20,19 @@ const AddQuantity = ({
   productQuantity,
   packType,
 }: AddQuantityProps) => {
-  const [quantityAdded, setQuantityAdded] = useState<number>(productQuantity);
+  const handleQuantityChange = (newQuantity: number) => {
+    if (newQuantity < 1) return;
 
-  const handleAddQuantityToLocalStorage = () => {
+    // Update products in state
+    setProductsAdded((prev) =>
+      prev.map((product) =>
+        product.id === productId
+          ? { ...product, quantity: newQuantity }
+          : product
+      )
+    );
+
+    // Update localStorage
     const productsAdded: LocalStorageProduct[] = JSON.parse(
       localStorage.getItem("productsAdded") ?? "[]"
     );
@@ -32,36 +42,16 @@ const AddQuantity = ({
     );
 
     if (existingProductIndex !== -1) {
-      // Actualizar cantidad si ya existe
-      productsAdded[existingProductIndex].quantity = quantityAdded;
+      productsAdded[existingProductIndex].quantity = newQuantity;
     } else {
-      // Agregar nuevo producto si no existe
       productsAdded.push({
         product_id: productId,
-        quantity: quantityAdded,
+        quantity: newQuantity,
         cost: 1,
       });
     }
 
     localStorage.setItem("productsAdded", JSON.stringify(productsAdded));
-
-    // Actualizar el estado de los productos agregados
-    setProductsAdded((prev) => {
-      return prev.map((p) => {
-        const localProduct = productsAdded.find(
-          (p: LocalStorageProduct) => p.product_id === productId
-        );
-
-        return p.product_id === productId
-          ? { ...p, quantity: localProduct?.quantity ?? 0 }
-          : p;
-      });
-    });
-  };
-
-  const handleBlur = () => {
-    // Guardar la cantidad en localStorage al salir del campo de entrada
-    handleAddQuantityToLocalStorage();
   };
 
   return (
@@ -69,15 +59,16 @@ const AddQuantity = ({
       <Input
         type="number"
         placeholder="Quantity"
-        className="flex-1"
-        value={quantityAdded}
-        onChange={(e) => setQuantityAdded(Number(e.target.value))}
-        onBlur={handleBlur} // Guardar valores cuando el usuario pierde el foco
-        min={0}
+        className="w-full"
+        value={productQuantity || 1}
+        onChange={(e) => handleQuantityChange(Number(e.target.value))}
+        min={1}
       />
-      <span className="w-fit font-semibold text-green-500 absolute right-10">
-        {productQuantity * (packType ?? 1) || ""}
-      </span>
+      {packType && packType > 1 && (
+        <span className="w-fit font-semibold text-green-500 absolute right-10">
+          {(productQuantity || 1) * packType}
+        </span>
+      )}
     </div>
   );
 };

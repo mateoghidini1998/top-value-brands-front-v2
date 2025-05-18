@@ -413,23 +413,15 @@ export const getAddedProductsColumns = (
       const product_image = row.original.product_image;
       const product_name = row.original.product_name;
       const ASIN = row.original.ASIN;
+      const in_seller_account = row.original.in_seller_account;
       return (
-        <div className="flex items-center gap-2">
-          {product_image ? (
-            <Link target="_blank" href={`https://www.amazon.com/dp/${ASIN}`}>
-              <img
-                src={product_image}
-                alt="product_image"
-                loading="lazy"
-                className="cover rounded-xl w-7 h-7"
-                style={{ objectFit: "cover", borderRadius: "8px" }}
-              />
-            </Link>
-          ) : (
-            <span className="w-7 h-7">No Image</span>
-          )}
-          <span className="truncate">{product_name}</span>
-        </div>
+        <ProductTitle
+          product_image={product_image}
+          product_name={product_name}
+          ASIN={ASIN || ""}
+          in_seller_account={in_seller_account}
+          width={300}
+        />
       );
     },
   },
@@ -459,22 +451,11 @@ export const getAddedProductsColumns = (
     size: 100,
     cell: ({ row }) => {
       return (
-        <Input
-          type="number"
-          min={1}
-          className="w-28 text-right"
-          value={row.original.quantity || 1}
-          onChange={(e) => {
-            const newQuantity = parseInt(e.target.value);
-            if (newQuantity < 1) return;
-            setProductsAdded((prev) =>
-              prev.map((product) =>
-                product.id === row.original.id
-                  ? { ...product, quantity: newQuantity }
-                  : product
-              )
-            );
-          }}
+        <AddQuantity
+          productQuantity={row.original.quantity}
+          packType={row.original.pack_type}
+          setProductsAdded={setProductsAdded}
+          productId={row.original.id}
         />
       );
     },
@@ -485,23 +466,11 @@ export const getAddedProductsColumns = (
     size: 100,
     cell: ({ row }) => {
       return (
-        <Input
-          type="number"
-          min={0}
-          step={0.01}
-          className="w-32 text-right"
-          value={row.original.product_cost}
-          onChange={(e) => {
-            const newCost = parseFloat(e.target.value);
-            if (newCost < 0) return;
-            setProductsAdded((prev) =>
-              prev.map((product) =>
-                product.id === row.original.id
-                  ? { ...product, product_cost: newCost }
-                  : product
-              )
-            );
-          }}
+        <AddProductCost
+          productCost={row.original.product_cost}
+          packType={row.original.pack_type}
+          setProductsAdded={setProductsAdded}
+          productId={row.original.id}
         />
       );
     },
@@ -511,9 +480,19 @@ export const getAddedProductsColumns = (
     header: "Total",
     size: 120,
     cell: ({ row }) => {
-      const total =
-        (row.original.quantity || 1) * parseFloat(row.original.product_cost.toString());
-      return <span className="text-right block">${total.toFixed(2)}</span>;
+      const product_cost = row.original.product_cost || 1;
+      const quantity = row.original.quantity || 1;
+
+      return (
+        <span>
+          $
+          {FormatUSD({
+            number: (product_cost * quantity).toString(),
+            maxDigits: 2,
+            minDigits: 2,
+          })}
+        </span>
+      );
     },
   },
   {
@@ -521,18 +500,12 @@ export const getAddedProductsColumns = (
     size: 50,
     cell: ({ row }) => {
       return (
-        <Button
-          variant="ghost"
-          className="h-8 w-8 p-0"
-          onClick={() => {
-            setProductsAdded((prev) =>
-              prev.filter((product) => product.id !== row.original.id)
-            );
-          }}
-        >
-          <span className="sr-only">Delete</span>
-          <Trash2 className="h-4 w-4" />
-        </Button>
+        <span className="flex items-center justify-center">
+          <RemoveProduct
+            productInOrder={row.original}
+            setData={setProductsAdded}
+          />
+        </span>
       );
     },
   },
