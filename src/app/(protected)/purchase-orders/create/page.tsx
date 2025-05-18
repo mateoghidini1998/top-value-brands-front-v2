@@ -120,7 +120,7 @@ export default function Page() {
       field: "product_image",
       caption: "Img",
       width: 50,
-      edit: false, // No editable, opcional
+      edit: false,
       cellRender: (cellData: any) => {
         const imageUrl = cellData.value;
         const ASIN = cellData.data.ASIN;
@@ -170,6 +170,17 @@ export default function Page() {
       customizeText: (cellInfo) => `$${parseFloat(cellInfo.value).toFixed(2)}`,
     },
     {
+      field: "avg_selling_price",
+      caption: "Avg Selling Price",
+      width: 150,
+      format: "currency",
+      alignment: "right",
+      customizeText: (cellInfo) => {
+        const value = parseFloat(cellInfo.value);
+        return isNaN(value) ? "-" : `$${value.toFixed(2)}`;
+      },
+    },
+    {
       field: "roi",
       caption: "ROI",
       width: 100,
@@ -196,15 +207,14 @@ export default function Page() {
       alignment: "right",
       format: "currency",
       cellRender: (cellInfo) => {
-        const roi = parseFloat(cellInfo.value);
+        const profit = parseFloat(cellInfo.value);
         let color = "";
-        if (roi < 0) color = "text-red-500"; // Rojo para valores menores a 0
-        else if (roi > 2)
-          color = "text-green-500"; // Verde para valores mayores a 2
-        else color = "text-yellow-500"; // Amarillo para valores entre 0 y 2
+        if (profit < 0) color = "text-red-500";
+        else if (profit > 2) color = "text-green-500";
+        else color = "text-yellow-500";
         return (
           <span className={`${color} w-full h-full`}>
-            {roi ? roi.toFixed(2) + "%" : "N/A"}
+            {profit ? `$${profit.toFixed(2)}` : "N/A"}
           </span>
         );
       },
@@ -314,9 +324,10 @@ export default function Page() {
       field: "warehouse_stock",
       caption: "Warehouse Stock",
       width: 150,
+      alignment: "right",
       customizeText: (cellInfo) => {
         const value = parseInt(cellInfo.value);
-        return new Intl.NumberFormat("en-US").format(value); // Formateo con comas
+        return isNaN(value) ? "0" : new Intl.NumberFormat("en-US").format(value);
       },
     },
     {

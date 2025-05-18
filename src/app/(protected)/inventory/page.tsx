@@ -23,7 +23,7 @@ const amzCols: GridColumn[] = [
     field: "product_image",
     caption: "Img",
     width: 50,
-    edit: false, // No editable, opcional
+    edit: false,
     cellRender: (cellData: any) => {
       const imageUrl = cellData.value;
       const ASIN = cellData.data.product_name;
@@ -52,17 +52,18 @@ const amzCols: GridColumn[] = [
     edit: false,
     type: "text",
     caption: "Listing Status",
-    width: 120,
+    width: 150,
     cellRender: ({ data: product }: { data: Product }) => {
       const isActiveListing = product.isActiveListing;
+      const inSellerAccount = product.in_seller_account;
       return (
         <div className={`flex justify-start items-center gap-2`}>
           <span
             className={`w-[8px] h-[8px] rounded-full shrink-0 ${
-              isActiveListing ? "bg-[#00952A]" : "bg-[#ef4444]"
+              isActiveListing && inSellerAccount ? "bg-[#00952A]" : "bg-[#ef4444]"
             }`}
           ></span>
-          {isActiveListing ? "Active" : "Inactive"}
+          {isActiveListing ? "Active" : "Inactive"} {inSellerAccount ? "(In Account)" : "(Not in Account)"}
         </div>
       );
     },
@@ -71,20 +72,6 @@ const amzCols: GridColumn[] = [
     field: "product_name",
     caption: "Product Name",
     width: 300,
-    cellRender: ({ data: product }: { data: Product }) => {
-      const productName = product.product_name;
-      const inSellerAccount = product.in_seller_account;
-      return (
-        <div className={`flex justify-start items-center gap-2`}>
-          <span
-            className={`w-[8px] h-[8px] rounded-full shrink-0 ${
-              inSellerAccount ? "bg-[#00952A]" : "bg-[#ef4444]"
-            }`}
-          ></span>
-          {productName}
-        </div>
-      );
-    },
   },
   {
     field: "product_cost",
@@ -156,9 +143,13 @@ const amzCols: GridColumn[] = [
   {
     field: "warehouse_stock",
     caption: "Warehouse Stock",
-    width: 150,
+    width: 140,
     alignment: "right",
-    format: "###,##0",
+    format: "#,##0",
+    customizeText: (cellInfo) => {
+      const value = parseInt(cellInfo.value);
+      return isNaN(value) ? "0" : value.toString();
+    },
   },
   {
     field: "asin",
@@ -228,16 +219,19 @@ const walmartCols: GridColumn[] = [
     edit: false,
     cellRender: (cellData: any) => {
       const imageUrl = cellData.value;
+      const gtin = cellData.data.gtin;
       return (
         <div className="flex justify-center items-center">
           {imageUrl ? (
-            <img
-              src={imageUrl}
-              alt="product_image"
-              loading="lazy"
-              className="cover rounded-xl w-7 h-7"
-              style={{ objectFit: "cover", borderRadius: "8px" }}
-            />
+            <Link target="a_blank" href={`https://www.walmart.com/ip/${gtin}`}>
+              <img
+                src={imageUrl}
+                alt="product_image"
+                loading="lazy"
+                className="cover rounded-xl w-7 h-7"
+                style={{ objectFit: "cover", borderRadius: "8px" }}
+              />
+            </Link>
           ) : (
             <span>No Image</span>
           )}
@@ -275,17 +269,6 @@ const walmartCols: GridColumn[] = [
     alignment: "right",
     format: "#,##0",
   },
-  {
-    field: "price",
-    caption: "Price",
-    width: 120,
-    format: "currency",
-    alignment: "right",
-    customizeText: (cellInfo) => {
-      const value = parseFloat(cellInfo.value);
-      return isNaN(value) ? "-" : `$${value.toFixed(2)}`;
-    },
-  },
   { field: "marketplace", caption: "Marketplace", width: 100 },
   {
     field: "warehouse_stock",
@@ -293,6 +276,10 @@ const walmartCols: GridColumn[] = [
     width: 140,
     alignment: "right",
     format: "#,##0",
+    customizeText: (cellInfo) => {
+      const value = parseInt(cellInfo.value);
+      return isNaN(value) ? "0" : value.toString();
+    },
   },
   {
     field: "is_active",
@@ -455,6 +442,14 @@ export default function InventoryGridExample() {
             e.cellElement.style.overflow = "visible";
             e.cellElement.style.zIndex = "1000";
             e.cellElement.style.position = "relative";
+          }
+        }}
+        onRowPrepared={(e) => {
+          if (e.rowType === "data" && marketplace === "amazon") {
+            const data = e.data;
+            if (!data.isActiveListing) {
+              e.rowElement.style.backgroundColor = "rgba(239, 68, 68, 0.1)"; // Light red background
+            }
           }
         }}
       />

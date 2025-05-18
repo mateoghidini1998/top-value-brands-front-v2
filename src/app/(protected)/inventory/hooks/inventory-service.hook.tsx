@@ -105,7 +105,7 @@ export const useUpdateProduct = () => {
     mutationFn: (data: EditProductProps) => inventoryService.editProduct(data),
     successMessage: SUCCESS_MESSAGES.UPDATE_PRODUCTS,
     errorMessage: ERROR_MESSAGES.UPDATE_PRODUCTS,
-    invalidateKeys: [[QUERY_KEYS.PRODUCTS]], // Invalidate user list after registration
+    invalidateKeys: [[QUERY_KEYS.PRODUCTS]], 
   });
 
   return {
@@ -122,7 +122,7 @@ export const useDeleteProduct = () => {
     mutationFn: (id: string) => inventoryService.deleteProduct(parseInt(id)),
     successMessage: SUCCESS_MESSAGES.DELETE_PRODUCT,
     errorMessage: ERROR_MESSAGES.DELETE_PRODUCT,
-    invalidateKeys: [[QUERY_KEYS.PRODUCTS]], // Invalidate user list after registration
+    invalidateKeys: [[QUERY_KEYS.PRODUCTS]],
   });
 
   return {
@@ -139,7 +139,7 @@ export const useDeleteProductFromSellerAccount = () => {
       inventoryService.deleteProductFromSellerAccount(parseInt(id)),
     successMessage: SUCCESS_MESSAGES.DELETE_PRODUCT,
     errorMessage: ERROR_MESSAGES.DELETE_PRODUCT,
-    invalidateKeys: [[QUERY_KEYS.PRODUCTS]], // Invalidate user list after registration
+    invalidateKeys: [[QUERY_KEYS.PRODUCTS]],
   });
 
   return {
@@ -156,7 +156,7 @@ export const useUpdateProductDGType = () => {
       inventoryService.updateProductDGType(data),
     successMessage: SUCCESS_MESSAGES.UPDATE_PRODUCTS,
     errorMessage: ERROR_MESSAGES.UPDATE_PRODUCTS,
-    invalidateKeys: [[QUERY_KEYS.PRODUCTS]], // Invalidate user list after registration
+    invalidateKeys: [[QUERY_KEYS.PRODUCTS]], 
   });
   return {
     updateDGTypeAsync: updateProductDGType.mutateAsync,
