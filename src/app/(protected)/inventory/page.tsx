@@ -57,20 +57,21 @@ const amzCols: GridColumn[] = [
       const isActiveListing = product.isActiveListing;
       const inSellerAccount = product.in_seller_account;
       const getStatusText = () => {
+        const accountText = inSellerAccount ? "In Account" : "Not in Account";
         if (isActiveListing === null) {
-          return `- (${inSellerAccount ? "In Account" : "Not in Account"})`;
+          return `- (${accountText})`;
         }
-        if (isActiveListing === false) {
-          return `Inactive (${inSellerAccount ? "In Account" : "Not in Account"})`;
-        }
-        return `Active (${inSellerAccount ? "In Account" : "Not in Account"})`;
+        const active = Boolean(isActiveListing); 
+        return active ? `Active (${accountText})` : `Inactive (${accountText})`;
       };
-      
+
       return (
         <div className={`flex justify-start items-center gap-2`}>
           <span
             className={`w-[8px] h-[8px] rounded-full shrink-0 ${
-              isActiveListing && inSellerAccount ? "bg-[#00952A]" : "bg-[#ef4444]"
+              isActiveListing && inSellerAccount
+                ? "bg-[#00952A]"
+                : "bg-[#ef4444]"
             }`}
           ></span>
           {getStatusText()}
