@@ -61,7 +61,8 @@ const amzCols: GridColumn[] = [
         if (isActiveListing === null) {
           return `- (${accountText})`;
         }
-        return isActiveListing ? `Active (${accountText})` : `Inactive (${accountText})`;
+        const isActive = typeof isActiveListing === 'number' ? isActiveListing === 1 : isActiveListing === true;
+        return isActive ? `Active (${accountText})` : `Inactive (${accountText})`;
       };
 
       const rowStyle = isActiveListing === false ? "bg-red-100" : "";
@@ -71,7 +72,7 @@ const amzCols: GridColumn[] = [
           {isActiveListing !== null && (
             <span
               className={`w-[8px] h-[8px] rounded-full shrink-0 ${
-                isActiveListing ? "bg-[#00952A]" : "bg-[#ef4444]"
+                (typeof isActiveListing === 'number' ? isActiveListing === 1 : isActiveListing === true) ? "bg-[#00952A]" : "bg-[#ef4444]"
               }`}
             ></span>
           )}
@@ -462,7 +463,7 @@ export default function InventoryGridExample() {
         onRowPrepared={(e) => {
           if (e.rowType === "data" && marketplace === "amazon") {
             const data = e.data;
-            if (data.isActiveListing === false) {
+            if (data.isActiveListing === 0 || data.isActiveListing === false) {
               e.rowElement.style.backgroundColor = "rgba(239, 68, 68, 0.1)"; // Light red background
             }
           }
