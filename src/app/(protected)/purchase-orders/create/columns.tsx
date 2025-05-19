@@ -15,7 +15,6 @@ import { ArrowUpDown } from "lucide-react";
 import { FormatUSD } from "@/helpers";
 import ProductVelocity from "./components/product-velocity";
 
-
 export const getTrackedProductsColumns = (
   setProductsAdded: Dispatch<SetStateAction<ProductInOrder[]>>,
   handleOrderBy: (orderBy: string) => void
@@ -441,6 +440,11 @@ export const getAddedProductsColumns = (
     accessorKey: "upc",
     header: "UPC",
     size: 120,
+  },
+  {
+    accessorKey: "pack_type",
+    header: "Pack Type",
+    size: 80,
   },
   {
     accessorKey: "quantity",
