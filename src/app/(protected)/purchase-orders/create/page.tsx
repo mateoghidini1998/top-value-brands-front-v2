@@ -149,6 +149,11 @@ export default function Page() {
       width: 120,
     },
     {
+      field: "upc",
+      caption: "UPC",
+      width: 80,
+    },
+    {
       field: "product_name",
       caption: "Product Name",
       width: 300,
@@ -327,7 +332,9 @@ export default function Page() {
       alignment: "right",
       customizeText: (cellInfo) => {
         const value = parseInt(cellInfo.value);
-        return isNaN(value) ? "0" : new Intl.NumberFormat("en-US").format(value);
+        return isNaN(value)
+          ? "0"
+          : new Intl.NumberFormat("en-US").format(value);
       },
     },
     {
