@@ -38,6 +38,7 @@ interface ActionsCellProps {
 
 const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
   const [selectedShipment, setSelectedShipment] = useState<number>(0);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [showReferenceIdDialog, setShowReferenceIdDialog] =
     useState<boolean>(false);
   const [showFbaShipmentIdDialog, setShowFbaShipmentIdDialog] =
@@ -81,6 +82,7 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
       try {
         await deleteShipmentAsync(selectedShipment.toString());
         setSelectedShipment(0);
+        setIsDeleting(false);
       } catch (error) {
         console.error("Failed to delete shipment:", error);
       }
@@ -164,7 +166,12 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
           >
             Download 2D Workflow
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
+          <DropdownMenuItem
+            onClick={() => {
+              setSelectedShipment(shipmentId);
+              setIsDeleting(true);
+            }}
+          >
             Delete Shipment
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setShowReferenceIdDialog(true)}>
@@ -179,7 +186,10 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
         </DropdownMenuContent>
       </DropdownMenu>
       {/* Delete Dialog */}
-      <AlertDialog open={!!selectedShipment} onOpenChange={(open) => !open}>
+      <AlertDialog
+        open={!!selectedShipment && isDeleting}
+        onOpenChange={(open) => !open}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
@@ -191,7 +201,14 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel
+              onClick={() => {
+                setSelectedShipment(0);
+                setIsDeleting(false);
+              }}
+            >
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteShipment}>
               Delete
             </AlertDialogAction>
@@ -200,7 +217,10 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
       </AlertDialog>
 
       {/* Update Status TO Shipped Dialog */}
-      <AlertDialog open={!!selectedShipment} onOpenChange={(open) => !open}>
+      <AlertDialog
+        open={!!selectedShipment && !isDeleting}
+        onOpenChange={(open) => !open}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
@@ -211,7 +231,9 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={() => setSelectedShipment(0)}>
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={() =>
                 updateFbaShipmentStatusToShippedAsync(shipmentId.toString())
