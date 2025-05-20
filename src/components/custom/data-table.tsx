@@ -219,7 +219,7 @@ DataTableProps<TData, TValue>) {
                       }}
                       className={`cursor-pointer ${
                         // @ts-expect-error Property 'dg_item' does not exist on type 'TData'
-                        checkIfHazmat(row.original.dg_item) ? "bg-red-100" : ""
+                        checkIfHazmat(row.original.dg_item) || row.original.hasMissingQuantities ? "bg-red-100" : ""
                       }`}
                     >
                       {row.getVisibleCells().map((cell) => (
