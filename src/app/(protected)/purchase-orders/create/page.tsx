@@ -224,16 +224,16 @@ export default function Page() {
         );
       },
     },
-    {
-      field: "units_sold",
-      caption: "Units Sold",
-      width: 120,
-      alignment: "right",
-      customizeText: (cellInfo) => {
-        const value = parseInt(cellInfo.value);
-        return new Intl.NumberFormat("en-US").format(value); // Formateo con comas
-      },
-    },
+    // {
+    //   field: "units_sold",
+    //   caption: "Units Sold",
+    //   width: 120,
+    //   alignment: "right",
+    //   customizeText: (cellInfo) => {
+    //     const value = parseInt(cellInfo.value);
+    //     return new Intl.NumberFormat("en-US").format(value); // Formateo con comas
+    //   },
+    // },
     {
       field: "current_rank",
       caption: "Current Rank",
