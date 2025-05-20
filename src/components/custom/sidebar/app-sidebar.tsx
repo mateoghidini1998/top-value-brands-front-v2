@@ -15,6 +15,7 @@ import * as React from "react";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { TeamSwitcher } from "./team-switcher";
+import ScanButton from "../scan-button";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user?: UserResource | null | undefined;
@@ -38,6 +39,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       </SidebarContent>
       <SidebarFooter>
         {/* <ModeToggle /> */}
+        <ScanButton />
         <NavUser />
       </SidebarFooter>
       <SidebarRail />

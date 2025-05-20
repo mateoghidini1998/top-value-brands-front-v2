@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,13 +8,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { ScanBarcode } from "lucide-react";
+import React, { useRef, useState } from "react";
+import { SidebarMenuButton, useSidebar } from "../ui/sidebar";
 
 const ScanButton: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [scan, setScan] = useState<MediaStream | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const { open: sidebarIsOpen } = useSidebar();
 
   const toggleCamera = async () => {
     if (!scan) {
@@ -50,13 +52,25 @@ const ScanButton: React.FC = () => {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="fixed bottom-10 right-[20px] z-50 w-10 h-10 rounded-full bg-white dark:bg-gray-800 border-2 border-blue-500 shadow-lg hover:bg-blue-100 dark:hover:bg-gray-700"
+        <SidebarMenuButton
+          size="lg"
+          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
         >
-          <ScanBarcode className="w-6 h-6 text-blue-500" />
-        </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+          >
+            <ScanBarcode className="w-6 h-6 text-blue-500" />
+          </Button>
+          <div
+            className={`grid flex-1 text-left text-sm leading-tight ${
+              !sidebarIsOpen ? "hidden" : ""
+            }`}
+          >
+            <span className="truncate ">{"Open Scanner"}</span>
+          </div>
+        </SidebarMenuButton>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] w-[450px] h-[450px] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ">
         <DialogHeader>
