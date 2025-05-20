@@ -430,15 +430,6 @@ export default function Page({
       <h1 className="text-2xl font-bold">
         Purchase order {ordersSummaryResponse.data.order.order_number}
       </h1>
-      <EditableOrderNotes
-        onAction={updateIncomingOrderNotesAsync}
-        notes={
-          ordersSummaryResponse.data.order.incoming_order_notes ||
-          "No notes yet"
-        }
-        orderId={params.orderId}
-      />
-
       <Tabs
         defaultValue={"summary"}
         value={activeTab}
@@ -467,7 +458,11 @@ export default function Page({
 
         {/* Summary */}
         <TabsContent value="summary" className="w-full">
-          <Button onClick={() => setIsSavingOrder(true)} variant={"outline"}>
+          <Button
+            onClick={() => setIsSavingOrder(true)}
+            variant={"default"}
+            className="bg-blue-500 text-white hover:bg-blue-400"
+          >
             Save Order
           </Button>
           <AlertDialog
@@ -745,6 +740,15 @@ export default function Page({
           </Card>
         </TabsContent>
       </Tabs>
+
+      <EditableOrderNotes
+        onAction={updateIncomingOrderNotesAsync}
+        notes={
+          ordersSummaryResponse.data.order.incoming_order_notes ||
+          "No notes yet"
+        }
+        orderId={params.orderId}
+      />
     </div>
   );
 }
