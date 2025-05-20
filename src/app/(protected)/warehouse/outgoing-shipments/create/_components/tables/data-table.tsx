@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { checkIfHazmat } from "@/lib/utils";
 import {
   type ColumnDef,
   type SortingState,
@@ -100,7 +101,14 @@ export function DataTable<TData, TValue>({
                 );
                 return (
                   <React.Fragment key={row.id}>
-                    <TableRow>
+                    <TableRow
+                      className={`cursor-pointer ${
+                        // @ts-expect-error Property 'is_hazmat' does not exist on type 'TData'
+                        checkIfHazmat(row.original.is_hazmat)
+                          ? "bg-red-100"
+                          : ""
+                      }`}
+                    >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
                           {flexRender(

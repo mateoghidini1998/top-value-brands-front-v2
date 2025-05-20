@@ -13,6 +13,7 @@ import {
 } from "@/types";
 import { DataTable } from "./data-table";
 import { ProductTitle } from "@/components/custom/product-title";
+import { checkIfHazmat } from "@/lib/utils";
 
 interface TabbedDataTableProps {
   data: GetAllPalletProductsResponse[];
@@ -130,6 +131,18 @@ export function TabbedDataTable({
       cell: ({ row }) => (
         <div className="text-center">{row.original.palletProducts.length}</div>
       ),
+    },
+    {
+      accessorKey: "is_hazmat",
+      header: () => <div className="text-center">Storage Type</div>,
+      cell: ({ row }) => {
+        const storageType = checkIfHazmat(row.original.is_hazmat);
+        return (
+          <div className="text-center">
+            {storageType ? "Hazmat" : "Standard"}
+          </div>
+        );
+      },
     },
     {
       id: "actions",

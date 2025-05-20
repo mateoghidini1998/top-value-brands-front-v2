@@ -90,6 +90,7 @@ export interface GetAllPalletProductsResponsePallet {
   id: number;
   pallet_number: string;
   warehouse_location: string;
+  is_hazmat: string;
   palletProducts: GetAllPalletProductsResponsePalletProduct[];
 }
 
