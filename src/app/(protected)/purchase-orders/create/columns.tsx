@@ -427,6 +427,10 @@ export const getAddedProductsColumns = (
     size: 120,
   },
   {
+    accessorKey: "supplier_item_number",
+    header: "Item No",
+  },
+  {
     id: "asin_gtin",
     header: "ASIN/GTIN",
     size: 120,
