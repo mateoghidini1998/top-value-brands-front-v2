@@ -356,6 +356,7 @@ export default function Page() {
       field: "pack_type",
       caption: "Pack Type",
       width: 150,
+      cellRender:({ value }: any) => <div className="text-center">{value ? value + ' Pack' : "-"}</div>,
     },
     {
       field: "dangerous_goods",
@@ -425,6 +426,12 @@ export default function Page() {
       field: "supplier_item_number",
       caption: "Supplier Item #",
       width: 180,
+    },
+    {
+      field: "pack_type",
+      caption: "Pack Type",
+      width: 150,
+      cellRender:({ value }: any) => <div className="text-center">{value ? value + ' Pack' : "-"}</div>,
     },
     {
       field: "product_cost",
