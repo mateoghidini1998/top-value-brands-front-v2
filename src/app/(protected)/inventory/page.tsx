@@ -51,7 +51,7 @@ const amzCols: GridColumn[] = [
     field: "isActiveListing",
     edit: false,
     type: "text",
-    caption: "Listing Status", 
+    caption: "Listing Status",
     width: 150,
     cellRender: ({ data: product }: { data: Product }) => {
       const isActiveListing = product.isActiveListing;
@@ -61,8 +61,13 @@ const amzCols: GridColumn[] = [
         if (isActiveListing === null) {
           return `- (${accountText})`;
         }
-        const isActive = typeof isActiveListing === 'number' ? isActiveListing === 1 : isActiveListing === true;
-        return isActive ? `Active (${accountText})` : `Inactive (${accountText})`;
+        const isActive =
+          typeof isActiveListing === "number"
+            ? isActiveListing === 1
+            : isActiveListing === true;
+        return isActive
+          ? `Active (${accountText})`
+          : `Inactive (${accountText})`;
       };
 
       const rowStyle = isActiveListing === false ? "bg-red-100" : "";
@@ -72,7 +77,13 @@ const amzCols: GridColumn[] = [
           {isActiveListing !== null && (
             <span
               className={`w-[8px] h-[8px] rounded-full shrink-0 ${
-                (typeof isActiveListing === 'number' ? isActiveListing === 1 : isActiveListing === true) ? "bg-[#00952A]" : "bg-[#ef4444]"
+                (
+                  typeof isActiveListing === "number"
+                    ? isActiveListing === 1
+                    : isActiveListing === true
+                )
+                  ? "bg-[#00952A]"
+                  : "bg-[#ef4444]"
               }`}
             ></span>
           )}
@@ -319,6 +330,12 @@ const walmartCols: GridColumn[] = [
     ),
   },
   { field: "upc", caption: "UPC", width: 120 },
+  {
+    field: "pack_type",
+    caption: "Pack Type",
+    width: 120,
+    cellRender: ({ value }) => <span>{value ? value + " Pack" : "-"}</span>,
+  },
   { field: "gtin", caption: "GTIN", width: 120 },
   {
     field: "updatedAt",
