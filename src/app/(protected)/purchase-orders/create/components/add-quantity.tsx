@@ -58,13 +58,13 @@ const AddQuantity = ({
       <Input
         type="number"
         placeholder="Quantity"
-        className="w-full"
+        className="w-full max-w-[130px]"
         value={productQuantity || 1}
         onChange={(e) => handleQuantityChange(Number(e.target.value))}
         min={1}
       />
       {packType && packType > 1 && (
-        <span className="w-fit font-semibold text-green-500 absolute right-10">
+        <span className="w-fit font-semibold text-green-500 absolute right-[120px]">
           {(productQuantity || 1) * packType}
         </span>
       )}
