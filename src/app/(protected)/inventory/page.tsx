@@ -47,42 +47,7 @@ const amzCols: GridColumn[] = [
     },
   },
   { field: "seller_sku", caption: "SKU", width: 120 },
-  {
-    field: "isActiveListing",
-    edit: false,
-    type: "text",
-    caption: "Listing Status",
-    width: 150,
-    cellRender: ({ data: product }: { data: Product }) => {
-      const isActiveListing = product.listing_status_id;
-      const inSellerAccount = product.in_seller_account;
-      const getStatusText = () => {
-        const accountText = inSellerAccount ? "In Account" : "Not in Account";
-        if (isActiveListing === null) {
-          return `- (${accountText})`;
-        }
-
-        return isActiveListing === 1
-          ? `Active (${accountText})`
-          : `Inactive (${accountText})`;
-      };
-
-      const rowStyle = isActiveListing === 3 ? "bg-red-100" : "";
-
-      return (
-        <div className={`flex justify-start items-center gap-2 ${rowStyle}`}>
-          {isActiveListing !== null && (
-            <span
-              className={`w-[8px] h-[8px] rounded-full shrink-0 ${
-                isActiveListing === 1 ? "bg-[#00952A]" : "bg-[#ef4444]"
-              }`}
-            ></span>
-          )}
-          {getStatusText()}
-        </div>
-      );
-    },
-  },
+  { field: "listing_status", caption: "Listing Status", width: 120 },
   {
     field: "product_name",
     caption: "Product Name",
@@ -471,7 +436,7 @@ export default function InventoryGridExample() {
         onRowPrepared={(e) => {
           if (e.rowType === "data" && marketplace === "amazon") {
             const data = e.data;
-            if (data.listing_status_id === 3 ) {
+            if (data.listing_status_id === 3) {
               e.rowElement.style.backgroundColor = "rgba(239, 68, 68, 0.1)"; // Light red background
             }
           }
