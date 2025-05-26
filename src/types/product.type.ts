@@ -79,6 +79,7 @@ export interface Product {
   fc_transfer: string;
   fc_processing: string;
   customer_order: string;
+  listing_status_id: number;
 }
 export interface UpdateProductDGType {
   productId: string;

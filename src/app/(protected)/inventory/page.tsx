@@ -54,36 +54,27 @@ const amzCols: GridColumn[] = [
     caption: "Listing Status",
     width: 150,
     cellRender: ({ data: product }: { data: Product }) => {
-      const isActiveListing = product.isActiveListing;
+      const isActiveListing = product.listing_status_id;
       const inSellerAccount = product.in_seller_account;
       const getStatusText = () => {
         const accountText = inSellerAccount ? "In Account" : "Not in Account";
         if (isActiveListing === null) {
           return `- (${accountText})`;
         }
-        const isActive =
-          typeof isActiveListing === "number"
-            ? isActiveListing === 1
-            : isActiveListing === true;
-        return isActive
+
+        return isActiveListing === 1
           ? `Active (${accountText})`
           : `Inactive (${accountText})`;
       };
 
-      const rowStyle = isActiveListing === false ? "bg-red-100" : "";
+      const rowStyle = isActiveListing === 3 ? "bg-red-100" : "";
 
       return (
         <div className={`flex justify-start items-center gap-2 ${rowStyle}`}>
           {isActiveListing !== null && (
             <span
               className={`w-[8px] h-[8px] rounded-full shrink-0 ${
-                (
-                  typeof isActiveListing === "number"
-                    ? isActiveListing === 1
-                    : isActiveListing === true
-                )
-                  ? "bg-[#00952A]"
-                  : "bg-[#ef4444]"
+                isActiveListing === 1 ? "bg-[#00952A]" : "bg-[#ef4444]"
               }`}
             ></span>
           )}
@@ -480,7 +471,7 @@ export default function InventoryGridExample() {
         onRowPrepared={(e) => {
           if (e.rowType === "data" && marketplace === "amazon") {
             const data = e.data;
-            if (data.isActiveListing === 0 || data.isActiveListing === false) {
+            if (data.listing_status_id === 3 ) {
               e.rowElement.style.backgroundColor = "rgba(239, 68, 68, 0.1)"; // Light red background
             }
           }
