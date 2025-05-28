@@ -40,11 +40,13 @@ export function SelectedProductsTable({
       },
     },
     {
-      accessorKey: "product.seller_sku",
+      accessorKey: "seller_sku",
       header: () => <div className="text-center">Seller SKU</div>,
-      cell: ({ row }) => (
-        <div className="text-center">{row.original.product.seller_sku}</div>
-      ),
+      cell: ({ row }) => {
+        return (
+          <div className="text-center">{row.original.product.seller_sku}</div>
+        );
+      },
     },
     {
       accessorKey: "product.ASIN",
