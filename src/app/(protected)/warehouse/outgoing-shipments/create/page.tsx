@@ -12,20 +12,45 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useGetAllPalletProducts } from "../../storage/hooks/use-pallets-service";
+import {
+  useCreateShipment,
+  useGetShipmentById,
+} from "../hooks/use-shipments-service";
 import { QuantityInputDialog } from "./_components/quantity-input-dialog";
 import { SelectedProductsTable } from "./_components/tables/selected-products-table";
 import { TabbedDataTable } from "./_components/tables/tabbed-data-table";
-import { useCreateShipment } from "../hooks/use-shipments-service";
+import { GetShipemntByIDResponse } from "@/types/shipments/get.types";
 
 export default function Page() {
   const searchParams = useSearchParams();
   const shipmentId = searchParams.get("update");
 
-  console.log(shipmentId);
+  function mapPalletProductsResponse(
+    raw: GetShipemntByIDResponse
+  ): GetAllPalletProductsResponsePalletProduct[] {
+    return raw.PalletProducts.map((item) => ({
+      id: item.id,
+      purchaseorderproduct_id: item.purchaseorderproduct_id,
+      quantity: item.quantity,
+      available_quantity: item.OutgoingShipmentProduct.quantity,
+      createdAt: new Date(item.createdAt),
+      updatedAt: new Date(item.updatedAt),
+      pallet_id: item.pallet_id,
+      product: {
+        product_name: item.product_name,
+        product_image: item.product_image,
+        seller_sku: item.seller_sku,
+        ASIN: item.ASIN,
+        in_seller_account: Boolean(item.in_seller_account),
+        upc: item.upc,
+      },
+    }));
+  }
 
   const { palletProducts, palletProductsIsLoading, palletProductsIsError } =
     useGetAllPalletProducts();
   const { createShipmentAsync, isCreatingShipment } = useCreateShipment();
+  const { shipment } = useGetShipmentById(shipmentId || "");
 
   const [availableProducts, setAvailableProducts] = useState<
     GetAllPalletProductsResponse[]
@@ -33,6 +58,7 @@ export default function Page() {
   const [selectedProducts, setSelectedProducts] = useState<
     GetAllPalletProductsResponsePalletProduct[]
   >([]);
+
   const [quantityDialog, setQuantityDialog] = useState<{
     isOpen: boolean;
     product: GetAllPalletProductsResponsePalletProduct | null;
@@ -40,10 +66,19 @@ export default function Page() {
   }>({ isOpen: false, product: null, action: "add" });
 
   useEffect(() => {
+    if (shipmentId && shipment) {
+      setSelectedProducts(mapPalletProductsResponse(shipment));
+    }
+  }, [shipmentId, shipment]);
+
+  useEffect(() => {
     if (palletProducts) {
       setAvailableProducts(palletProducts || []);
     }
   }, [palletProducts]);
+
+  console.log(shipment);
+  console.log(selectedProducts);
 
   if (isCreatingShipment) {
     return <LoadingSpinner />;
@@ -127,8 +162,12 @@ export default function Page() {
   };
 
   const handleCancel = () => {
-    setSelectedProducts([]);
-    setAvailableProducts(palletProducts || []);
+    if (shipmentId && shipment) {
+      setSelectedProducts(mapPalletProductsResponse(shipment));
+    } else {
+      setSelectedProducts([]);
+      setAvailableProducts(palletProducts || []);
+    }
   };
 
   const updateAvailableProducts = (
