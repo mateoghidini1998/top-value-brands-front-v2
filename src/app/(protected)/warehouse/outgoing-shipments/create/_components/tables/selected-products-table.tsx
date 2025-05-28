@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ProductTitle } from "@/components/custom/product-title";
 import { GetAllPalletProductsResponsePalletProduct } from "@/types";
 import { DataTable } from "./data-table";
+import { toast } from "sonner";
 
 interface SelectedProductsTableProps {
   data: GetAllPalletProductsResponsePalletProduct[];
@@ -65,17 +66,36 @@ export function SelectedProductsTable({
     {
       id: "actions",
       header: () => <div className="text-right">Actions</div>,
-      cell: ({ row }) => (
-        <div className="text-right">
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => onRemoveProduct(row.original.id)}
-          >
-            <Trash2 className="h-4 w-4 text-destructive" />
-          </Button>
-        </div>
-      ),
+      cell: ({ row }) => {
+        const canBeUpdated = !row.original.outgoingshipmentproduct_is_checked;
+        return (
+          <div className="text-right">
+            {canBeUpdated ? (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  onRemoveProduct(row.original.id);
+                }}
+              >
+                <Trash2 className="h-4 w-4 text-destructive" />
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  toast.error(
+                    "This product has been removed from the pallet. Cannot be edited."
+                  );
+                }}
+              >
+                <Trash2 className="h-4 w-4 text-gray-400" />
+              </Button>
+            )}
+          </div>
+        );
+      },
     },
   ];
 

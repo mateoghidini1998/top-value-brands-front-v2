@@ -15,6 +15,7 @@ import { useGetAllPalletProducts } from "../../storage/hooks/use-pallets-service
 import {
   useCreateShipment,
   useGetShipmentById,
+  useUpdateShipment,
 } from "../hooks/use-shipments-service";
 import { QuantityInputDialog } from "./_components/quantity-input-dialog";
 import { SelectedProductsTable } from "./_components/tables/selected-products-table";
@@ -28,28 +29,37 @@ export default function Page() {
   function mapPalletProductsResponse(
     raw: GetShipemntByIDResponse
   ): GetAllPalletProductsResponsePalletProduct[] {
-    return raw.PalletProducts.map((item) => ({
-      id: item.id,
-      purchaseorderproduct_id: item.purchaseorderproduct_id,
-      quantity: item.quantity,
-      available_quantity: item.OutgoingShipmentProduct.quantity,
-      createdAt: new Date(item.createdAt),
-      updatedAt: new Date(item.updatedAt),
-      pallet_id: item.pallet_id,
-      product: {
-        product_name: item.product_name,
-        product_image: item.product_image,
-        seller_sku: item.seller_sku,
-        ASIN: item.ASIN,
-        in_seller_account: Boolean(item.in_seller_account),
-        upc: item.upc,
-      },
-    }));
+    console.log(raw);
+
+    return raw.PalletProducts.map((item) => {
+      return {
+        id: item.id,
+        purchaseorderproduct_id: item.purchaseorderproduct_id,
+        outgoingshipmentproduct_is_checked:
+          item.OutgoingShipmentProduct.is_checked,
+        quantity: item.quantity,
+        available_quantity: item.OutgoingShipmentProduct.quantity,
+        createdAt: new Date(item.createdAt),
+        updatedAt: new Date(item.updatedAt),
+        pallet_id: item.pallet_id,
+        product: {
+          product_name: item.product_name,
+          product_image: item.product_image,
+          seller_sku: item.seller_sku,
+          ASIN: item.ASIN,
+          in_seller_account: Boolean(item.in_seller_account),
+          upc: item.upc,
+        },
+      };
+    });
   }
 
   const { palletProducts, palletProductsIsLoading, palletProductsIsError } =
     useGetAllPalletProducts();
   const { createShipmentAsync, isCreatingShipment } = useCreateShipment();
+  const { updateShipmentAsync, isUpdatingShipment } = useUpdateShipment(
+    parseInt(shipmentId || "0") || 0
+  );
   const { shipment } = useGetShipmentById(shipmentId || "");
 
   const [availableProducts, setAvailableProducts] = useState<
@@ -65,6 +75,11 @@ export default function Page() {
     action: "add" | "remove";
   }>({ isOpen: false, product: null, action: "add" });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isEditingShipment, setIsEditingShipment] = useState<boolean>(
+    shipmentId !== null
+  );
+
   useEffect(() => {
     if (shipmentId && shipment) {
       setSelectedProducts(mapPalletProductsResponse(shipment));
@@ -77,10 +92,7 @@ export default function Page() {
     }
   }, [palletProducts]);
 
-  console.log(shipment);
-  console.log(selectedProducts);
-
-  if (isCreatingShipment) {
+  if (isCreatingShipment || isUpdatingShipment) {
     return <LoadingSpinner />;
   }
 
@@ -150,6 +162,22 @@ export default function Page() {
     }
     await createShipmentAsync({
       shipment_number: `TV-USA-${Math.floor(100000 + Math.random() * 900000)}`,
+      palletproducts: selectedProducts.map((p) => {
+        return {
+          pallet_product_id: p.id,
+          quantity: p.available_quantity!,
+        };
+      }),
+    });
+
+    setSelectedProducts([]);
+  };
+  const handleUpdateShipment = async () => {
+    if (selectedProducts.length === 0) {
+      return toast.error("Please select at least one product");
+    }
+    await updateShipmentAsync({
+      shipment_id: shipment!.id,
       palletproducts: selectedProducts.map((p) => {
         return {
           pallet_product_id: p.id,
@@ -327,9 +355,15 @@ export default function Page() {
           <div className="flex items-center justify-between">
             <CardTitle>Manage Shipment</CardTitle>
             <div className="flex gap-3">
-              <Button variant="default" onClick={handleSaveShipment}>
-                Save Shipment
-              </Button>
+              {!isEditingShipment ? (
+                <Button variant="default" onClick={handleSaveShipment}>
+                  Save Shipment
+                </Button>
+              ) : (
+                <Button variant="default" onClick={handleUpdateShipment}>
+                  Update Shipment
+                </Button>
+              )}
               <Button variant="destructive" onClick={handleCancel}>
                 Cancel
               </Button>

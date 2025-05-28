@@ -4,7 +4,7 @@ import {
   GetShipmentsResponse,
 } from "@/types/shipments/get.types";
 import { BaseService, type IApiRequest } from "./base-service";
-import { CreateShipmentProps } from "@/types/shipments/create.types";
+import { CreateShipmentProps, UpdateShipmentProps } from "@/types/shipments/create.types";
 
 export class ShipmentsService extends BaseService {
   constructor(apiRequest: IApiRequest) {
@@ -46,6 +46,11 @@ export class ShipmentsService extends BaseService {
   public async createShipment(shipment: CreateShipmentProps) {
     const url = this.constructUrl("/");
     const options = this.constructOptions("POST", shipment);
+    return this.apiRequest<string>(url, options);
+  }
+  public async updateShipment(shipmentUpdates: UpdateShipmentProps) {
+    const url = this.constructUrl(`/${shipmentUpdates.shipment_id}/v2`);
+    const options = this.constructOptions("PUT", shipmentUpdates);
     return this.apiRequest<string>(url, options);
   }
 

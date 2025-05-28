@@ -97,6 +97,7 @@ export interface GetAllPalletProductsResponsePallet {
 export interface GetAllPalletProductsResponsePalletProduct {
   id: number;
   purchaseorderproduct_id: number;
+  outgoingshipmentproduct_is_checked?: boolean;
   quantity: number;
   available_quantity: number | null;
   createdAt: Date;

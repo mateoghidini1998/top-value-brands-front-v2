@@ -1,7 +1,10 @@
 import { ERROR_MESSAGES, QUERY_KEYS, SUCCESS_MESSAGES } from "@/constants";
 import { useCreateMutation } from "@/hooks/mutation-factory";
 import { serviceFactory } from "@/services";
-import { CreateShipmentProps } from "@/types/shipments/create.types";
+import {
+  CreateShipmentProps,
+  UpdateShipmentProps,
+} from "@/types/shipments/create.types";
 import {
   GetShipemntByIDResponse,
   GetShipmentsProps,
@@ -122,6 +125,23 @@ export const useCreateShipment = () => {
     isCreatingShipmentError: createShipment.isError,
     isCreatingShipmentSuccess: createShipment.isSuccess,
     isCreatingShipment: createShipment.isPending,
+  };
+};
+
+export const useUpdateShipment = (shipmentId: number) => {
+  const updateShipment = useCreateMutation<UpdateShipmentProps>({
+    mutationFn: (shipmentUpdates: UpdateShipmentProps) =>
+      shipmentsService.updateShipment(shipmentUpdates),
+    successMessage: SUCCESS_MESSAGES.UPDATE_SHIPMENT,
+    errorMessage: ERROR_MESSAGES.UPDATE_SHIPMENT,
+    invalidateKeys: [[QUERY_KEYS.SHIPMENT, shipmentId]],
+  });
+
+  return {
+    updateShipmentAsync: updateShipment.mutateAsync,
+    isUpdatingShipmentError: updateShipment.isError,
+    isUpdatingShipmentSuccess: updateShipment.isSuccess,
+    isUpdatingShipment: updateShipment.isPending,
   };
 };
 
