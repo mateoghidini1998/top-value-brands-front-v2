@@ -1,5 +1,6 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate } from "@/helpers";
 import { ShipmentPallet } from "@/types/shipments/get.types";
@@ -8,8 +9,12 @@ import {
   ClockIcon,
   IdCardIcon,
   PlaneIcon,
+  Plus,
+  Save,
   StoreIcon,
+  X,
 } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { DataTable } from "../create/_components/tables/data-table";
 import { useGetShipmentById } from "../hooks/use-shipments-service";
@@ -118,7 +123,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
 
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">Products</h2>
-        {/* {isEditing ? (
+        {isEditing ? (
           <div className="space-x-2">
             <Button variant="outline" onClick={() => setIsEditing(false)}>
               <X className="h-4 w-4 mr-2" />
@@ -132,26 +137,18 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
         ) : (
           <div className="w-fit flex items-center justify-between gap-4">
             <Button
-              disabled
-              className={`${shipment.status !== "WORKING" && "hidden"} `}
-              onClick={() => setIsEditing(true)}
-            >
-              <Pencil className="h-4 w-4 mr-2" />
-              Edit Shipment
-            </Button>
-            <Button
-              disabled
+              variant={"outline"}
               className={`${shipment.status !== "WORKING" && "hidden"} `}
             >
               <Plus className="h-4 w-4 mr-2" />
               <Link
                 href={`/warehouse/outgoing-shipments/create?update=${shipment.id}`}
               >
-                Add Products
+                Edit Shipment
               </Link>
             </Button>
           </div>
-        )} */}
+        )}
       </div>
 
       <DataTable pagination columns={palletCols(shipment.id)} data={pallets} />
