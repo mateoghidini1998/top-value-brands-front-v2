@@ -149,6 +149,20 @@ export default function Page() {
       width: 120,
     },
     {
+      field: "listing_status",
+      caption: "Listing Status",
+      width: 120,
+      cellRender: (cellData: any) => {
+        const listing_status = cellData.value;
+        const listing_status_id = cellData.data.listing_status_id;
+        return (
+          <span className={listing_status_id === 3 ? "text-red-500" : ""}>
+            {listing_status || "N/A"}
+          </span>
+        );
+      },
+    },
+    {
       field: "upc",
       caption: "UPC",
       width: 80,
@@ -707,15 +721,26 @@ export default function Page() {
           allowSearch={true}
           allowFilter={true}
           allowSelect={false}
-          // Disable editing functionality
           allowedit={false}
           allowdelete={false}
           allowadd={false}
-          // Add our custom button column
           gridButtons={gridButtonsConfig}
           stateStoreName={
             marketplace === "amazon" ? "create-po-amazon" : "create-po-walmart"
           }
+          rowAlternation={false}
+          onRowPrepared={(e) => {
+            if (e.rowType === "data" && marketplace === "amazon") {
+              const data = e.data;
+              if (data.listing_status_id === 3) {
+                e.rowElement.style.backgroundColor = "rgba(239, 68, 68, 0.1)"; // Light red background
+              } else {
+                // Si no es listing_status_id === 3, alternamos entre blanco y gris
+                const rowIndex = e.rowIndex;
+                e.rowElement.style.backgroundColor = rowIndex % 2 === 0 ? "white" : "rgba(0, 0, 0, 0.05)";
+              }
+            }
+          }}
         />
       </div>
 
