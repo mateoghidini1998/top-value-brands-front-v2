@@ -124,10 +124,21 @@ export default function Page() {
       cellRender: (cellData: any) => {
         const imageUrl = cellData.value;
         const ASIN = cellData.data.ASIN;
+        const GTIN = cellData.data.GTIN;
+        const getProductUrl = () => {
+          if (ASIN) {
+            return `https://www.amazon.com/dp/${ASIN}`;
+          }
+          if (GTIN) {
+            return `https://www.walmart.com/ip/${GTIN}`;
+          }
+          return "#";
+        };
+
         return (
           <div className="flex justify-center items-center">
             {imageUrl ? (
-              <Link target="a_blank" href={`https://www.amazon.com/dp/${ASIN}`}>
+              <Link target="a_blank" href={getProductUrl()}>
                 <img
                   src={imageUrl}
                   alt="product_image"

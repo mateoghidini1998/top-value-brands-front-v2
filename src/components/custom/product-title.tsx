@@ -10,10 +10,10 @@ import Link from "next/link";
 import EmptyImage from "./empty-image";
 
 type ProductNameTableDataProps = {
-  // product: Product;
   product_name: string;
   product_image: string;
-  ASIN: string;
+  ASIN?: string;
+  GTIN?: string;
   in_seller_account?: boolean;
   width: number;
 };
@@ -22,9 +22,20 @@ export function ProductTitle({
   product_name,
   product_image,
   ASIN,
+  GTIN,
   in_seller_account,
   width,
 }: ProductNameTableDataProps) {
+  const getProductUrl = () => {
+    if (ASIN) {
+      return `https://www.amazon.com/dp/${ASIN}`;
+    }
+    if (GTIN) {
+      return `https://www.walmart.com/ip/${GTIN}`;
+    }
+    return "#";
+  };
+
   return (
     <TooltipProvider>
       <Tooltip>
@@ -39,7 +50,7 @@ export function ProductTitle({
                   <div className="w-7 h-7">
                     <Link
                       target="a_blank"
-                      href={`https://www.amazon.com/dp/${ASIN}`}
+                      href={getProductUrl()}
                     >
                       <img
                         src={product_image}

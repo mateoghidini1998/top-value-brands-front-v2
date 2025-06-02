@@ -27,10 +27,21 @@ const amzCols: GridColumn[] = [
     cellRender: (cellData: any) => {
       const imageUrl = cellData.value;
       const asin = cellData.data.asin || cellData.data.ASIN;
+      const gtin = cellData.data.gtin || cellData.data.GTIN;
+      const getProductUrl = () => {
+        if (asin) {
+          return `https://www.amazon.com/dp/${asin}`;
+        }
+        if (gtin) {
+          return `https://www.walmart.com/ip/${gtin}`;
+        }
+        return "#";
+      };
+
       return (
         <div className="flex justify-center items-center">
           {imageUrl ? (
-            <Link target="a_blank" href={`https://www.amazon.com/dp/${asin}`}>
+            <Link target="a_blank" href={getProductUrl()}>
               <img
                 src={imageUrl}
                 alt="product_image"

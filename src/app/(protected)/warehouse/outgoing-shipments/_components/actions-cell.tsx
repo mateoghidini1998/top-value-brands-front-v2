@@ -30,6 +30,7 @@ import {
   usePrefetchShipmentByID,
   useUpdateFbaShipmentStatusToShipped,
   updateShipmentStatusToReadyToBeShipped,
+  useGetShipmentById,
 } from "../hooks/use-shipments-service";
 import { Input } from "@/components/ui/input";
 
@@ -52,11 +53,13 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
     useUpdateFbaShipmentStatusToShipped(selectedShipment.toString());
 
   const { updateShipmentStatusToReadyToBeShippedAsync } =
-  updateShipmentStatusToReadyToBeShipped(selectedShipment.toString());
+    updateShipmentStatusToReadyToBeShipped(selectedShipment.toString());
 
   const { prefetchShipmentByID } = usePrefetchShipmentByID(
     shipmentId.toString()
   );
+
+  const { shipment } = useGetShipmentById(shipmentId.toString());
 
   const { addReferenceIdAsync } = useAddReferenceId(shipmentId.toString());
   const { addFbaShipmentIdAsync } = useAddFbaShipmentId(shipmentId.toString());
@@ -184,12 +187,16 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
           <DropdownMenuItem onClick={() => setShowFbaShipmentIdDialog(true)}>
             Add FBA Shipment ID
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
-            Set Status To Shipped
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
-            Set Status To Ready To Be Shipped
-          </DropdownMenuItem>
+          {shipment?.status !== "WORKING" && shipment?.status !== "SHIPPED" && (
+            <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
+              Set Status To Shipped
+            </DropdownMenuItem>
+          )}
+          {shipment?.status === "WORKING" && (
+            <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
+              Set Status To Ready To Be Shipped
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
       {/* Delete Dialog */}
