@@ -343,25 +343,24 @@ export default function InventoryGridExample() {
         open ? "max-w-[calc(100vw-265px)]" : "max-w-[calc(100vw-80px)]"
       } overflow-x-auto relative`}
     >
-      {/* <Button onClick={() => setIsWalmart(!isWalmart)}>
-        {isWalmart ? "Switch to Amazon" : "Switch to Walmart"}
-      </Button> */}
-      <Tabs
-        defaultValue="amazon"
-        className="w-[200px] absolute top-0 left-[550px] z-[10]"
-      >
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="amazon" onClick={() => setMarketplace("amazon")}>
-            Amazon
-          </TabsTrigger>
-          <TabsTrigger
-            value="walmart"
-            onClick={() => setMarketplace("walmart")}
-          >
-            Walmart
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
+      <div className="flex justify-between items-center mb-4">
+        <Tabs
+          defaultValue="amazon"
+          className="w-[200px]"
+        >
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="amazon" onClick={() => setMarketplace("amazon")}>
+              Amazon
+            </TabsTrigger>
+            <TabsTrigger
+              value="walmart"
+              onClick={() => setMarketplace("walmart")}
+            >
+              Walmart
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
 
       {openCreateModal && (
         <Dialog open onOpenChange={setOpenCreateModal}>
