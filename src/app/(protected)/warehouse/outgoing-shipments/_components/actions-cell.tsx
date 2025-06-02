@@ -29,6 +29,7 @@ import {
   useDeleteShipment,
   usePrefetchShipmentByID,
   useUpdateFbaShipmentStatusToShipped,
+  updateShipmentStatusToReadyToBeShipped,
 } from "../hooks/use-shipments-service";
 import { Input } from "@/components/ui/input";
 
@@ -49,6 +50,9 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
 
   const { updateFbaShipmentStatusToShippedAsync } =
     useUpdateFbaShipmentStatusToShipped(selectedShipment.toString());
+
+  const { updateShipmentStatusToReadyToBeShippedAsync } =
+  updateShipmentStatusToReadyToBeShipped(selectedShipment.toString());
 
   const { prefetchShipmentByID } = usePrefetchShipmentByID(
     shipmentId.toString()
@@ -183,6 +187,9 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
           <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
             Set Status To Shipped
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
+            Set Status To Ready To Be Shipped
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       {/* Delete Dialog */}
@@ -237,6 +244,34 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
             <AlertDialogAction
               onClick={() =>
                 updateFbaShipmentStatusToShippedAsync(shipmentId.toString())
+              }
+            >
+              Update
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={!!selectedShipment && !isDeleting}
+        onOpenChange={(open) => !open}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Are you sure you want to update this shipment to ready to be shipped?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. Warehouse stock will be updated.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setSelectedShipment(0)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() =>
+                updateShipmentStatusToReadyToBeShippedAsync(shipmentId.toString())
               }
             >
               Update

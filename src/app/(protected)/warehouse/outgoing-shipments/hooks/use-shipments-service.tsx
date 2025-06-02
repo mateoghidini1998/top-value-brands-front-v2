@@ -272,3 +272,28 @@ export const useUpdateFbaShipmentStatusToShipped = (shipmentId: string) => {
       updateFbaShipmentStatusToShipped.isPending,
   };
 };
+
+export const updateShipmentStatusToReadyToBeShipped = (shipmentId: string) => {
+  const updateShipmentStatusToReadyToBeShipped = useCreateMutation<string>({
+    mutationFn: () =>
+      shipmentsService.updateShipmentStatusToReadyToBeShipped(shipmentId),
+    successMessage: SUCCESS_MESSAGES.UPDATE_FBA_SHIPMENT_STATUS,
+    errorMessage: ERROR_MESSAGES.UPDATE_FBA_SHIPMENT_STATUS,
+    invalidateKeys: [
+      [QUERY_KEYS.SHIPMENT, shipmentId],
+      [QUERY_KEYS.SHIPMENTS],
+      [QUERY_KEYS.PRODUCTS],
+    ],
+  });
+
+  return {
+    updateShipmentStatusToReadyToBeShippedAsync:
+    updateShipmentStatusToReadyToBeShipped.mutateAsync,
+    updateFbaShipmentStatusToShippedError:
+    updateShipmentStatusToReadyToBeShipped.isError,
+    updateFbaShipmentStatusToShippedSuccess:
+    updateShipmentStatusToReadyToBeShipped.isSuccess,
+    isUpdatingFbaShipmentStatusToShipped:
+    updateShipmentStatusToReadyToBeShipped.isPending,
+  };
+};
