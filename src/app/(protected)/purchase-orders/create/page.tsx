@@ -485,18 +485,6 @@ export default function Page() {
       format: "#,##0",
     },
     {
-      field: "is_active",
-      caption: "Active",
-      width: 80,
-      cellRender: ({ value }) => (
-        <span
-          className={`font-bold ${value ? "text-green-600" : "text-red-500"}`}
-        >
-          {value ? "Yes" : "No"}
-        </span>
-      ),
-    },
-    {
       field: "in_seller_account",
       caption: "In Seller Account",
       width: 140,
