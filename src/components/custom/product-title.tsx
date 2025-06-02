@@ -55,14 +55,6 @@ export function ProductTitle({
                     <EmptyImage />
                   </div>
                 )}
-
-                {in_seller_account !== undefined && (
-                  <div
-                    className={`w-[8px] h-[8px] rounded-full ${
-                      in_seller_account ? "bg-[#00952A]" : "bg-[#ef4444]"
-                    }`}
-                  ></div>
-                )}
               </div>
               <span
                 className=" limited-wrap"
