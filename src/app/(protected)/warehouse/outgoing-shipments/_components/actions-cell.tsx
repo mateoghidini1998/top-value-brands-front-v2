@@ -29,7 +29,7 @@ import {
   useDeleteShipment,
   usePrefetchShipmentByID,
   useUpdateFbaShipmentStatusToShipped,
-  updateShipmentStatusToReadyToBeShipped,
+  updateShipmentStatusToWorking,
   useGetShipmentById,
 } from "../hooks/use-shipments-service";
 import { Input } from "@/components/ui/input";
@@ -52,8 +52,8 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
   const { updateFbaShipmentStatusToShippedAsync } =
     useUpdateFbaShipmentStatusToShipped(selectedShipment.toString());
 
-  const { updateShipmentStatusToReadyToBeShippedAsync } =
-    updateShipmentStatusToReadyToBeShipped(selectedShipment.toString());
+  const { updateShipmentStatusToWorkingAsync } =
+    updateShipmentStatusToWorking(selectedShipment.toString());
 
   const { prefetchShipmentByID } = usePrefetchShipmentByID(
     shipmentId.toString()
@@ -187,14 +187,14 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
           <DropdownMenuItem onClick={() => setShowFbaShipmentIdDialog(true)}>
             Add FBA Shipment ID
           </DropdownMenuItem>
-          {shipment?.status !== "WORKING" && shipment?.status !== "SHIPPED" && (
+          {shipment?.status !== "READY TO PICK" && (
             <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
               Set Status To Shipped
             </DropdownMenuItem>
           )}
-          {shipment?.status === "WORKING" && (
+          {shipment?.status === "READY TO PICK" && (
             <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
-              Set Status To Ready To Be Picked
+              Set Status To Working
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>
@@ -266,7 +266,7 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Are you sure you want to update this shipment to ready to be picked?
+              Are you sure you want to update this shipment to working?
             </AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. Warehouse stock will be updated.
@@ -278,7 +278,7 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() =>
-                updateShipmentStatusToReadyToBeShippedAsync(shipmentId.toString())
+                updateShipmentStatusToWorkingAsync(shipmentId.toString())
               }
             >
               Update

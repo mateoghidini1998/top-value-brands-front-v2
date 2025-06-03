@@ -84,7 +84,7 @@ export class ShipmentsService extends BaseService {
     return this.apiRequest<string>(url, options);
   }
 
-  public async updateShipmentStatusToReadyToBeShipped(shipmentId: string) {
+  public async updateShipmentStatusToWorking(shipmentId: string) {
     const url = this.constructUrl(`/status-ready/${shipmentId}`);
     const options = this.constructOptions("PATCH", { shipmentId });
     return this.apiRequest<string>(url, options);

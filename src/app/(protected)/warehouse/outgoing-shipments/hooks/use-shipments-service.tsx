@@ -273,10 +273,10 @@ export const useUpdateFbaShipmentStatusToShipped = (shipmentId: string) => {
   };
 };
 
-export const updateShipmentStatusToReadyToBeShipped = (shipmentId: string) => {
-  const updateShipmentStatusToReadyToBeShipped = useCreateMutation<string>({
+export const updateShipmentStatusToWorking = (shipmentId: string) => {
+  const updateShipmentStatusToWorking = useCreateMutation<string>({
     mutationFn: () =>
-      shipmentsService.updateShipmentStatusToReadyToBeShipped(shipmentId),
+      shipmentsService.updateShipmentStatusToWorking(shipmentId),
     successMessage: SUCCESS_MESSAGES.UPDATE_FBA_SHIPMENT_STATUS,
     errorMessage: ERROR_MESSAGES.UPDATE_FBA_SHIPMENT_STATUS,
     invalidateKeys: [
@@ -287,13 +287,13 @@ export const updateShipmentStatusToReadyToBeShipped = (shipmentId: string) => {
   });
 
   return {
-    updateShipmentStatusToReadyToBeShippedAsync:
-    updateShipmentStatusToReadyToBeShipped.mutateAsync,
+    updateShipmentStatusToWorkingAsync:
+    updateShipmentStatusToWorking.mutateAsync,
     updateFbaShipmentStatusToShippedError:
-    updateShipmentStatusToReadyToBeShipped.isError,
+    updateShipmentStatusToWorking.isError,
     updateFbaShipmentStatusToShippedSuccess:
-    updateShipmentStatusToReadyToBeShipped.isSuccess,
+    updateShipmentStatusToWorking.isSuccess,
     isUpdatingFbaShipmentStatusToShipped:
-    updateShipmentStatusToReadyToBeShipped.isPending,
+    updateShipmentStatusToWorking.isPending,
   };
 };
