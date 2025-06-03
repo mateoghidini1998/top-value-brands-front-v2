@@ -165,15 +165,18 @@ export const useDeleteShipment = (shipmentId: string) => {
   };
 };
 
-export const useCheckShipmentProducts = (outgoingShipmentProductId: number) => {
+export const useCheckShipmentProducts = (
+  outgoingShipmentProductId: number,
+  shipmentId: string
+) => {
   const checkShipmentProduct = useCreateMutation<number>({
     mutationFn: () =>
       shipmentsService.checkProductShipment(outgoingShipmentProductId),
     successMessage: SUCCESS_MESSAGES.UPDATE_PRODUCTS,
     errorMessage: ERROR_MESSAGES.UPDATE_PRODUCTS,
     invalidateKeys: [
-      [QUERY_KEYS.SHIPMENT],
-      [QUERY_KEYS.SHIPMENTS],
+      [QUERY_KEYS.SHIPMENT, shipmentId],
+      [QUERY_KEYS.SHIPMENTS],             
       [QUERY_KEYS.WAREHOUSE_AVAILABLE_LOCATIONS],
     ],
   });

@@ -85,8 +85,8 @@ export class ShipmentsService extends BaseService {
   }
 
   public async updateShipmentStatusToWorking(shipmentId: string) {
-    const url = this.constructUrl(`/status-ready/${shipmentId}`);
-    const options = this.constructOptions("PATCH", { shipmentId });
+    const url = this.constructUrl(`/status-working/${shipmentId}`);
+    const options = this.constructOptions("PATCH");
     return this.apiRequest<string>(url, options);
   }
 
@@ -96,6 +96,12 @@ export class ShipmentsService extends BaseService {
   ) {
     const url = this.constructUrl(`/${shipmentId}/pallets/${palletId}/check`);
     const options = this.constructOptions("PUT");
+    return this.apiRequest<string>(url, options);
+  }
+
+  public async updateFbaShipmentStatusToReadyToPick(shipmentId: string) {
+    const url = this.constructUrl(`/status-ready/${shipmentId}`);
+    const options = this.constructOptions("PATCH");
     return this.apiRequest<string>(url, options);
   }
 }

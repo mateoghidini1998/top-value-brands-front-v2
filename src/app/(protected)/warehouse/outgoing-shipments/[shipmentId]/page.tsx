@@ -138,7 +138,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
           <div className="w-fit flex items-center justify-between gap-4">
             <Button
               variant={"outline"}
-              className={`${shipment.status !== "READY_TO_PICK" && "hidden"} `}
+              className={`${shipment.status !== "IN PROGRESS" && "hidden"} `}
             >
               <Plus className="h-4 w-4 mr-2" />
               <Link
@@ -154,7 +154,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
       <DataTable pagination columns={palletCols(shipment.id)} data={pallets} />
       <DataTable
         pagination
-        columns={createColumns(isEditing)}
+        columns={createColumns(isEditing, shipment.id)}
         data={shipment?.PalletProducts}
       />
     </div>

@@ -13,7 +13,8 @@ import ToggleCheckAllShipmentProducts from "../_components/toggleCheckAllShipmen
 import { DGItemCell } from "@/app/(protected)/purchase-orders/[orderId]/components/dg-item-cell";
 
 export const createColumns = (
-  isEditing: boolean
+  isEditing: boolean,
+  shipmentId: number
 ): ColumnDef<ShipmentPalletProduct>[] => [
   {
     id: "product_title",
@@ -111,7 +112,10 @@ export const createColumns = (
 
       return (
         <div className="text-right pr-6">
-          <CheckPalletProducts row={row.original} />
+          <CheckPalletProducts 
+            row={row.original} 
+            shipmentId={shipmentId}
+          />
         </div>
       );
     },
@@ -153,7 +157,7 @@ export const palletCols = (shipmentId: number): ColumnDef<ShipmentPallet>[] => [
     id: "actions",
     header: "Check All Products",
     cell: ({ row }) => {
-      const hide = !row.original.allProductsInShipment;
+      const hide = false;
       const palletId = row.original.pallet_id;
       const isChecked = row.original.allProductsChecked;
       return (
