@@ -194,7 +194,7 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
           )}
           {shipment?.status === "WORKING" && (
             <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
-              Set Status To Ready To Be Shipped
+              Set Status To Ready To Be Picked
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>
@@ -266,7 +266,7 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Are you sure you want to update this shipment to ready to be shipped?
+              Are you sure you want to update this shipment to ready to be picked?
             </AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. Warehouse stock will be updated.

@@ -50,7 +50,7 @@ const shipmentStatuses: ShipmentStatus[] = [
   { value: "SHIPPED", name: "Shipped" },
   { value: "READY_TO_SHIP", name: "Ready to Ship" },
   { value: "CHECKED_IN", name: "Checked In" },
-  { value: "READY_TO_BE_SHIPPED", name: "Ready to Be Shipped" },
+  { value: "READY_TO_PICK", name: "Ready to Pick" },
 ];
 
 const showColumns: ShowHideColsumnsProps = {

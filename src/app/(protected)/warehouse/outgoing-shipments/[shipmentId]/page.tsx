@@ -138,7 +138,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
           <div className="w-fit flex items-center justify-between gap-4">
             <Button
               variant={"outline"}
-              className={`${shipment.status !== "WORKING" && "hidden"} `}
+              className={`${shipment.status !== "READY_TO_PICK" && "hidden"} `}
             >
               <Plus className="h-4 w-4 mr-2" />
               <Link
