@@ -23,7 +23,6 @@ export function ProductTitle({
   product_image,
   ASIN,
   GTIN,
-  in_seller_account,
   width,
 }: ProductNameTableDataProps) {
   const getProductUrl = () => {
