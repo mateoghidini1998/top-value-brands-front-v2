@@ -276,7 +276,7 @@ export const useUpdateFbaShipmentStatusToShipped = (shipmentId: string) => {
   };
 };
 
-export const updateShipmentStatusToWorking = (shipmentId: string) => {
+export const useUpdateShipmentStatusToWorking = (shipmentId: string) => {
   const updateShipmentStatusToWorking = useCreateMutation<string>({
     mutationFn: () =>
       shipmentsService.updateShipmentStatusToWorking(shipmentId),
@@ -290,13 +290,9 @@ export const updateShipmentStatusToWorking = (shipmentId: string) => {
   });
 
   return {
-    updateShipmentStatusToWorkingAsync:
-    updateShipmentStatusToWorking.mutateAsync,
-    updateFbaShipmentStatusToShippedError:
-    updateShipmentStatusToWorking.isError,
-    updateFbaShipmentStatusToShippedSuccess:
-    updateShipmentStatusToWorking.isSuccess,
-    isUpdatingFbaShipmentStatusToShipped:
-    updateShipmentStatusToWorking.isPending,
+    updateShipmentStatusToWorkingAsync: updateShipmentStatusToWorking.mutateAsync,
+    updateShipmentStatusToWorkingError: updateShipmentStatusToWorking.isError,
+    updateShipmentStatusToWorkingSuccess: updateShipmentStatusToWorking.isSuccess,
+    isUpdatingShipmentStatusToWorking: updateShipmentStatusToWorking.isPending,
   };
 };

@@ -29,7 +29,7 @@ import {
   useDeleteShipment,
   usePrefetchShipmentByID,
   useUpdateFbaShipmentStatusToShipped,
-  updateShipmentStatusToWorking,
+  useUpdateShipmentStatusToWorking,
   useGetShipmentById,
 } from "../hooks/use-shipments-service";
 import { Input } from "@/components/ui/input";
@@ -53,7 +53,7 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
     useUpdateFbaShipmentStatusToShipped(selectedShipment.toString());
 
   const { updateShipmentStatusToWorkingAsync } =
-    updateShipmentStatusToWorking(selectedShipment.toString());
+    useUpdateShipmentStatusToWorking(selectedShipment.toString());
 
   const { prefetchShipmentByID } = usePrefetchShipmentByID(
     shipmentId.toString()
