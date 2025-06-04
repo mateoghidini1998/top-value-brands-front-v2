@@ -6,14 +6,21 @@ export default function ToggleCheckAllShipmentProducts({
   palletId,
   isChecked,
   hide,
+  shipmentStatus,
 }: {
   shipmentId: number;
   palletId: number;
   isChecked: boolean;
   hide: boolean;
+  shipmentStatus: string;
 }) {
   const { toggleCheckAllShipmentProductsAsync } =
     useToggleCheckAllShipmentProducts(shipmentId, palletId);
+
+  if (shipmentStatus !== "WORKING") {
+    return null;
+  }
+
   return (
     <Checkbox
       className={` ${hide && "hidden"}`}

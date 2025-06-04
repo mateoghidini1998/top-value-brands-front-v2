@@ -42,7 +42,8 @@ interface ShipmentStatus {
 }
 
 const shipmentStatuses: ShipmentStatus[] = [
-  { value: "PENDING", name: "Pending" },
+  { value: "DRAFT", name: "Draft" },
+  { value: "WORKING", name: "Working" },
   { value: "IN_TRANSIT", name: "In Transit" },
   { value: "DELIVERED", name: "Delivered" },
   { value: "WORKING", name: "Working" },
@@ -50,7 +51,6 @@ const shipmentStatuses: ShipmentStatus[] = [
   { value: "SHIPPED", name: "Shipped" },
   { value: "READY_TO_SHIP", name: "Ready to Ship" },
   { value: "CHECKED_IN", name: "Checked In" },
-  { value: "READY_TO_PICK", name: "Ready to Pick" },
 ];
 
 const showColumns: ShowHideColsumnsProps = {

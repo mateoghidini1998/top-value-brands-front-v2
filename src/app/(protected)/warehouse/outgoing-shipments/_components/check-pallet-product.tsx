@@ -5,9 +5,10 @@ import { useCheckShipmentProducts } from "../hooks/use-shipments-service";
 interface CheckPalletProductsProps {
   row: ShipmentPalletProduct;
   shipmentId: number;
+  shipmentStatus: string;
 }
 
-const CheckPalletProducts = ({ row, shipmentId }: CheckPalletProductsProps) => {
+const CheckPalletProducts = ({ row, shipmentId, shipmentStatus }: CheckPalletProductsProps) => {
   const { checkShipmentProductAsync } = useCheckShipmentProducts(
     row.OutgoingShipmentProduct.id,
     shipmentId.toString()
@@ -16,6 +17,10 @@ const CheckPalletProducts = ({ row, shipmentId }: CheckPalletProductsProps) => {
   const handleCheckProduct = async () => {
     await checkShipmentProductAsync(row.OutgoingShipmentProduct.id);
   };
+
+  if (shipmentStatus !== "WORKING") {
+    return null;
+  }
 
   return (
     <>

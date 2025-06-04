@@ -14,7 +14,8 @@ import { DGItemCell } from "@/app/(protected)/purchase-orders/[orderId]/componen
 
 export const createColumns = (
   isEditing: boolean,
-  shipmentId: number
+  shipmentId: number,
+  shipmentStatus: string
 ): ColumnDef<ShipmentPalletProduct>[] => [
   {
     id: "product_title",
@@ -115,6 +116,7 @@ export const createColumns = (
           <CheckPalletProducts 
             row={row.original} 
             shipmentId={shipmentId}
+            shipmentStatus={shipmentStatus}
           />
         </div>
       );
@@ -122,7 +124,10 @@ export const createColumns = (
   },
 ];
 
-export const palletCols = (shipmentId: number): ColumnDef<ShipmentPallet>[] => [
+export const palletCols = (
+  shipmentId: number,
+  shipmentStatus: string
+): ColumnDef<ShipmentPallet>[] => [
   {
     accessorKey: "pallet_number",
     header: ({ column }) => (
@@ -166,6 +171,7 @@ export const palletCols = (shipmentId: number): ColumnDef<ShipmentPallet>[] => [
           shipmentId={shipmentId}
           palletId={palletId}
           isChecked={isChecked}
+          shipmentStatus={shipmentStatus}
         />
       );
     },

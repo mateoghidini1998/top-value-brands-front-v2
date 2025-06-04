@@ -187,12 +187,7 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
           <DropdownMenuItem onClick={() => setShowFbaShipmentIdDialog(true)}>
             Add FBA Shipment ID
           </DropdownMenuItem>
-          {shipment?.status !== "READY TO PICK" && (
-            <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
-              Set Status To Shipped
-            </DropdownMenuItem>
-          )}
-          {shipment?.status === "READY TO PICK" && (
+          {shipment?.status === "DRAFT" && (
             <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
               Set Status To Working
             </DropdownMenuItem>
@@ -259,6 +254,7 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
         </AlertDialogContent>
       </AlertDialog>
 
+      {/* Update Status TO Working Dialog */}
       <AlertDialog
         open={!!selectedShipment && !isDeleting}
         onOpenChange={(open) => !open}

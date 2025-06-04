@@ -100,7 +100,15 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{shipment.status}</div>
-            <p className="text-xs text-muted-foreground">Shipment status</p>
+            {shipment.status === "WORKING" && 
+              shipment.PalletProducts?.every(
+                (product: any) => !product.OutgoingShipmentProduct.is_checked
+              ) && (
+              <span className="px-2 py-1  text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">
+                Ready to Pick
+              </span>
+            )}
+            <p className="text-xs text-muted-foreground mt-2">Shipment status</p>
           </CardContent>
         </Card>
 
@@ -138,7 +146,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
           <div className="w-fit flex items-center justify-between gap-4">
             <Button
               variant={"outline"}
-              className={`${shipment.status !== "IN PROGRESS" && "hidden"} `}
+              className={`${shipment.status !== "DRAFT" && "hidden"} `}
             >
               <Plus className="h-4 w-4 mr-2" />
               <Link
@@ -151,10 +159,14 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
         )}
       </div>
 
-      <DataTable pagination columns={palletCols(shipment.id)} data={pallets} />
+      <DataTable 
+        pagination 
+        columns={palletCols(shipment.id, shipment.status)} 
+        data={pallets} 
+      />
       <DataTable
         pagination
-        columns={createColumns(isEditing, shipment.id)}
+        columns={createColumns(isEditing, shipment.id, shipment.status)}
         data={shipment?.PalletProducts}
       />
     </div>
