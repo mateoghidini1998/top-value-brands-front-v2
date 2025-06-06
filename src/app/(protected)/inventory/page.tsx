@@ -210,11 +210,12 @@ const walmartCols: GridColumn[] = [
     edit: false,
     cellRender: (cellData: any) => {
       const imageUrl = cellData.value;
+      const wpid = cellData.data.wpid;
       const gtin = cellData.data.gtin;
       return (
         <div className="flex justify-center items-center">
           {imageUrl ? (
-            <Link target="a_blank" href={`https://www.walmart.com/ip/${gtin}`}>
+            <Link target="a_blank" href={`https://www.walmart.com/ip/${wpid}`}>
               <img
                 src={imageUrl}
                 alt="product_image"

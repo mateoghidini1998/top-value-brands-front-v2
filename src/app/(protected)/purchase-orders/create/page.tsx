@@ -125,12 +125,13 @@ export default function Page() {
         const imageUrl = cellData.value;
         const ASIN = cellData.data.ASIN;
         const GTIN = cellData.data.GTIN;
+        const WPID = cellData.data.WPID;
         const getProductUrl = () => {
           if (ASIN) {
             return `https://www.amazon.com/dp/${ASIN}`;
           }
-          if (GTIN) {
-            return `https://www.walmart.com/ip/${GTIN}`;
+          if (WPID != null) {
+            return `https://www.walmart.com/ip/${WPID}`;
           }
           return "#";
         };
@@ -629,6 +630,7 @@ export default function Page() {
     return {
       id: product.id,
       gtin: product?.gtin || null,
+      wpid: product?.wpid || null,
       product_id: product.id,
       current_rank: null,
       thirty_days_rank: null,

@@ -20,6 +20,7 @@ export interface Shipment {
   updatedAt: Date;
   reference_id: string;
   PalletProducts: ShipmentPalletProduct[];
+  readyToPick: boolean;
 }
 
 export interface ShipmentPalletProduct {

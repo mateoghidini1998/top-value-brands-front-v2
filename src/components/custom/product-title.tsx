@@ -14,6 +14,7 @@ type ProductNameTableDataProps = {
   product_image: string;
   ASIN?: string;
   GTIN?: string;
+  WPID?: string;
   in_seller_account?: boolean;
   width: number;
 };
@@ -23,14 +24,15 @@ export function ProductTitle({
   product_image,
   ASIN,
   GTIN,
+  WPID,
   width,
 }: ProductNameTableDataProps) {
   const getProductUrl = () => {
     if (ASIN) {
       return `https://www.amazon.com/dp/${ASIN}`;
     }
-    if (GTIN) {
-      return `https://www.walmart.com/ip/${GTIN}`;
+    if (WPID != null) {
+      return `https://www.walmart.com/ip/${WPID}`;
     }
     return "#";
   };
