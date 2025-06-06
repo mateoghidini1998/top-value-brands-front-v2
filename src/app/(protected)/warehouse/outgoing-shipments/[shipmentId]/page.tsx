@@ -104,7 +104,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
               shipment.PalletProducts?.every(
                 (product: ShipmentPalletProduct) => !product.OutgoingShipmentProduct.is_checked
               ) && (
-              <span className="px-2 py-1  text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">
+              <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
                 Ready to Pick
               </span>
             )}

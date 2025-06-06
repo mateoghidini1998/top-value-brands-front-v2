@@ -40,7 +40,7 @@ export const getColumns = (
         <div className="flex flex-col items-center  gap-1">
           <span>{status}</span>
           {isReadyToPick && (
-            <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full w-fit">
+            <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full w-fit">
               Ready to Pick
             </span>
           )}
