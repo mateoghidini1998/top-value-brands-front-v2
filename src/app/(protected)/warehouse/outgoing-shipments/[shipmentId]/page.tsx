@@ -3,7 +3,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate } from "@/helpers";
-import { ShipmentPallet } from "@/types/shipments/get.types";
+import { ShipmentPallet, ShipmentPalletProduct } from "@/types/shipments/get.types";
 import {
   AlertCircle,
   ClockIcon,
@@ -102,7 +102,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
             <div className="text-2xl font-bold">{shipment.status}</div>
             {shipment.status === "WORKING" && 
               shipment.PalletProducts?.every(
-                (product: any) => !product.OutgoingShipmentProduct.is_checked
+                (product: ShipmentPalletProduct) => !product.OutgoingShipmentProduct.is_checked
               ) && (
               <span className="px-2 py-1  text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">
                 Ready to Pick
