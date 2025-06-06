@@ -272,7 +272,9 @@ const walmartCols: GridColumn[] = [
       return isNaN(value) ? "0" : value.toString();
     },
   },
-  { field: "listing_status", caption: "Listing Status", width: 120 },
+  { field: "listing_status", caption: "Listing Status", width: 120, cellRender: ({ value }) => (
+    <span>{value?.replace(/_/g, ' ')}</span>
+  ) },
   { field: "upc", caption: "UPC", width: 120 },
   {
     field: "pack_type",

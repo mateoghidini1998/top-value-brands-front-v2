@@ -168,7 +168,7 @@ export default function Page() {
         const listing_status_id = cellData.data.listing_status_id;
         return (
           <span className={listing_status_id === 3 ? "text-red-500" : ""}>
-            {listing_status || "N/A"}
+            {listing_status ? listing_status.replace(/_/g, ' ') : "N/A"}
           </span>
         );
       },
