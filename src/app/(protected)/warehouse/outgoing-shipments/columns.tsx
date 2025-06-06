@@ -37,10 +37,10 @@ export const getColumns = (
       const isReadyToPick = row.original.readyToPick;
 
       return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col items-center  gap-1">
           <span>{status}</span>
           {isReadyToPick && (
-            <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">
+            <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full w-fit">
               Ready to Pick
             </span>
           )}
