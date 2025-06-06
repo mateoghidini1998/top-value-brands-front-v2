@@ -23,7 +23,6 @@ export function ProductTitle({
   product_name,
   product_image,
   ASIN,
-  GTIN,
   WPID,
   width,
 }: ProductNameTableDataProps) {

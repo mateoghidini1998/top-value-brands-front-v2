@@ -27,13 +27,13 @@ const amzCols: GridColumn[] = [
     cellRender: (cellData: any) => {
       const imageUrl = cellData.value;
       const asin = cellData.data.asin || cellData.data.ASIN;
-      const gtin = cellData.data.gtin || cellData.data.GTIN;
+      const wpid = cellData.data.wpid || cellData.data.WPID;
       const getProductUrl = () => {
         if (asin) {
           return `https://www.amazon.com/dp/${asin}`;
         }
-        if (gtin) {
-          return `https://www.walmart.com/ip/${gtin}`;
+        if (wpid != null) {
+          return `https://www.walmart.com/ip/${wpid}`;
         }
         return "#";
       };
@@ -211,7 +211,6 @@ const walmartCols: GridColumn[] = [
     cellRender: (cellData: any) => {
       const imageUrl = cellData.value;
       const wpid = cellData.data.wpid;
-      const gtin = cellData.data.gtin;
       return (
         <div className="flex justify-center items-center">
           {imageUrl ? (

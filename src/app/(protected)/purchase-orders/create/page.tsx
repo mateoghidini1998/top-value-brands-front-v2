@@ -124,7 +124,6 @@ export default function Page() {
       cellRender: (cellData: any) => {
         const imageUrl = cellData.value;
         const ASIN = cellData.data.ASIN;
-        const GTIN = cellData.data.GTIN;
         const WPID = cellData.data.WPID;
         const getProductUrl = () => {
           if (ASIN) {
