@@ -272,30 +272,7 @@ const walmartCols: GridColumn[] = [
       return isNaN(value) ? "0" : value.toString();
     },
   },
-  {
-    field: "is_active",
-    caption: "Active",
-    width: 80,
-    cellRender: ({ value }) => (
-      <span
-        className={`font-bold ${value ? "text-green-600" : "text-red-500"}`}
-      >
-        {value ? "Yes" : "No"}
-      </span>
-    ),
-  },
-  {
-    field: "in_seller_account",
-    caption: "In Seller Account",
-    width: 140,
-    cellRender: ({ value }) => (
-      <span
-        className={`font-bold ${value ? "text-green-600" : "text-red-500"}`}
-      >
-        {value ? "Yes" : "No"}
-      </span>
-    ),
-  },
+  { field: "listing_status", caption: "Listing Status", width: 120 },
   { field: "upc", caption: "UPC", width: 120 },
   {
     field: "pack_type",
@@ -444,7 +421,7 @@ export default function InventoryGridExample() {
           }
         }}
         onRowPrepared={(e) => {
-          if (e.rowType === "data" && marketplace === "amazon") {
+          if (e.rowType === "data") {
             const data = e.data;
             if (data.listing_status_id === 3) {
               e.rowElement.style.backgroundColor = "rgba(239, 68, 68, 0.1)"; // Light red background
