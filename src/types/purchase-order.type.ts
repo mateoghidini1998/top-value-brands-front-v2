@@ -48,6 +48,7 @@ export interface PurchaseOrderSummaryProducts {
   warehouse_stock: string;
   dg_item: string;
   pallet_quantity?: number;
+  marketplace?: string;
 }
 
 export interface Order {

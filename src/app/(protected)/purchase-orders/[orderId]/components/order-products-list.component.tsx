@@ -17,8 +17,11 @@ export default function OrderProductsTable({
   orderId,
 }: OrderProductsTableProps) {
   // Filter products by marketplace based on ASIN/GTIN presence
-  const amazonProducts = products.filter((product) => product.ASIN);
-  const walmartProducts = products.filter((product) => product.GTIN);
+  //const amazonProducts = products.filter((product) => product.ASIN);
+  //const walmartProducts = products.filter((product) => product.GTIN);
+
+  const amazonProducts = products.filter((product) => product.marketplace === "Amazon" || product.marketplace === "Unknown");
+  const walmartProducts = products.filter((product) => product.marketplace === "Walmart");
 
   return (
     <div className="space-y-6">
