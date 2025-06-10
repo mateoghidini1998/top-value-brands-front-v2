@@ -33,7 +33,7 @@ export function TabbedDataTable({
   const [searchProduct, setSearchProduct] = useState("");
 
   const filteredData = data.filter((order) =>
-    order.order_number.toLowerCase().includes(searchOrder.toLowerCase())
+    order.order_number?.toLowerCase().includes(searchOrder?.toLowerCase())
   );
   const [expandedOrders, setExpandedOrders] = useState<number[]>([]);
   const [expandedPallets, setExpandedPallets] = useState<number[]>([]);
@@ -278,8 +278,8 @@ export function TabbedDataTable({
             .flatMap((order) => order.pallets)
             .filter((pallet) =>
               pallet.pallet_number
-                .toLowerCase()
-                .includes(searchPalletNumber.toLowerCase())
+                ?.toLowerCase()
+                .includes(searchPalletNumber?.toLowerCase())
             )}
           expandedRows={expandedPallets}
           renderSubComponent={({ row }) => (
@@ -299,14 +299,14 @@ export function TabbedDataTable({
             order.pallets
               .filter((pallet) =>
                 pallet.pallet_number
-                  .toLowerCase()
-                  .includes(searchPalletNumber.toLowerCase())
+                  ?.toLowerCase()
+                  .includes(searchPalletNumber?.toLowerCase())
               )
               .flatMap((pallet) => pallet.palletProducts)
               .filter((product) =>
                 product.product.product_name
-                  .toLowerCase()
-                  .includes(searchProduct.toLowerCase())
+                  ?.toLowerCase()
+                  .includes(searchProduct?.toLowerCase())
               )
           )}
         />

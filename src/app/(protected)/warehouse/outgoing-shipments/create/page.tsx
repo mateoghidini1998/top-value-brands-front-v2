@@ -22,6 +22,33 @@ import { SelectedProductsTable } from "./_components/tables/selected-products-ta
 import { TabbedDataTable } from "./_components/tables/tabbed-data-table";
 import { GetShipemntByIDResponse } from "@/types/shipments/get.types";
 
+function stripEmptyLevels(
+  orders: GetAllPalletProductsResponse[]
+): GetAllPalletProductsResponse[] {
+  return (
+    orders
+      .map((order) => {
+        // 1) Filtrar productos dentro de cada pallet
+        const cleanedPallets = order.pallets
+          .map((pallet) => ({
+            ...pallet,
+            palletProducts: pallet.palletProducts.filter(
+              (product) => product.available_quantity !== 0
+            ),
+          }))
+          // 2) Quitar pallets sin productos
+          .filter((pallet) => pallet.palletProducts.length > 0);
+
+        return {
+          ...order,
+          pallets: cleanedPallets,
+        };
+      })
+      // 3) Quitar orders sin pallets
+      .filter((order) => order.pallets.length > 0)
+  );
+}
+
 export default function Page() {
   const searchParams = useSearchParams();
   const shipmentId = searchParams.get("update");
@@ -62,6 +89,8 @@ export default function Page() {
   );
   const { shipment } = useGetShipmentById(shipmentId || "");
 
+  console.log(palletProducts);
+
   const [availableProducts, setAvailableProducts] = useState<
     GetAllPalletProductsResponse[]
   >([]);
@@ -87,10 +116,20 @@ export default function Page() {
   }, [shipmentId, shipment]);
 
   useEffect(() => {
-    if (palletProducts) {
-      setAvailableProducts(palletProducts || []);
+    if (!palletProducts) return;
+
+    const cleaned: GetAllPalletProductsResponse[] =
+      stripEmptyLevels(palletProducts);
+
+    if (shipmentId) {
+      // @ts-expect-error @typescript-eslint/no-unsafe-member-access
+      setSelectedProducts(cleaned);
+    } else {
+      setAvailableProducts(cleaned);
     }
-  }, [palletProducts]);
+  }, [palletProducts, shipmentId]);
+
+  console.log(availableProducts);
 
   if (isCreatingShipment || isUpdatingShipment) {
     return <LoadingSpinner />;
@@ -194,7 +233,7 @@ export default function Page() {
       setSelectedProducts(mapPalletProductsResponse(shipment));
     } else {
       setSelectedProducts([]);
-      setAvailableProducts(palletProducts || []);
+      setAvailableProducts(stripEmptyLevels(palletProducts!) || []);
     }
   };
 
