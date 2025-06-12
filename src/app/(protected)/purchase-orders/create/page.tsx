@@ -6,7 +6,7 @@ import LoadingSpinner from "@/components/custom/loading-spinner";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatDate } from "@/helpers";
-import { PurchaseOrderSummaryProducts } from "@/types";
+import { Product, PurchaseOrderSummaryProducts } from "@/types";
 import { ArrowDown } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -332,12 +332,24 @@ export default function Page() {
     },
     {
       field: "reserved_quantity",
-      caption: "Reserved",
-      width: 120,
+      caption: "Reserved Qty",
+      width: 130,
       alignment: "right",
-      customizeText: (cellInfo) => {
-        const value = parseInt(cellInfo.value);
-        return new Intl.NumberFormat("en-US").format(value); // Formateo con comas
+      format: "###,##0",
+      cellRender: ({ data: product }: { data: Product }) => {
+        const { reserved_quantity, fc_transfer, fc_processing, customer_order } =
+          product;
+        const tooltipContent = `
+        Reserved:
+            FC Transfer: ${fc_transfer}
+            FC Processing: ${fc_processing}
+            Customer Order: ${customer_order}
+            `;
+        return (
+          <div title={tooltipContent.trim()} className="text-left">
+            {reserved_quantity}
+          </div>
+        );
       },
     },
     {

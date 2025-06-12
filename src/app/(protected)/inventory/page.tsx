@@ -81,27 +81,6 @@ const amzCols: GridColumn[] = [
     // valueFormat: "###,##0",
     format: "###,##0",
   },
-  // {
-  //   field: "reserved_quantity",
-  //   caption: "Reserved Qty",
-  //   width: 120,
-  //   alignment: "right",
-  //   format: "###,##0",
-  //   cellRender: ({ data: product }: { data: Product }) => {
-  //     const { reserved_quantity, fc_transfer, fc_processing, customer_order } = product;
-  //     return (
-  //       <div className="relative group flex justify-start items-center gap-2 shrink-0">
-  //         {reserved_quantity}
-  //         <div className="absolute z-[20000] left-0 top-0 ml-2 bg-gray-800 text-white text-xs p-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200  flex-nowrap shrink-0">
-  //           <div>FC Transfer: {fc_transfer}</div>
-  //           <div>FC Processing: {fc_processing}</div>
-  //           <div>Customer Order: {customer_order}</div>
-  //         </div>
-  //       </div>
-  //     );
-  //   }
-  // },
-
   {
     field: "reserved_quantity",
     caption: "Reserved Qty",
