@@ -49,6 +49,7 @@ export interface PurchaseOrderSummaryProducts {
   dg_item: string;
   pallet_quantity?: number;
   marketplace?: string;
+  selling_price?: number;
 }
 
 export interface Order {

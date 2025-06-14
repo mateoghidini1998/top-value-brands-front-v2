@@ -320,6 +320,28 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
     },
   },
   {
+    accessorKey: "selling_price",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Selling Price
+      </span>
+    ),
+    cell: ({ row }) => {
+      return (
+        <span>
+          {FormatUSD({
+            number: row.original.selling_price?.toString() || "0",
+            maxDigits: 2,
+            minDigits: 2,
+          })}
+        </span>
+      );
+    },
+  },
+  {
     accessorKey: "warehouse_stock",
     header: ({ column }) => (
       <span
