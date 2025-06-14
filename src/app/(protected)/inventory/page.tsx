@@ -152,6 +152,36 @@ const amzCols: GridColumn[] = [
     width: 180,
     customizeText: (cellInfo) => formatDate(cellInfo.value),
   },
+  {
+    field: "profit",
+    caption: "Profit",
+    width: 100,
+    alignment: "right",
+    format: "currency",
+    cellRender: (cellInfo) => {
+      const profit = parseFloat(cellInfo.value);
+      let color = "";
+      if (profit < 0) color = "text-red-500";
+      else if (profit > 2) color = "text-green-500";
+      else color = "text-yellow-500";
+      return (
+        <span className={`${color} w-full h-full`}>
+          {profit ? `$${profit.toFixed(2)}` : 0}
+        </span>
+      );
+    },
+  },
+  {
+    field: "fees",
+    caption: "Fees",
+    width: 100,
+    alignment: "right",
+    format: "currency",
+    customizeText: (cellInfo) => {
+      const value = parseFloat(cellInfo.value);
+      return isNaN(value) ? "-" : `$${value.toFixed(2)}`;
+    },
+  },
 ];
 
 const summaryConfig: SummaryConfig = {
