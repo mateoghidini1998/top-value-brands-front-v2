@@ -200,6 +200,36 @@ export default function Page() {
       customizeText: (cellInfo) => `$${parseFloat(cellInfo.value).toFixed(2)}`,
     },
     {
+      field: "fees",
+      caption: "Fees",
+      width: 100,
+      alignment: "right",
+      format: "currency",
+      customizeText: (cellInfo) => {
+        const value = parseFloat(cellInfo.value);
+        return isNaN(value) ? "-" : `$${value.toFixed(2)}`;
+      },
+    },
+    {
+      field: "profit",
+      caption: "Profit",
+      width: 100,
+      alignment: "right",
+      format: "currency",
+      cellRender: (cellInfo) => {
+        const profit = parseFloat(cellInfo.value);
+        let color = "";
+        if (profit < 0) color = "text-red-500";
+        else if (profit > 2) color = "text-green-500";
+        else color = "text-yellow-500";
+        return (
+          <span className={`${color} w-full h-full`}>
+            {profit ? `$${profit.toFixed(2)}` : "N/A"}
+          </span>
+        );
+      },
+    },
+    {
       field: "avg_selling_price",
       caption: "Avg Selling Price",
       width: 150,
@@ -226,25 +256,6 @@ export default function Page() {
         return (
           <span className={`${color} w-full h-full`}>
             {roi ? ` ${roi.toFixed(2)}%` : "N/A"}
-          </span>
-        );
-      },
-    },
-    {
-      field: "profit",
-      caption: "Profit",
-      width: 100,
-      alignment: "right",
-      format: "currency",
-      cellRender: (cellInfo) => {
-        const profit = parseFloat(cellInfo.value);
-        let color = "";
-        if (profit < 0) color = "text-red-500";
-        else if (profit > 2) color = "text-green-500";
-        else color = "text-yellow-500";
-        return (
-          <span className={`${color} w-full h-full`}>
-            {profit ? `$${profit.toFixed(2)}` : "N/A"}
           </span>
         );
       },
