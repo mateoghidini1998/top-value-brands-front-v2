@@ -60,22 +60,22 @@ export default function Page() {
 
     return raw.PalletProducts.map((item) => {
       return {
-        id: item.id,
-        purchaseorderproduct_id: item.purchaseorderproduct_id,
+        id: item?.id,
+        purchaseorderproduct_id: item?.purchaseorderproduct_id,
         outgoingshipmentproduct_is_checked:
-          item.OutgoingShipmentProduct.is_checked,
-        quantity: item.quantity,
-        available_quantity: item.OutgoingShipmentProduct.quantity,
-        createdAt: new Date(item.createdAt),
-        updatedAt: new Date(item.updatedAt),
-        pallet_id: item.pallet_id,
+          item?.OutgoingShipmentProduct.is_checked,
+        quantity: item?.quantity,
+        available_quantity: item?.OutgoingShipmentProduct.quantity,
+        createdAt: new Date(item?.createdAt),
+        updatedAt: new Date(item?.updatedAt),
+        pallet_id: item?.pallet_id,
         product: {
-          product_name: item.product_name,
-          product_image: item.product_image,
-          seller_sku: item.seller_sku,
-          ASIN: item.ASIN,
-          in_seller_account: Boolean(item.in_seller_account),
-          upc: item.upc,
+          product_name: item?.product_name,
+          product_image: item?.product_image,
+          seller_sku: item?.seller_sku,
+          ASIN: item?.ASIN,
+          in_seller_account: Boolean(item?.in_seller_account),
+          upc: item?.upc,
         },
       };
     });
