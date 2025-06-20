@@ -143,7 +143,7 @@ export default function Page() {
     return <div>Error</div>;
   }
 
-  if (!availableProducts.length) {
+  if (!availableProducts.length && !shipmentId) {
     return <div>No pallets found for active purchase orders.</div>;
   }
 
