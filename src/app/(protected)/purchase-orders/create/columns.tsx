@@ -1,19 +1,20 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Dispatch, SetStateAction } from "react";
-import AddProduct from "./components/add-product";
-import { ProductInOrder } from "./interface/product-added.interface";
-import RemoveProduct from "./components/remove-product";
 import { ProductTitle } from "@/components/custom/product-title";
 import { Badge } from "@/components/ui/badge";
-import { formatDate } from "@/helpers/format-date";
-import AddQuantity from "./components/add-quantity";
-import AddProductCost from "./components/add-product-cost";
-import { TrackedProduct } from "@/types";
-import { ArrowUpDown } from "lucide-react";
 import { FormatUSD } from "@/helpers";
+import { formatDate } from "@/helpers/format-date";
+import { TrackedProduct } from "@/types";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
+import { Dispatch, SetStateAction } from "react";
+import AddProduct from "./components/add-product";
+import AddProductCost from "./components/add-product-cost";
+import AddQuantity from "./components/add-quantity";
 import ProductVelocity from "./components/product-velocity";
+import RemoveProduct from "./components/remove-product";
+import { ProductInOrder } from "./interface/product-added.interface";
 
 export const getTrackedProductsColumns = (
   setProductsAdded: Dispatch<SetStateAction<ProductInOrder[]>>,
@@ -399,36 +400,36 @@ export const getTrackedProductsColumns = (
 ];
 
 export const getAddedProductsColumns = (
-  setProductsAdded: React.Dispatch<React.SetStateAction<ProductInOrder[]>>
+  setProductsAdded: Dispatch<SetStateAction<ProductInOrder[]>>
 ): ColumnDef<ProductInOrder>[] => [
   {
     id: "product_title",
     header: "Product Name",
-    size: 300,
     cell: ({ row }) => {
       const product_image = row.original.product_image;
       const product_name = row.original.product_name;
       const ASIN = row.original.ASIN;
       const in_seller_account = row.original.in_seller_account;
+      const width = 300;
       return (
         <ProductTitle
           product_image={product_image}
           product_name={product_name}
           ASIN={ASIN || ""}
           in_seller_account={in_seller_account}
-          width={300}
+          width={width}
         />
       );
     },
   },
   {
+    accessorKey: "supplier_item_number",
+    header: "Item No",
+  },
+  {
     accessorKey: "seller_sku",
     header: "SKU",
     size: 120,
-  },
-  {
-    accessorKey: "supplier_item_number",
-    header: "Item No",
   },
   {
     id: "asin_gtin",
@@ -453,37 +454,34 @@ export const getAddedProductsColumns = (
   {
     accessorKey: "quantity",
     header: "Quantity",
-    size: 100,
     cell: ({ row }) => {
       return (
         <AddQuantity
           productQuantity={row.original.quantity}
           packType={row.original.pack_type}
           setProductsAdded={setProductsAdded}
-          productId={row.original.id}
+          productId={row.original.product_id}
         />
       );
     },
   },
   {
     accessorKey: "product_cost",
-    header: "Cost",
-    size: 100,
+    header: "Product Cost",
     cell: ({ row }) => {
       return (
         <AddProductCost
           productCost={row.original.product_cost}
           packType={row.original.pack_type}
           setProductsAdded={setProductsAdded}
-          productId={row.original.id}
+          productId={row.original.product_id}
         />
       );
     },
   },
   {
     accessorKey: "total_amount",
-    header: "Total",
-    size: 120,
+    header: "Total Amount",
     cell: ({ row }) => {
       const product_cost = row.original.product_cost || 1;
       const quantity = row.original.quantity || 1;
@@ -502,7 +500,7 @@ export const getAddedProductsColumns = (
   },
   {
     id: "actions",
-    size: 50,
+    header: "Actions",
     cell: ({ row }) => {
       return (
         <span className="flex items-center justify-center">

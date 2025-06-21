@@ -1,6 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import {
   LocalStorageProduct,
   ProductInOrder,
@@ -19,19 +20,9 @@ const AddQuantity = ({
   productQuantity,
   packType,
 }: AddQuantityProps) => {
-  const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity < 1) return;
+  const [quantityAdded, setQuantityAdded] = useState<number>(productQuantity);
 
-    // Update products in state
-    setProductsAdded((prev) =>
-      prev.map((product) =>
-        product.id === productId
-          ? { ...product, quantity: newQuantity }
-          : product
-      )
-    );
-
-    // Update localStorage
+  const handleAddQuantityToLocalStorage = () => {
     const productsAdded: LocalStorageProduct[] = JSON.parse(
       localStorage.getItem("productsAdded") ?? "[]"
     );
@@ -41,33 +32,52 @@ const AddQuantity = ({
     );
 
     if (existingProductIndex !== -1) {
-      productsAdded[existingProductIndex].quantity = newQuantity;
+      // Actualizar cantidad si ya existe
+      productsAdded[existingProductIndex].quantity = quantityAdded;
     } else {
+      // Agregar nuevo producto si no existe
       productsAdded.push({
         product_id: productId,
-        quantity: newQuantity,
+        quantity: quantityAdded,
         cost: 1,
       });
     }
 
     localStorage.setItem("productsAdded", JSON.stringify(productsAdded));
+
+    // Actualizar el estado de los productos agregados
+    setProductsAdded((prev) => {
+      return prev.map((p) => {
+        const localProduct = productsAdded.find(
+          (p: LocalStorageProduct) => p.product_id === productId
+        );
+
+        return p.product_id === productId
+          ? { ...p, quantity: localProduct?.quantity ?? 0 }
+          : p;
+      });
+    });
+  };
+
+  const handleBlur = () => {
+    // Guardar la cantidad en localStorage al salir del campo de entrada
+    handleAddQuantityToLocalStorage();
   };
 
   return (
-    <div className="flex justify-between items-center gap-2 relative">
+    <div className="flex justify-between items-center gap-2 relative w-[150px]">
       <Input
         type="number"
         placeholder="Quantity"
-        className="w-full max-w-[130px]"
-        value={productQuantity || 1}
-        onChange={(e) => handleQuantityChange(Number(e.target.value))}
-        min={1}
+        className="flex-1"
+        value={quantityAdded}
+        onChange={(e) => setQuantityAdded(Number(e.target.value))}
+        onBlur={handleBlur} // Guardar valores cuando el usuario pierde el foco
+        min={0}
       />
-      {packType && packType > 1 && (
-        <span className="w-fit font-semibold text-green-500 absolute right-[120px]">
-          {(productQuantity || 1) * packType}
-        </span>
-      )}
+      <span className="w-fit font-semibold text-green-500 absolute right-10">
+        {productQuantity * (packType ?? 1) || ""}
+      </span>
     </div>
   );
 };

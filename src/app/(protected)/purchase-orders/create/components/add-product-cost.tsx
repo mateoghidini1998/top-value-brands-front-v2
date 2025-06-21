@@ -70,14 +70,14 @@ const AddProductCost = ({
         defaultValue={1}
         type="number"
         placeholder="Cost"
-        className="w-full max-w-[130px]"
+        className="w-[150px]"
         value={costAdded}
         onChange={(e) => setCostAdded(Number(e.target.value))}
         onBlur={handleBlur} // Guardar valores cuando el usuario pierde el foco
         min={1}
       />
-      <span className="w-fit font-semibold text-green-500 absolute right-[120px]">
-        {productCost / (packType ?? 1) || ""}
+      <span className="w-fit font-semibold text-green-500 absolute right-[110px]">
+        {(productCost / (packType ?? 1)).toFixed(2) || ""}
       </span>
     </div>
   );
