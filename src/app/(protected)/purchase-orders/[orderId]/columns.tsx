@@ -205,7 +205,7 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
       return (
         <span>
           {`$ ${FormatUSD({
-            number: row.original.lowest_fba_price.toString(),
+            number: row.original?.lowest_fba_price?.toString(),
             maxDigits: 2,
             minDigits: 2,
           })}`}
