@@ -40,6 +40,7 @@ interface ActionsCellProps {
 
 const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
   const [selectedShipment, setSelectedShipment] = useState<number>(0);
+  const [updatingStatus, setUpdatingStatus] = useState<string>("");
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [showReferenceIdDialog, setShowReferenceIdDialog] =
     useState<boolean>(false);
@@ -184,11 +185,26 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
           <DropdownMenuItem onClick={() => setShowReferenceIdDialog(true)}>
             Add Reference ID
           </DropdownMenuItem>
+          {shipment?.status !== "WORKING" && shipment?.status !== "SHIPPED" && (
+            <DropdownMenuItem
+              onClick={() => {
+                setSelectedShipment(shipmentId);
+                setUpdatingStatus("SHIPPED");
+              }}
+            >
+              Set Status To Shipped
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={() => setShowFbaShipmentIdDialog(true)}>
             Add FBA Shipment ID
           </DropdownMenuItem>
           {shipment?.status === "DRAFT" && (
-            <DropdownMenuItem onClick={() => setSelectedShipment(shipmentId)}>
+            <DropdownMenuItem
+              onClick={() => {
+                setSelectedShipment(shipmentId);
+                setUpdatingStatus("WORKING");
+              }}
+            >
               Set Status To Working
             </DropdownMenuItem>
           )}
@@ -227,7 +243,7 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
 
       {/* Update Status TO Shipped Dialog */}
       <AlertDialog
-        open={!!selectedShipment && !isDeleting}
+        open={!!selectedShipment && !isDeleting && updatingStatus === "SHIPPED"}
         onOpenChange={(open) => !open}
       >
         <AlertDialogContent>
@@ -240,7 +256,12 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setSelectedShipment(0)}>
+            <AlertDialogCancel
+              onClick={() => {
+                setSelectedShipment(0);
+                setUpdatingStatus("");
+              }}
+            >
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
@@ -256,7 +277,7 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
 
       {/* Update Status TO Working Dialog */}
       <AlertDialog
-        open={!!selectedShipment && !isDeleting}
+        open={!!selectedShipment && !isDeleting && updatingStatus === "WORKING"}
         onOpenChange={(open) => !open}
       >
         <AlertDialogContent>
@@ -269,7 +290,12 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setSelectedShipment(0)}>
+            <AlertDialogCancel
+              onClick={() => {
+                setSelectedShipment(0);
+                setUpdatingStatus("");
+              }}
+            >
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
