@@ -3,7 +3,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate } from "@/helpers";
-import { ShipmentPallet, ShipmentPalletProduct } from "@/types/shipments/get.types";
+import {
+  ShipmentPallet,
+  ShipmentPalletProduct,
+} from "@/types/shipments/get.types";
 import {
   AlertCircle,
   ClockIcon,
@@ -14,11 +17,14 @@ import {
   StoreIcon,
   X,
 } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { DataTable } from "../create/_components/tables/data-table";
-import { useGetShipmentById } from "../hooks/use-shipments-service";
+import {
+  useGetShipmentById,
+  useUpdateShipment,
+} from "../hooks/use-shipments-service";
 import { createColumns, palletCols } from "./columns";
+import Link from "next/link";
 
 export interface ManifestPalletTable {
   pallet_id: number;
@@ -28,17 +34,66 @@ export interface ManifestPalletTable {
 
 export default function Page({ params }: { params: { shipmentId: string } }) {
   const { shipment, shipmentIsError } = useGetShipmentById(params.shipmentId);
+  const { updateShipmentAsync } = useUpdateShipment(Number(params.shipmentId));
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isEditing, setIsEditing] = useState(false);
+  const [products, setProducts] = useState<ShipmentPalletProduct[]>(
+    shipment?.PalletProducts || []
+  );
+
   const [pallets, setPallets] = useState<ShipmentPallet[]>(
     shipment?.pallets || []
   );
 
   useEffect(() => {
     if (shipment) {
-      setPallets(shipment.pallets);
+      setProducts(shipment.PalletProducts || []);
+      setPallets(shipment.pallets || []);
     }
   }, [shipment]);
+
+  const handleProductChange = (
+    index: number,
+    field: string,
+    value: unknown
+  ) => {
+    setProducts((prev) =>
+      prev.map((product, i) =>
+        i === index
+          ? {
+              ...product,
+              OutgoingShipmentProduct: {
+                ...product.OutgoingShipmentProduct,
+                [field]: value,
+              },
+            }
+          : product
+      )
+    );
+  };
+
+  const handleRemoveProduct = (productId: number) => {
+    setProducts((prev) => prev.filter((p) => p.id !== productId));
+  };
+
+  const handleSave = async () => {
+    try {
+      await updateShipmentAsync({
+        shipment_id: Number(params.shipmentId),
+        palletproducts: products
+          .filter((p) => p.OutgoingShipmentProduct.quantity > 0)
+          .map((p) => ({
+            pallet_product_id: p.id,
+            quantity: Number(p.OutgoingShipmentProduct.quantity),
+          })),
+      });
+      setIsEditing(false);
+      // Podés mostrar un toast de éxito, o refrescar datos
+    } catch (err) {
+      // Manejá el error, mostrale feedback al usuario
+      console.error("Error updating shipment", err);
+    }
+  };
 
   if (shipmentIsError) {
     return (
@@ -100,15 +155,18 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{shipment.status}</div>
-            {shipment.status === "WORKING" && 
+            {shipment.status === "WORKING" &&
               shipment.PalletProducts?.every(
-                (product: ShipmentPalletProduct) => !product.OutgoingShipmentProduct.is_checked
+                (product: ShipmentPalletProduct) =>
+                  !product.OutgoingShipmentProduct.is_checked
               ) && (
-              <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                Ready to Pick
-              </span>
-            )}
-            <p className="text-xs text-muted-foreground mt-2">Shipment status</p>
+                <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                  Ready to Pick
+                </span>
+              )}
+            <p className="text-xs text-muted-foreground mt-2">
+              Shipment status
+            </p>
           </CardContent>
         </Card>
 
@@ -137,13 +195,21 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
               <X className="h-4 w-4 mr-2" />
               Cancel
             </Button>
-            <Button onClick={() => setIsEditing(false)}>
+            <Button onClick={handleSave}>
               <Save className="h-4 w-4 mr-2" />
               Save Changes
             </Button>
           </div>
         ) : (
           <div className="w-fit flex items-center justify-between gap-4">
+            <Button
+              variant="outline"
+              className={shipment.status !== "DRAFT" ? "hidden" : ""}
+              onClick={() => setIsEditing(true)}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Edit Products
+            </Button>
             <Button
               variant={"outline"}
               className={`${shipment.status !== "DRAFT" && "hidden"} `}
@@ -152,22 +218,28 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
               <Link
                 href={`/warehouse/outgoing-shipments/create?update=${shipment.id}`}
               >
-                Edit Shipment
+                Add Products
               </Link>
             </Button>
           </div>
         )}
       </div>
 
-      <DataTable 
-        pagination 
-        columns={palletCols(shipment.id, shipment.status)} 
-        data={pallets} 
+      <DataTable
+        pagination
+        columns={palletCols(shipment.id, shipment.status)}
+        data={pallets}
       />
       <DataTable
         pagination
-        columns={createColumns(isEditing, shipment.id, shipment.status)}
-        data={shipment?.PalletProducts}
+        columns={createColumns(
+          isEditing,
+          shipment.id,
+          shipment.status,
+          handleProductChange,
+          handleRemoveProduct
+        )}
+        data={isEditing ? products : shipment?.PalletProducts}
       />
     </div>
   );

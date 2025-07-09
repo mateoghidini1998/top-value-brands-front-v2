@@ -134,7 +134,7 @@ export const useUpdateShipment = (shipmentId: number) => {
       shipmentsService.updateShipment(shipmentUpdates),
     successMessage: SUCCESS_MESSAGES.UPDATE_SHIPMENT,
     errorMessage: ERROR_MESSAGES.UPDATE_SHIPMENT,
-    invalidateKeys: [[QUERY_KEYS.SHIPMENT, shipmentId]],
+    invalidateKeys: [[QUERY_KEYS.SHIPMENT, shipmentId], [QUERY_KEYS.SHIPMENTS]],
   });
 
   return {

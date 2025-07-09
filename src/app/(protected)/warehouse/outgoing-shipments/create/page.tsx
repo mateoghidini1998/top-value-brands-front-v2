@@ -28,15 +28,13 @@ function stripEmptyLevels(
   return (
     orders
       .map((order) => {
-        // 1) Filtrar productos dentro de cada pallet
-        const cleanedPallets = order.pallets
+        const cleanedPallets = (order.pallets || [])
           .map((pallet) => ({
             ...pallet,
-            palletProducts: pallet.palletProducts.filter(
-              (product) => product.available_quantity !== 0
+            palletProducts: (pallet.palletProducts || []).filter(
+              (product) => !!product && product.available_quantity !== 0
             ),
           }))
-          // 2) Quitar pallets sin productos
           .filter((pallet) => pallet.palletProducts.length > 0);
 
         return {
@@ -44,7 +42,6 @@ function stripEmptyLevels(
           pallets: cleanedPallets,
         };
       })
-      // 3) Quitar orders sin pallets
       .filter((order) => order.pallets.length > 0)
   );
 }
@@ -115,19 +112,13 @@ export default function Page() {
     }
   }, [shipmentId, shipment]);
 
-  useEffect(() => {
-    if (!palletProducts) return;
+useEffect(() => {
+  if (!palletProducts) return;
 
-    const cleaned: GetAllPalletProductsResponse[] =
-      stripEmptyLevels(palletProducts);
+  const cleaned: GetAllPalletProductsResponse[] = stripEmptyLevels(palletProducts);
 
-    if (shipmentId) {
-      // @ts-expect-error @typescript-eslint/no-unsafe-member-access
-      setSelectedProducts(cleaned);
-    } else {
-      setAvailableProducts(cleaned);
-    }
-  }, [palletProducts, shipmentId]);
+  setAvailableProducts(cleaned);
+}, [palletProducts]);
 
   console.log(availableProducts);
 

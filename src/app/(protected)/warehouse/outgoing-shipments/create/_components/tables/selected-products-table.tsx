@@ -22,10 +22,10 @@ export function SelectedProductsTable({
       id: "product_title",
       header: () => <div className="text-center">Product Name</div>,
       cell: ({ row }) => {
-        const product_image = row.original.product.product_image;
-        const product_name = row.original.product.product_name;
-        const ASIN = row.original.product.ASIN;
-        const in_seller_account = row.original.product.in_seller_account;
+        const product_image = row.original.product?.product_image;
+        const product_name = row.original.product?.product_name;
+        const ASIN = row.original.product?.ASIN;
+        const in_seller_account = row.original.product?.in_seller_account;
         const width = 300;
         return (
           <div className="text-center">
@@ -45,15 +45,15 @@ export function SelectedProductsTable({
       header: () => <div className="text-center">Seller SKU</div>,
       cell: ({ row }) => {
         return (
-          <div className="text-center">{row.original.product.seller_sku}</div>
+          <div className="text-center">{row.original.product?.seller_sku}</div>
         );
       },
     },
     {
-      accessorKey: "product.ASIN",
+      accessorKey: "product?.ASIN",
       header: () => <div className="text-center">ASIN</div>,
       cell: ({ row }) => (
-        <div className="text-center">{row.original.product.ASIN}</div>
+        <div className="text-center">{row.original.product?.ASIN}</div>
       ),
     },
     {

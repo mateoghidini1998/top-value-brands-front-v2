@@ -15,7 +15,10 @@ import { DGItemCell } from "@/app/(protected)/purchase-orders/[orderId]/componen
 export const createColumns = (
   isEditing: boolean,
   shipmentId: number,
-  shipmentStatus: string
+  shipmentStatus: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handleProductChange?: (index: number, field: string, value: any) => void,
+  handleRemoveProduct?: (productId: number) => void // <- Nuevo parámetro
 ): ColumnDef<ShipmentPalletProduct>[] => [
   {
     id: "product_title",
@@ -76,17 +79,39 @@ export const createColumns = (
       return <p>{row.original.pack_type} Pack</p>;
     },
   },
+  // {
+  //   accessorKey: "OutgoingShipmentProduct.quantity",
+  //   header: "Quantity",
+  //   cell: ({ row }) => {
+  //     if (isEditing) {
+  //       return (
+  //         <Input
+  //           type="number"
+  //           defaultValue={row.original.OutgoingShipmentProduct.quantity}
+  //           className="w-24"
+  //           min={1}
+  //         />
+  //       );
+  //     }
+  //     return row.original.OutgoingShipmentProduct.quantity;
+  //   },
+  // },
   {
     accessorKey: "OutgoingShipmentProduct.quantity",
     header: "Quantity",
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
+      const index = table.getRowModel().rows.findIndex((r) => r.id === row.id);
       if (isEditing) {
         return (
           <Input
             type="number"
-            defaultValue={row.original.OutgoingShipmentProduct.quantity}
+            value={row.original.OutgoingShipmentProduct.quantity}
             className="w-24"
             min={1}
+            onChange={(e) =>
+              handleProductChange &&
+              handleProductChange(index, "quantity", Number(e.target.value))
+            }
           />
         );
       }
@@ -104,6 +129,9 @@ export const createColumns = (
               variant="ghost"
               size="icon"
               className="text-destructive hover:text-destructive hover:bg-destructive/20"
+              onClick={() =>
+                handleRemoveProduct && handleRemoveProduct(row.original.id)
+              }
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -113,8 +141,8 @@ export const createColumns = (
 
       return (
         <div className="text-right pr-6">
-          <CheckPalletProducts 
-            row={row.original} 
+          <CheckPalletProducts
+            row={row.original}
             shipmentId={shipmentId}
             shipmentStatus={shipmentStatus}
           />
