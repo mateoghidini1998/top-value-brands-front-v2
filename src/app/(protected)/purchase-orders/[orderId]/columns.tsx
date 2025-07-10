@@ -262,8 +262,20 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
     accessorKey: "reserved_quantity",
     header: "Reserved Quantity",
     cell: ({ row }) => {
-      const reserved_quantity: number = row.getValue("reserved_quantity");
-      return <span>{reserved_quantity.toLocaleString() || "N/A"}</span>;
+      const product = row.original;
+      const { reserved_quantity, fc_transfer, fc_processing, customer_order } =
+        product;
+      const tooltipContent = `
+        Reserved:
+            FC Transfer: ${fc_transfer}
+            FC Processing: ${fc_processing}
+            Customer Order: ${customer_order}
+            `;
+      return (
+        <div title={tooltipContent.trim()} className="text-left">
+          {reserved_quantity}
+        </div>
+      );
     },
   },
   {

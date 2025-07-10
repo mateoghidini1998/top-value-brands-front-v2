@@ -13,6 +13,11 @@ export interface Data {
 }
 
 export interface PurchaseOrderSummaryProducts {
+  reserved_quantity: number;
+  fc_transfer: string;
+  fc_processing: string;
+  customer_order: string;
+  listing_status_id: number;
   product_velocity_2: number;
   product_velocity_7: number;
   product_velocity_15: number;
