@@ -1,4 +1,5 @@
 "use client";
+import { ProductTitle } from "@/components/custom/product-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,10 +13,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Order } from "@/types";
+import { useUser } from "@clerk/nextjs";
 import { AlertTriangleIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useGetPurchaseOrderSummary } from "../../hooks";
-import { ProductTitle } from "@/components/custom/product-title";
 import UploadInvoiceFile from "../_components/upload-invoice";
 
 interface PageProps {
@@ -25,7 +26,7 @@ interface PageProps {
 }
 
 export default function Page({ params }: PageProps) {
-  // const router = useRouter()
+  const { user } = useUser();
 
   const {
     ordersSummaryResponse,
@@ -54,7 +55,8 @@ export default function Page({ params }: PageProps) {
     <div className="">
       <h1 className="text-2xl font-bold py-4">Order - {order.order_number}</h1>
 
-      <OrderSummaryCard order={order} />
+      {/* @ts-expect-error @typescript-eslint/no-unsafe-member-access */}
+      <OrderSummaryCard order={order} userRole={user!.publicMetadata.role} />
 
       <UploadInvoiceFile orderId={params.orderId} />
 
@@ -112,7 +114,13 @@ export default function Page({ params }: PageProps) {
   );
 }
 
-function OrderSummaryCard({ order }: { order: Order }) {
+function OrderSummaryCard({
+  order,
+  userRole,
+}: {
+  order: Order;
+  userRole: string;
+}) {
   return (
     <Card>
       <CardHeader>
@@ -128,13 +136,15 @@ function OrderSummaryCard({ order }: { order: Order }) {
             <dt className="font-medium text-gray-500">Status</dt>
             <dd>{order.status}</dd>
           </div>
-          <div>
-            <dt className="font-medium text-gray-500">Total Price</dt>
-            <dd>{order.total_price}</dd>
-          </div>
+          {userRole.toLowerCase() === "admin" && (
+            <div>
+              <dt className="font-medium text-gray-500">Total Price</dt>
+              <dd>$ {order.total_price.toLocaleString()}</dd>
+            </div>
+          )}
           <div>
             <dt className="font-medium text-gray-500">Supplier</dt>
-            <dd>{order.supplier_name}</dd>
+            <dd>{order.supplier_name.toLocaleString()}</dd>
           </div>
           <div>
             <dt className="font-medium text-gray-500">Created At</dt>
