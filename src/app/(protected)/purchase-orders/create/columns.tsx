@@ -98,6 +98,7 @@ export const getTrackedProductsColumns = (
   },
   {
     accessorKey: "units_sold",
+
     header: () => {
       return (
         <div
@@ -158,7 +159,6 @@ export const getTrackedProductsColumns = (
     accessorKey: "seller_sku",
     header: "Seller SKU",
   },
-
   {
     accessorKey: "avg_selling_price",
     header: () => {
@@ -223,17 +223,6 @@ export const getTrackedProductsColumns = (
   },
   {
     accessorKey: "FBA_available_inventory",
-    // header: () => {
-    //   return (
-    //     <div
-    //       className="text-right flex items-center cursor-pointer justify-center gap-2"
-    //       onClick={() => handleOrderBy("FBA_available_inventory")}
-    //     >
-    //       <ArrowUpDown className="mr-2 w-4 h-4 " />
-    //       FBA Inventory
-    //     </div>
-    //   );
-    // },
     header: "FBA Inventory",
     cell: ({ row }) => {
       const FBA_available_inventory: number = row.getValue(
@@ -244,17 +233,6 @@ export const getTrackedProductsColumns = (
   },
   {
     accessorKey: "reserved_quantity",
-    // header: () => {
-    //   return (
-    //     <div
-    //       className="text-right flex items-center cursor-pointer justify-center gap-2"
-    //       onClick={() => handleOrderBy("reserved_quantity")}
-    //     >
-    //       <ArrowUpDown className="mr-2 w-4 h-4 " />
-    //       Reserved Quantity
-    //     </div>
-    //   );
-    // },
     header: "Reserved Quantity",
     cell: ({ row }) => {
       const reserved_quantity: number = row.getValue("reserved_quantity");
@@ -263,17 +241,6 @@ export const getTrackedProductsColumns = (
   },
   {
     accessorKey: "Inbound_to_FBA",
-    // header: () => {
-    //   return (
-    //     <div
-    //       className="text-right flex items-center cursor-pointer justify-center gap-2"
-    //       onClick={() => handleOrderBy("Inbound_to_FBA")}
-    //     >
-    //       <ArrowUpDown className="mr-2 w-4 h-4 " />
-    //       Inbound to FBA
-    //     </div>
-    //   );
-    // },
     header: "Inbound to FBA",
     cell: ({ row }) => {
       const Inbound_to_FBA: number = row.getValue("Inbound_to_FBA");

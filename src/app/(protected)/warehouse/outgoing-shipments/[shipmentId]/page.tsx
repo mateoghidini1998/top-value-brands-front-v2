@@ -11,6 +11,7 @@ import {
   AlertCircle,
   ClockIcon,
   IdCardIcon,
+  Pencil,
   PlaneIcon,
   Plus,
   Save,
@@ -207,7 +208,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
               className={shipment.status !== "DRAFT" ? "hidden" : ""}
               onClick={() => setIsEditing(true)}
             >
-              <Plus className="h-4 w-4 mr-2" />
+              <Pencil className="h-4 w-4 mr-2" />
               Edit Products
             </Button>
             <Button

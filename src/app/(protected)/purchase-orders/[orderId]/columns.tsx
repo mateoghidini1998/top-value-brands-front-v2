@@ -1,6 +1,7 @@
 "use client";
 
 import { ProductTitle } from "@/components/custom/product-title";
+import { Badge } from "@/components/ui/badge";
 import { FormatUSD } from "@/helpers";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
@@ -55,94 +56,94 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
       return <DGItemCell dgItem={dg_item} />;
     },
   },
-  // {
-  //   accessorKey: "product_velocity",
-  //   header: ({ column }) => (
-  //     <span
-  //       className="cursor-pointer"
-  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //     >
-  //       Velocity
-  //     </span>
-  //   ),
-  //   cell: ({ row }) => {
-  //     return (
-  //       <span>
-  //         {FormatUSD({
-  //           number: row.original.product_velocity.toString(),
-  //           maxDigits: 4,
-  //           minDigits: 2,
-  //         })}
-  //       </span>
-  //     );
-  //   },
-  // },
-  // {
-  //   accessorKey: "units_sold",
-  //   header: ({ column }) => (
-  //     <span
-  //       className="cursor-pointer"
-  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //     >
-  //       Units Sold
-  //     </span>
-  //   ),
-  //   cell: ({ row }) => {
-  //     return (
-  //       <span>
-  //         {FormatUSD({
-  //           number: row.original.units_sold.toString(),
-  //           maxDigits: 0,
-  //           minDigits: 0,
-  //         })}
-  //       </span>
-  //     );
-  //   },
-  // },
-  // {
-  //   accessorKey: "thirty_days_rank",
-  //   header: ({ column }) => (
-  //     <span
-  //       className="cursor-pointer"
-  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //     >
-  //       30 Days Rank
-  //     </span>
-  //   ),
-  //   cell: ({ row }) => {
-  //     return (
-  //       <span>
-  //         {FormatUSD({
-  //           number: row.original.thirty_days_rank.toString(),
-  //           maxDigits: 0,
-  //           minDigits: 0,
-  //         })}
-  //       </span>
-  //     );
-  //   },
-  // },
-  // {
-  //   accessorKey: "ninety_days_rank",
-  //   header: ({ column }) => (
-  //     <span
-  //       className="cursor-pointer"
-  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //     >
-  //       90 Days Rank
-  //     </span>
-  //   ),
-  //   cell: ({ row }) => {
-  //     return (
-  //       <span>
-  //         {FormatUSD({
-  //           number: row.original.ninety_days_rank.toString(),
-  //           maxDigits: 0,
-  //           minDigits: 0,
-  //         })}
-  //       </span>
-  //     );
-  //   },
-  // },
+  {
+    accessorKey: "product_velocity",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Velocity
+      </span>
+    ),
+    cell: ({ row }) => {
+      return (
+        <span>
+          {FormatUSD({
+            number: row.original.product_velocity.toString(),
+            maxDigits: 4,
+            minDigits: 2,
+          })}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "units_sold",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Units Sold
+      </span>
+    ),
+    cell: ({ row }) => {
+      return (
+        <span>
+          {FormatUSD({
+            number: row.original.units_sold.toString(),
+            maxDigits: 0,
+            minDigits: 0,
+          })}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "thirty_days_rank",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        30 Days Rank
+      </span>
+    ),
+    cell: ({ row }) => {
+      return (
+        <span>
+          {FormatUSD({
+            number: row.original.thirty_days_rank.toString(),
+            maxDigits: 0,
+            minDigits: 0,
+          })}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "ninety_days_rank",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        90 Days Rank
+      </span>
+    ),
+    cell: ({ row }) => {
+      return (
+        <span>
+          {FormatUSD({
+            number: row.original.ninety_days_rank.toString(),
+            maxDigits: 0,
+            minDigits: 0,
+          })}
+        </span>
+      );
+    },
+  },
   {
     id: "ASIN / GTIN",
     header: ({ column }) => (
@@ -157,6 +158,27 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
       const ASIN = row.original.ASIN || null;
       const GTIN = row.original.GTIN || null;
       return <span>{ASIN || GTIN}</span>;
+    },
+  },
+  {
+    accessorKey: "avg_selling_price",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Avg Selling Price
+      </span>
+    ),
+    cell: ({ row }) => {
+      const product_cost: number = parseFloat(
+        row.getValue("avg_selling_price")
+      );
+      return (
+        <span>{`${
+          product_cost ? `$ ${product_cost.toFixed(2)}` : "N/A"
+        }`}</span>
+      );
     },
   },
   {
@@ -214,6 +236,32 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
     },
   },
   {
+    accessorKey: "FBA_available_inventory",
+    header: "FBA Inventory",
+    cell: ({ row }) => {
+      const FBA_available_inventory: number = row.getValue(
+        "FBA_available_inventory"
+      );
+      return <span>{FBA_available_inventory.toLocaleString() || "N/A"}</span>;
+    },
+  },
+  {
+    accessorKey: "reserved_quantity",
+    header: "Reserved Quantity",
+    cell: ({ row }) => {
+      const reserved_quantity: number = row.getValue("reserved_quantity");
+      return <span>{reserved_quantity.toLocaleString() || "N/A"}</span>;
+    },
+  },
+  {
+    accessorKey: "Inbound_to_FBA",
+    header: "Inbound to FBA",
+    cell: ({ row }) => {
+      const Inbound_to_FBA: number = row.getValue("Inbound_to_FBA");
+      return <span>{Inbound_to_FBA.toLocaleString() || "N/A"}</span>;
+    },
+  },
+  {
     accessorKey: "fees",
     header: ({ column }) => (
       <span
@@ -236,24 +284,33 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
     },
   },
   {
-    accessorKey: "profit",
-    header: ({ column }) => (
-      <span
-        className="cursor-pointer"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Profit
-      </span>
-    ),
-    cell: ({ row }) => {
+    accessorKey: "poproduct_profit",
+    header: () => {
       return (
-        <span>
-          {`$ ${FormatUSD({
-            number: row.original.profit?.toString() || "0",
-            maxDigits: 2,
-            minDigits: 2,
-          })}`}
-        </span>
+        <div className="text-right flex items-center cursor-pointer justify-center gap-2">
+          Profit
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("poproduct_profit"));
+
+      const getBadgeVariant = (amount: number) => {
+        if (amount > 2) {
+          return "arrived";
+        }
+
+        if (amount < 2) {
+          return "cancelled";
+        }
+
+        return "secondary";
+      };
+
+      return (
+        <Badge variant={getBadgeVariant(amount)}>
+          {isNaN(amount) ? "N/A" : `$ ${amount.toFixed(2)}`}
+        </Badge>
       );
     },
   },
@@ -268,31 +325,26 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
       </span>
     ),
     cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("roi"));
+
+      const getBadgeVariant = (amount: number) => {
+        if (amount > 2) {
+          return "arrived";
+        }
+
+        if (amount < 2) {
+          return "cancelled";
+        }
+
+        return "secondary";
+      };
       return (
-        <span>
-          {`${FormatUSD({
-            number: row.original.roi?.toString() || "0",
-            maxDigits: 2,
-            minDigits: 2,
-          })} %`}
-        </span>
+        <Badge variant={getBadgeVariant(amount)}>
+          {isNaN(amount) ? "N/A" : `${amount.toFixed(2)} %`}
+        </Badge>
       );
     },
   },
-  // {
-  //   accessorKey: "updatedAt",
-  //   header: ({ column }) => (
-  //     <span
-  //       className="cursor-pointer"
-  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //     >
-  //       Last Update
-  //     </span>
-  //   ),
-  //   cell: ({ row }) => (
-  //     <span>{formatDate(row.original.updatedAt.toString())}</span>
-  //   ),
-  // },
   {
     accessorKey: "seller_sku",
     header: "Seller SKU",

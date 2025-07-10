@@ -16,8 +16,7 @@ export const createColumns = (
   isEditing: boolean,
   shipmentId: number,
   shipmentStatus: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handleProductChange?: (index: number, field: string, value: any) => void,
+  handleProductChange?: (index: number, field: string, value: unknown) => void,
   handleRemoveProduct?: (productId: number) => void // <- Nuevo parámetro
 ): ColumnDef<ShipmentPalletProduct>[] => [
   {
@@ -78,29 +77,20 @@ export const createColumns = (
     cell: ({ row }) => {
       return <p>{row.original.pack_type} Pack</p>;
     },
+    },
+  {
+    accessorKey: "available_quantity",
+    header: "Available Quantity",
+    cell: ({ row }) => {
+      return <p>{row.original.available_quantity}</p>;
+    },
   },
-  // {
-  //   accessorKey: "OutgoingShipmentProduct.quantity",
-  //   header: "Quantity",
-  //   cell: ({ row }) => {
-  //     if (isEditing) {
-  //       return (
-  //         <Input
-  //           type="number"
-  //           defaultValue={row.original.OutgoingShipmentProduct.quantity}
-  //           className="w-24"
-  //           min={1}
-  //         />
-  //       );
-  //     }
-  //     return row.original.OutgoingShipmentProduct.quantity;
-  //   },
-  // },
   {
     accessorKey: "OutgoingShipmentProduct.quantity",
     header: "Quantity",
-    cell: ({ row, table }) => {
-      const index = table.getRowModel().rows.findIndex((r) => r.id === row.id);
+    cell: ({ row }) => {
+      const index = row.index; // <-- el index real de la fila en los datos que recibe la tabla
+
       if (isEditing) {
         return (
           <Input
