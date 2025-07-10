@@ -13,6 +13,9 @@ export interface Data {
 }
 
 export interface PurchaseOrderSummaryProducts {
+  product_velocity_2: number;
+  product_velocity_7: number;
+  product_velocity_15: number;
   id: number;
   product_id: number;
   product_name: string;

@@ -12,6 +12,7 @@ import {
   TotalAmountCell,
 } from "./components";
 import { DGItemCell } from "./components/dg-item-cell";
+import ProductVelocity from "../create/components/product-velocity";
 
 export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
   {
@@ -63,19 +64,31 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
         className="cursor-pointer"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Velocity
+        Velocity (30d)
       </span>
     ),
     cell: ({ row }) => {
-      return (
-        <span>
-          {FormatUSD({
-            number: row.original.product_velocity.toString(),
-            maxDigits: 4,
-            minDigits: 2,
-          })}
-        </span>
-      );
+      const product = row.original;
+      const velocities = [
+        {
+          days: 2,
+          velocity: product.product_velocity_2,
+        },
+        {
+          days: 7,
+          velocity: product.product_velocity_7,
+        },
+        {
+          days: 15,
+          velocity: product.product_velocity_15,
+        },
+        {
+          days: 30,
+          velocity: product.product_velocity,
+        },
+      ];
+      return <ProductVelocity velocities={velocities} width={"100%"} />;
+      // return <span>{product_velocity.toFixed(3) || "N/A"}</span>;
     },
   },
   {
