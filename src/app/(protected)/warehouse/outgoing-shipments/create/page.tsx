@@ -8,7 +8,8 @@ import type {
   GetAllPalletProductsResponsePallet,
   GetAllPalletProductsResponsePalletProduct,
 } from "@/types";
-import { useSearchParams } from "next/navigation";
+import { GetShipemntByIDResponse } from "@/types/shipments/get.types";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useGetAllPalletProducts } from "../../storage/hooks/use-pallets-service";
@@ -20,35 +21,11 @@ import {
 import { QuantityInputDialog } from "./_components/quantity-input-dialog";
 import { SelectedProductsTable } from "./_components/tables/selected-products-table";
 import { TabbedDataTable } from "./_components/tables/tabbed-data-table";
-import { GetShipemntByIDResponse } from "@/types/shipments/get.types";
-
-function stripEmptyLevels(
-  orders: GetAllPalletProductsResponse[]
-): GetAllPalletProductsResponse[] {
-  return (
-    orders
-      .map((order) => {
-        const cleanedPallets = (order.pallets || [])
-          .map((pallet) => ({
-            ...pallet,
-            palletProducts: (pallet.palletProducts || []).filter(
-              (product) => !!product && product.available_quantity !== 0
-            ),
-          }))
-          .filter((pallet) => pallet.palletProducts.length > 0);
-
-        return {
-          ...order,
-          pallets: cleanedPallets,
-        };
-      })
-      .filter((order) => order.pallets.length > 0)
-  );
-}
 
 export default function Page() {
   const searchParams = useSearchParams();
   const shipmentId = searchParams.get("update");
+  const router = useRouter();
 
   function mapPalletProductsResponse(
     raw: GetShipemntByIDResponse
@@ -78,16 +55,17 @@ export default function Page() {
     });
   }
 
-  const { palletProducts, palletProductsIsLoading, palletProductsIsError } =
-    useGetAllPalletProducts();
+  const {
+    palletProducts,
+    palletProductsIsLoading,
+    palletProductsIsError,
+    palletProductsRefetch,
+  } = useGetAllPalletProducts();
   const { createShipmentAsync, isCreatingShipment } = useCreateShipment();
   const { updateShipmentAsync, isUpdatingShipment } = useUpdateShipment(
     parseInt(shipmentId || "0") || 0
   );
-  const { shipment } = useGetShipmentById(shipmentId || "");
-
-  console.log(palletProducts);
-
+  const { shipment: shipment } = useGetShipmentById(shipmentId || "");
   const [availableProducts, setAvailableProducts] = useState<
     GetAllPalletProductsResponse[]
   >([]);
@@ -112,13 +90,13 @@ export default function Page() {
     }
   }, [shipmentId, shipment]);
 
-useEffect(() => {
-  if (!palletProducts) return;
+  useEffect(() => {
+    if (!palletProducts) return;
 
-  const cleaned: GetAllPalletProductsResponse[] = stripEmptyLevels(palletProducts);
+    const cleaned: GetAllPalletProductsResponse[] = palletProducts;
 
-  setAvailableProducts(cleaned);
-}, [palletProducts]);
+    setAvailableProducts(cleaned);
+  }, [palletProducts]);
 
   console.log(availableProducts);
 
@@ -151,10 +129,20 @@ useEffect(() => {
 
     if (pallet) {
       const newSelectedProducts = [...selectedProducts];
+
       pallet.palletProducts.forEach(
         (product: GetAllPalletProductsResponsePalletProduct) => {
-          if (!newSelectedProducts.some((p) => p.id === product.id)) {
-            newSelectedProducts.push(product);
+          const idx = newSelectedProducts.findIndex((p) => p.id === product.id);
+          if (idx > -1) {
+            // Sumar cantidad
+            newSelectedProducts[idx] = {
+              ...newSelectedProducts[idx],
+              available_quantity:
+                (newSelectedProducts[idx].available_quantity || 0) +
+                (product.available_quantity || 0),
+            };
+          } else {
+            newSelectedProducts.push({ ...product });
           }
         }
       );
@@ -162,6 +150,7 @@ useEffect(() => {
       updateAvailableProducts(newSelectedProducts);
     }
   };
+
   const handleAddPurchaseOrderProducts = (purchaseOrderId: number) => {
     const order = availableProducts.find((o) => o.id === purchaseOrderId);
 
@@ -170,19 +159,21 @@ useEffect(() => {
       order.pallets
         .flatMap((p) => p.palletProducts)
         .forEach((product) => {
-          if (!newSelectedProducts.some((p) => p.id === product.id)) {
-            newSelectedProducts.push(product);
+          const idx = newSelectedProducts.findIndex((p) => p.id === product.id);
+          if (idx > -1) {
+            // Sumar cantidad
+            newSelectedProducts[idx] = {
+              ...newSelectedProducts[idx],
+              available_quantity:
+                (newSelectedProducts[idx].available_quantity || 0) +
+                (product.available_quantity || 0),
+            };
+          } else {
+            newSelectedProducts.push({ ...product });
           }
         });
       setSelectedProducts(newSelectedProducts);
       updateAvailableProducts(newSelectedProducts);
-    }
-  };
-
-  const handleRemoveProduct = (productId: number) => {
-    const product = selectedProducts.find((p) => p.id === productId);
-    if (product) {
-      setQuantityDialog({ isOpen: true, product, action: "remove" });
     }
   };
 
@@ -217,15 +208,17 @@ useEffect(() => {
     });
 
     setSelectedProducts([]);
+    router.push(`/warehouse/outgoing-shipments/${shipment!.id}`);
   };
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
     if (shipmentId && shipment) {
       setSelectedProducts(mapPalletProductsResponse(shipment));
     } else {
       setSelectedProducts([]);
-      setAvailableProducts(stripEmptyLevels(palletProducts!) || []);
     }
+    const products = await palletProductsRefetch();
+    setAvailableProducts(products.data!); // <-- Hace el refetch al backend
   };
 
   const updateAvailableProducts = (
@@ -416,10 +409,7 @@ useEffect(() => {
             <div className="space-y-4">
               <h2 className="text-lg font-semibold">Selected Products</h2>
               <div className="rounded-lg border bg-background p-4">
-                <SelectedProductsTable
-                  data={selectedProducts}
-                  onRemoveProduct={handleRemoveProduct}
-                />
+                <SelectedProductsTable data={selectedProducts} />
               </div>
             </div>
           </div>
