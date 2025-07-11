@@ -1,7 +1,7 @@
+import { DGItemCell } from "@/app/(protected)/purchase-orders/[orderId]/components/dg-item-cell";
 import { ProductTitle } from "@/components/custom/product-title";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import {
   ShipmentPallet,
   ShipmentPalletProduct,
@@ -9,8 +9,8 @@ import {
 import type { ColumnDef } from "@tanstack/react-table";
 import { Trash2 } from "lucide-react";
 import CheckPalletProducts from "../_components/check-pallet-product";
+import EditableQuantityCell from "../_components/editable-quantity-cell";
 import ToggleCheckAllShipmentProducts from "../_components/toggleCheckAllShipmentProducts";
-import { DGItemCell } from "@/app/(protected)/purchase-orders/[orderId]/components/dg-item-cell";
 
 export const createColumns = (
   isEditing: boolean,
@@ -77,7 +77,7 @@ export const createColumns = (
     cell: ({ row }) => {
       return <p>{row.original.pack_type} Pack</p>;
     },
-    },
+  },
   {
     accessorKey: "available_quantity",
     header: "Available Quantity",
@@ -89,23 +89,20 @@ export const createColumns = (
     accessorKey: "OutgoingShipmentProduct.quantity",
     header: "Quantity",
     cell: ({ row }) => {
-      const index = row.index; // <-- el index real de la fila en los datos que recibe la tabla
-
+      const index = row.index;
+      const valueFromParent = row.original.OutgoingShipmentProduct.quantity;
       if (isEditing) {
         return (
-          <Input
-            type="number"
-            value={row.original.OutgoingShipmentProduct.quantity}
-            className="w-24"
-            min={1}
-            onChange={(e) =>
+          <EditableQuantityCell
+            value={valueFromParent}
+            onChange={(newValue) =>
               handleProductChange &&
-              handleProductChange(index, "quantity", Number(e.target.value))
+              handleProductChange(index, "quantity", newValue)
             }
           />
         );
       }
-      return row.original.OutgoingShipmentProduct.quantity;
+      return valueFromParent;
     },
   },
   {

@@ -34,7 +34,9 @@ export interface ManifestPalletTable {
 }
 
 export default function Page({ params }: { params: { shipmentId: string } }) {
-  const { shipment, shipmentIsError } = useGetShipmentById(params.shipmentId);
+  const { shipment, shipmentIsError, shipmentRefetch } = useGetShipmentById(
+    params.shipmentId
+  );
   const { updateShipmentAsync } = useUpdateShipment(Number(params.shipmentId));
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isEditing, setIsEditing] = useState(false);
@@ -88,6 +90,7 @@ export default function Page({ params }: { params: { shipmentId: string } }) {
             quantity: Number(p.OutgoingShipmentProduct.quantity),
           })),
       });
+      await shipmentRefetch(); // Forzar refetch después del update
       setIsEditing(false);
       // Podés mostrar un toast de éxito, o refrescar datos
     } catch (err) {

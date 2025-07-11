@@ -134,7 +134,14 @@ export const useUpdateShipment = (shipmentId: number) => {
       shipmentsService.updateShipment(shipmentUpdates),
     successMessage: SUCCESS_MESSAGES.UPDATE_SHIPMENT,
     errorMessage: ERROR_MESSAGES.UPDATE_SHIPMENT,
-    invalidateKeys: [[QUERY_KEYS.SHIPMENT, shipmentId], [QUERY_KEYS.SHIPMENTS]],
+    invalidateKeys: [
+      [QUERY_KEYS.SHIPMENT, shipmentId],
+      [QUERY_KEYS.SHIPMENTS],
+      [QUERY_KEYS.PALLET_PRODUCTS],
+      [QUERY_KEYS.WAREHOUSE_AVAILABLE_LOCATIONS],
+      [QUERY_KEYS.PALLETS],
+      [QUERY_KEYS.PALLET],
+    ],
   });
 
   return {
@@ -176,7 +183,7 @@ export const useCheckShipmentProducts = (
     errorMessage: ERROR_MESSAGES.UPDATE_PRODUCTS,
     invalidateKeys: [
       [QUERY_KEYS.SHIPMENT, shipmentId],
-      [QUERY_KEYS.SHIPMENTS],             
+      [QUERY_KEYS.SHIPMENTS],
       [QUERY_KEYS.WAREHOUSE_AVAILABLE_LOCATIONS],
     ],
   });
@@ -290,9 +297,11 @@ export const useUpdateShipmentStatusToWorking = (shipmentId: string) => {
   });
 
   return {
-    updateShipmentStatusToWorkingAsync: updateShipmentStatusToWorking.mutateAsync,
+    updateShipmentStatusToWorkingAsync:
+      updateShipmentStatusToWorking.mutateAsync,
     updateShipmentStatusToWorkingError: updateShipmentStatusToWorking.isError,
-    updateShipmentStatusToWorkingSuccess: updateShipmentStatusToWorking.isSuccess,
+    updateShipmentStatusToWorkingSuccess:
+      updateShipmentStatusToWorking.isSuccess,
     isUpdatingShipmentStatusToWorking: updateShipmentStatusToWorking.isPending,
   };
 };
