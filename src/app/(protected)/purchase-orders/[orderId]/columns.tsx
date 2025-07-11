@@ -255,7 +255,7 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
       const FBA_available_inventory: number = row.getValue(
         "FBA_available_inventory"
       );
-      return <span>{FBA_available_inventory.toLocaleString() || "N/A"}</span>;
+      return <span>{FBA_available_inventory?.toLocaleString() || "N/A"}</span>;
     },
   },
   {
@@ -283,7 +283,7 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
     header: "Inbound to FBA",
     cell: ({ row }) => {
       const Inbound_to_FBA: number = row.getValue("Inbound_to_FBA");
-      return <span>{Inbound_to_FBA.toLocaleString() || "N/A"}</span>;
+      return <span>{Inbound_to_FBA?.toLocaleString() || "N/A"}</span>;
     },
   },
   {
