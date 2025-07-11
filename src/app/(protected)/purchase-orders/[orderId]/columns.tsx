@@ -105,7 +105,7 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
       return (
         <span>
           {FormatUSD({
-            number: row.original.units_sold.toString(),
+            number: row.original.units_sold?.toString(),
             maxDigits: 0,
             minDigits: 0,
           })}
@@ -127,7 +127,7 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
       return (
         <span>
           {FormatUSD({
-            number: row.original.thirty_days_rank.toString(),
+            number: row.original.thirty_days_rank?.toString(),
             maxDigits: 0,
             minDigits: 0,
           })}
@@ -149,7 +149,7 @@ export const columns: ColumnDef<PurchaseOrderSummaryProducts>[] = [
       return (
         <span>
           {FormatUSD({
-            number: row.original.ninety_days_rank.toString(),
+            number: row.original.ninety_days_rank?.toString(),
             maxDigits: 0,
             minDigits: 0,
           })}
