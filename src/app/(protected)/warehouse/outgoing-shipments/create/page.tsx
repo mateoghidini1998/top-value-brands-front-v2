@@ -177,6 +177,13 @@ export default function Page() {
     }
   };
 
+  const handleRemoveProduct = (productId: number) => {
+    const product = selectedProducts.find((p) => p.id === productId);
+    if (product) {
+      setQuantityDialog({ isOpen: true, product, action: "remove" });
+    }
+  };
+
   const handleSaveShipment = async () => {
     if (selectedProducts.length === 0) {
       return toast.error("Please select at least one product");
@@ -409,7 +416,10 @@ export default function Page() {
             <div className="space-y-4">
               <h2 className="text-lg font-semibold">Selected Products</h2>
               <div className="rounded-lg border bg-background p-4">
-                <SelectedProductsTable data={selectedProducts} />
+                <SelectedProductsTable
+                  data={selectedProducts}
+                  onRemoveProduct={handleRemoveProduct}
+                />
               </div>
             </div>
           </div>
