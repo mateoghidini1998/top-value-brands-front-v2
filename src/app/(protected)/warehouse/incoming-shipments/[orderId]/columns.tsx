@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { DGItemCell } from "@/app/(protected)/purchase-orders/[orderId]/components/dg-item-cell";
@@ -15,10 +16,10 @@ import { formatDateWithoutHours, FormatUSD } from "@/helpers";
 import { PurchaseOrderSummaryProducts } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { SquarePlus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { ExpireDateCell } from "../_components/expire-date-cell";
 import { PalletQuantityCell } from "../_components/pallet-quantity-cell";
 import { MissingFieldsInterface } from "./page";
-import { toast } from "sonner";
 
 export const reasons = [
   { id: 1, label: "ok" },
@@ -90,7 +91,27 @@ export const incomingOrderCols = (
       cell: ({ row }) => {
         const ASIN = row.original.ASIN || null;
         const GTIN = row.original.GTIN || null;
-        return <span>{ASIN || GTIN}</span>;
+
+        const identifier = ASIN || GTIN;
+        const marketplace = ASIN ? "Amazon" : GTIN ? "Walmart" : null;
+        const icon = ASIN ? (
+          // <Amazon className="w-3 h-3 text-[#FF9900]" />
+          <img src="/amazon-2.svg" alt="amazon" className="h-[40px] w-[40px]" />
+        ) : GTIN ? (
+          // <Store className="w-3 h-3 text-[#0071ce]" />
+          <img src="/walmart.svg" alt="walmart" className="h-[50px] w-[50px]" />
+        ) : null;
+
+        return (
+          <span className="flex flex-col items-center relative min-h-[2.5rem]">
+            <span className="font-medium">{identifier || "N/A"}</span>
+            {marketplace && (
+              <span className="absolute left-1/2 -translate-x-1/2 bottom-[-15px]">
+                {icon}
+              </span>
+            )}
+          </span>
+        );
       },
     },
     {
@@ -291,8 +312,40 @@ export const availableToCreate = (
     },
   },
   {
-    accessorKey: "ASIN",
-    header: "ASIN",
+    id: "ASIN / GTIN",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        ASIN / GTIN
+      </span>
+    ),
+    cell: ({ row }) => {
+      const ASIN = row.original.ASIN || null;
+      const GTIN = row.original.GTIN || null;
+
+      const identifier = ASIN || GTIN;
+      const marketplace = ASIN ? "Amazon" : GTIN ? "Walmart" : null;
+      const icon = ASIN ? (
+        // <Amazon className="w-3 h-3 text-[#FF9900]" />
+        <img src="/amazon-2.svg" alt="amazon" className="h-[40px] w-[40px]" />
+      ) : GTIN ? (
+        // <Store className="w-3 h-3 text-[#0071ce]" />
+        <img src="/walmart.svg" alt="walmart" className="h-[50px] w-[50px]" />
+      ) : null;
+
+      return (
+        <span className="flex flex-col items-center relative min-h-[2.5rem]">
+          <span className="font-medium">{identifier || "N/A"}</span>
+          {marketplace && (
+            <span className="absolute left-1/2 -translate-x-1/2 bottom-[-15px]">
+              {icon}
+            </span>
+          )}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "seller_sku",
@@ -377,8 +430,40 @@ export const addedToCreate = (
     },
   },
   {
-    accessorKey: "ASIN",
-    header: "ASIN",
+    id: "ASIN / GTIN",
+    header: ({ column }) => (
+      <span
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        ASIN / GTIN
+      </span>
+    ),
+    cell: ({ row }) => {
+      const ASIN = row.original.ASIN || null;
+      const GTIN = row.original.GTIN || null;
+
+      const identifier = ASIN || GTIN;
+      const marketplace = ASIN ? "Amazon" : GTIN ? "Walmart" : null;
+      const icon = ASIN ? (
+        // <Amazon className="w-3 h-3 text-[#FF9900]" />
+        <img src="/amazon-2.svg" alt="amazon" className="h-[40px] w-[40px]" />
+      ) : GTIN ? (
+        // <Store className="w-3 h-3 text-[#0071ce]" />
+        <img src="/walmart.svg" alt="walmart" className="h-[50px] w-[50px]" />
+      ) : null;
+
+      return (
+        <span className="flex flex-col items-center relative min-h-[2.5rem]">
+          <span className="font-medium">{identifier || "N/A"}</span>
+          {marketplace && (
+            <span className="absolute left-1/2 -translate-x-1/2 bottom-[-15px]">
+              {icon}
+            </span>
+          )}
+        </span>
+      );
+    },
   },
   {
     id: "dg_item",

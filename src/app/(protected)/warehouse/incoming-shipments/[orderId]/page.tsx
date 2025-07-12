@@ -617,6 +617,21 @@ export default function Page({
                   }
                 }
 
+                // 2. Validar marketplace
+                // Definir la función para identificar el marketplace:
+                const getMarketplace = (prod: PurchaseOrderSummaryProducts) =>
+                  prod?.ASIN ? "amazon" : prod?.GTIN ? "walmart" : null;
+
+                const existingMarketplace = getMarketplace(prev[0]);
+                const newMarketplace = getMarketplace(product);
+
+                if (existingMarketplace !== newMarketplace && prev.length > 0) {
+                  toast.error(
+                    "You can't combine products from different marketplaces in one pallet"
+                  );
+                  return prev;
+                }
+
                 // Agregar el producto si cumple con la validación
                 return [
                   ...prev,
