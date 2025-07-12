@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type {
   GetAllPalletProductsResponse,
-  GetAllPalletProductsResponsePallet,
   GetAllPalletProductsResponsePalletProduct,
 } from "@/types";
 import { GetShipemntByIDResponse } from "@/types/shipments/get.types";
@@ -177,6 +176,13 @@ export default function Page() {
     }
   };
 
+  const handleRemoveProduct = (productId: number) => {
+    const product = selectedProducts.find((p) => p.id === productId);
+    if (product) {
+      setQuantityDialog({ isOpen: true, product, action: "remove" });
+    }
+  };
+
   const handleSaveShipment = async () => {
     if (selectedProducts.length === 0) {
       return toast.error("Please select at least one product");
@@ -227,90 +233,76 @@ export default function Page() {
     setAvailableProducts((prevAvailable) =>
       prevAvailable.map((order) => ({
         ...order,
-        pallets: order.pallets.map(
-          (pallet: GetAllPalletProductsResponsePallet) => ({
-            ...pallet,
-            palletProducts: pallet.palletProducts.filter(
-              (product) => !newSelectedProducts.some((p) => p.id === product.id)
-            ),
-          })
-        ),
+        pallets: order.pallets.map((pallet) => ({
+          ...pallet,
+          palletProducts: pallet.palletProducts
+            .map((product) => {
+              // Sumar todas las quantities seleccionadas para este producto
+              const selected = newSelectedProducts.find(
+                (p) => p.id === product.id
+              );
+              const selectedQty = selected?.available_quantity ?? 0;
+              const originalQty = product.available_quantity ?? 0;
+              const remaining = originalQty - selectedQty;
+
+              if (remaining > 0) {
+                return { ...product, available_quantity: remaining };
+              }
+              // Si ya no queda quantity, desaparece de available
+              return null;
+            })
+            .filter(Boolean) as GetAllPalletProductsResponsePalletProduct[],
+        })),
       }))
     );
   };
 
   const handleQuantityConfirm = (quantity: number) => {
     if (quantityDialog.product && quantityDialog.action === "add") {
-      const availableQuantity = quantityDialog.product.available_quantity || 0;
+      // Sumar o actualizar la cantidad en selected
+      setSelectedProducts((prev) => {
+        const idx = prev.findIndex((p) => p.id === quantityDialog.product!.id);
+        if (idx > -1) {
+          // Si ya existe, sumá
+          const updated = [...prev];
+          updated[idx] = {
+            ...updated[idx],
+            available_quantity:
+              (updated[idx].available_quantity ?? 0) + quantity,
+          };
+          return updated;
+        } else {
+          // Nuevo producto seleccionado
+          return [
+            ...prev,
+            { ...quantityDialog.product!, available_quantity: quantity },
+          ];
+        }
+      });
 
-      if (quantity === availableQuantity) {
-        setSelectedProducts((prev) => {
-          // validate that the product is not already added. Else updates the quantity
-          if (prev.some((p) => p.id === quantityDialog.product!.id)) {
-            //1. find the product
-            //2. update the quantity
-            //3. return the new array with the updated produc
-
-            const newSelectedProducts = prev.map((p) => {
-              if (p.id === quantityDialog.product!.id) {
-                return {
-                  ...p,
-                  available_quantity: p.available_quantity! + quantity,
-                };
-              }
-              return p;
-            });
-
-            return newSelectedProducts;
-          } else {
-            return [...prev, { ...quantityDialog.product!, quantity }];
-          }
-        });
-
-        updateAvailableProducts([...selectedProducts, quantityDialog.product!]);
-      } else if (quantity < availableQuantity) {
-        setSelectedProducts((prev) => {
-          // validate that the product is not already added. Else updates the quantity
-          if (prev.some((p) => p.id === quantityDialog.product!.id)) {
-            //1. find the product
-            //2. update the quantity
-            //3. return the new array with the updated produc
-
-            const newSelectedProducts = prev.map((p) => {
-              if (p.id === quantityDialog.product!.id) {
-                return {
-                  ...p,
-                  available_quantity: p.available_quantity! + quantity,
-                };
-              }
-              return p;
-            });
-
-            return newSelectedProducts;
-          } else {
-            return [
-              ...prev,
-              { ...quantityDialog.product!, available_quantity: quantity },
-            ];
-          }
-        });
-        setAvailableProducts((prevAvailable) => {
-          return prevAvailable.map((order) => ({
-            ...order,
-            pallets: order.pallets.map((pallet) => ({
-              ...pallet,
-              palletProducts: pallet.palletProducts.map((product) =>
-                product.id === quantityDialog.product!.id
-                  ? {
-                      ...product,
-                      available_quantity: availableQuantity - quantity,
-                    }
-                  : product
-              ),
-            })),
-          }));
-        });
-      }
+      // Luego, actualizar los available
+      setAvailableProducts((prevAvailable) =>
+        prevAvailable.map((order) => ({
+          ...order,
+          pallets: order.pallets.map((pallet) => ({
+            ...pallet,
+            palletProducts: pallet.palletProducts
+              .map((product) => {
+                if (product.id === quantityDialog.product!.id) {
+                  const remaining =
+                    (product.available_quantity ?? 0) - quantity;
+                  if (remaining > 0) {
+                    return { ...product, available_quantity: remaining };
+                  }
+                  // No mostrarlo si no queda más
+                  return null;
+                }
+                return product;
+              })
+              .filter(Boolean) as GetAllPalletProductsResponsePalletProduct[],
+          })),
+        }))
+      );
     } else if (quantityDialog.product && quantityDialog.action === "remove") {
       const selectedProduct = selectedProducts.find(
         (p) => p.id === quantityDialog.product!.id
@@ -409,7 +401,10 @@ export default function Page() {
             <div className="space-y-4">
               <h2 className="text-lg font-semibold">Selected Products</h2>
               <div className="rounded-lg border bg-background p-4">
-                <SelectedProductsTable data={selectedProducts} />
+                <SelectedProductsTable
+                  data={selectedProducts}
+                  onRemoveProduct={handleRemoveProduct}
+                />
               </div>
             </div>
           </div>
