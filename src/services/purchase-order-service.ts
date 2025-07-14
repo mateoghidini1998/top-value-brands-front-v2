@@ -168,4 +168,14 @@ export class PurchaseOrderService extends BaseService {
     const options = this.constructOptions("PUT", { purchaseOrderIds });
     return this.apiRequest<string>(url, options);
   }
+
+  public async recalculateProfits({
+    orderId,
+  }: {
+    orderId: string;
+  }): Promise<string> {
+    const url = this.constructUrl(`/${orderId}/recalculate-profits`);
+    const options = this.constructOptions("PATCH");
+    return this.apiRequest<string>(url, options);
+  }
 }

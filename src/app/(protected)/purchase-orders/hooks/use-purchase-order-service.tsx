@@ -17,7 +17,10 @@ import {
   UpdateOrderStatusProps,
   UpdatePurchaseOrderProps,
 } from "@/types/purchase-orders";
-import { AddProductsToOrderProps } from "@/types/purchase-orders/add-products-to-order.types";
+import {
+  AddProductsToOrderProps,
+  RecalculateProfitsProps,
+} from "@/types/purchase-orders/add-products-to-order.types";
 import { DeleteOrderProductProps } from "@/types/purchase-orders/delete-products-form-order.types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -251,6 +254,23 @@ export const usePrefetchOrderSummary = () => {
   };
 
   return { prefetchOrderSummary };
+};
+
+export const useRecalculateProfits = () => {
+  const recalculateProfits = useCreateMutation<RecalculateProfitsProps>({
+    mutationFn: (props: RecalculateProfitsProps) =>
+      purchaseOrderService.recalculateProfits(props),
+    successMessage: SUCCESS_MESSAGES.UPDATE_PRODUCTS,
+    errorMessage: ERROR_MESSAGES.UPDATE_PRODUCTS,
+    invalidateKeys: [[QUERY_KEYS.ORDER_SUMMARY], [QUERY_KEYS.ORDERS]],
+  });
+
+  return {
+    recalculateProfitsAsync: recalculateProfits.mutateAsync,
+    isRecalculatingProfitsError: recalculateProfits.isError,
+    isRecalculatingProfitsSuccess: recalculateProfits.isSuccess,
+    isRecalculatingProfits: recalculateProfits.isPending,
+  };
 };
 
 export const useUpdateOrderNotes = () => {

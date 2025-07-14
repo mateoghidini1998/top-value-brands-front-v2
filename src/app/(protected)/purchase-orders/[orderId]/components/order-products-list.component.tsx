@@ -1,11 +1,12 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Truck } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { RefreshCcw } from "lucide-react";
 import Link from "next/link";
 // import { DataTable } from "../../../warehouse/outgoing-shipments/create/_components/tables/data-table";
 import { DataTable } from "@/components/custom/data-table";
-import { columns } from "../columns";
 import { PurchaseOrderSummaryProducts } from "@/types";
+import { useRecalculateProfits } from "../../hooks";
+import { columns } from "../columns";
 
 interface OrderProductsTableProps {
   products: PurchaseOrderSummaryProducts[];
@@ -16,15 +17,26 @@ export default function OrderProductsTable({
   products,
   orderId,
 }: OrderProductsTableProps) {
-  // Filter products by marketplace based on ASIN/GTIN presence
-  //const amazonProducts = products.filter((product) => product.ASIN);
-  //const walmartProducts = products.filter((product) => product.GTIN);
-
-  const amazonProducts = products.filter((product) => product.marketplace === "Amazon" || product.marketplace === "Unknown");
-  const walmartProducts = products.filter((product) => product.marketplace === "Walmart");
+  const { recalculateProfitsAsync, isRecalculatingProfits } =
+    useRecalculateProfits();
+  const amazonProducts = products.filter(
+    (product) =>
+      product.marketplace === "Amazon" || product.marketplace === "Unknown"
+  );
+  const walmartProducts = products.filter(
+    (product) => product.marketplace === "Walmart"
+  );
 
   return (
     <div className="space-y-6">
+      <Button
+        variant="outline"
+        onClick={() => recalculateProfitsAsync({ orderId })}
+        disabled={isRecalculatingProfits}
+      >
+        <RefreshCcw className="w-4 h-4 text-muted-foreground ml-auto" />{" "}
+        Recalculate Profits
+      </Button>
       {/* Amazon Products */}
       {amazonProducts.length > 0 && (
         <Card>
@@ -32,7 +44,6 @@ export default function OrderProductsTable({
             <div className="flex flex-col items-start gap-4 justify-center w-fit space-y-0 pb-2">
               <h3 className="text-lg font-semibold">Amazon Products</h3>
             </div>
-            <Truck className="w-4 h-4 text-muted-foreground ml-auto" />
           </CardHeader>
           <CardContent className="p-0 w-full">
             <DataTable
@@ -52,7 +63,6 @@ export default function OrderProductsTable({
             <div className="flex flex-col items-start gap-4 justify-center w-fit space-y-0 pb-2">
               <h3 className="text-lg font-semibold">Walmart Products</h3>
             </div>
-            <Truck className="w-4 h-4 text-muted-foreground ml-auto" />
           </CardHeader>
           <CardContent className="p-0 w-full">
             <DataTable

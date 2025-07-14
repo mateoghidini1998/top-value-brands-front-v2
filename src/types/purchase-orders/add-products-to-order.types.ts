@@ -3,6 +3,10 @@ export interface AddProductsToOrderProps {
   products: ProductsToAdd[];
 }
 
+export interface RecalculateProfitsProps {
+  orderId: string;
+}
+
 export interface ProductsToAdd {
   product_id: number;
   quantity: number;
