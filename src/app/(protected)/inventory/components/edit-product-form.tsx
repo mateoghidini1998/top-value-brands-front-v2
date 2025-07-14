@@ -21,6 +21,7 @@ import { SupplierItem } from "../../purchase-orders/page";
 import { useSuppliers } from "../../suppliers/hooks/useSuppliers";
 import { useUpdateProduct } from "../hooks/inventory-service.hook";
 import { RefreshCw } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
 const editProductSchema = z.object({
   gtin: z.union([z.string(), z.null(), z.literal("")]),
@@ -55,6 +56,7 @@ const generateRandomSKU = (): string => {
 };
 
 export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
+  const { user } = useUser();
   const { updateAsync } = useUpdateProduct();
   const { suppliersQuery } = useSuppliers();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -107,8 +109,6 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          // form.handleSubmit(onSubmit)(e);
-          // console.log("Form state:", form.getValues(), form.formState);
           onSubmit(form.getValues());
         }}
         className="space-y-8"
@@ -163,63 +163,70 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
             </div>
           )}
         />
-        <FormField
-          control={form.control}
-          name="product_cost"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Product Cost</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  value={field.value ?? ""}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="supplier_id"
-          render={({ field }) => (
-            <FormItem className="flex flex-col items-start justify-center gap-1">
-              <FormLabel>Supplier ID</FormLabel>
-              <FormControl className="">
-                <FilterSearch
-                  className="w-full"
-                  items={formatSuppliers(suppliersQuery.data.data)}
-                  value={selectedSupplier}
-                  onValueChange={(supplier_id) => {
-                    setSelectedSupplier(supplier_id as number);
-                    field.onChange(supplier_id);
-                  }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="supplier_item_number"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Supplier Item Number</FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  {...field}
-                  value={field.value ?? ""}
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {user?.publicMetadata.role !== "warehouse" && (
+          <>
+            <FormField
+              control={form.control}
+              name="product_cost"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product Cost</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      {...field}
+                      value={field.value ?? ""}
+                      onChange={(e) =>
+                        field.onChange(parseFloat(e.target.value))
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="supplier_id"
+              render={({ field }) => (
+                <FormItem className="flex flex-col items-start justify-center gap-1">
+                  <FormLabel>Supplier ID</FormLabel>
+                  <FormControl className="">
+                    <FilterSearch
+                      className="w-full"
+                      items={formatSuppliers(suppliersQuery.data.data)}
+                      value={selectedSupplier}
+                      onValueChange={(supplier_id) => {
+                        setSelectedSupplier(supplier_id as number);
+                        field.onChange(supplier_id);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="supplier_item_number"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Supplier Item Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      {...field}
+                      value={field.value ?? ""}
+                      onChange={(e) => field.onChange(e.target.value)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        )}
         <FormField
           control={form.control}
           name="upc"

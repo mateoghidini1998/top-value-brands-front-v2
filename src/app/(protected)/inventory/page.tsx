@@ -17,6 +17,8 @@ import {
   SummaryConfig,
 } from "./components/data-grid/data-grid";
 import { useDeleteProduct, useGetAllProducts } from "./hooks";
+import { useUser } from "@clerk/nextjs";
+import { UserResource } from "@/types/auth.type";
 
 const amzCols: GridColumn[] = [
   {
@@ -154,6 +156,122 @@ const amzCols: GridColumn[] = [
   },
 ];
 
+// Columnas específicas para warehouse (sin las columnas que necesitas quitar)
+const amzWarehouseCols: GridColumn[] = [
+  {
+    field: "product_image",
+    caption: "Img",
+    width: 50,
+    edit: false,
+    cellRender: (cellData: any) => {
+      const imageUrl = cellData.value;
+      const asin = cellData.data.asin || cellData.data.ASIN;
+      const wpid = cellData.data.wpid || cellData.data.WPID;
+      const getProductUrl = () => {
+        if (asin) {
+          return `https://www.amazon.com/dp/${asin}`;
+        }
+        if (wpid != null) {
+          return `https://www.walmart.com/ip/${wpid}`;
+        }
+        return "#";
+      };
+
+      return (
+        <div className="flex justify-center items-center">
+          {imageUrl ? (
+            <Link target="a_blank" href={getProductUrl()}>
+              <img
+                src={imageUrl}
+                alt="product_image"
+                loading="lazy"
+                className="cover rounded-xl w-7 h-7"
+                style={{ objectFit: "cover", borderRadius: "8px" }}
+              />
+            </Link>
+          ) : (
+            <span>No Image</span>
+          )}
+        </div>
+      );
+    },
+  },
+  { field: "seller_sku", caption: "SKU", width: 120 },
+  {
+    field: "product_name",
+    caption: "Product Name",
+    width: 300,
+  },
+  {
+    field: "fba_available_inventory",
+    caption: "FBA Inventory",
+    width: 140,
+    alignment: "right",
+    format: "###,##0",
+  },
+  {
+    field: "reserved_quantity",
+    caption: "Reserved Qty",
+    width: 130,
+    alignment: "right",
+    format: "###,##0",
+    cellRender: ({ data: product }: { data: Product }) => {
+      const { reserved_quantity, fc_transfer, fc_processing, customer_order } =
+        product;
+      const tooltipContent = `
+      Reserved:
+          FC Transfer: ${fc_transfer}
+          FC Processing: ${fc_processing}
+          Customer Order: ${customer_order}
+          `;
+      return (
+        <div title={tooltipContent.trim()} className="text-left">
+          {reserved_quantity}
+        </div>
+      );
+    },
+  },
+  {
+    field: "inbound_to_fba",
+    caption: "Inbound to FBA",
+    width: 150,
+    alignment: "right",
+    format: "###,##0",
+  },
+  {
+    field: "warehouse_stock",
+    caption: "Warehouse Stock",
+    width: 140,
+    alignment: "right",
+    format: "#,##0",
+    customizeText: (cellInfo) => {
+      const value = parseInt(cellInfo.value);
+      return isNaN(value) ? "0" : value.toString();
+    },
+  },
+  {
+    field: "asin",
+    caption: "ASIN",
+    width: 150,
+  },
+  {
+    field: "upc",
+    caption: "UPC",
+    width: 150,
+  },
+  {
+    field: "pack_type",
+    caption: "Pack Type",
+    width: 150,
+  },
+  {
+    field: "updatedAt",
+    caption: "Updated At",
+    width: 180,
+    customizeText: (cellInfo) => formatDate(cellInfo.value),
+  },
+];
+
 const summaryConfig: SummaryConfig = {
   summ: [
     {
@@ -251,9 +369,78 @@ const walmartCols: GridColumn[] = [
       return isNaN(value) ? "0" : value.toString();
     },
   },
-  { field: "listing_status", caption: "Listing Status", width: 120, cellRender: ({ value }) => (
-    <span>{value?.replace(/_/g, ' ')}</span>
-  ) },
+  {
+    field: "listing_status",
+    caption: "Listing Status",
+    width: 120,
+    cellRender: ({ value }) => <span>{value?.replace(/_/g, " ")}</span>,
+  },
+  { field: "upc", caption: "UPC", width: 120 },
+  {
+    field: "pack_type",
+    caption: "Pack Type",
+    width: 120,
+    cellRender: ({ value }) => <span>{value ? value + " Pack" : "-"}</span>,
+  },
+  { field: "gtin", caption: "GTIN", width: 120 },
+  {
+    field: "updatedAt",
+    caption: "Updated At",
+    width: 180,
+    customizeText: (cellInfo) => formatDate(cellInfo.value),
+  },
+];
+
+// Columnas específicas para warehouse de Walmart (sin las columnas que necesitas quitar)
+const walmartWarehouseCols: GridColumn[] = [
+  {
+    field: "product_image",
+    caption: "Img",
+    width: 50,
+    edit: false,
+    cellRender: (cellData: any) => {
+      const imageUrl = cellData.value;
+      const wpid = cellData.data.wpid;
+      return (
+        <div className="flex justify-center items-center">
+          {imageUrl ? (
+            <Link target="a_blank" href={`https://www.walmart.com/ip/${wpid}`}>
+              <img
+                src={imageUrl}
+                alt="product_image"
+                loading="lazy"
+                className="cover rounded-xl w-7 h-7"
+                style={{ objectFit: "cover", borderRadius: "8px" }}
+              />
+            </Link>
+          ) : (
+            <span>No Image</span>
+          )}
+        </div>
+      );
+    },
+  },
+  { field: "seller_sku", caption: "SKU", width: 120 },
+  { field: "product_name", caption: "Product Name", width: 300 },
+  {
+    field: "available_to_sell_qty",
+    caption: "Available Qty",
+    width: 140,
+    alignment: "right",
+    format: "#,##0",
+  },
+  { field: "marketplace", caption: "Marketplace", width: 100 },
+  {
+    field: "warehouse_stock",
+    caption: "Warehouse Stock",
+    width: 140,
+    alignment: "right",
+    format: "#,##0",
+    customizeText: (cellInfo) => {
+      const value = parseInt(cellInfo.value);
+      return isNaN(value) ? "0" : value.toString();
+    },
+  },
   { field: "upc", caption: "UPC", width: 120 },
   {
     field: "pack_type",
@@ -273,6 +460,7 @@ const walmartCols: GridColumn[] = [
 export default function InventoryGridExample() {
   const { productResponse } = useGetAllProducts({ page: 1, limit: 10000 });
   const { deleteAsync } = useDeleteProduct();
+  const { user } = useUser();
 
   const { open } = useSidebar();
   const [openCreateModal, setOpenCreateModal] = useState(false);
@@ -280,6 +468,28 @@ export default function InventoryGridExample() {
   const [selectedRow, setSelectedRow] = useState<any>(null);
 
   const [marketplace, setMarketplace] = useState<string>("amazon");
+
+  // Detectar si el usuario es warehouse
+  const customUser: UserResource = {
+    publicMetadata: {
+      role: user?.publicMetadata.role as string,
+    },
+    username: user?.username as string | null,
+    primaryEmailAddress: {
+      emailAddress: user?.primaryEmailAddress?.emailAddress as string | null,
+    },
+  };
+
+  const isWarehouse = customUser?.publicMetadata.role === "warehouse";
+
+  // Seleccionar las columnas apropiadas según el rol del usuario
+  const getAmazonColumns = () => {
+    return isWarehouse ? amzWarehouseCols : amzCols;
+  };
+
+  const getWalmartColumns = () => {
+    return isWarehouse ? walmartWarehouseCols : walmartCols;
+  };
 
   const handleInitNewRow = (e: any) => {
     console.log(openCreateModal);
@@ -313,12 +523,12 @@ export default function InventoryGridExample() {
       } overflow-x-auto relative`}
     >
       <div className="flex justify-between items-center mb-4">
-        <Tabs
-          defaultValue="amazon"
-          className="w-[200px]"
-        >
+        <Tabs defaultValue="amazon" className="w-[200px]">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="amazon" onClick={() => setMarketplace("amazon")}>
+            <TabsTrigger
+              value="amazon"
+              onClick={() => setMarketplace("amazon")}
+            >
               Amazon
             </TabsTrigger>
             <TabsTrigger
@@ -369,7 +579,9 @@ export default function InventoryGridExample() {
           ) || []
         }
         keyExpr="seller_sku"
-        columns={marketplace === "walmart" ? walmartCols : amzCols}
+        columns={
+          marketplace === "walmart" ? getWalmartColumns() : getAmazonColumns()
+        }
         allowadd={true}
         allowedit={true}
         allowdelete={true}
