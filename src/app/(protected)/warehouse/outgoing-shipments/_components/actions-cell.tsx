@@ -185,7 +185,7 @@ const ActionsCell = ({ shipmentId }: ActionsCellProps) => {
           <DropdownMenuItem onClick={() => setShowReferenceIdDialog(true)}>
             Add Reference ID
           </DropdownMenuItem>
-          {shipment?.status !== "WORKING" && shipment?.status !== "SHIPPED" && (
+          {shipment?.status !== "SHIPPED" && (
             <DropdownMenuItem
               onClick={() => {
                 setSelectedShipment(shipmentId);
