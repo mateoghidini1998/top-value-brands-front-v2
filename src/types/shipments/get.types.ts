@@ -5,6 +5,7 @@ export interface GetShipmentsProps {
   status?: string;
   orderBy?: string;
   orderWay?: string;
+  marketplace?: string;
 }
 export interface GetShipmentsResponse {
   shipments: Shipment[];

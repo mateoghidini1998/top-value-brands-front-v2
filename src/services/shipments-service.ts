@@ -22,6 +22,7 @@ export class ShipmentsService extends BaseService {
     status = "",
     orderBy = "",
     orderWay = "",
+    marketplace = "",
   }: GetShipmentsProps = {}): Promise<GetShipmentsResponse> {
     const queryParams = new URLSearchParams({
       page: page.toString(),
@@ -30,6 +31,7 @@ export class ShipmentsService extends BaseService {
       status,
       orderBy,
       orderWay,
+      marketplace,
     }).toString();
 
     const url = this.constructUrl(`?${queryParams}`);

@@ -29,6 +29,8 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { getColumns } from "./columns";
 import { useGetAllShipments } from "./hooks/use-shipments-service";
+import { useUser } from "@clerk/nextjs";
+import { UserResource } from "@/types/auth.type";
 
 type PaginationRange = number | "...";
 export interface SupplierItem {
@@ -60,6 +62,21 @@ const showColumns: ShowHideColsumnsProps = {
 };
 
 export default function Page() {
+  
+  const { user } = useUser();
+
+  const customUser: UserResource = {
+    publicMetadata: {
+      role: user?.publicMetadata.role as string,
+    },
+    username: user?.username as string | null,
+    primaryEmailAddress: {
+      emailAddress: user?.primaryEmailAddress?.emailAddress as string | null,
+    },
+  };
+  
+  const isWalmartUser = customUser?.publicMetadata.role.split('_').includes("walmartonly");
+
   const {
     shipmentsResponse,
     filterByStatus,
@@ -74,6 +91,7 @@ export default function Page() {
   } = useGetAllShipments({
     page: 1,
     limit: 50,
+    marketplace: isWalmartUser ? "walmart" : "amazon",
   });
   const router = useRouter();
 
