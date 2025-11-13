@@ -27,6 +27,7 @@ export function InventoryTable({ products, onOrderBy }: InventoryTableProps) {
   const customUser: UserResource = {
     publicMetadata: {
       role: user.publicMetadata.role as string,
+      warehouse: user.publicMetadata.warehouse as string,
     },
     username: user.username as string | null,
     primaryEmailAddress: {
