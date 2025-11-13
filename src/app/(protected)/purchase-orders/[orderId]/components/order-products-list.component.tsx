@@ -11,15 +11,17 @@ import { columns } from "../columns";
 interface OrderProductsTableProps {
   products: PurchaseOrderSummaryProducts[];
   orderId: string;
+  isWalmartUser: boolean;
 }
 
 export default function OrderProductsTable({
   products,
   orderId,
+  isWalmartUser,
 }: OrderProductsTableProps) {
   const { recalculateProfitsAsync, isRecalculatingProfits } =
     useRecalculateProfits();
-  const amazonProducts = products.filter(
+  const amazonProducts = isWalmartUser ? [] : products.filter(
     (product) =>
       product.marketplace === "Amazon" || product.marketplace === "Unknown"
   );
@@ -38,7 +40,7 @@ export default function OrderProductsTable({
         Recalculate Profits
       </Button>
       {/* Amazon Products */}
-      {amazonProducts.length > 0 && (
+      {amazonProducts.length > 0 && !isWalmartUser && (
         <Card>
           <CardHeader className="flex flex-row items-center">
             <div className="flex flex-col items-start gap-4 justify-center w-fit space-y-0 pb-2">

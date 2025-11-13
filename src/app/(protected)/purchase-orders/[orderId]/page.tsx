@@ -6,6 +6,8 @@ import { PurchaseOrderProvider } from "@/contexts/orders.context";
 import { useGetPurchaseOrderSummary, useUpdateOrderNotes } from "../hooks";
 import OrderProductsTable from "./components/order-products-list.component";
 import OrderDetails from "./components/order-details.component";
+import { UserResource } from "@/types/auth.type";
+import { useUser } from "@clerk/nextjs";
 
 export default function PurchaseOrderPage({
   params,
@@ -19,6 +21,19 @@ export default function PurchaseOrderPage({
     ordersSummaryError,
   } = useGetPurchaseOrderSummary(params.orderId);
   const { updateOrderNotesAsync } = useUpdateOrderNotes();
+  const { user } = useUser();
+
+  const customUser: UserResource = {
+    publicMetadata: {
+      role: user?.publicMetadata.role as string,
+    },
+    username: user?.username as string | null,
+    primaryEmailAddress: {
+      emailAddress: user?.primaryEmailAddress?.emailAddress as string | null,
+    },
+  };
+  
+  const isWalmartUser = customUser?.publicMetadata.role.split('_').includes("walmartonly");
 
   if (ordersSummaryIsLoading) {
     return <LoadingSpinner />;
@@ -36,7 +51,7 @@ export default function PurchaseOrderPage({
 
   if (!ordersSummaryResponse) return null;
 
-  const { order, purchaseOrderProducts } = ordersSummaryResponse.data;
+  const { order, purchaseOrderProducts } = isWalmartUser ? { order: ordersSummaryResponse.data.order, purchaseOrderProducts: ordersSummaryResponse.data.purchaseOrderProducts.filter((product) => product.marketplace === "Walmart") } : ordersSummaryResponse.data;
 
   return (
     <PurchaseOrderProvider initialProducts={purchaseOrderProducts}>
@@ -50,6 +65,7 @@ export default function PurchaseOrderPage({
         <OrderProductsTable
           products={purchaseOrderProducts}
           orderId={params.orderId}
+          isWalmartUser={isWalmartUser}
         />
       </div>
     </PurchaseOrderProvider>
