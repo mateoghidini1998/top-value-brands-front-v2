@@ -462,25 +462,26 @@ export default function InventoryGridExample() {
   const { deleteAsync } = useDeleteProduct();
   const { user } = useUser();
 
+    // Detectar si el usuario es warehouse
+    const customUser: UserResource = {
+      publicMetadata: {
+        role: user?.publicMetadata.role as string,
+      },
+      username: user?.username as string | null,
+      primaryEmailAddress: {
+        emailAddress: user?.primaryEmailAddress?.emailAddress as string | null,
+      },
+    };
+  
+    const isWarehouse = customUser?.publicMetadata.role === "warehouse";
+    const isWalmartUser = customUser?.publicMetadata.role.split('_').includes("walmartonly");
+
   const { open } = useSidebar();
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<any>(null);
 
-  const [marketplace, setMarketplace] = useState<string>("amazon");
-
-  // Detectar si el usuario es warehouse
-  const customUser: UserResource = {
-    publicMetadata: {
-      role: user?.publicMetadata.role as string,
-    },
-    username: user?.username as string | null,
-    primaryEmailAddress: {
-      emailAddress: user?.primaryEmailAddress?.emailAddress as string | null,
-    },
-  };
-
-  const isWarehouse = customUser?.publicMetadata.role === "warehouse";
+  const [marketplace, setMarketplace] = useState<string>(isWalmartUser ? "walmart" : "amazon");
 
   // Seleccionar las columnas apropiadas según el rol del usuario
   const getAmazonColumns = () => {
@@ -523,13 +524,15 @@ export default function InventoryGridExample() {
       } overflow-x-auto relative`}
     >
       <div className="flex justify-between items-center mb-4">
-        <Tabs defaultValue="amazon" className="w-[200px]">
+        <Tabs defaultValue={isWalmartUser ? "walmart" : "amazon"} className="w-[200px]">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger
+              disabled={isWalmartUser}
+              className={isWalmartUser ? "opacity-50 cursor-not-allowed" : ""}
               value="amazon"
               onClick={() => setMarketplace("amazon")}
             >
-              Amazon
+              {isWalmartUser ? '🔒' : "Amazon"}
             </TabsTrigger>
             <TabsTrigger
               value="walmart"
