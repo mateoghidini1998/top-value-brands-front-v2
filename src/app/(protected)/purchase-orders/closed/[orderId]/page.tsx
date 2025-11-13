@@ -18,6 +18,7 @@ import { AlertTriangleIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useGetPurchaseOrderSummary } from "../../hooks";
 import UploadInvoiceFile from "../_components/upload-invoice";
+import { UserResource } from "@/types/auth.type";
 
 interface PageProps {
   params: {
@@ -27,6 +28,18 @@ interface PageProps {
 
 export default function Page({ params }: PageProps) {
   const { user } = useUser();
+
+  const customUser: UserResource = {
+    publicMetadata: {
+      role: user?.publicMetadata.role as string,
+    },
+    username: user?.username as string | null,
+    primaryEmailAddress: {
+      emailAddress: user?.primaryEmailAddress?.emailAddress as string | null,
+    },
+  };
+  
+  const isWalmartUser = customUser?.publicMetadata.role.split('_').includes("walmartonly");
 
   const {
     ordersSummaryResponse,
@@ -49,7 +62,7 @@ export default function Page({ params }: PageProps) {
     return <ErrorAlert error={ordersSummaryError} />;
   }
 
-  const { order, purchaseOrderProducts } = ordersSummaryResponse.data;
+  const { order, purchaseOrderProducts } = isWalmartUser ? { order: ordersSummaryResponse.data.order, purchaseOrderProducts: ordersSummaryResponse.data.purchaseOrderProducts.filter((product) => product.marketplace === "Walmart") } : ordersSummaryResponse.data;
 
   return (
     <div className="">

@@ -25,6 +25,8 @@ import { getAddedProductsColumns } from "./columns";
 import CreateOrderSummary from "./components/create-order-summary";
 import { ProductInOrder } from "./interface/product-added.interface";
 import { checkIfHazmat } from "@/lib/utils";
+import { useUser } from "@clerk/nextjs";
+import { UserResource } from "@/types/auth.type";
 
 export interface SupplierItem {
   value: number;
@@ -38,12 +40,26 @@ export default function Page() {
     trackedProductsIsError,
   } = useGetTrackedProducts({
     page: 1,
-    limit: 10000,
+    limit: 100000,
   });
 
-  const { productResponse } = useGetAllProducts({ page: 1, limit: 10000 });
+  const { productResponse } = useGetAllProducts({ page: 1, limit: 100000 });
 
-  const [marketplace, setMarketplace] = useState<string>("amazon");
+  const { user } = useUser();
+
+  const customUser: UserResource = {
+    publicMetadata: {
+      role: user?.publicMetadata.role as string,
+    },
+    username: user?.username as string | null,
+    primaryEmailAddress: {
+      emailAddress: user?.primaryEmailAddress?.emailAddress as string | null,
+    },
+  };
+  
+  const isWalmartUser = customUser?.publicMetadata.role.split('_').includes("walmartonly");
+
+  const [marketplace, setMarketplace] = useState<string>(isWalmartUser ? "walmart" : "amazon");
 
   const { suppliersQuery } = useSuppliers();
   const searchParams = useSearchParams();
@@ -724,13 +740,15 @@ export default function Page() {
         } overflow-x-auto`}
       >
         <div className="flex justify-between items-center mb-4">
-          <Tabs defaultValue="amazon" className="w-[200px]">
+          <Tabs defaultValue={isWalmartUser ? "walmart" : "amazon"} className="w-[200px]">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger
+                disabled={isWalmartUser}
+                className={isWalmartUser ? "opacity-50 cursor-not-allowed" : ""}
                 value="amazon"
                 onClick={() => setMarketplace("amazon")}
               >
-                Amazon
+                {isWalmartUser ? '🔒' : "Amazon"}
               </TabsTrigger>
               <TabsTrigger
                 value="walmart"
