@@ -41,6 +41,8 @@ import {
   useUpdateProductDGType,
 } from "../hooks/use-incoming-orders-service";
 import { addedToCreate, availableToCreate, incomingOrderCols } from "./columns";
+import { UserResource } from "@/types/auth.type";
+import { useUser } from "@clerk/nextjs";
 
 const showColumns: ShowHideColsumnsProps = {
   show: true,
@@ -68,6 +70,19 @@ export default function Page({
     ordersSummaryIsError,
     ordersSummaryError,
   } = useGetPurchaseOrderSummary(params.orderId);
+  const { user } = useUser();
+
+  const customUser: UserResource = {
+    publicMetadata: {
+      role: user?.publicMetadata.role as string,
+    },
+    username: user?.username as string | null,
+    primaryEmailAddress: {
+      emailAddress: user?.primaryEmailAddress?.emailAddress as string | null,
+    },
+  };
+  
+  const isWalmartUser = customUser?.publicMetadata.role.split('_').includes("walmartonly");
 
   const [isSavingOrder, setIsSavingOrder] = useState(false);
   const [activeTab, setActiveTab] = useState("summary");
@@ -134,11 +149,11 @@ export default function Page({
   const tableData = useMemo(() => {
     if (!ordersSummaryResponse?.data.purchaseOrderProducts) return [];
 
-    return ordersSummaryResponse.data.purchaseOrderProducts.map((product) => ({
+    return isWalmartUser ? ordersSummaryResponse.data.purchaseOrderProducts.filter((product) => product.marketplace === "Walmart") : ordersSummaryResponse.data.purchaseOrderProducts.map((product) => ({
       ...product,
       ...localChanges[product.id],
     }));
-  }, [ordersSummaryResponse?.data.purchaseOrderProducts, localChanges]);
+  }, [ordersSummaryResponse?.data.purchaseOrderProducts, localChanges, isWalmartUser]);
 
   const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
