@@ -29,6 +29,7 @@ export interface User {
 export interface UserResource {
   publicMetadata: {
     role: string;
+    warehouse: string;
   };
   username: string | null;
   primaryEmailAddress: {

@@ -32,6 +32,7 @@ export default function Page({ params }: PageProps) {
   const customUser: UserResource = {
     publicMetadata: {
       role: user?.publicMetadata.role as string,
+      warehouse: user?.publicMetadata.warehouse as string,
     },
     username: user?.username as string | null,
     primaryEmailAddress: {
@@ -39,7 +40,7 @@ export default function Page({ params }: PageProps) {
     },
   };
   
-  const isWalmartUser = customUser?.publicMetadata.role.split('_').includes("walmartonly");
+  const isWalmartUser = customUser?.publicMetadata.warehouse === "walmart";
 
   const {
     ordersSummaryResponse,

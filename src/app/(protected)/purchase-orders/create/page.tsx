@@ -50,6 +50,7 @@ export default function Page() {
   const customUser: UserResource = {
     publicMetadata: {
       role: user?.publicMetadata.role as string,
+      warehouse: user?.publicMetadata.warehouse as string,
     },
     username: user?.username as string | null,
     primaryEmailAddress: {
@@ -57,7 +58,7 @@ export default function Page() {
     },
   };
   
-  const isWalmartUser = customUser?.publicMetadata.role.split('_').includes("walmartonly");
+  const isWalmartUser = customUser?.publicMetadata.warehouse === "walmart";
 
   const [marketplace, setMarketplace] = useState<string>(isWalmartUser ? "walmart" : "amazon");
 

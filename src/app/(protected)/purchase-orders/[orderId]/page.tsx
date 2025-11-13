@@ -26,6 +26,7 @@ export default function PurchaseOrderPage({
   const customUser: UserResource = {
     publicMetadata: {
       role: user?.publicMetadata.role as string,
+      warehouse: user?.publicMetadata.warehouse as string,
     },
     username: user?.username as string | null,
     primaryEmailAddress: {
@@ -33,7 +34,7 @@ export default function PurchaseOrderPage({
     },
   };
   
-  const isWalmartUser = customUser?.publicMetadata.role.split('_').includes("walmartonly");
+  const isWalmartUser = customUser?.publicMetadata.warehouse === "walmart";
 
   if (ordersSummaryIsLoading) {
     return <LoadingSpinner />;
